@@ -48,9 +48,9 @@ export default function PluginPreviewBody({isInstalled}: PluginPreviewBodyProps)
   return (
     <div className="w-full flex flex-col overflow-hidden">
       <Tabs
+        className=""
         variant="light"
         color="primary"
-        className="mb-2 ml-2"
         onSelectionChange={setCurrentTabKey}
         selectedKey={currentTabKey.toString()}>
         <Tab

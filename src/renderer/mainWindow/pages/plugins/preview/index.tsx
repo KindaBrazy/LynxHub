@@ -1,5 +1,5 @@
+import {Card} from '@heroui-v3/react';
 import {usePluginsState} from '@lynx/redux/reducers/plugins';
-import {ContainersBg} from '@lynx/utils/commonStyles';
 import {WidgetAdd} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty} from 'lodash';
 import {memo} from 'react';
@@ -37,12 +37,13 @@ const PluginPreviewPanel = memo(() => {
   const installedPlugin = installedList.find(item => item.id === selectedPlugin?.metadata.id);
 
   return (
-    <div
+    <Card
       className={
-        'absolute right-2 inset-y-2 rounded-xl border border-foreground-100 overflow-hidden' +
-        ' transition-[left] duration-500 sm:left-104 lg:left-124 2xl:left-148 shadow-small' +
-        ` ${ContainersBg} rounded-xl flex flex-col`
-      }>
+        'absolute right-2 inset-y-4 overflow-hidden' +
+        ' transition-[left] duration-500 sm:left-104 lg:left-124 2xl:left-148' +
+        ` flex flex-col`
+      }
+      variant="secondary">
       {isEmpty(selectedPlugin) ? (
         <EmptySelectionPlaceholder />
       ) : (
@@ -51,7 +52,7 @@ const PluginPreviewPanel = memo(() => {
           <PreviewBody isInstalled={!!installedPlugin} />
         </>
       )}
-    </div>
+    </Card>
   );
 });
 

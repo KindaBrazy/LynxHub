@@ -1,7 +1,6 @@
-import {Card, CardBody, CardHeader} from '@heroui/react';
+import {Card, Description} from '@heroui-v3/react';
 import SettingsSearchHighlight from '@lynx/pages/settings/SettingsSearchHighlight';
 import {useRegisterSectionSearch} from '@lynx/pages/settings/SettingsSearchRegistry';
-import {ContainersBg} from '@lynx/utils/commonStyles';
 import {motion} from 'framer-motion';
 import {ReactNode} from 'react';
 
@@ -41,15 +40,15 @@ export default function SettingsSection({
       transition={{duration: 0.2}}
       animate={{translateX: 0, opacity: 1}}
       initial={{translateX: -50, opacity: 0}}>
-      <Card id={id} shadow="sm" className={`w-full ${ContainersBg} border-1 border-foreground-100`}>
-        <CardHeader className={`flex flex-col items-center justify-center gap-x-2 ${titleColor}`}>
+      <Card id={id} variant="secondary">
+        <Card.Header className={`flex flex-col gap-y-0.5 text-center ${titleColor}`}>
           <div className="flex flex-row items-center justify-center gap-x-2">
             {icon}
             <SettingsSearchHighlight text={title} />
           </div>
-          <span className="text-sm text-foreground-500">{description}</span>
-        </CardHeader>
-        <CardBody className={`${itemsCenter && 'justify-center'} flex flex-col gap-y-3`}>{children}</CardBody>
+          <Description>{description}</Description>
+        </Card.Header>
+        <Card.Content className={`${itemsCenter && 'justify-center'} flex flex-col gap-y-3`}>{children}</Card.Content>
       </Card>
     </motion.div>
   );

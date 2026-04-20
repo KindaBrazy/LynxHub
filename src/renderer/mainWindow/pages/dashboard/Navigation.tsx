@@ -1,6 +1,5 @@
-import {Button, Card, CardBody, CardHeader, ScrollShadow} from '@heroui/react';
+import {Button, Card, Header, ScrollShadow} from '@heroui-v3/react';
 import {extensionsData} from '@lynx/plugins/extensions/loader';
-import {ContainersBg} from '@lynx/utils/commonStyles';
 import {DashboardPage_Icon} from '@lynx_assets/icons/pages';
 import staticsIpc from '@lynx_shared/ipc/statics';
 import {Download, HeartPulse2, InfoSquare, SmileCircle} from '@solar-icons/react-perf/BoldDuotone';
@@ -15,7 +14,7 @@ import {useScrollSpy} from './useScrollSpy';
 type GroupItem = {
   icon: ReactNode;
   title: string;
-  color?: 'danger' | 'warning' | 'success' | 'default';
+  className?: string;
   elementId: string;
 };
 
@@ -66,19 +65,20 @@ const DashboardGroupSection = memo(
     }, []);
 
     return (
-      <div className="mt-3 flex flex-col gap-y-2 text-start">
-        <span className={`font-semibold text-sm uppercase tracking-tight ${danger ? 'text-danger' : ''}`}>{title}</span>
+      <div className="flex flex-col gap-y-2 text-start">
+        <Header className={`font-semibold uppercase tracking-tight ${danger ? 'text-danger' : ''}`}>{title}</Header>
         <div className="flex flex-col gap-y-1">
           {items.map(item => (
             <Button
+              className={
+                `duration-100 overflow-visible ${activeSection === item.elementId && 'cursor-default'}` +
+                ` ${item.className}`
+              }
               size="sm"
-              variant="light"
-              color={item.color || 'default'}
+              variant="ghost"
               key={`${item.title}_settings_section`}
               onPress={() => onPress(item.elementId)}
-              className={`duration-100 overflow-visible ${activeSection === item.elementId && 'cursor-default'}`}
-              fullWidth
-              disableRipple>
+              fullWidth>
               <div className="z-10 flex justify-start w-full items-center gap-x-1.5 text-[0.82rem] font-medium">
                 {item.icon}
                 <SettingsSearchHighlight text={item.title} />
@@ -87,7 +87,7 @@ const DashboardGroupSection = memo(
                 <motion.div
                   layoutId="setting_nav_indicator"
                   transition={{duration: 0.4, type: 'spring'}}
-                  className="absolute inset-0 z-0 bg-primary/50 rounded-lg"
+                  className="absolute inset-0 z-0 bg-primary/50 rounded-full"
                 />
               )}
             </Button>
@@ -97,8 +97,6 @@ const DashboardGroupSection = memo(
     );
   },
 );
-
-DashboardGroupSection.displayName = 'DashboardGroupSection';
 
 const DashboardNavigation = memo(() => {
   const buttons = useMemo(
@@ -141,23 +139,23 @@ const DashboardNavigation = memo(() => {
   const activeSection = useScrollSpy(allItemIds);
 
   return (
-    <Card className={`h-full my-2 text-medium w-48 shrink-0 border-1 border-foreground-100 ${ContainersBg}`}>
-      <CardHeader className="justify-center gap-x-2 pt-4">
+    <Card variant="secondary" className="h-full my-2 w-48 shrink-0">
+      <Card.Header className="flex flex-row gap-x-2">
         <DashboardPage_Icon className="size-5" />
         <span>Dashboard</span>
-      </CardHeader>
-      <CardBody className="pt-0" as={ScrollShadow} hideScrollBar>
-        {sections.map((section, index) => (
-          <DashboardGroupSection key={index} {...section} activeSection={activeSection} />
-        ))}
-        {buttons.map((Btn, index) => (
-          <Btn key={`nav-btn-${index}`} />
-        ))}
-      </CardBody>
+      </Card.Header>
+      <Card.Content>
+        <ScrollShadow className="h-full flex flex-col gap-y-3">
+          {sections.map((section, index) => (
+            <DashboardGroupSection key={index} {...section} activeSection={activeSection} />
+          ))}
+          {buttons.map((Btn, index) => (
+            <Btn key={`nav-btn-${index}`} />
+          ))}
+        </ScrollShadow>
+      </Card.Content>
     </Card>
   );
 });
-
-DashboardNavigation.displayName = 'DashboardNavigation';
 
 export default DashboardNavigation;

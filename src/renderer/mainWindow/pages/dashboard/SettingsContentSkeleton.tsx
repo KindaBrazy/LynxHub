@@ -1,5 +1,4 @@
-import {Card, CardBody, CardHeader, Skeleton} from '@heroui/react';
-import {ContainersBg} from '@lynx/utils/commonStyles';
+import {Card, Skeleton} from '@heroui-v3/react';
 import {memo} from 'react';
 
 /**
@@ -26,19 +25,19 @@ DashboardSkeleton.displayName = 'DashboardSkeleton';
 /** Skeleton for a settings section card with header and items */
 const SectionSkeleton = memo(({itemCount}: {itemCount: number}) => {
   return (
-    <Card className={`w-full ${ContainersBg} border-1 border-foreground-100`}>
+    <Card className="w-full" variant="secondary">
       {/* Section Header */}
-      <CardHeader className="flex flex-row items-center justify-center gap-x-2">
+      <Card.Header className="flex flex-row items-center justify-center gap-x-2">
         <Skeleton className="size-5 rounded-lg" />
         <Skeleton className="w-32 h-5 rounded-lg" />
-      </CardHeader>
+      </Card.Header>
 
       {/* Section Body with Setting Items */}
-      <CardBody className="flex flex-col gap-y-3">
+      <Card.Content className="flex flex-col gap-y-3">
         {Array.from({length: itemCount}).map((_, index) => (
           <ItemSkeleton key={index} />
         ))}
-      </CardBody>
+      </Card.Content>
     </Card>
   );
 });

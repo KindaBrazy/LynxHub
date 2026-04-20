@@ -1,8 +1,7 @@
-import {Button, Card, CardBody, CardHeader, Input, ScrollShadow} from '@heroui/react';
+import {Button, Card, CloseButton, Header, InputGroup, ScrollShadow} from '@heroui-v3/react';
 import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {settingsActions, useSettingsState} from '@lynx/redux/reducers/settings';
 import {searchInStrings} from '@lynx/utils';
-import {ContainersBg} from '@lynx/utils/commonStyles';
 import {Circle_Icon, Terminal_Icon} from '@lynx_assets/icons';
 import {SettingPage_Icon} from '@lynx_assets/icons/pages';
 import {
@@ -11,7 +10,7 @@ import {
   Earth,
   Keyboard,
   Rocket,
-  SpedometerMiddle,
+  SpeedometerMiddle,
   TrashBin2,
 } from '@solar-icons/react-perf/BoldDuotone';
 import {AnimatePresence, motion} from 'framer-motion';
@@ -29,7 +28,7 @@ export type GroupItem = {
   /** Display title for the underlying item */
   title: string;
   /** Optional theme color override for specific visual impact (e.g., danger actions) */
-  color?: 'danger' | 'warning' | 'success';
+  className?: string;
   /** Target section element ID to navigate to */
   elementId: string;
 };
@@ -60,7 +59,7 @@ const groupSections: GroupProps[] = [
       },
       {
         title: 'Performance',
-        icon: <SpedometerMiddle className="size-4 shrink-0" />,
+        icon: <SpeedometerMiddle className="size-4 shrink-0" />,
         elementId: settingsSectionId.SettingsPerformanceId,
       },
       {
@@ -96,7 +95,7 @@ const groupSections: GroupProps[] = [
       {
         title: 'Clear',
         icon: <TrashBin2 className="size-4 shrink-0" />,
-        color: 'danger',
+        className: 'text-danger',
         elementId: settingsSectionId.SettingsClearId,
       },
     ],
@@ -117,20 +116,21 @@ export const GroupSection = ({title, items, danger = false}: GroupProps) => {
   const targetSection = selectedSection || SettingsGeneralId;
 
   return (
-    <div className="mt-3 flex flex-col gap-y-2 text-start">
-      <span className={`font-semibold text-sm uppercase tracking-tight ${danger ? 'text-danger' : ''}`}>{title}</span>
+    <div className="flex flex-col gap-y-2 text-start">
+      <Header className={`font-semibold uppercase tracking-tight ${danger ? 'text-danger' : ''}`}>{title}</Header>
       <div className="flex flex-col gap-y-1">
         <AnimatePresence>
           {items.map(item => (
             <Button
+              className={
+                `duration-100 overflow-visible ${targetSection === item.elementId && 'cursor-default'}` +
+                ` ${item.className}`
+              }
               size="sm"
-              variant="light"
-              color={item.color || 'default'}
+              variant="ghost"
               key={`${item.title}_settings_section`}
               onPress={() => setSelectedSection(item.elementId)}
-              className={`duration-100 overflow-visible ${targetSection === item.elementId && 'cursor-default'}`}
-              fullWidth
-              disableRipple>
+              fullWidth>
               <div className="z-10 flex justify-start w-full items-center gap-x-1.5 text-[0.82rem] font-medium">
                 {item.icon}
                 <SettingsSearchHighlight text={item.title} />
@@ -139,7 +139,7 @@ export const GroupSection = ({title, items, danger = false}: GroupProps) => {
                 <motion.div
                   layoutId="setting_nav_indicator"
                   transition={{duration: 0.4, type: 'spring'}}
-                  className="absolute inset-0 z-0 bg-primary/50 rounded-lg"
+                  className="absolute inset-0 z-0 bg-primary/50 rounded-full"
                 />
               )}
             </Button>
@@ -183,26 +183,33 @@ const SettingsPageNav = ({sectionTexts}: SettingsPageNavProps) => {
     : groupSections;
 
   return (
-    <Card className={`h-full my-2 text-medium w-48 shrink-0 border-1 border-foreground-100 ${ContainersBg}`}>
-      <CardHeader className="justify-center gap-x-2 pt-4">
+    <Card variant="secondary" className="h-full my-2 w-48 shrink-0">
+      <Card.Header className="flex flex-row gap-x-2">
         <SettingPage_Icon className="size-5" />
-        <span>
-          <SettingsSearchHighlight text="Settings" />
-        </span>
-      </CardHeader>
-      <CardBody className="pt-0 flex flex-col">
-        <Input
-          size="sm"
-          className="py-1"
-          value={searchValue}
-          onValueChange={setSearchValue}
-          placeholder="Search settings..."
-          aria-label="Search settings sections"
-          startContent={<Circle_Icon className="size-4" />}
-          isClearable
-        />
+        <SettingsSearchHighlight text="Settings" />
+      </Card.Header>
+      <Card.Content className="flex flex-col">
+        <InputGroup>
+          <InputGroup.Prefix>
+            <Circle_Icon />
+          </InputGroup.Prefix>
+          <InputGroup.Input
+            value={searchValue}
+            placeholder="Search settings..."
+            aria-label="Search settings sections"
+            onChange={event => setSearchValue(event.target.value)}
+          />
 
-        <ScrollShadow className="flex-1" hideScrollBar>
+          {searchValue && (
+            <CloseButton
+              aria-label="Clear"
+              onPress={() => setSearchValue('')}
+              className="absolute right-5.5 scale-80"
+            />
+          )}
+        </InputGroup>
+
+        <ScrollShadow className="h-full flex flex-col gap-y-3" hideScrollBar>
           {groupsToRender.length === 0 && searchValue && (
             <div className="px-3 text-xs text-foreground-500">No sections match "{searchValue}".</div>
           )}
@@ -214,7 +221,7 @@ const SettingsPageNav = ({sectionTexts}: SettingsPageNavProps) => {
             <Btn key={index} />
           ))}
         </ScrollShadow>
-      </CardBody>
+      </Card.Content>
     </Card>
   );
 };
