@@ -46,6 +46,15 @@
   --xterm-scrollbar-thumb-color: rgba(0, 0, 0, 0.1);
 }
 
+:root,
+[data-theme='light'] {
+  --accent: oklch(0.705 0.169 242.482);
+}
+.dark,
+[data-theme='dark'] {
+  --accent: oklch(0.509 0.246 262.557);
+}
+
 * {
   -webkit-user-select: none;
   -webkit-user-drag: none;
