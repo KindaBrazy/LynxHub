@@ -1,4 +1,4 @@
-import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger} from '@heroui/react';
+import {Button, Dropdown, Header, Label} from '@heroui-v3/react';
 import {pluginsActions} from '@lynx/redux/reducers/plugins';
 import {useUserState} from '@lynx/redux/reducers/user';
 import {AppDispatch} from '@lynx/redux/store';
@@ -128,30 +128,37 @@ interface FilterMenuProps {
  */
 export function FilterMenu({selectedKeys, setSelectedKeys}: FilterMenuProps) {
   return (
-    <Dropdown size="sm" closeOnSelect={false} className="border border-foreground/15!">
-      <DropdownTrigger>
-        <Button variant="flat" isIconOnly>
-          <Filter className="size-4" />
+    <Dropdown>
+      <Dropdown.Trigger>
+        <Button variant="secondary" className="bg-surface shrink-0 shadow" isIconOnly>
+          <Filter />
         </Button>
-      </DropdownTrigger>
-      <DropdownMenu
-        variant="faded"
-        selectionMode="multiple"
-        selectedKeys={selectedKeys}
-        // @ts-ignore-next-line
-        onSelectionChange={setSelectedKeys}>
-        <DropdownSection title="Filter">
-          <DropdownItem key="installed" className="cursor-default">
-            Installed
-          </DropdownItem>
-          <DropdownItem key="modules" className="cursor-default">
-            Modules
-          </DropdownItem>
-          <DropdownItem key="extensions" className="cursor-default">
-            Extensions
-          </DropdownItem>
-        </DropdownSection>
-      </DropdownMenu>
+      </Dropdown.Trigger>
+      <Dropdown.Popover>
+        <Dropdown.Menu
+          onSelectionChange={values => {
+            console.log(values);
+            setSelectedKeys(values as PluginFilter);
+          }}
+          selectionMode="multiple"
+          selectedKeys={selectedKeys}>
+          <Dropdown.Section>
+            <Header>Filter List</Header>
+            <Dropdown.Item id="installed">
+              <Dropdown.ItemIndicator />
+              <Label>Installed</Label>
+            </Dropdown.Item>
+            <Dropdown.Item id="modules">
+              <Dropdown.ItemIndicator />
+              <Label>Modules</Label>
+            </Dropdown.Item>
+            <Dropdown.Item id="extensions">
+              <Dropdown.ItemIndicator />
+              <Label>Extensions</Label>
+            </Dropdown.Item>
+          </Dropdown.Section>
+        </Dropdown.Menu>
+      </Dropdown.Popover>
     </Dropdown>
   );
 }

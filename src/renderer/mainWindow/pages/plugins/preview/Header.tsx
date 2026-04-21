@@ -1,4 +1,4 @@
-import {Button, Chip, User} from '@heroui/react';
+import {Avatar, Button, Chip, Description, Label} from '@heroui-v3/react';
 import {usePluginsState} from '@lynx/redux/reducers/plugins';
 import {useUserState} from '@lynx/redux/reducers/user';
 import {PluginInstalledItem} from '@lynx_common/types/plugins';
@@ -68,72 +68,65 @@ export default function PluginPreviewHeader({installedPlugin}: PluginPreviewHead
         `w-full flex flex-col sm:gap-y-2 shrink-0 ` + `${isInstalled ? 'min-[77rem]:flex-row' : 'min-[53rem]:flex-row'}`
       }>
       <div className="w-full flex flex-col">
-        <User
-          avatarProps={{
-            src: pluginIconUrl,
-            className: 'bg-black/0',
-            showFallback: true,
-            name: selectedPlugin?.metadata.title,
-            radius: 'none',
-          }}
-          description={
-            <div className="flex flex-row gap-x-2 items-center">
-              {/* Version chip with optional upgrade/downgrade arrow indicator */}
-              <Chip
-                size="sm"
-                variant="light"
-                className="text-foreground-600"
-                startContent={<BoxMinimalistic className="size-3.5" />}
-                classNames={{content: 'flex flex-row items-center justify-center gap-x-1'}}>
-                <span>
-                  {resolvedVersion !== 'N/A' && 'v'}
-                  {resolvedVersion}
-                </span>
-                {targetVersion && (
-                  <>
-                    <ArrowRight className="size-3" />
-                    <span className={isUpgradeAvailable ? 'text-success' : 'text-warning'}>v{targetVersion}</span>
-                  </>
-                )}
-              </Chip>
+        <div className="inline-flex items-center gap-2">
+          <Avatar>
+            <Avatar.Image src={getCacheUrl(pluginIconUrl)} alt={selectedPlugin?.metadata.title} />
+            {selectedPlugin && (
+              <Avatar.Fallback>
+                {...selectedPlugin.metadata.title.split(' ').map(item => item.slice(0, 1))}
+              </Avatar.Fallback>
+            )}
+          </Avatar>
+          <div className="flex flex-col">
+            <Label className="text-lg">{selectedPlugin?.metadata.title}</Label>
+            <Description>
+              <div className="flex flex-row gap-x-2 items-center">
+                {/* Version chip with optional upgrade/downgrade arrow indicator */}
+                <Chip size="sm" variant="tertiary" className="text-muted tracking-tight">
+                  <BoxMinimalistic className="size-3.5" />
+                  <span>{resolvedVersion}</span>
+                  {targetVersion && (
+                    <>
+                      <ArrowRight className="size-2.5" />
+                      <span className={isUpgradeAvailable ? 'text-success' : 'text-warning'}>{targetVersion}</span>
+                    </>
+                  )}
+                </Chip>
 
-              {/* Release date chip */}
-              <Chip
-                size="sm"
-                variant="light"
-                className="text-foreground-600"
-                startContent={<CalendarMinimalistic className="size-3.5" />}>
-                {releaseDate}
-              </Chip>
+                {/* Release date chip */}
+                <Chip size="sm" variant="tertiary" className="text-muted">
+                  <CalendarMinimalistic />
+                  {releaseDate}
+                </Chip>
 
-              {/* Plugin type indicator (extension vs module) */}
-              <div
-                className={`flex flex-row gap-x-1 items-center ${
-                  pluginType === 'extension' ? 'text-primary-500' : 'text-secondary'
-                }`}>
-                <WidgetAdd />
-                <span>{pluginType === 'extension' ? 'Extension' : 'Module'}</span>
+                {/* Plugin type indicator (extension vs module) */}
+                <div
+                  className={`flex flex-row gap-x-1 items-center ${
+                    pluginType === 'extension' ? 'text-primary-500' : 'text-secondary'
+                  }`}>
+                  <WidgetAdd />
+                  <span>{pluginType === 'extension' ? 'Extension' : 'Module'}</span>
+                </div>
               </div>
-            </div>
-          }
-          className="self-start"
-          name={<span className="font-semibold text-foreground text-xl">{selectedPlugin?.metadata.title}</span>}
-        />
+            </Description>
+          </div>
+        </div>
 
         {/* Owner & homepage link row */}
         <div className="flex flex-row items-center ml-12">
-          <Chip variant="light" startContent={<UserIcon />}>
+          <Chip variant="tertiary">
+            <UserIcon />
             {pluginOwner}
           </Chip>
           <Button
             size="sm"
-            variant="light"
-            className="text-small"
+            variant="ghost"
+            className="text-xs"
             onPress={handleOpenHomePage}
-            startContent={<HomeAngle2 />}
-            aria-label="Open plugin home page"
-            endContent={<SquareTopDown className="size-3" />}>
+            aria-label="Open plugin home page">
+            <HomeAngle2 className="size-3.5" />
             Home Page
+            <SquareTopDown className="size-2.5" />
           </Button>
         </div>
       </div>

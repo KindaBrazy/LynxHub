@@ -1,16 +1,15 @@
 import {
+  Avatar,
   Button,
   Card,
-  CardBody,
-  CardFooter,
-  CardHeader,
   Chip,
+  Description,
   Link,
-  Progress,
+  ProgressBar,
+  Spinner,
   Tooltip,
-  useDisclosure,
-  User,
-} from '@heroui/react';
+  useOverlayState,
+} from '@heroui-v3/react';
 import {
   pluginsActions,
   useIsInstallingPlugin,
@@ -29,7 +28,7 @@ import pluginsIpc from '@lynx_shared/ipc/plugins';
 import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
 import {QuestionCircle} from '@solar-icons/react-perf/Bold';
 import {SettingsMinimalistic, ShieldWarning, TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
-import {ArrowRight, Unread} from '@solar-icons/react-perf/LineDuotone';
+import {ArrowRight, CheckRead} from '@solar-icons/react-perf/LineDuotone';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 import {SimpleGitProgressEvent} from 'simple-git';
@@ -59,7 +58,7 @@ export function PluginListItem({item, installed}: PluginListItemProps) {
   const isInstalling = useIsInstallingPlugin(item.metadata.id);
   const isUnInstalling = useIsUninstallingPlugin(item.metadata.id);
 
-  const configModal = useDisclosure();
+  const configModal = useOverlayState();
 
   const isSelected = useMemo(
     () => selectedPlugin?.metadata.id === item.metadata.id,
@@ -131,39 +130,35 @@ export function PluginListItem({item, installed}: PluginListItemProps) {
   return (
     <Card
       className={
-        `relative border-2 border-foreground-100 bg-foreground-50 transition-all! duration-300!` +
-        ` hover:bg-foreground-100 hover:shadow-medium` +
-        ` ${isSelected && (isExtension ? 'border-primary!' : 'border-secondary!')}`
+        `relative border-2 border-surface transition-all! duration-300!` +
+        ` hover:bg-foreground-100 ${isCompatible ? 'cursor-pointer' : ''}` +
+        ` ${isSelected && (isExtension ? 'border-accent!' : 'border-LynxPurple!')}`
       }
-      as="div"
-      shadow="sm"
-      onPress={handleSelect}
-      isPressable={isCompatible}
       key={`${item.metadata.id}_plugin_list_item`}
-      fullWidth>
+      onClick={isCompatible ? handleSelect : undefined}>
       {!isCompatible && (
         <div
           className={
-            'absolute inset-0 z-20 flex flex-col items-center justify-center gap-y-1 ' +
-            'dark:bg-black/50 bg-foreground-300/50'
+            'absolute inset-0 z-20 flex flex-col items-center justify-center gap-y-1 ' + 'bg-surface-tertiary/50'
           }>
-          <Tooltip
-            delay={300}
-            color="warning"
-            content={item.incompatibleReason}
-            classNames={{content: 'p-2 whitespace-pre'}}
-            showArrow>
-            <QuestionCircle
-              className={
-                'size-10 rounded-full bg-background/80 p-1 text-warning/80 transition-colors' +
-                ' duration-200 hover:text-warning'
-              }
-            />
+          <Tooltip delay={300}>
+            <Tooltip.Trigger>
+              <QuestionCircle
+                className={
+                  'size-10 rounded-full bg-surface p-1 text-warning/80 transition-colors' +
+                  ' duration-200 hover:text-warning'
+                }
+              />
+            </Tooltip.Trigger>
+            <Tooltip.Content className="whitespace-pre" showArrow>
+              <Tooltip.Arrow />
+              <p className="text-wrap">{item.incompatibleReason}</p>
+            </Tooltip.Content>
           </Tooltip>
-          <span className="rounded-lg bg-background/80 px-2 py-1 text-sm">Incompatible</span>
+          <span className="rounded-lg bg-surface px-2 py-1 text-sm">Incompatible</span>
           {foundInstalled && (
-            <div className="absolute right-2 top-2 rounded-lg bg-background/80 p-1">
-              <Button size="sm" variant="flat" color="danger" onPress={handleUninstall} isIconOnly>
+            <div className="absolute right-2 top-2 rounded-lg bg-surface p-1">
+              <Button size="sm" variant="danger-soft" onPress={handleUninstall} isIconOnly>
                 <TrashBin2 className="size-4" />
               </Button>
             </div>
@@ -171,132 +166,106 @@ export function PluginListItem({item, installed}: PluginListItemProps) {
         </div>
       )}
 
-      <CardHeader className="pb-0">
-        <User
-          description={
-            <span className="text-xs text-foreground-500">
-              By <span className="font-bold text-foreground-500">{extractGitUrl(item.url).owner}</span>
-            </span>
-          }
-          avatarProps={{
-            src: getCacheUrl(getPluginIconUrl(item.url)),
-            radius: 'none',
-            name: item.metadata.title,
-            showFallback: true,
-            className: 'shrink-0 !bg-black/0',
-          }}
-          name={
-            <div className="space-x-2">
-              <Link
-                className={
-                  `font-semibold transition-colors duration-300 ` +
-                  `${isExtension ? 'text-primary-500' : 'text-secondary-500'}`
-                }
-                size="lg"
-                href={item.url}
-                isExternal>
-                {item.metadata.title}
-              </Link>
-              <Chip
-                size="sm"
-                radius="sm"
-                variant="flat"
-                classNames={{content: 'flex flex-row items-center justify-center gap-x-1'}}>
-                <span>
-                  {currentVersion !== 'N/A' && 'v'}
-                  {currentVersion}
-                </span>
-                {targetUpdate && (
-                  <>
-                    <ArrowRight className="size-3" />
-                    <span className={`${isUpgrade ? 'text-success' : 'text-warning'}`}>v{targetVersion}</span>
-                  </>
+      <Card.Header>
+        <div className="inline-flex items-center gap-2">
+          <Avatar>
+            <Avatar.Image alt={item.metadata.title} src={getCacheUrl(getPluginIconUrl(item.url))} />
+            <Avatar.Fallback>{...item.metadata.title.split(' ').map(item => item.slice(0, 1))}</Avatar.Fallback>
+          </Avatar>
+          <div className="flex flex-col">
+            <Link
+              onPress={() => window.open(item.url)}
+              className={`no-underline hover:underline ${isExtension ? 'text-accent' : 'text-LynxPurple'}`}>
+              {item.metadata.title}
+            </Link>
+            <Description>
+              By <span className="font-bold text-muted">{extractGitUrl(item.url).owner}</span>
+            </Description>
+            <div className="flex flex-wrap gap-x-1 items-center">
+              <Description>
+                {currentVersion !== 'N/A' && (
+                  <span className="flex flex-row items-center justify-center gap-x-0.5 w-fit mt-0.5 tracking-tight">
+                    <span>{currentVersion}</span>
+                    {targetUpdate && (
+                      <>
+                        <ArrowRight className="size-2.5" />
+                        <span className={`${isUpgrade ? 'text-success' : 'text-warning'}`}>{targetVersion}</span>
+                      </>
+                    )}
+                  </span>
                 )}
-              </Chip>
+              </Description>
+              {foundUnloaded && (
+                <Tooltip delay={300}>
+                  <Tooltip.Trigger>
+                    <Chip size="sm" variant="soft" color="warning" className="px-1.5">
+                      <ShieldWarning />
+                      Unloaded
+                    </Chip>
+                  </Tooltip.Trigger>
+                  <Tooltip.Content showArrow>
+                    <Tooltip.Arrow />
+                    <p>{foundUnloaded.message}</p>
+                  </Tooltip.Content>
+                </Tooltip>
+              )}
             </div>
-          }
-          className="mt-2 justify-start"
-        />
-      </CardHeader>
+          </div>
+        </div>
 
-      <CardBody className="py-0 pl-[3.7rem]">
-        <span className="mb-1.5 mt-1 line-clamp-3 max-[63rem]:line-clamp-2 text-xs text-foreground-700">
-          {item.metadata.description}
-        </span>
-      </CardBody>
+        {foundInstalled && <CheckRead className="text-success size-5 absolute top-3 right-3" />}
+      </Card.Header>
 
-      <CardFooter className="flex flex-row max-[63rem]:flex-col items-center justify-between gap-x-2 pt-0">
-        <div className="flex flex-row items-center gap-x-1 px-0">
-          {linux && <Linux_Icon className="size-4" />}
-          {win32 && <Windows_Icon className="size-4" />}
-          {darwin && <MacOS_Icon className="size-4" />}
+      <Card.Content>
+        <Description className="line-clamp-3 max-[63rem]:line-clamp-2">{item.metadata.description}</Description>
+      </Card.Content>
+
+      <Card.Footer className="flex flex-row max-[63rem]:flex-col items-center justify-between gap-x-2">
+        <div className="flex flex-row items-center gap-x-1">
+          {linux && <Linux_Icon className="size-4 text-surface-foreground/70" />}
+          {win32 && <Windows_Icon className="size-4 text-surface-foreground/70" />}
+          {darwin && <MacOS_Icon className="size-4 text-surface-foreground/70" />}
 
           {foundInstalled && (
             <>
-              <Chip
-                size="sm"
-                radius="sm"
-                variant="flat"
-                color="primary"
-                className="ml-2"
-                startContent={<Unread className="size-4" />}>
-                Installed
-              </Chip>
               {!isExtension && (
                 <>
-                  <ModuleConfigModal isOpen={configModal.isOpen} onClose={configModal.onClose} />
-                  <Tooltip delay={500} content="Configure Tools">
-                    <Button
-                      size="sm"
-                      variant="flat"
-                      color="secondary"
-                      onPress={configModal.onOpen}
-                      className="ml-1 min-w-0 px-2"
-                      isIconOnly>
-                      <SettingsMinimalistic className="size-4" />
-                    </Button>
+                  <ModuleConfigModal isOpen={configModal.isOpen} onClose={configModal.close} />
+                  <Tooltip delay={500}>
+                    <Tooltip.Trigger>
+                      <Button size="sm" variant="secondary" className="ml-1 px-2" onPress={configModal.open} isIconOnly>
+                        <SettingsMinimalistic className="size-4" />
+                      </Button>
+                    </Tooltip.Trigger>
+                    <Tooltip.Content showArrow>
+                      <Tooltip.Arrow />
+                      <p>Configure Tools</p>
+                    </Tooltip.Content>
                   </Tooltip>
                 </>
               )}
             </>
-          )}
-
-          {foundUnloaded && (
-            <Tooltip
-              delay={300}
-              radius="sm"
-              color="warning"
-              className="px-4 py-2"
-              content={foundUnloaded.message}
-              showArrow>
-              <Chip
-                size="sm"
-                radius="sm"
-                variant="flat"
-                color="warning"
-                startContent={<ShieldWarning className="size-3.5" />}>
-                Unloaded
-              </Chip>
-            </Tooltip>
           )}
         </div>
 
         <UpdateButton item={item} />
 
         {isInstalling && (
-          <Button size="sm" color="success" variant="light" className="mr-4" isLoading isDisabled>
-            Installing...
-          </Button>
+          <div className="flex items-center gap-x-1">
+            <Spinner size="sm" />
+            <span className="text-sm">Installing...</span>
+          </div>
         )}
 
         {isUnInstalling && (
-          <Button size="sm" color="danger" variant="light" className="mr-4" isLoading isDisabled>
-            Uninstalling...
-          </Button>
+          <div className="flex items-center gap-x-1">
+            <Spinner size="sm" color="warning" />
+            <span className="text-sm">Uninstalling...</span>
+          </div>
         )}
 
         <InstallProgress pluginUrl={item.url} isInstalling={isInstalling} />
-      </CardFooter>
+      </Card.Footer>
     </Card>
   );
 }
@@ -347,12 +316,14 @@ function InstallProgress({isInstalling, pluginUrl}: InstallProgressProps) {
   if (!isInstalling) return null;
 
   return (
-    <Progress
-      size="sm"
+    <ProgressBar
       color="success"
       value={installProgress}
       aria-label="Installing progress"
-      className="absolute bottom-0 inset-x-0"
-    />
+      className="absolute -bottom-0.5 inset-x-0">
+      <ProgressBar.Track>
+        <ProgressBar.Fill />
+      </ProgressBar.Track>
+    </ProgressBar>
   );
 }

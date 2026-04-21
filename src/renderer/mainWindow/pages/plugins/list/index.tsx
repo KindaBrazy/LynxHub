@@ -1,5 +1,4 @@
-import {Button, Input, Progress, Skeleton} from '@heroui/react';
-import {Card, Separator} from '@heroui-v3/react';
+import {Button, Card, ProgressBar, SearchField, Skeleton} from '@heroui-v3/react';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import LynxScroll from '@lynx/components/LynxScroll';
 import {pluginsActions, usePluginsState} from '@lynx/redux/reducers/plugins';
@@ -7,6 +6,7 @@ import {AppDispatch} from '@lynx/redux/store';
 import {searchInStrings, showRestartModal} from '@lynx/utils';
 import {lynxTopToast} from '@lynx/utils/hooks';
 import {Circle_Icon} from '@lynx_assets/icons';
+import {PluginPage_Icon} from '@lynx_assets/icons/pages';
 import {PluginFilter} from '@lynx_common/types/plugins';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
 import {Refresh} from '@solar-icons/react-perf/BoldDuotone';
@@ -76,56 +76,59 @@ export default function PluginList() {
       }
       variant="secondary">
       {refreshing && (
-        <Progress
-          size="sm"
-          color="secondary"
-          aria-label="Refreshing Item"
-          className="absolute top-0 inset-x-0"
-          isIndeterminate
-        />
+        <ProgressBar size="sm" aria-label="Loading list" className="absolute -top-1 inset-x-0" isIndeterminate>
+          <ProgressBar.Track>
+            <ProgressBar.Fill />
+          </ProgressBar.Track>
+        </ProgressBar>
       )}
 
-      <div className="flex w-full flex-col gap-y-4">
-        <div className="flex w-full flex-row items-center justify-between">
-          <span className="text-xl font-semibold">Plugins</span>
-          <SyncAllButton />
+      <Card.Header>
+        <div className="flex w-full flex-col gap-y-4">
+          <div className="flex w-full flex-row items-center justify-between">
+            <div className="flex gap-x-2 items-center">
+              <PluginPage_Icon className="size-5" />
+              <span>Plugins</span>
+            </div>
+            <SyncAllButton />
+          </div>
+          <div className="flex flex-row items-center gap-x-2">
+            <SearchField name="search" value={searchValue} onChange={setSearchValue} fullWidth>
+              <SearchField.Group>
+                <SearchField.SearchIcon />
+                <SearchField.Input placeholder="Search for Plugins..." />
+                <SearchField.ClearButton />
+              </SearchField.Group>
+            </SearchField>
+            <FilterMenu selectedKeys={selectedFilters} setSelectedKeys={setSelectedFilters} />
+          </div>
         </div>
-        <div className="flex flex-row items-center gap-x-2">
-          <Input
-            type="search"
-            value={searchValue}
-            onValueChange={setSearchValue}
-            placeholder="Search for plugins..."
-            startContent={<Circle_Icon className="size-4" />}
-          />
-          <FilterMenu selectedKeys={selectedFilters} setSelectedKeys={setSelectedFilters} />
-        </div>
-      </div>
+      </Card.Header>
 
-      <Separator />
-
-      <LynxScroll className="size-full space-y-2 px-3 pt-2">
-        {loading ? (
-          <div className="flex flex-col">
-            {Array(3)
-              .fill(null)
-              .map((_, index) => (
-                <div key={index} className="h-36 w-full space-y-1 p-2">
-                  <Skeleton className="h-10 w-full rounded-lg" />
-                  <Skeleton className="h-20 w-full rounded-xl" />
-                </div>
+      <Card.Content>
+        <LynxScroll className="size-full space-y-2 px-3 pt-2">
+          {loading ? (
+            <div className="flex flex-col">
+              {Array(3)
+                .fill(null)
+                .map((_, index) => (
+                  <div key={index} className="h-36 w-full space-y-1 p-2">
+                    <Skeleton className="h-10 w-full rounded-xl bg-surface/50" />
+                    <Skeleton className="h-20 w-full rounded-xl bg-surface/50" />
+                  </div>
+                ))}
+            </div>
+          ) : isEmpty(resultList) ? (
+            emptyText
+          ) : (
+            <div className="flex flex-col gap-y-2 pb-4">
+              {resultList.map(item => (
+                <PluginListItem item={item} installed={installed} key={`${item.metadata.id}_list_item`} />
               ))}
-          </div>
-        ) : isEmpty(resultList) ? (
-          emptyText
-        ) : (
-          <div className="flex flex-col gap-y-2 pb-4">
-            {resultList.map(item => (
-              <PluginListItem item={item} installed={installed} key={`${item.metadata.id}_list_item`} />
-            ))}
-          </div>
-        )}
-      </LynxScroll>
+            </div>
+          )}
+        </LynxScroll>
+      </Card.Content>
     </Card>
   );
 }
@@ -167,12 +170,8 @@ function SyncAllButton() {
   if (isEmpty(syncList)) return null;
 
   return (
-    <Button
-      size="sm"
-      color="success"
-      onPress={syncAll}
-      isLoading={updatingAll}
-      startContent={!updatingAll && <Refresh />}>
+    <Button size="sm" onPress={syncAll} isPending={updatingAll}>
+      {!updatingAll && <Refresh />}
       {updatingAll ? 'Syncing...' : `Sync All (${syncList.length})`}
     </Button>
   );

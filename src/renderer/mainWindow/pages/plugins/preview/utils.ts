@@ -1,4 +1,4 @@
-import {ChipProps} from '@heroui/chip';
+import {ChipProps} from '@heroui-v3/react';
 import {SubscribeStages} from '@lynx_common/types';
 
 /**
@@ -21,9 +21,9 @@ export function getStageDisplayName(stage: SubscribeStages) {
 export function getStageColor(stage: SubscribeStages): ChipProps['color'] {
   switch (stage) {
     case 'insider':
-      return 'secondary';
+      return 'accent';
     case 'early_access':
-      return 'primary';
+      return 'warning';
     default:
       return 'success';
   }

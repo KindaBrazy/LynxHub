@@ -1,4 +1,4 @@
-import {Tab, Tabs} from '@heroui/react';
+import {Key, Tabs} from '@heroui-v3/react';
 import MarkdownViewer from '@lynx/components/MarkdownViewer';
 import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {usePluginsState} from '@lynx/redux/reducers/plugins';
@@ -8,7 +8,7 @@ import {HomeAngle2} from '@solar-icons/react-perf/BoldDuotone';
 import {Checklist} from '@solar-icons/react-perf/LineDuotone';
 import {AnimatePresence, motion} from 'framer-motion';
 import {isNil} from 'lodash';
-import {Key, useEffect, useMemo, useState} from 'react';
+import {useEffect, useMemo, useState} from 'react';
 
 import ChangelogList from './ChangelogList';
 
@@ -27,7 +27,7 @@ interface PluginPreviewBodyProps {
  */
 export default function PluginPreviewBody({isInstalled}: PluginPreviewBodyProps) {
   const selectedPlugin = usePluginsState('selectedPlugin');
-  const [currentTabKey, setCurrentTabKey] = useState<Key>('changelog');
+  const [currentTabKey, setCurrentTabKey] = useState<Key | undefined>('changelog');
 
   useDebounceBreadcrumb('Plugin tab', [currentTabKey]);
 
@@ -47,30 +47,21 @@ export default function PluginPreviewBody({isInstalled}: PluginPreviewBodyProps)
 
   return (
     <div className="w-full flex flex-col overflow-hidden">
-      <Tabs
-        className=""
-        variant="light"
-        color="primary"
-        onSelectionChange={setCurrentTabKey}
-        selectedKey={currentTabKey.toString()}>
-        <Tab
-          title={
-            <div className="flex flex-row items-center gap-x-2">
+      <Tabs className="w-full" selectedKey={currentTabKey} onSelectionChange={setCurrentTabKey}>
+        <Tabs.ListContainer>
+          <Tabs.List aria-label="Options">
+            <Tabs.Tab id="readme" className="gap-x-1">
               <HomeAngle2 />
-              <span>Readme</span>
-            </div>
-          }
-          key="readme"
-        />
-        <Tab
-          title={
-            <div className="flex flex-row items-center gap-x-2">
+              Readme
+              <Tabs.Indicator />
+            </Tabs.Tab>
+            <Tabs.Tab id="changelog" className="gap-x-1">
               <Checklist />
-              <span>Changelog</span>
-            </div>
-          }
-          key="changelog"
-        />
+              Changelog
+              <Tabs.Indicator />
+            </Tabs.Tab>
+          </Tabs.List>
+        </Tabs.ListContainer>
       </Tabs>
 
       <AnimatePresence mode="wait">
