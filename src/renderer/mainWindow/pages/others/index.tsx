@@ -1,4 +1,4 @@
-import {ScrollShadow} from '@heroui/react';
+import {ScrollShadow} from '@heroui-v3/react';
 import {GetComponentsByPath} from '@lynx/components/card';
 import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {OthersPage_Icon} from '@lynx_assets/icons/pages';
