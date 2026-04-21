@@ -1,6 +1,5 @@
 import {TRANSITION_EASINGS} from '@heroui/framer-utils';
-import {Avatar} from '@heroui/react';
-import {Spinner} from '@heroui-v3/react';
+import {Avatar, Spinner} from '@heroui-v3/react';
 import {Terminal_Icon} from '@lynx_assets/icons';
 import {
   AgentPage_Icon,
@@ -59,7 +58,11 @@ const getPageIcon = (pageID: string) => {
     case PageID.settings:
       return <SettingPage_Icon className="size-full" />;
     default:
-      return <Avatar radius="none" className="size-full" src={APP_ICON_TRANSPARENT} />;
+      return (
+        <Avatar>
+          <Avatar.Image src={APP_ICON_TRANSPARENT} />
+        </Avatar>
+      );
   }
 };
 
@@ -84,13 +87,12 @@ const TabIcon = memo(({tab, currentView}: Props) => {
     // Use lynxcache:// protocol for favicon caching, fallback to Web_Icon on error
     if (favIcon.show && favIcon.url && !imgError) {
       return (
-        <Avatar
-          name={title}
-          radius="none"
-          src={getCacheUrl(favIcon.url)}
-          className="size-full bg-transparent"
-          ImgComponent={props => <img alt="" {...props} onError={handleImgError} />}
-        />
+        <Avatar className="size-4 rounded-none bg-transparent">
+          <Avatar.Image alt={title} onError={handleImgError} src={getCacheUrl(favIcon.url)} />
+          <Avatar.Fallback className="bg-transparent">
+            <Earth />
+          </Avatar.Fallback>
+        </Avatar>
       );
     }
 
