@@ -258,12 +258,15 @@ const NavigationDock = memo(({items}: Props) => {
       onMouseLeave={() => {
         setIsHoveringDock(false);
       }}
+      className={
+        'relative backdrop-blur-xl rounded-2xl p-1 shadow-lg border border-surface-secondary' +
+        ' dark:bg-LynxRaisinBlack bg-white'
+      }
       ref={dockRef}
       animate={{opacity: 1, x: 0}}
       onMouseMove={handleMouseMove}
       initial={{opacity: 0, x: -50}}
-      onMouseEnter={() => setIsHoveringDock(true)}
-      className="relative backdrop-blur-xl rounded-2xl p-1 shadow-2xl dark:bg-LynxRaisinBlack bg-white">
+      onMouseEnter={() => setIsHoveringDock(true)}>
       {/* Animated border gradient following cursor */}
       <AnimatePresence>
         {isHoveringDock && (
