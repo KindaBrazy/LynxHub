@@ -1,4 +1,4 @@
-import {Button, Card, Chip, Select, Selection, SelectItem} from '@heroui/react';
+import {Button, Card, Chip, Description, Key, Label, ListBox, Select} from '@heroui-v3/react';
 import SettingsSection from '@lynx/components/SettingsSection';
 import {modalActions} from '@lynx/redux/reducers/modals';
 import {useSettingsState} from '@lynx/redux/reducers/settings';
@@ -13,6 +13,8 @@ import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
 import {Download} from '@solar-icons/react-perf/BoldDuotone';
 import {memo, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
+
+import SettingsSearchHighlight from '../../settings/SettingsSearchHighlight';
 
 export const DashboardUpdateId = 'settings_update_elem';
 
@@ -63,22 +65,21 @@ const DashboardUpdate = memo(() => {
     dispatch(modalActions.openUpdateApp());
   }, [dispatch]);
 
-  const [selection, setSelection] = useState<string[]>(['public']);
+  const [selection, setSelection] = useState<string>('public');
 
-  const onChange = useCallback((keys: Selection) => {
-    AddBreadcrumb_Renderer(`Update Channel Changed: keys:${JSON.stringify(keys)}`);
-    if (keys !== 'all') {
-      const value = keys.values().next().value?.toString() as SubscribeStages | undefined;
-      if (value) {
-        userIpc.patreon.updateChannel(value);
-        pluginsIpc.checkForSync(value);
-      }
-    }
+  const onChange = useCallback((key: Key | null) => {
+    if (!key || typeof key === 'number') return;
+
+    AddBreadcrumb_Renderer(`Update Channel Changed: keys:${JSON.stringify(key)}`);
+
+    const value = key as SubscribeStages;
+    userIpc.patreon.updateChannel(value);
+    pluginsIpc.checkForSync(value);
   }, []);
 
   useEffect(() => {
     const offChannel = applicationIpc.on.updateChannelChange(channel => {
-      setSelection([channel]);
+      setSelection(channel);
     });
     userIpc.patreon.updateChannel('get');
 
@@ -100,145 +101,154 @@ const DashboardUpdate = memo(() => {
 
   return (
     <SettingsSection title="Updates" id={DashboardUpdateId} icon={<Download className="size-5" />} itemsCenter>
-      <Select
-        radius="sm"
-        label="Update Frequency"
-        labelPlacement="outside"
-        selectedKeys={selection}
-        disabledKeys={disabledKeys}
-        onSelectionChange={onChange}
-        description="Choose how often you want to receive updates."
-        classNames={{trigger: 'cursor-default transition! duration-300!', description: 'text-start'}}
-        disallowEmptySelection>
-        <SelectItem
-          key="public"
-          className="cursor-default"
-          description="Get updates at the same time as everyone else.">
-          Standard Updates
-        </SelectItem>
-        <SelectItem
-          key="early_access"
-          textValue="Early Access"
-          className="cursor-default"
-          classNames={{title: 'space-x-1'}}
-          description="Get exclusive early access to updates and new features.">
-          <span>Early Access</span>
-          {patreonLoggedIn ? (
-            <span className="text-warning">
-              {patreonUserData.subscribeStage === 'public' && '(Upgrade your Patreon tier to unlock)'}
-            </span>
-          ) : (
-            <span className="text-warning">(Login to Patreon to unlock)</span>
-          )}
-        </SelectItem>
-        <SelectItem
-          key="insider"
-          textValue="Insider"
-          className="cursor-default"
-          classNames={{title: 'space-x-1'}}
-          description="Get immediate access to every new feature and fix for LynxHub Core, extensions and modules.">
-          <span>Insider</span>
-          {patreonLoggedIn ? (
-            <span className="text-warning">
-              {patreonUserData.subscribeStage !== 'insider' && '(Upgrade your Patreon tier to unlock)'}
-            </span>
-          ) : (
-            <span className="text-warning">(Login to Patreon to unlock)</span>
-          )}
-        </SelectItem>
+      <Select value={selection} onChange={onChange} disabledKeys={disabledKeys}>
+        <Label>
+          <SettingsSearchHighlight text="Update Frequency" />
+        </Label>
+        <Select.Trigger>
+          <Select.Value />
+          <Select.Indicator />
+        </Select.Trigger>
+        <Description>
+          <SettingsSearchHighlight text="Choose how often you want to receive updates." />
+        </Description>
+        <Select.Popover>
+          <ListBox>
+            <ListBox.Item id="public" textValue="Standard Updates">
+              <ListBox.ItemIndicator />
+              <div className="flex flex-col">
+                <Label>Standard Updates</Label>
+                <Description>Get updates at the same time as everyone else.</Description>
+              </div>
+            </ListBox.Item>
+            <ListBox.Item id="early_access" textValue="Early Access">
+              <ListBox.ItemIndicator />
+              <div className="flex flex-col">
+                <Label>
+                  <span>Early Access</span>
+                  {patreonLoggedIn ? (
+                    <span className="text-warning">
+                      {patreonUserData.subscribeStage === 'public' && '(Upgrade your Patreon tier to unlock)'}
+                    </span>
+                  ) : (
+                    <span className="text-warning">(Login to Patreon to unlock)</span>
+                  )}
+                </Label>
+                <Description>Get exclusive early access to updates and new features.</Description>
+              </div>
+            </ListBox.Item>
+            <ListBox.Item id="insider" textValue="Insider">
+              <ListBox.ItemIndicator />
+              <div className="flex flex-col">
+                <Label>
+                  <span>Insider</span>
+                  {patreonLoggedIn ? (
+                    <span className="text-warning">
+                      {patreonUserData.subscribeStage !== 'insider' && '(Upgrade your Patreon tier to unlock)'}
+                    </span>
+                  ) : (
+                    <span className="text-warning">(Login to Patreon to unlock)</span>
+                  )}
+                </Label>
+                <Description>
+                  Get immediate access to every new feature and fix for LynxHub Core, extensions and modules.
+                </Description>
+              </div>
+            </ListBox.Item>
+          </ListBox>
+        </Select.Popover>
       </Select>
 
-      {appUpdateAvailable && (
-        <Button color="success" className="mt-6" onPress={openUpdate} fullWidth>
-          Update
-        </Button>
-      )}
-
-      <div className="w-full mt-6">
+      <div className="w-full">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Insider Card */}
-          <Card
-            className={
-              `p-4 bg-content2 shadow cursor-default ` +
-              `${selection[0] === 'insider' && 'border-2'} border-secondary/50`
-            }
-            isPressable>
-            <div className="flex justify-between items-center mb-2">
-              <h3 className="text-lg font-semibold text-secondary">Insider</h3>
-              <Chip size="sm" variant="flat" color="secondary">
-                Latest
-              </Chip>
-            </div>
-            <div className="space-y-2">
-              <div className="flex justify-between">
-                <span className="text-default-500">Version:</span>
-                <span className="font-medium">{statusInsider.version}</span>
+          <Card className={`${selection === 'insider' && 'border-2'} border-LynxPurple/50`}>
+            <Card.Header>
+              <div className="flex justify-between items-center">
+                <h3 className="text-LynxPurple">Insider</h3>
+                <Chip size="sm" color="accent">
+                  Latest
+                </Chip>
               </div>
-              <div className="flex justify-between">
-                <span className="text-default-500">Build:</span>
-                <span className="font-medium">{statusInsider.build}</span>
+            </Card.Header>
+
+            <Card.Content>
+              <div className="flex flex-col gap-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-muted">Version:</span>
+                  <span>{statusInsider.version}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted">Build:</span>
+                  <span>{statusInsider.build}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted">Date:</span>
+                  <span>{statusInsider.date}</span>
+                </div>
               </div>
-              <div className="flex justify-between">
-                <span className="text-default-500">Date:</span>
-                <span className="font-medium">{statusInsider.date}</span>
-              </div>
-            </div>
+            </Card.Content>
           </Card>
 
           {/* Early Access Card */}
-          <Card
-            className={
-              `p-4 bg-content2 shadow cursor-default ` +
-              `${selection[0] === 'early_access' && 'border-2'} border-warning/50`
-            }
-            isPressable>
-            <div className="flex justify-between items-center mb-2">
-              <h3 className="text-lg font-semibold text-warning">Early Access</h3>
-              <Chip size="sm" variant="flat" color="warning">
-                Preview
-              </Chip>
-            </div>
-            <div className="space-y-2">
-              <div className="flex justify-between">
-                <span className="text-default-500">Version:</span>
-                <span className="font-medium">{statusEarly.version}</span>
+          <Card className={`${selection === 'early_access' && 'border-2'} border-warning/50`}>
+            <Card.Header>
+              <div className="flex justify-between items-center">
+                <h3 className="text-warning">Early Access</h3>
+                <Chip size="sm" color="warning">
+                  Preview
+                </Chip>
               </div>
-              <div className="flex justify-between">
-                <span className="text-default-500">Build:</span>
-                <span className="font-medium">{statusEarly.build || '?'}</span>
+            </Card.Header>
+
+            <Card.Content>
+              <div className="flex flex-col gap-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-muted">Version:</span>
+                  <span>{statusEarly.version}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted">Build:</span>
+                  <span>{statusEarly.build}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted">Date:</span>
+                  <span>{statusEarly.date}</span>
+                </div>
               </div>
-              <div className="flex justify-between">
-                <span className="text-default-500">Date:</span>
-                <span className="font-medium">{statusEarly.date}</span>
-              </div>
-            </div>
+            </Card.Content>
           </Card>
 
           {/* Public Card */}
-          <Card
-            className={
-              `p-4 bg-content2 shadow cursor-default ` + `${selection[0] === 'public' && 'border-2'} border-success/50`
-            }
-            isPressable>
-            <div className="flex justify-between items-center mb-2">
-              <h3 className="text-lg font-semibold text-success">Public</h3>
-            </div>
-            <div className="space-y-2">
-              <div className="flex justify-between">
-                <span className="text-default-500">Version:</span>
-                <span className="font-medium">{statusPublic.version}</span>
+          <Card className={`${selection === 'public' && 'border-2'} border-success/50`}>
+            <Card.Header>
+              <h3 className="text-success">Public</h3>
+            </Card.Header>
+
+            <Card.Content>
+              <div className="flex flex-col gap-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-muted">Version:</span>
+                  <span>{statusPublic.version}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted">Build:</span>
+                  <span>{statusPublic.build}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted">Date:</span>
+                  <span>{statusPublic.date}</span>
+                </div>
               </div>
-              <div className="flex justify-between">
-                <span className="text-default-500">Build:</span>
-                <span className="font-medium">{statusPublic.build}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-default-500">Date:</span>
-                <span className="font-medium">{statusPublic.date}</span>
-              </div>
-            </div>
+            </Card.Content>
           </Card>
         </div>
+
+        {appUpdateAvailable && (
+          <Button className="mt-4" onPress={openUpdate} fullWidth>
+            Update
+          </Button>
+        )}
       </div>
     </SettingsSection>
   );

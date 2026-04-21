@@ -1,4 +1,4 @@
-import {Alert, Button, Card, User} from '@heroui/react';
+import {Alert, Avatar, Button, Card, Description, Label} from '@heroui-v3/react';
 import {userActions, useUserState} from '@lynx/redux/reducers/user';
 import {AppDispatch} from '@lynx/redux/store';
 import {Patreon_Icon} from '@lynx_assets/icons';
@@ -68,59 +68,70 @@ const Profile_Patreon = memo(() => {
   }, []);
 
   return (
-    <Card
-      shadow="sm"
-      radius="lg"
-      className={`${patreonLoggedIn && 'border-success/70! bg-success/5'} border border-foreground/20 p-4`}>
-      <div className="mb-3 flex flex-row items-center space-x-1.5">
-        <Patreon_Icon className="text-large" />
-        <span className="text-medium">Patreon</span>
-      </div>
-      <div className="space-between flex flex-row justify-between items-center">
-        <User
-          avatarProps={{
-            src: getCacheUrl(patreonUserData.imageUrl),
-          }}
-          name={patreonUserData.name}
-          description={patreonUserData.tier}
-        />
-        {isNotMember ? (
-          <div className="flex flex-col items-end space-y-2 text-right">
-            <Alert
-              description={
-                <div className="flex flex-row items-center justify-between w-full">
-                  <Button size="sm" variant="flat" color="primary" onPress={openPatreonPage}>
-                    Become a Member
-                  </Button>
-                  <Button size="sm" variant="light" onPress={closeAlert}>
-                    Close
-                  </Button>
-                </div>
+    <Card className={`border ${patreonLoggedIn ? 'border-success/70 bg-success/5' : 'border-surface-secondary'} `}>
+      <Card.Header>
+        <div className="flex flex-row items-center space-x-1.5">
+          <Patreon_Icon className="text-large" />
+          <span className="text-medium">Patreon</span>
+        </div>
+      </Card.Header>
+
+      <Card.Content className="space-between flex flex-row justify-between items-center">
+        <div className="inline-flex items-center gap-2">
+          <Avatar className={`shrink-0`}>
+            <Avatar.Image src={getCacheUrl(patreonUserData.imageUrl)} />
+            <Avatar.Fallback>{...patreonUserData.name.split(' ').map(item => item.slice(0, 1))}</Avatar.Fallback>
+          </Avatar>
+          <div className="flex flex-col">
+            <Label
+              className={
+                'cursor-text outline-none focus:border border-transparent focus:border-foreground-200' +
+                ' focus:px-1.5 focus:py-0.5 rounded-lg transition duration-200 line-clamp-1 z-20'
               }
-              color="default"
-              title="You are not a member of the Lynxhub Patreon."
-              classNames={{description: 'py-1 w-full', title: 'text-warning'}}
-            />
+              spellCheck="false"
+              onClick={e => e.stopPropagation()}
+              contentEditable
+              suppressContentEditableWarning>
+              {patreonUserData.name}
+            </Label>
+            <Description>{patreonUserData.tier}</Description>
+          </div>
+        </div>
+        {isNotMember ? (
+          <div className="items-end">
+            <Alert status="warning" className="bg-surface-secondary">
+              <Alert.Indicator />
+              <Alert.Content>
+                <Alert.Title>Join LynxHub Patreon</Alert.Title>
+                <Alert.Description>You are not a member of the Lynxhub</Alert.Description>
+                <Button size="sm" className="mt-2" onPress={openPatreonPage}>
+                  Become a Member
+                </Button>
+              </Alert.Content>
+              <Button size="sm" onPress={closeAlert} variant="danger-soft">
+                Close
+              </Button>
+            </Alert>
           </div>
         ) : (
           <div className="flex flex-row space-x-2">
             {patreonLoggedIn ? (
-              <Button size="sm" variant="light" color="warning" isLoading={isLoading} onPress={logoutPatreon}>
+              <Button size="sm" variant="danger-soft" isPending={isLoading} onPress={logoutPatreon}>
                 Logout
               </Button>
             ) : (
-              <Button size="sm" variant="flat" color="success" isLoading={isLoading} onPress={loginPatreon}>
+              <Button size="sm" variant="primary" isPending={isLoading} onPress={loginPatreon}>
                 Login
               </Button>
             )}
             {isLoading && !patreonLoggedIn && (
-              <Button size="sm" variant="flat" color="danger" onPress={cancelLoading}>
+              <Button size="sm" variant="danger-soft" onPress={cancelLoading}>
                 Cancel
               </Button>
             )}
           </div>
         )}
-      </div>
+      </Card.Content>
     </Card>
   );
 });
