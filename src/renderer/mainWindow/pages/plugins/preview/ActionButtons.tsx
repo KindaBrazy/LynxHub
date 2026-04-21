@@ -158,7 +158,7 @@ export default function PluginActionButtons({isInstalled, currentVersion}: Plugi
         <UpdateButton item={selectedPlugin!} />
 
         {/* Install or uninstall button depending on current installation state */}
-        {!isInstalled ? (
+        {isInstalled ? (
           <Button
             size="sm"
             variant="danger"
