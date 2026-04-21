@@ -1,4 +1,4 @@
-import {Button} from '@heroui/react';
+import {Button} from '@heroui-v3/react';
 import SettingsSection from '@lynx/components/SettingsSection';
 import {AppDispatch} from '@lynx/redux/store';
 import {lynxTopToast} from '@lynx/utils/hooks';
@@ -51,16 +51,26 @@ export default function SettingsData() {
   }, [currentPath]);
 
   return (
-    <SettingsSection title="Data" id={SettingsDataId} icon={<Database className="size-5" />} itemsCenter>
-      <span>
+    <SettingsSection
+      description={
         <SettingsSearchHighlight text="App data, including extensions, modules and binaries, will be saved here." />
-      </span>
-
-      <Button variant="flat" isDisabled={!currentPath} onPress={handleOpenFolder} startContent={<MoveToFolder />}>
+      }
+      title="Data"
+      id={SettingsDataId}
+      icon={<Database className="size-5" />}
+      itemsCenter>
+      <Button
+        variant="tertiary"
+        isDisabled={!currentPath}
+        onPress={handleOpenFolder}
+        className="bg-surface hover:bg-surface/50"
+        fullWidth>
+        <MoveToFolder />
         {currentPath || 'Loading path...'}
       </Button>
 
-      <Button variant="flat" color="warning" startContent={<Repeat />} onPress={handleChangeDataPath}>
+      <Button variant="danger-soft" onPress={handleChangeDataPath} fullWidth>
+        <Repeat />
         <SettingsSearchHighlight text="Change (Restart Required)" />
       </Button>
     </SettingsSection>

@@ -1,4 +1,4 @@
-import {Select, Selection, SelectItem} from '@heroui/react';
+import {Description, Key, Label, ListBox, Select} from '@heroui-v3/react';
 import {AppDispatch} from '@lynx/redux/store';
 import {showRestartModal} from '@lynx/utils';
 import storageIpc from '@lynx_shared/ipc/storage';
@@ -25,13 +25,13 @@ export default function DiskCache() {
   }, []);
 
   const onChange = useCallback(
-    (keys: Selection) => {
-      if (keys !== 'all') {
-        const value = Number(keys.values().next().value) as DiskCacheSize;
-        storageIpc.update('performance', {diskCacheSize: value});
-        setSelectedKey(String(value));
-        showRestartModal(dispatch, 'To apply performance changes, please restart the app.');
-      }
+    (key: Key | null) => {
+      if (!key || typeof key === 'number') return;
+
+      const value = Number(key) as DiskCacheSize;
+      storageIpc.update('performance', {diskCacheSize: value});
+      setSelectedKey(String(value));
+      showRestartModal(dispatch, 'To apply performance changes, please restart the app.');
     },
     [dispatch],
   );
@@ -41,27 +41,57 @@ export default function DiskCache() {
 
   return (
     <SettingsFilterItem searchTexts={[labelText, descriptionText, 'cache', 'disk', 'storage']}>
-      <Select
-        className="my-0!"
-        labelPlacement="outside"
-        selectedKeys={[selectedKey]}
-        onSelectionChange={onChange}
-        label={<SettingsSearchHighlight text={labelText} />}
-        description={<SettingsSearchHighlight text={descriptionText} />}
-        classNames={{trigger: 'cursor-default transition! duration-300!'}}
-        disallowEmptySelection>
-        <SelectItem key="0" className="cursor-default" description="Use browser default cache size.">
-          Default
-        </SelectItem>
-        <SelectItem key="268435456" className="cursor-default" description="Small cache for limited disk space.">
-          256 MB
-        </SelectItem>
-        <SelectItem key="536870912" className="cursor-default" description="Medium cache for balanced usage.">
-          512 MB
-        </SelectItem>
-        <SelectItem key="1073741824" className="cursor-default" description="Large cache for frequently visited sites.">
-          1 GB
-        </SelectItem>
+      <Select value={selectedKey} onChange={onChange}>
+        <Label>
+          <SettingsSearchHighlight text={labelText} />
+        </Label>
+        <Select.Trigger>
+          <Select.Value />
+          <Select.Indicator />
+        </Select.Trigger>
+        <Description>
+          <SettingsSearchHighlight text={descriptionText} />
+        </Description>
+        <Select.Popover>
+          <ListBox>
+            <ListBox.Item id="0" textValue="Default">
+              <ListBox.ItemIndicator />
+              <div className="flex flex-col">
+                <Label>Default</Label>
+                <Description>
+                  <SettingsSearchHighlight text="Use browser default cache size." />
+                </Description>
+              </div>
+            </ListBox.Item>
+            <ListBox.Item id="268435456" textValue="256 MB">
+              <ListBox.ItemIndicator />
+              <div className="flex flex-col">
+                <Label>256 MB</Label>
+                <Description>
+                  <SettingsSearchHighlight text="Small cache for limited disk space." />
+                </Description>
+              </div>
+            </ListBox.Item>
+            <ListBox.Item id="536870912" textValue="512 MB">
+              <ListBox.ItemIndicator />
+              <div className="flex flex-col">
+                <Label>512 MB</Label>
+                <Description>
+                  <SettingsSearchHighlight text="Medium cache for balanced usage." />
+                </Description>
+              </div>
+            </ListBox.Item>
+            <ListBox.Item id="1073741824" textValue="1 GB">
+              <ListBox.ItemIndicator />
+              <div className="flex flex-col">
+                <Label>1 GB</Label>
+                <Description>
+                  <SettingsSearchHighlight text="Large cache for frequently visited sites." />
+                </Description>
+              </div>
+            </ListBox.Item>
+          </ListBox>
+        </Select.Popover>
       </Select>
     </SettingsFilterItem>
   );

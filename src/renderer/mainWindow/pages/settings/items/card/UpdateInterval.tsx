@@ -1,4 +1,4 @@
-import {NumberInput} from '@heroui/react';
+import {Label, NumberField} from '@heroui-v3/react';
 import {cardsActions, useCardsState} from '@lynx/redux/reducers/cards';
 import {AppDispatch} from '@lynx/redux/store';
 import storageIpc from '@lynx_shared/ipc/storage';
@@ -26,22 +26,23 @@ export default function UpdateInterval() {
   return (
     <SettingsFilterItem
       searchTexts={['Update check frequency:', 'update interval', 'card update', 'check for updates', 'minutes']}>
-      <div className="w-full text-start flex flex-col gap-y-1">
-        <NumberInput
-          label={
-            <div className="flex flex-row gap-x-1 items-center justify-start">
-              <Stopwatch />
-              <SettingsSearchHighlight text="Update check frequency:" />
-            </div>
-          }
-          minValue={2}
-          value={updateInterval}
-          labelPlacement="outside"
-          aria-label="Card Update Interval"
-          onValueChange={handleIntervalChange}
-          endContent={<span className="text-sm">Minutes</span>}
-        />
-      </div>
+      <NumberField
+        minValue={2}
+        value={updateInterval}
+        onChange={handleIntervalChange}
+        aria-label="Card Update Interval">
+        <Label>
+          <div className="flex flex-row gap-x-1 items-center justify-start">
+            <Stopwatch />
+            <SettingsSearchHighlight text="Update Check Frequency (Minutes)" />
+          </div>
+        </Label>
+        <NumberField.Group>
+          <NumberField.DecrementButton />
+          <NumberField.Input />
+          <NumberField.IncrementButton />
+        </NumberField.Group>
+      </NumberField>
     </SettingsFilterItem>
   );
 }

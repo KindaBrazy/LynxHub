@@ -41,7 +41,6 @@ export default function OutputColor() {
             <span className="text-[#0099ff]">Info </span> <span className="text-[#00cccc]">Debug </span> .
           </span>
         }
-        size="default"
         enabled={outputColor}
         title="Colorize Output Text"
         onEnabledChange={onEnabledChange}

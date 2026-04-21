@@ -1,4 +1,4 @@
-import {NumberInput} from '@heroui/react';
+import {Label, NumberField} from '@heroui-v3/react';
 import {terminalActions, useTerminalState} from '@lynx/redux/reducers/terminal';
 import {AppDispatch} from '@lynx/redux/store';
 import {useDispatch} from 'react-redux';
@@ -19,7 +19,20 @@ export default function FontSize() {
 
   return (
     <SettingsFilterItem searchTexts={['Font Size', 'terminal', 'font size', 'text size']}>
-      <NumberInput size="sm" minValue={2} maxValue={100} value={fontSize} label="Font Size" onValueChange={onChange} />
+      <NumberField
+        step={1}
+        minValue={2}
+        maxValue={100}
+        value={fontSize}
+        onChange={onChange}
+        aria-label="Terminal font size">
+        <Label>Font Size</Label>
+        <NumberField.Group>
+          <NumberField.DecrementButton />
+          <NumberField.Input />
+          <NumberField.IncrementButton />
+        </NumberField.Group>
+      </NumberField>
     </SettingsFilterItem>
   );
 }

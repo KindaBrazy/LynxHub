@@ -1,4 +1,4 @@
-import {Select, Selection, SelectItem} from '@heroui/react';
+import {Description, Key, Label, ListBox, Select} from '@heroui-v3/react';
 import {terminalActions, useTerminalState} from '@lynx/redux/reducers/terminal';
 import {AppDispatch} from '@lynx/redux/store';
 import {TerminalUseConpty} from '@lynx_common/types/ipc';
@@ -17,11 +17,11 @@ export default function Conpty() {
   const dispatch = useDispatch<AppDispatch>();
 
   const onChange = useCallback(
-    (keys: Selection) => {
-      if (keys !== 'all') {
-        const value = keys.values().next().value as TerminalUseConpty;
-        dispatch(terminalActions.setTerminalState({key: 'useConpty', value}));
-      }
+    (key: Key | null) => {
+      if (!key || typeof key === 'number') return;
+
+      const value = key as TerminalUseConpty;
+      dispatch(terminalActions.setTerminalState({key: 'useConpty', value}));
     },
     [dispatch],
   );
@@ -31,24 +31,39 @@ export default function Conpty() {
 
   return (
     <SettingsFilterItem searchTexts={[labelText, descriptionText, 'terminal', 'conpty', 'windows', 'pty']}>
-      <Select
-        className="my-0!"
-        labelPlacement="outside"
-        selectedKeys={[useConpty]}
-        onSelectionChange={onChange}
-        label={<SettingsSearchHighlight text={labelText} />}
-        description={<SettingsSearchHighlight text={descriptionText} />}
-        classNames={{trigger: 'cursor-default transition! duration-300!'}}
-        disallowEmptySelection>
-        <SelectItem key="auto" className="cursor-default">
-          Auto
-        </SelectItem>
-        <SelectItem key="yes" className="cursor-default">
-          Yes
-        </SelectItem>
-        <SelectItem key="no" className="cursor-default">
-          No
-        </SelectItem>
+      <Select value={useConpty} onChange={onChange}>
+        <Label>
+          <SettingsSearchHighlight text={labelText} />
+        </Label>
+        <Select.Trigger>
+          <Select.Value />
+          <Select.Indicator />
+        </Select.Trigger>
+        <Description>
+          <SettingsSearchHighlight text={descriptionText} />
+        </Description>
+        <Select.Popover>
+          <ListBox>
+            <ListBox.Item id="auto" textValue="Auto">
+              <ListBox.ItemIndicator />
+              <div className="flex flex-col">
+                <Label>Auto</Label>
+              </div>
+            </ListBox.Item>
+            <ListBox.Item id="yes" textValue="Yes">
+              <ListBox.ItemIndicator />
+              <div className="flex flex-col">
+                <Label>Yes</Label>
+              </div>
+            </ListBox.Item>
+            <ListBox.Item id="no" textValue="No">
+              <ListBox.ItemIndicator />
+              <div className="flex flex-col">
+                <Label>No</Label>
+              </div>
+            </ListBox.Item>
+          </ListBox>
+        </Select.Popover>
       </Select>
     </SettingsFilterItem>
   );

@@ -1,4 +1,4 @@
-import {NumberInput} from '@heroui/react';
+import {Label, NumberField} from '@heroui-v3/react';
 import {terminalActions, useTerminalState} from '@lynx/redux/reducers/terminal';
 import {AppDispatch} from '@lynx/redux/store';
 import {useDispatch} from 'react-redux';
@@ -19,15 +19,20 @@ export default function ResizeDelay() {
 
   return (
     <SettingsFilterItem searchTexts={['Resize Delay', 'terminal', 'resize delay', 'resize', 'latency']}>
-      <NumberInput
+      <NumberField
         step={1}
-        size="sm"
         minValue={1}
         maxValue={5000}
         value={resizeDelay}
-        label="Resize Delay"
-        onValueChange={onChange}
-      />
+        onChange={onChange}
+        aria-label="Terminal resize delay">
+        <Label>Resize Delay</Label>
+        <NumberField.Group>
+          <NumberField.DecrementButton />
+          <NumberField.Input />
+          <NumberField.IncrementButton />
+        </NumberField.Group>
+      </NumberField>
     </SettingsFilterItem>
   );
 }

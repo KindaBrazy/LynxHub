@@ -28,7 +28,6 @@ export default function CloseOnExit() {
     <SettingsFilterItem
       searchTexts={[titleText, descriptionText, 'terminal', 'close tab', 'process exit', 'auto close']}>
       <LynxSwitch
-        size="default"
         title={titleText}
         enabled={closeTabOnExit}
         description={descriptionText}

@@ -28,7 +28,6 @@ export default function SendYWithExit() {
   return (
     <SettingsFilterItem searchTexts={[titleText, descriptionText, 'terminal', 'exit', 'y']}>
       <LynxSwitch
-        size="default"
         title={titleText}
         enabled={sendYWithExit}
         description={descriptionText}

@@ -27,7 +27,6 @@ export default function Ligatures() {
   return (
     <SettingsFilterItem searchTexts={[titleText, descriptionText, 'terminal', 'ligatures', 'font', 'programming']}>
       <LynxSwitch
-        size="default"
         title={titleText}
         enabled={enableLigatures}
         description={descriptionText}

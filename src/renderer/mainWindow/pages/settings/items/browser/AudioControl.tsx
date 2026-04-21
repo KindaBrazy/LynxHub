@@ -1,4 +1,4 @@
-import {Switch} from '@heroui/react';
+import {Card, Label, Switch} from '@heroui-v3/react';
 import {useCardsState} from '@lynx/redux/reducers/cards';
 import {useVolumeState, volumeActions} from '@lynx/redux/reducers/volume';
 import {AppDispatch} from '@lynx/redux/store';
@@ -121,28 +121,32 @@ export default function AudioControl() {
 
   return (
     <SettingsFilterItem searchTexts={muteSearchTexts}>
-      <div className="flex flex-col gap-2 rounded-lg border-2 border-transparent bg-default-100 px-4 py-2.5">
-        <div className="flex flex-col gap-1">
-          <SettingsSearchHighlight text={muteTitle} className="text-sm font-medium" />
-          <SettingsSearchHighlight text={muteDescription} className="text-tiny text-default-400" />
-        </div>
-        <div className="mt-1 flex flex-row items-center gap-3">
-          {globalMuted ? (
-            <VolumeCross aria-hidden="true" className="size-5 shrink-0 text-danger-500" />
-          ) : (
-            <Volume aria-hidden="true" className="size-5 shrink-0 text-default-500" />
-          )}
-          <Switch
-            size="sm"
-            isSelected={globalMuted}
-            aria-checked={globalMuted}
-            aria-label="Global mute toggle"
-            onValueChange={handleMuteToggle}
-            classNames={{wrapper: globalMuted ? 'bg-danger-500' : 'bg-default-300'}}>
-            <span className="text-sm">{globalMuted ? 'All audio muted' : 'Audio enabled'}</span>
+      <Card>
+        <Card.Header>
+          <Card.Title>
+            <SettingsSearchHighlight text={muteTitle} />
+          </Card.Title>
+          <Card.Description>
+            <SettingsSearchHighlight text={muteDescription} />
+          </Card.Description>
+        </Card.Header>
+
+        <Card.Content>
+          <Switch isSelected={globalMuted} onChange={handleMuteToggle} aria-label="Global mute toggle">
+            {globalMuted ? (
+              <VolumeCross aria-hidden="true" className="size-4.5 shrink-0 text-danger-500" />
+            ) : (
+              <Volume aria-hidden="true" className="size-5 shrink-0 text-default-500" />
+            )}
+            <Switch.Control>
+              <Switch.Thumb />
+            </Switch.Control>
+            <Switch.Content>
+              <Label className="text-sm cursor-pointer">{globalMuted ? 'All audio muted' : 'Audio enabled'}</Label>
+            </Switch.Content>
           </Switch>
-        </div>
-      </div>
+        </Card.Content>
+      </Card>
     </SettingsFilterItem>
   );
 }

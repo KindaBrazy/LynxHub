@@ -1,4 +1,4 @@
-import {Select, Selection, SelectItem} from '@heroui/react';
+import {Description, Key, Label, ListBox, Select} from '@heroui-v3/react';
 import {AppDispatch} from '@lynx/redux/store';
 import {showRestartModal} from '@lynx/utils';
 import storageIpc from '@lynx_shared/ipc/storage';
@@ -25,13 +25,13 @@ export default function ColorProfile() {
   }, []);
 
   const onChange = useCallback(
-    (keys: Selection) => {
-      if (keys !== 'all') {
-        const value = keys.values().next().value as ColorProfile;
-        storageIpc.update('performance', {forceColorProfile: value});
-        setSelectedKey(value);
-        showRestartModal(dispatch, 'To apply performance changes, please restart the app.');
-      }
+    (key: Key | null) => {
+      if (!key || typeof key === 'number') return;
+
+      const value = key as ColorProfile;
+      storageIpc.update('performance', {forceColorProfile: value});
+      setSelectedKey(value);
+      showRestartModal(dispatch, 'To apply performance changes, please restart the app.');
     },
     [dispatch],
   );
@@ -41,27 +41,57 @@ export default function ColorProfile() {
 
   return (
     <SettingsFilterItem searchTexts={[labelText, descriptionText, 'color', 'profile', 'srgb', 'display']}>
-      <Select
-        className="my-0!"
-        labelPlacement="outside"
-        selectedKeys={[selectedKey]}
-        onSelectionChange={onChange}
-        label={<SettingsSearchHighlight text={labelText} />}
-        description={<SettingsSearchHighlight text={descriptionText} />}
-        classNames={{trigger: 'cursor-default transition! duration-300!'}}
-        disallowEmptySelection>
-        <SelectItem key="default" className="cursor-default" description="Use system default color profile.">
-          Default
-        </SelectItem>
-        <SelectItem key="srgb" className="cursor-default" description="Standard color profile for most displays.">
-          sRGB
-        </SelectItem>
-        <SelectItem key="display-p3" className="cursor-default" description="Wide color gamut for compatible displays.">
-          Display P3
-        </SelectItem>
-        <SelectItem key="color-spin-gamma24" className="cursor-default" description="Alternative gamma curve.">
-          Color Spin (Gamma 2.4)
-        </SelectItem>
+      <Select value={selectedKey} onChange={onChange}>
+        <Label>
+          <SettingsSearchHighlight text={labelText} />
+        </Label>
+        <Select.Trigger>
+          <Select.Value />
+          <Select.Indicator />
+        </Select.Trigger>
+        <Description>
+          <SettingsSearchHighlight text={descriptionText} />
+        </Description>
+        <Select.Popover>
+          <ListBox>
+            <ListBox.Item id="default" textValue="Default">
+              <ListBox.ItemIndicator />
+              <div className="flex flex-col">
+                <Label>Default</Label>
+                <Description>
+                  <SettingsSearchHighlight text="Use system default color profile." />
+                </Description>
+              </div>
+            </ListBox.Item>
+            <ListBox.Item id="srgb" textValue="sRGB">
+              <ListBox.ItemIndicator />
+              <div className="flex flex-col">
+                <Label>sRGB</Label>
+                <Description>
+                  <SettingsSearchHighlight text="Standard color profile for most displays." />
+                </Description>
+              </div>
+            </ListBox.Item>
+            <ListBox.Item id="display-p3" textValue="Display P3">
+              <ListBox.ItemIndicator />
+              <div className="flex flex-col">
+                <Label>Display P3</Label>
+                <Description>
+                  <SettingsSearchHighlight text="Wide color gamut for compatible displays." />
+                </Description>
+              </div>
+            </ListBox.Item>
+            <ListBox.Item id="color-spin-gamma24" textValue="Color Spin (Gamma 2.4)">
+              <ListBox.ItemIndicator />
+              <div className="flex flex-col">
+                <Label>Color Spin (Gamma 2.4)</Label>
+                <Description>
+                  <SettingsSearchHighlight text="Alternative gamma curve." />
+                </Description>
+              </div>
+            </ListBox.Item>
+          </ListBox>
+        </Select.Popover>
       </Select>
     </SettingsFilterItem>
   );

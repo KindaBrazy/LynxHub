@@ -7,9 +7,10 @@ import Confirm from './Confirm';
 import Taskbar from './Taskbar';
 import Theme from './Theme';
 import TitleName from './TitleName';
-import Tooltip from './Tooltip';
 
 export const SettingsGeneralId = 'settings_app_elem';
+
+// TODO: removed tooltip settings: also remove all usage and storage save
 
 /**
  * General Settings section component.
@@ -21,7 +22,6 @@ export default function SettingsGeneral() {
       <SettingsSection title="General" id={SettingsGeneralId} icon={<SettingPage_Icon className="size-5" />}>
         <Theme />
         <Taskbar />
-        <Tooltip />
         <TitleName />
         <CollectErrors />
       </SettingsSection>

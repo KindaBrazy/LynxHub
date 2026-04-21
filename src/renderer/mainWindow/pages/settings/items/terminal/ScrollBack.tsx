@@ -1,4 +1,4 @@
-import {NumberInput} from '@heroui/react';
+import {Label, NumberField} from '@heroui-v3/react';
 import {terminalActions, useTerminalState} from '@lynx/redux/reducers/terminal';
 import {AppDispatch} from '@lynx/redux/store';
 import {useDispatch} from 'react-redux';
@@ -19,15 +19,20 @@ export default function ScrollBack() {
 
   return (
     <SettingsFilterItem searchTexts={['Scrollback', 'terminal', 'scrollback', 'buffer', 'history']}>
-      <NumberInput
-        size="sm"
+      <NumberField
         step={100}
         minValue={100}
         maxValue={999999}
-        label="Scrollback"
         value={scrollBack}
-        onValueChange={onChange}
-      />
+        onChange={onChange}
+        aria-label="Terminal scrollback">
+        <Label>Scrollback</Label>
+        <NumberField.Group>
+          <NumberField.DecrementButton />
+          <NumberField.Input />
+          <NumberField.IncrementButton />
+        </NumberField.Group>
+      </NumberField>
     </SettingsFilterItem>
   );
 }
