@@ -1,4 +1,4 @@
-import {Button, Input, Select, Selection, SelectItem} from '@heroui/react';
+import {Button, Description, Input, Key, Label, ListBox, Select} from '@heroui-v3/react';
 import {AppDispatch} from '@lynx/redux/store';
 import {lynxTopToast} from '@lynx/utils/hooks';
 import {AgentTypes} from '@lynx_common/types/ipc';
@@ -72,10 +72,10 @@ function useUserAgentSettings() {
   }, []);
 
   // Handler for agent selection drop down
-  const handleAgentSelection = useCallback((keys: Selection) => {
-    if (keys === 'all') return;
+  const handleAgentSelection = useCallback((key: Key | null) => {
+    if (!key || typeof key === 'number') return;
 
-    const value = keys.values().next().value?.toString() as AgentTypes;
+    const value = key as AgentTypes;
     if (!value) return;
 
     setSelectedAgent(value);
@@ -132,36 +132,69 @@ export default function UserAgent() {
   return (
     <SettingsFilterItem searchTexts={filterSearchTexts}>
       <div className="flex flex-col gap-y-2">
-        <Select
-          aria-label="Select User Agent"
-          onSelectionChange={handleAgentSelection}
-          selectedKeys={selectedAgent ? [selectedAgent] : []}
-          label={<SettingsSearchHighlight text="User Agent" />}>
-          <SelectItem key="lynxhub" variant="flat" color="success" description={getAgentDescription('lynxhub')}>
-            LynxHub (Default)
-          </SelectItem>
-          <SelectItem key="electron" variant="flat" description={getAgentDescription('electron')}>
-            Electron
-          </SelectItem>
-          <SelectItem key="chrome" variant="flat" description={getAgentDescription('chrome')}>
-            Chrome
-          </SelectItem>
-          <SelectItem key="custom" variant="flat" description={getAgentDescription('custom')}>
-            Custom
-          </SelectItem>
+        <Select value={selectedAgent} onChange={handleAgentSelection}>
+          <Label>
+            <SettingsSearchHighlight text="User Agent" />
+          </Label>
+          <Select.Trigger>
+            <Select.Value />
+            <Select.Indicator />
+          </Select.Trigger>
+          <Select.Popover>
+            <ListBox>
+              <ListBox.Item id="lynxhub" textValue="LynxHub (Default)">
+                <ListBox.ItemIndicator />
+                <div className="flex flex-col">
+                  <Label>LynxHub (Default)</Label>
+                  <Description>
+                    <SettingsSearchHighlight text={getAgentDescription('lynxhub')} />
+                  </Description>
+                </div>
+              </ListBox.Item>
+              <ListBox.Item id="electron" textValue="Electron">
+                <ListBox.ItemIndicator />
+                <div className="flex flex-col">
+                  <Label>Electron</Label>
+                  <Description>
+                    <SettingsSearchHighlight text={getAgentDescription('electron')} />
+                  </Description>
+                </div>
+              </ListBox.Item>
+              <ListBox.Item id="chrome" textValue="Chrome">
+                <ListBox.ItemIndicator />
+                <div className="flex flex-col">
+                  <Label>Chrome</Label>
+                  <Description>
+                    <SettingsSearchHighlight text={getAgentDescription('chrome')} />
+                  </Description>
+                </div>
+              </ListBox.Item>
+              <ListBox.Item id="custom" textValue="Custom">
+                <ListBox.ItemIndicator />
+                <div className="flex flex-col">
+                  <Label>Custom</Label>
+                  <Description>
+                    <SettingsSearchHighlight text={getAgentDescription('custom')} />
+                  </Description>
+                </div>
+              </ListBox.Item>
+            </ListBox>
+          </Select.Popover>
         </Select>
 
         {selectedAgent === 'custom' && (
           <div className="flex w-full flex-row items-center gap-x-2">
             <Input
               value={customValue}
-              onValueChange={setCustomValue}
               aria-label="Custom User Agent Input"
               placeholder="Enter custom User-Agent string..."
+              onChange={event => setCustomValue(event.target.value)}
+              fullWidth
             />
             <Button
-              variant="flat"
-              color="success"
+              size="sm"
+              variant="primary"
+              className="shrink-0"
               onPress={saveCustomAgent}
               aria-label="Save custom user agent"
               isIconOnly>

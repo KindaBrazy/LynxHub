@@ -1,4 +1,4 @@
-import {Button, Checkbox, CheckboxGroup} from '@heroui/react';
+import {Button, Card, Checkbox, CheckboxGroup, Label} from '@heroui-v3/react';
 import {AppDispatch} from '@lynx/redux/store';
 import {lynxTopToast} from '@lynx/utils/hooks';
 import browserIpc from '@lynx_shared/ipc/browser';
@@ -91,31 +91,46 @@ export default function ClearBrowserData() {
 
   return (
     <SettingsFilterItem searchTexts={filterSearchTexts}>
-      <div className="flex flex-row items-center justify-between">
-        <CheckboxGroup
-          className="w-fit"
-          value={selectedOptions}
-          isDisabled={isClearing}
-          orientation="horizontal"
-          onValueChange={setSelectedOptions}
-          classNames={{label: 'text-warning'}}
-          label={<SettingsSearchHighlight text="Select browser data to clear:" />}>
-          {BROWSER_DATA_OPTIONS.map(option => (
-            <Checkbox key={option.value} value={option.value}>
-              <SettingsSearchHighlight text={option.label} />
-            </Checkbox>
-          ))}
-        </CheckboxGroup>
-        <Button
-          variant="flat"
-          color="warning"
-          isLoading={isClearing}
-          onPress={performClearData}
-          isDisabled={isEmpty(selectedOptions)}
-          startContent={!isClearing && <Broom />}>
-          Clear
-        </Button>
-      </div>
+      <Card>
+        <Card.Header>
+          <Card.Title>
+            <SettingsSearchHighlight text={'Clear Data'} />
+          </Card.Title>
+          <Card.Description>
+            <SettingsSearchHighlight text="Select browser data to clear" />
+          </Card.Description>
+        </Card.Header>
+
+        <Card.Content className="flex-row justify-between">
+          <CheckboxGroup
+            variant="secondary"
+            value={selectedOptions}
+            isDisabled={isClearing}
+            onChange={setSelectedOptions}
+            className="flex flex-row gap-x-4">
+            {BROWSER_DATA_OPTIONS.map(option => (
+              <Checkbox className="mt-0" key={option.value} value={option.value}>
+                <Checkbox.Control>
+                  <Checkbox.Indicator />
+                </Checkbox.Control>
+                <Checkbox.Content>
+                  <Label>
+                    <SettingsSearchHighlight text={option.label} />
+                  </Label>
+                </Checkbox.Content>
+              </Checkbox>
+            ))}
+          </CheckboxGroup>
+          <Button
+            variant="danger-soft"
+            isPending={isClearing}
+            onPress={performClearData}
+            isDisabled={isEmpty(selectedOptions)}>
+            {!isClearing && <Broom />}
+            Clear
+          </Button>
+        </Card.Content>
+      </Card>
     </SettingsFilterItem>
   );
 }

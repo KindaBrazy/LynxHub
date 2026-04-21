@@ -49,7 +49,7 @@ export enum ThemeAnimationType {
 }
 
 interface ReactThemeSwitchAnimationHook {
-  ref: RefObject<HTMLSelectElement | null>;
+  ref: RefObject<HTMLDivElement | null>;
   toggleSwitchTheme: () => Promise<void>;
   isDarkMode: boolean;
 }
@@ -106,7 +106,7 @@ export default function useModeAnimation(props?: ReactThemeSwitchAnimationProps)
     }
   };
 
-  const ref = useRef<HTMLSelectElement | null>(null);
+  const ref = useRef<HTMLDivElement | null>(null);
 
   const createBlurCircleMask = (blur: number) => {
     // Using a larger viewBox and centered circle for better scaling

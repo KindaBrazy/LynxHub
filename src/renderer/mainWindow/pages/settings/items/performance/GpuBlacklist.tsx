@@ -44,7 +44,7 @@ export default function GpuBlacklist() {
         enabled={enabled}
         description={descriptionText}
         onEnabledChange={onEnabledChange}
-        icon={<ShieldWarning className="text-warning" />}
+        icon={<ShieldWarning className="text-warning size-5" />}
       />
     </SettingsFilterItem>
   );

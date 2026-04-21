@@ -1,4 +1,4 @@
-import {Select, Selection, SelectItem} from '@heroui/react';
+import {Description, Key, Label, ListBox, Select} from '@heroui-v3/react';
 import {AppDispatch} from '@lynx/redux/store';
 import {showRestartModal} from '@lynx/utils';
 import storageIpc from '@lynx_shared/ipc/storage';
@@ -25,13 +25,13 @@ export default function JsMemory() {
   }, []);
 
   const onChange = useCallback(
-    (keys: Selection) => {
-      if (keys !== 'all') {
-        const value = Number(keys.values().next().value) as JsMemorySize;
-        storageIpc.update('performance', {jsMaxOldSpaceSize: value});
-        setSelectedKey(String(value));
-        showRestartModal(dispatch, 'To apply performance changes, please restart the app.');
-      }
+    (key: Key | null) => {
+      if (!key || typeof key === 'number') return;
+
+      const value = Number(key) as JsMemorySize;
+      storageIpc.update('performance', {jsMaxOldSpaceSize: value});
+      setSelectedKey(String(value));
+      showRestartModal(dispatch, 'To apply performance changes, please restart the app.');
     },
     [dispatch],
   );
@@ -42,27 +42,42 @@ export default function JsMemory() {
 
   return (
     <SettingsFilterItem searchTexts={[labelText, descriptionText, 'js', 'memory', 'heap', 'ram']}>
-      <Select
-        className="my-0!"
-        labelPlacement="outside"
-        selectedKeys={[selectedKey]}
-        onSelectionChange={onChange}
-        label={<SettingsSearchHighlight text={labelText} />}
-        description={<SettingsSearchHighlight text={descriptionText} />}
-        classNames={{trigger: 'cursor-default transition! duration-300!'}}
-        disallowEmptySelection>
-        <SelectItem
-          key="2048"
-          className="cursor-default"
-          description="Lower memory usage, suitable for most use cases.">
-          2 GB
-        </SelectItem>
-        <SelectItem key="4096" className="cursor-default" description="Balanced setting for moderate workloads.">
-          4 GB (Default)
-        </SelectItem>
-        <SelectItem key="8192" className="cursor-default" description="Maximum memory for heavy web applications.">
-          8 GB
-        </SelectItem>
+      <Select value={selectedKey} onChange={onChange}>
+        <Label>
+          <SettingsSearchHighlight text={labelText} />
+        </Label>
+        <Select.Trigger>
+          <Select.Value />
+          <Select.Indicator />
+        </Select.Trigger>
+        <Description>
+          <SettingsSearchHighlight text={descriptionText} />
+        </Description>
+        <Select.Popover>
+          <ListBox>
+            <ListBox.Item id="2048" textValue="2 GB">
+              <ListBox.ItemIndicator />
+              <div className="flex flex-col">
+                <Label>2 GB</Label>
+                <Description>Lower memory usage, suitable for most use cases.</Description>
+              </div>
+            </ListBox.Item>
+            <ListBox.Item id="4096" textValue="4 GB (Default)">
+              <ListBox.ItemIndicator />
+              <div className="flex flex-col">
+                <Label>4 GB (Default)</Label>
+                <Description>Lower memory usage, suitable for most use cases.</Description>
+              </div>
+            </ListBox.Item>
+            <ListBox.Item id="8192" textValue="8 GB">
+              <ListBox.ItemIndicator />
+              <div className="flex flex-col">
+                <Label>8 GB</Label>
+                <Description>Lower memory usage, suitable for most use cases.</Description>
+              </div>
+            </ListBox.Item>
+          </ListBox>
+        </Select.Popover>
       </Select>
     </SettingsFilterItem>
   );

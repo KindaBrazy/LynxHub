@@ -1,4 +1,4 @@
-import {Button, Radio, RadioGroup} from '@heroui/react';
+import {Button, Card, FieldError, Input, Label, Radio, RadioGroup, TextField} from '@heroui-v3/react';
 import {AppDispatch} from '@lynx/redux/store';
 import {lynxTopToast} from '@lynx/utils/hooks';
 import downloadManagerIpc from '@lynx_shared/ipc/downloadManager';
@@ -157,63 +157,77 @@ export default function Downloads() {
   return (
     <>
       <SettingsFilterItem searchTexts={locationSearchTexts}>
-        <div className="flex flex-col gap-2 bg-default-100 rounded-lg px-4 py-2.5 border-2 border-transparent">
-          <div className="flex flex-col gap-1">
-            <SettingsSearchHighlight text={locationTitle} className="text-sm font-medium" />
-            <SettingsSearchHighlight text={locationDescription} className="text-tiny text-default-400" />
-          </div>
-          <div className="flex flex-col gap-2 mt-1">
-            <div className="flex flex-row items-center gap-2">
-              <div
-                className={`flex-1 text-xs font-mono rounded-lg px-2 py-1.5 truncate ${
-                  locationError
-                    ? 'bg-danger-100 text-danger-700 dark:bg-danger-900/30 dark:text-danger-400'
-                    : 'text-default-500 bg-default-200'
-                }`}>
-                {downloadLocation || 'Loading...'}
-              </div>
-              <Button
-                size="sm"
-                variant="flat"
-                color="secondary"
-                isLoading={isLoadingLocation}
-                onPress={handleChangeLocation}
-                startContent={!isLoadingLocation && <MoveToFolder className="size-4" />}>
-                Change Location
-              </Button>
-            </div>
-            {locationError && (
-              <p className="text-xs text-danger-600 dark:text-danger-400 px-1">Error: {locationError}</p>
-            )}
-          </div>
-        </div>
+        <Card>
+          <Card.Header>
+            <Card.Title>
+              <SettingsSearchHighlight text={locationTitle} />
+            </Card.Title>
+            <Card.Description>
+              <SettingsSearchHighlight text={locationDescription} />
+            </Card.Description>
+          </Card.Header>
+
+          <Card.Content>
+            <TextField isInvalid={!!locationError}>
+              <Input variant="secondary" value={downloadLocation} className="text-xs font-JetBrainsMono" />
+              <FieldError>Error: {locationError}</FieldError>
+            </TextField>
+          </Card.Content>
+
+          <Card.Footer>
+            <Button variant="tertiary" isPending={isLoadingLocation} onPress={handleChangeLocation} fullWidth>
+              {!isLoadingLocation && <MoveToFolder className="size-4" />}
+              Change Location
+            </Button>
+          </Card.Footer>
+        </Card>
       </SettingsFilterItem>
 
       <SettingsFilterItem searchTexts={behaviorSearchTexts}>
-        <div className="flex flex-col gap-2 bg-default-100 rounded-lg px-4 py-2.5 border-2 border-transparent">
-          <div className="flex flex-col gap-1">
-            <SettingsSearchHighlight text={behaviorTitle} className="text-sm font-medium" />
-            <SettingsSearchHighlight text={behaviorDescription} className="text-tiny text-default-400" />
-          </div>
-          <div className="flex flex-col gap-2">
+        <Card>
+          <Card.Header>
+            <Card.Title>
+              <SettingsSearchHighlight text={behaviorTitle} />
+            </Card.Title>
+            <Card.Description>
+              <SettingsSearchHighlight text={behaviorDescription} />
+            </Card.Description>
+          </Card.Header>
+
+          <Card.Content>
             <RadioGroup
+              variant="secondary"
               value={downloadBehavior}
-              orientation="horizontal"
+              isInvalid={!!behaviorError}
               isDisabled={isLoadingBehavior}
-              classNames={{wrapper: 'gap-4'}}
-              onValueChange={handleBehaviorChange}>
-              <Radio value="default" classNames={{label: 'text-sm'}}>
-                <SettingsSearchHighlight text="Use default location" />
-              </Radio>
-              <Radio value="ask" classNames={{label: 'text-sm'}}>
-                <SettingsSearchHighlight text="Always ask where to save" />
-              </Radio>
+              onChange={handleBehaviorChange}
+              isRequired>
+              <div className="flex flex-row gap-x-4 mb-2">
+                <Radio value="default" className="mt-0">
+                  <Radio.Control>
+                    <Radio.Indicator />
+                  </Radio.Control>
+                  <Radio.Content>
+                    <Label>
+                      <SettingsSearchHighlight text="Use default location" />
+                    </Label>
+                  </Radio.Content>
+                </Radio>
+                <Radio value="ask" className="mt-0">
+                  <Radio.Control>
+                    <Radio.Indicator />
+                  </Radio.Control>
+                  <Radio.Content>
+                    <Label>
+                      <SettingsSearchHighlight text="Always ask where to save" />
+                    </Label>
+                  </Radio.Content>
+                </Radio>
+              </div>
+              <FieldError>Error: {behaviorError}</FieldError>
             </RadioGroup>
-            {behaviorError && (
-              <p className="text-xs text-danger-600 dark:text-danger-400 px-1">Error: {behaviorError}</p>
-            )}
-          </div>
-        </div>
+          </Card.Content>
+        </Card>
       </SettingsFilterItem>
     </>
   );

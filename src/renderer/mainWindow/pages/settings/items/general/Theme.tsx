@@ -1,4 +1,4 @@
-import {Select, Selection, SelectItem} from '@heroui/react';
+import {Description, Key, Label, ListBox, Select} from '@heroui-v3/react';
 import {appActions, useAppState} from '@lynx/redux/reducers/app';
 import {AppDispatch} from '@lynx/redux/store';
 import {DarkModeTypes} from '@lynx_common/types/ipc';
@@ -37,10 +37,10 @@ export default function Theme() {
   }, []);
 
   const onThemeChange = useCallback(
-    async (keys: Selection) => {
-      if (keys === 'all') return;
+    async (key: Key | null) => {
+      if (!key || typeof key === 'number') return;
 
-      const newSelectedTheme = keys.values().next().value as DarkModeTypes;
+      const newSelectedTheme = key as DarkModeTypes;
 
       let nextEffectiveMode: 'dark' | 'light';
       if (newSelectedTheme === 'system') {
@@ -75,30 +75,43 @@ export default function Theme() {
 
   return (
     <SettingsFilterItem searchTexts={[labelText, descriptionText, 'theme', 'dark', 'light', 'system']}>
-      <Select
-        ref={ref}
-        className="my-0!"
-        labelPlacement="outside"
-        selectedKeys={[selectedTheme]}
-        onSelectionChange={onThemeChange}
-        label={<SettingsSearchHighlight text={labelText} />}
-        description={<SettingsSearchHighlight text={descriptionText} />}
-        classNames={{trigger: 'cursor-default transition! duration-300!'}}
-        startContent={selectedTheme === 'system' ? <Display /> : selectedTheme === 'dark' ? <Moon /> : <Sun2 />}
-        disallowEmptySelection>
-        <SelectItem key="dark" startContent={<Moon />} className="cursor-default">
-          Dark
-        </SelectItem>
-        <SelectItem key="light" startContent={<Sun2 />} className="cursor-default">
-          Light
-        </SelectItem>
-        <SelectItem
-          key="system"
-          startContent={<Display />}
-          className="cursor-default"
-          description="Automatically switch theme based on system settings.">
-          System Default
-        </SelectItem>
+      <Select ref={ref} value={selectedTheme} onChange={onThemeChange}>
+        <Label>
+          <SettingsSearchHighlight text={labelText} />
+        </Label>
+        <Select.Trigger>
+          <Select.Value>
+            <span className="flex flex-row items-center gap-x-2">
+              {selectedTheme === 'system' ? <Display /> : selectedTheme === 'dark' ? <Moon /> : <Sun2 />}
+              {selectedTheme === 'system' ? 'System Default' : selectedTheme === 'dark' ? 'Dark' : 'Light'}
+            </span>
+          </Select.Value>
+          <Select.Indicator />
+        </Select.Trigger>
+        <Description>{descriptionText}</Description>
+        <Select.Popover>
+          <ListBox>
+            <ListBox.Item id="dark" textValue="dark">
+              <ListBox.ItemIndicator />
+              <Moon />
+              <Label>Dark</Label>
+            </ListBox.Item>
+            <ListBox.Item id="light" textValue="light">
+              <ListBox.ItemIndicator />
+              <Sun2 />
+              <Label>Light</Label>
+            </ListBox.Item>
+            <ListBox.Item id="system" textValue="system">
+              <ListBox.ItemIndicator />
+              <Display />
+
+              <div className="flex flex-col">
+                <Label>System Default</Label>
+                <Description>Automatically switch theme based on system settings.</Description>
+              </div>
+            </ListBox.Item>
+          </ListBox>
+        </Select.Popover>
       </Select>
     </SettingsFilterItem>
   );

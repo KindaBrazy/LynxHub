@@ -1,4 +1,4 @@
-import {Select, Selection, SelectItem} from '@heroui/react';
+import {Description, Key, Label, ListBox, Select} from '@heroui-v3/react';
 import {terminalActions, useTerminalState} from '@lynx/redux/reducers/terminal';
 import {AppDispatch} from '@lynx/redux/store';
 import {TerminalCursorStyle} from '@lynx_common/types/ipc';
@@ -17,11 +17,11 @@ export default function CursorStyle() {
   const dispatch = useDispatch<AppDispatch>();
 
   const onChange = useCallback(
-    (keys: Selection) => {
-      if (keys !== 'all') {
-        const value = keys.values().next().value as TerminalCursorStyle;
-        dispatch(terminalActions.setTerminalState({key: 'cursorStyle', value}));
-      }
+    (key: Key | null) => {
+      if (!key || typeof key === 'number') return;
+
+      const value = key as TerminalCursorStyle;
+      dispatch(terminalActions.setTerminalState({key: 'cursorStyle', value}));
     },
     [dispatch],
   );
@@ -31,24 +31,39 @@ export default function CursorStyle() {
 
   return (
     <SettingsFilterItem searchTexts={[labelText, descriptionText, 'cursor', 'style', 'terminal']}>
-      <Select
-        className="my-0!"
-        labelPlacement="outside"
-        selectedKeys={[cursorStyle]}
-        onSelectionChange={onChange}
-        label={<SettingsSearchHighlight text={labelText} />}
-        description={<SettingsSearchHighlight text={descriptionText} />}
-        classNames={{trigger: 'cursor-default transition! duration-300!', mainWrapper: 'mt-2'}}
-        disallowEmptySelection>
-        <SelectItem key="bar" className="cursor-default">
-          Bar
-        </SelectItem>
-        <SelectItem key="block" className="cursor-default">
-          Block
-        </SelectItem>
-        <SelectItem key="underline" className="cursor-default">
-          Underline
-        </SelectItem>
+      <Select value={cursorStyle} onChange={onChange}>
+        <Label>
+          <SettingsSearchHighlight text={labelText} />
+        </Label>
+        <Select.Trigger>
+          <Select.Value />
+          <Select.Indicator />
+        </Select.Trigger>
+        <Description>
+          <SettingsSearchHighlight text={descriptionText} />
+        </Description>
+        <Select.Popover>
+          <ListBox>
+            <ListBox.Item id="bar" textValue="Bar">
+              <ListBox.ItemIndicator />
+              <div className="flex flex-col">
+                <Label>Bar</Label>
+              </div>
+            </ListBox.Item>
+            <ListBox.Item id="block" textValue="Block">
+              <ListBox.ItemIndicator />
+              <div className="flex flex-col">
+                <Label>Block</Label>
+              </div>
+            </ListBox.Item>
+            <ListBox.Item id="underline" textValue="Underline">
+              <ListBox.ItemIndicator />
+              <div className="flex flex-col">
+                <Label>Underline</Label>
+              </div>
+            </ListBox.Item>
+          </ListBox>
+        </Select.Popover>
       </Select>
     </SettingsFilterItem>
   );

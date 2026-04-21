@@ -1,4 +1,4 @@
-import {Button, ButtonGroup, Popover, PopoverContent, PopoverTrigger} from '@heroui/react';
+import {Button, ButtonGroup, Popover} from '@heroui-v3/react';
 import storageIpc from '@lynx_shared/ipc/storage';
 import {Refresh} from '@solar-icons/react-perf/BoldDuotone';
 import {useState} from 'react';
@@ -18,34 +18,33 @@ export default function ResetSettings() {
   };
 
   return (
-    <Popover
-      size="sm"
-      shadow="sm"
-      isOpen={isClearSettingsOpen}
-      onOpenChange={setIsClearSettingsOpen}
-      classNames={{base: 'before:bg-foreground-100'}}
-      showArrow>
-      <PopoverTrigger>
-        <Button variant="flat" color="danger" startContent={<Refresh />} fullWidth>
+    <Popover isOpen={isClearSettingsOpen} onOpenChange={setIsClearSettingsOpen}>
+      <Popover.Trigger>
+        <Button variant="danger" fullWidth>
+          <Refresh />
           <SettingsSearchHighlight text="Reset Settings (Restart Required)" />
         </Button>
-      </PopoverTrigger>
-      <PopoverContent className="p-4 gap-y-2 bg-foreground-100">
-        <span className="font-bold w-full text-sm">
-          <SettingsSearchHighlight text="Reset Settings" />
-        </span>
-        <span>
-          <SettingsSearchHighlight text="Are you sure you want to reset all app settings and restart?" />
-        </span>
-        <ButtonGroup className="flex flex-row w-full mt-2" fullWidth>
-          <Button size="sm" color="danger" onPress={reset} startContent={<Refresh />}>
-            Reset & Restart
-          </Button>
-          <Button size="sm" onPress={cancel} className="cursor-default">
-            Cancel
-          </Button>
-        </ButtonGroup>
-      </PopoverContent>
+      </Popover.Trigger>
+      <Popover.Content>
+        <Popover.Arrow />
+        <Popover.Dialog className="max-w-90">
+          <Popover.Heading>
+            <SettingsSearchHighlight text="Reset Settings" />
+          </Popover.Heading>
+          <p className="mt-1 text-sm text-muted">
+            <SettingsSearchHighlight text="Are you sure you want to fully reset app settings and restart?" />
+          </p>
+          <ButtonGroup className="mt-3" fullWidth>
+            <Button size="sm" onPress={reset} variant="danger-soft">
+              <Refresh />
+              Reset & Restart
+            </Button>
+            <Button size="sm" onPress={cancel} variant="secondary">
+              Cancel
+            </Button>
+          </ButtonGroup>
+        </Popover.Dialog>
+      </Popover.Content>
     </Popover>
   );
 }

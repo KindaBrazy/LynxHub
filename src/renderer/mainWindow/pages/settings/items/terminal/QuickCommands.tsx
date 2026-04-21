@@ -1,4 +1,4 @@
-import {Button, Input} from '@heroui/react';
+import {Button, Input} from '@heroui-v3/react';
 import {terminalActions, useTerminalState} from '@lynx/redux/reducers/terminal';
 import {AppDispatch} from '@lynx/redux/store';
 import {Broom} from '@solar-icons/react-perf/BoldDuotone';
@@ -42,20 +42,18 @@ export default function QuickCommands() {
               key={`terminal_quick_command_${slot}`}
               className="grid grid-cols-1 gap-2 md:grid-cols-[minmax(0,1.5fr)_minmax(0,2fr)_auto] items-center">
               <Input
-                size="sm"
                 value={item.label}
-                label={`Quick Command ${slot} Label`}
-                onValueChange={value => updateQuickCommands(index, {label: value})}
+                placeholder={`Quick Command ${slot} Label`}
+                onChange={event => updateQuickCommands(index, {label: event.target.value})}
               />
               <Input
-                size="sm"
                 value={item.command}
-                label={`Quick Command ${slot}`}
-                onValueChange={value => updateQuickCommands(index, {command: value})}
+                placeholder={`Quick Command ${slot}`}
+                onChange={event => updateQuickCommands(index, {command: event.target.value})}
               />
               <Button
-                variant="light"
-                color="warning"
+                size="sm"
+                variant="danger-soft"
                 onPress={() => updateQuickCommands(index, {label: '', command: ''})}
                 isIconOnly>
                 <Broom />

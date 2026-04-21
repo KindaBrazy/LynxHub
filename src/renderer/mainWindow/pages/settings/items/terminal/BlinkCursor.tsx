@@ -27,7 +27,6 @@ export default function BlinkCursor() {
   return (
     <SettingsFilterItem searchTexts={[titleText, descriptionText, 'terminal', 'cursor', 'blink']}>
       <LynxSwitch
-        size="default"
         title={titleText}
         enabled={blinkCursor}
         description={descriptionText}

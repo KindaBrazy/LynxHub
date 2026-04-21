@@ -1,4 +1,4 @@
-import {Button, Input, Listbox, ListboxItem, ListboxSection} from '@heroui/react';
+import {Button, Description, Header, Input, Label, ListBox, Surface} from '@heroui-v3/react';
 import SettingsSection from '@lynx/components/SettingsSection';
 import {hotkeysActions, useHotkeysState} from '@lynx/redux/reducers/hotkeys';
 import {useSettingsState} from '@lynx/redux/reducers/settings';
@@ -164,44 +164,42 @@ export default function SettingsHotkeys() {
           if (!canShow || !include.includes(name)) return null;
 
           return (
-            <ListboxItem
-              classNames={{
-                description: 'transition-colors duration-200',
-                title: 'transition-colors duration-200',
-              }}
-              endContent={
-                <div className="flex flex-row gap-x-2 items-center">
-                  <Button
-                    size="sm"
-                    variant="flat"
-                    color="secondary"
-                    disabled={isRecording}
-                    isLoading={isRecording}
-                    onPress={() => handleRecordClick(name)}>
-                    <Keyboard className="size-4" />
-                  </Button>
-                  <Input
-                    ref={el => {
-                      inputRefs.current[name] = el;
-                    }}
-                    size="sm"
-                    onBlur={() => handleBlur(name)}
-                    variant={isRecording ? 'bordered' : 'flat'}
-                    color={isRecording ? 'secondary' : 'default'}
-                    value={isRecording ? 'Press keys...' : formatHotkey(hotkey)}
-                    onKeyDown={isRecording ? e => handleKeyDown(e, name) : undefined}
-                    placeholder={isRecording ? 'Press keys...' : formatHotkey(hotkey)}
-                    classNames={{input: 'cursor-default', innerWrapper: 'cursor-default'}}
-                    isReadOnly
-                  />
-                </div>
-              }
+            <ListBox.Item
               textValue={label}
               key={`${name}_hotkey`}
-              title={<SettingsSearchHighlight text={label} />}
-              description={<SettingsSearchHighlight text={description} />}
-              className="transition-background duration-200 cursor-default"
-            />
+              className="justify-between cursor-default hover:bg-background">
+              <div className="flex flex-col">
+                <Label>
+                  <SettingsSearchHighlight text={label} />
+                </Label>
+                <Description>
+                  <SettingsSearchHighlight text={description} />
+                </Description>
+              </div>
+              <div className="flex flex-row gap-x-2 items-center">
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  className="shrink-0"
+                  isPending={isRecording}
+                  isDisabled={isRecording}
+                  onPress={() => handleRecordClick(name)}
+                  isIconOnly>
+                  <Keyboard className="size-5" />
+                </Button>
+                <Input
+                  ref={el => {
+                    inputRefs.current[name] = el;
+                  }}
+                  onBlur={() => handleBlur(name)}
+                  variant={isRecording ? 'primary' : 'secondary'}
+                  value={isRecording ? 'Press keys...' : formatHotkey(hotkey)}
+                  onKeyDown={isRecording ? e => handleKeyDown(e, name) : undefined}
+                  placeholder={isRecording ? 'Press keys...' : formatHotkey(hotkey)}
+                  readOnly
+                />
+              </div>
+            </ListBox.Item>
           );
         }),
       );
@@ -211,16 +209,20 @@ export default function SettingsHotkeys() {
 
   return (
     <SettingsSection title="Hotkeys" id={SettingsHotkeysId} icon={<Keyboard className="size-5" />}>
-      <Listbox variant="flat" aria-label="hotkeys_list">
-        {Hotkey_Sections.map(section => {
-          return (
-            <ListboxSection key={section.kind} title={section.title}>
-              {renderItems(section.includes)}
-            </ListboxSection>
-          );
-        })}
-      </Listbox>
-      <Button variant="flat" color="warning" onPress={resetToDefault} startContent={<Refresh />}>
+      <Surface className="rounded-3xl p-1">
+        <ListBox aria-label="hotkeys_list">
+          {Hotkey_Sections.map(section => {
+            return (
+              <ListBox.Section key={section.kind}>
+                <Header>{section.title}</Header>
+                {renderItems(section.includes)}
+              </ListBox.Section>
+            );
+          })}
+        </ListBox>
+      </Surface>
+      <Button variant="danger-soft" onPress={resetToDefault} fullWidth>
+        <Refresh />
         Reset to Defaults
       </Button>
     </SettingsSection>

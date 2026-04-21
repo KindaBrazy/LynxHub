@@ -1,4 +1,4 @@
-import {Select, Selection, SelectItem} from '@heroui/react';
+import {Description, Key, Label, ListBox, Select} from '@heroui-v3/react';
 import {AppDispatch} from '@lynx/redux/store';
 import {showRestartModal} from '@lynx/utils';
 import storageIpc from '@lynx_shared/ipc/storage';
@@ -29,13 +29,13 @@ export default function Autoplay() {
   }, []);
 
   const onChange = useCallback(
-    (keys: Selection) => {
-      if (keys !== 'all') {
-        const value = keys.values().next().value as AutoplayPolicy;
-        storageIpc.update('performance', {autoplayPolicy: value});
-        setSelectedKey(value);
-        showRestartModal(dispatch, 'To apply performance changes, please restart the app.');
-      }
+    (key: Key | null) => {
+      if (!key || typeof key === 'number') return;
+
+      const value = key as AutoplayPolicy;
+      storageIpc.update('performance', {autoplayPolicy: value});
+      setSelectedKey(value);
+      showRestartModal(dispatch, 'To apply performance changes, please restart the app.');
     },
     [dispatch],
   );
@@ -45,36 +45,57 @@ export default function Autoplay() {
 
   return (
     <SettingsFilterItem searchTexts={[labelText, descriptionText, 'autoplay', 'media', 'video', 'audio']}>
-      <Select
-        className="my-0!"
-        labelPlacement="outside"
-        selectedKeys={[selectedKey]}
-        onSelectionChange={onChange}
-        label={<SettingsSearchHighlight text={labelText} />}
-        description={<SettingsSearchHighlight text={descriptionText} />}
-        classNames={{trigger: 'cursor-default transition! duration-300!'}}
-        disallowEmptySelection>
-        <SelectItem key="default" className="cursor-default" description="Use browser default autoplay behavior.">
-          Default
-        </SelectItem>
-        <SelectItem
-          className="cursor-default"
-          key="no-user-gesture-required"
-          description="Allow autoplay without user interaction.">
-          Allow Autoplay
-        </SelectItem>
-        <SelectItem
-          className="cursor-default"
-          key="user-gesture-required"
-          description="Require user click before playback.">
-          Require Gesture
-        </SelectItem>
-        <SelectItem
-          className="cursor-default"
-          key="document-user-activation-required"
-          description="Require page interaction before playback.">
-          Require Page Activation
-        </SelectItem>
+      <Select value={selectedKey} onChange={onChange}>
+        <Label>
+          <SettingsSearchHighlight text={labelText} />
+        </Label>
+        <Select.Trigger>
+          <Select.Value />
+          <Select.Indicator />
+        </Select.Trigger>
+        <Description>
+          <SettingsSearchHighlight text={descriptionText} />
+        </Description>
+        <Select.Popover>
+          <ListBox>
+            <ListBox.Item id="default" textValue="Default">
+              <ListBox.ItemIndicator />
+              <div className="flex flex-col">
+                <Label>Default</Label>
+                <Description>
+                  <SettingsSearchHighlight text="Use browser default autoplay behavior." />
+                </Description>
+              </div>
+            </ListBox.Item>
+            <ListBox.Item textValue="Allow Autoplay" id="no-user-gesture-required">
+              <ListBox.ItemIndicator />
+              <div className="flex flex-col">
+                <Label>Allow Autoplay</Label>
+                <Description>
+                  <SettingsSearchHighlight text="Allow autoplay without user interaction." />
+                </Description>
+              </div>
+            </ListBox.Item>
+            <ListBox.Item id="user-gesture-required" textValue="Require Gesture">
+              <ListBox.ItemIndicator />
+              <div className="flex flex-col">
+                <Label>Require Gesture</Label>
+                <Description>
+                  <SettingsSearchHighlight text="Wide color gamut for compatible displays." />
+                </Description>
+              </div>
+            </ListBox.Item>
+            <ListBox.Item id="document-user-activation-required" textValue="Require user click before playback.">
+              <ListBox.ItemIndicator />
+              <div className="flex flex-col">
+                <Label>Require Page Activation</Label>
+                <Description>
+                  <SettingsSearchHighlight text="Require page interaction before playback." />
+                </Description>
+              </div>
+            </ListBox.Item>
+          </ListBox>
+        </Select.Popover>
       </Select>
     </SettingsFilterItem>
   );

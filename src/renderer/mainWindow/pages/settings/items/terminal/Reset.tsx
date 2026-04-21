@@ -1,4 +1,4 @@
-import {Button} from '@heroui/react';
+import {Button} from '@heroui-v3/react';
 import {terminalActions} from '@lynx/redux/reducers/terminal';
 import {AppDispatch} from '@lynx/redux/store';
 import {Refresh} from '@solar-icons/react-perf/BoldDuotone';
@@ -34,13 +34,8 @@ export default function Reset() {
         'terminal settings',
         'reset quick commands',
       ]}>
-      <Button
-        variant="flat"
-        color="warning"
-        onPress={onApply}
-        isLoading={isSaving}
-        startContent={<Refresh />}
-        fullWidth>
+      <Button className="mt-2" variant="danger" onPress={onApply} isPending={isSaving} fullWidth>
+        <Refresh />
         Reset All Terminal Settings
       </Button>
     </SettingsFilterItem>

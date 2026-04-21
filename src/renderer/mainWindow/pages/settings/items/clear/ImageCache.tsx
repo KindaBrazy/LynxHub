@@ -1,4 +1,4 @@
-import {Button, ButtonGroup, Chip, Popover, PopoverContent, PopoverTrigger, Spinner} from '@heroui/react';
+import {Button, ButtonGroup, Chip, Popover, Spinner} from '@heroui-v3/react';
 import {AppDispatch} from '@lynx/redux/store';
 import {lynxTopToast} from '@lynx/utils/hooks';
 import utilsIpc from '@lynx_shared/ipc/utils';
@@ -6,6 +6,7 @@ import {Broom} from '@solar-icons/react-perf/BoldDuotone';
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
+import DescriptionGrid from '../../../../components/DescriptionGrid';
 import SettingsSearchHighlight from '../../SettingsSearchHighlight';
 
 export type CacheStats = {
@@ -60,74 +61,78 @@ export default function ImageCache() {
     <>
       {isLoadingStats ? (
         <div className="flex items-center justify-center py-4">
-          <Spinner size="sm" />
+          <Spinner />
         </div>
       ) : cacheStats ? (
         <>
-          <div className="flex flex-col gap-2 text-sm">
-            <div className="flex justify-between items-center">
-              <span className="text-foreground-500">
-                <SettingsSearchHighlight text="Cached Items:" />
-              </span>
-              <Chip size="sm" variant="flat" color="primary">
-                {cacheStats.entryCount}
-              </Chip>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-foreground-500">
-                <SettingsSearchHighlight text="Cache Size:" />
-              </span>
-              <Chip size="sm" variant="flat" color="secondary">
-                {cacheStats.totalSizeFormatted}
-              </Chip>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-foreground-500">
-                <SettingsSearchHighlight text="Last Cleanup:" />
-              </span>
-              <span className="text-xs text-foreground-400">
-                {new Date(cacheStats.lastCleanup).toLocaleDateString()}
-              </span>
-            </div>
-          </div>
+          <DescriptionGrid
+            items={[
+              {
+                key: 'cached_items',
+                label: <SettingsSearchHighlight text="Cached Items:" />,
+                content: (
+                  <Chip size="sm" color="accent" variant="soft">
+                    {cacheStats.entryCount}
+                  </Chip>
+                ),
+              },
+              {
+                key: 'cached_size',
+                label: <SettingsSearchHighlight text="Cache Size:" />,
+                content: (
+                  <Chip size="sm" variant="soft" color="warning">
+                    {cacheStats.totalSizeFormatted}
+                  </Chip>
+                ),
+              },
+              {
+                key: 'last_cleanup',
+                label: <SettingsSearchHighlight text="Last Cleanup:" />,
+                content: (
+                  <span className="text-xs text-foreground-400">
+                    {new Date(cacheStats.lastCleanup).toLocaleDateString()}
+                  </span>
+                ),
+              },
+            ]}
+            columns={3}
+          />
 
-          <Popover
-            size="sm"
-            shadow="sm"
-            isOpen={isClearCacheOpen}
-            onOpenChange={setIsClearCacheOpen}
-            classNames={{base: 'before:bg-foreground-100'}}
-            showArrow>
-            <PopoverTrigger>
-              <Button
-                variant="flat"
-                color="warning"
-                isLoading={isClearing}
-                startContent={<Broom />}
-                isDisabled={cacheStats.entryCount === 0 || isClearing}
-                fullWidth>
-                <SettingsSearchHighlight text="Clear Image Cache" />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="p-4 gap-y-2 bg-foreground-100">
-              <span className="font-bold w-full text-sm">
-                <SettingsSearchHighlight text="Clear Image Cache" />
-              </span>
-              <span>
-                <SettingsSearchHighlight
-                  text={`Clear ${cacheStats.entryCount} cached images (${cacheStats.totalSizeFormatted})?`}
-                />
-              </span>
-              <ButtonGroup className="flex flex-row w-full mt-2" fullWidth>
-                <Button size="sm" color="warning" startContent={<Broom />} onPress={handleClearImageCache}>
-                  Clear
+          {cacheStats.entryCount === 0 || isClearing ? (
+            <Button variant="danger-soft" isPending={isClearing} fullWidth isDisabled>
+              <Broom />
+              <SettingsSearchHighlight text="Clear Image Cache" />
+            </Button>
+          ) : (
+            <Popover isOpen={isClearCacheOpen} onOpenChange={setIsClearCacheOpen}>
+              <Popover.Trigger>
+                <Button variant="danger-soft" isPending={isClearing} fullWidth>
+                  <Broom />
+                  <SettingsSearchHighlight text="Clear Image Cache" />
                 </Button>
-                <Button size="sm" className="cursor-default" onPress={() => setIsClearCacheOpen(false)}>
-                  Cancel
-                </Button>
-              </ButtonGroup>
-            </PopoverContent>
-          </Popover>
+              </Popover.Trigger>
+              <Popover.Content>
+                <Popover.Arrow />
+                <Popover.Dialog className="w-90">
+                  <Popover.Heading>
+                    <SettingsSearchHighlight text="Clear Image Cache" />
+                  </Popover.Heading>
+                  <p className="mt-1 text-sm text-muted">
+                    Clear {cacheStats.entryCount} cached images ({cacheStats.totalSizeFormatted})?
+                  </p>
+                  <ButtonGroup className="mt-2" fullWidth>
+                    <Button size="sm" variant="danger-soft" onPress={handleClearImageCache}>
+                      <Broom />
+                      Clear
+                    </Button>
+                    <Button size="sm" variant="secondary" onPress={() => setIsClearCacheOpen(false)}>
+                      Cancel
+                    </Button>
+                  </ButtonGroup>
+                </Popover.Dialog>
+              </Popover.Content>
+            </Popover>
+          )}
         </>
       ) : (
         <span className="text-sm text-foreground-500">

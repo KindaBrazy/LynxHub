@@ -1,4 +1,4 @@
-import {Select, Selection, SelectItem} from '@heroui/react';
+import {Description, Key, Label, ListBox, Select} from '@heroui-v3/react';
 import {TaskbarStatus} from '@lynx_common/types/ipc';
 import {isLinux, isMac} from '@lynx_common/utils';
 import applicationIpc from '@lynx_shared/ipc/application';
@@ -14,12 +14,12 @@ import SettingsSearchHighlight from '../../SettingsSearchHighlight';
 export default function Taskbar() {
   const [selectedKey, setSelectedKey] = useState<TaskbarStatus>('taskbar-tray');
 
-  const onChange = useCallback((keys: Selection) => {
-    if (keys !== 'all') {
-      const value = keys.values().next().value as TaskbarStatus;
-      applicationIpc.send.setTaskBarStatus(value);
-      setSelectedKey(value);
-    }
+  const onChange = useCallback((key: Key | null) => {
+    if (!key || typeof key === 'number') return;
+
+    const value = key as TaskbarStatus;
+    applicationIpc.send.setTaskBarStatus(value);
+    setSelectedKey(value);
   }, []);
 
   useEffect(() => {
@@ -35,38 +35,46 @@ export default function Taskbar() {
 
   return (
     <SettingsFilterItem searchTexts={[labelText, descriptionText, 'taskbar', 'dock', 'tray']}>
-      <Select
-        className="my-0!"
-        labelPlacement="outside"
-        selectedKeys={[selectedKey]}
-        onSelectionChange={onChange}
-        label={<SettingsSearchHighlight text={labelText} />}
-        description={<SettingsSearchHighlight text={descriptionText} />}
-        classNames={{trigger: 'cursor-default transition! duration-300!'}}
-        disallowEmptySelection>
-        <SelectItem key="taskbar-tray" className="cursor-default">
-          {isMac ? 'Dock & Tray' : 'Taskbar & Tray'}
-        </SelectItem>
-        <SelectItem key="taskbar" className="cursor-default">
-          {isMac ? 'Dock Only' : 'Taskbar Only'}
-        </SelectItem>
-        {isLinux ? (
-          <SelectItem key="!" className="hidden" textValue="Nothing" />
-        ) : (
-          <SelectItem key="tray" className="cursor-default">
-            {isMac ? 'Tray Only' : 'Tray Only'}
-          </SelectItem>
-        )}
-        <SelectItem
-          description={
-            isMac
-              ? 'Show in the dock when focused, move to tray when minimized.'
-              : 'Show in the taskbar when focused, move to tray when minimized.'
-          }
-          key="tray-minimized"
-          className="cursor-default">
-          {isMac ? 'Dock when focused, Tray when minimized' : 'Taskbar when focused, Tray when minimized'}
-        </SelectItem>
+      <Select value={selectedKey} onChange={onChange}>
+        <Label>
+          <SettingsSearchHighlight text={labelText} />
+        </Label>
+        <Select.Trigger>
+          <Select.Value />
+          <Select.Indicator />
+        </Select.Trigger>
+        <Description>{descriptionText}</Description>
+        <Select.Popover>
+          <ListBox>
+            <ListBox.Item id="taskbar-tray" textValue={isMac ? 'Dock & Tray' : 'Taskbar & Tray'}>
+              <ListBox.ItemIndicator />
+              <Label>{isMac ? 'Dock & Tray' : 'Taskbar & Tray'}</Label>
+            </ListBox.Item>
+            <ListBox.Item id="taskbar" textValue={isMac ? 'Dock Only' : 'Taskbar Only'}>
+              <ListBox.ItemIndicator />
+              <Label>{isMac ? 'Dock Only' : 'Taskbar Only'}</Label>
+            </ListBox.Item>
+            {!isLinux && (
+              <ListBox.Item id="tray" textValue={isMac ? 'Tray Only' : 'Tray Only'}>
+                <ListBox.ItemIndicator />
+                <Label>{isMac ? 'Tray Only' : 'Tray Only'}</Label>
+              </ListBox.Item>
+            )}
+            <ListBox.Item id="tray-minimized" textValue={isMac ? 'Tray Only' : 'Tray Only'}>
+              <ListBox.ItemIndicator />
+              <div className="flex flex-col">
+                <Label>
+                  {isMac ? 'Dock when focused, Tray when minimized' : 'Taskbar when focused, Tray when minimized'}
+                </Label>
+                <Description>
+                  {isMac
+                    ? 'Show in the dock when focused, move to tray when minimized.'
+                    : 'Show in the taskbar when focused, move to tray when minimized.'}
+                </Description>
+              </div>
+            </ListBox.Item>
+          </ListBox>
+        </Select.Popover>
       </Select>
     </SettingsFilterItem>
   );
