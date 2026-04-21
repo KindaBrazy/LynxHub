@@ -1,4 +1,5 @@
-import {Button, Checkbox, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
+import {Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
+import {Button, Checkbox, Label} from '@heroui-v3/react';
 import {useTabVisibility} from '@lynx/layouts/tabs/utils';
 import {APP_AUTHOR_NAME} from '@lynx_common/consts';
 import {ShieldWarning} from '@solar-icons/react-perf/BoldDuotone';
@@ -72,7 +73,7 @@ export default function SecurityWarning({isOpen, onAgree, setIsOpen, type, title
 
   return (
     <Modal
-      size="xl"
+      size="2xl"
       shadow="none"
       isOpen={isOpen}
       placement="center"
@@ -81,47 +82,48 @@ export default function SecurityWarning({isOpen, onAgree, setIsOpen, type, title
       classNames={{backdrop: `top-10! ${show}`, wrapper: `top-10! ${show}`}}
       hideCloseButton>
       <ModalContent className="overflow-hidden">
-        <ModalHeader className="bg-foreground-100 justify-center text-warning items-center gap-x-2">
+        <ModalHeader className="bg-surface-secondary justify-center text-warning items-center gap-x-2">
           <ShieldWarning className="size-7" />
           <span>Security Notice</span>
         </ModalHeader>
 
-        <ModalBody className="py-6 scrollbar-hide">
-          <p className="font-semibold text-success">
+        <ModalBody className="py-6 scrollbar-hide leading-relaxed text-sm">
+          <p className="font-semibold text-success text-base">
             LynxHub grants {type === 'extension' ? 'extensions' : 'modules'} full access, similar to standalone
             applications, to maximize their potential.
           </p>
-          <p className="text-foreground-600">
+          <p className="text-muted">
             When an {type === 'extension' ? 'extension' : 'module'} is initially submitted, its code is reviewed for
             security and potential vulnerabilities.
             <br />
             However, after the initial review, {type === 'extension' ? 'extensions' : 'modules'} can update their
             functionality with commits, and developers can add any code they want.
           </p>
-          <p className="text-foreground-600">
+          <p className="text-muted">
             Please exercise caution and only install trusted {type === 'extension' ? 'extensions' : 'modules'}. LynxHub
             is not responsible for vulnerabilities that may arise after the initial review and subsequent updates.
           </p>
-          <p className="text-warning">
-            By clicking <span className="font-semibold text-success">Agree</span>, you acknowledge and accept the
+          <p className="text-warning text-base">
+            By clicking <span className="font-semibold text-accent">Agree</span>, you acknowledge and accept the
             potential security implications of installing
             <span className="font-semibold">{` "${title}" by "${owner}"`}</span>.
           </p>
         </ModalBody>
 
-        <ModalFooter className="bg-foreground-100 py-3 justify-between">
-          <Checkbox
-            size="sm"
-            isSelected={dontShow}
-            onValueChange={setDontShow}
-            classNames={{hiddenInput: 'cursor-default'}}>
-            Do not show this message again
+        <ModalFooter className="bg-surface-secondary py-3 justify-between">
+          <Checkbox isSelected={dontShow} onChange={setDontShow}>
+            <Checkbox.Control>
+              <Checkbox.Indicator />
+            </Checkbox.Control>
+            <Checkbox.Content>
+              <Label>Do not show this message again</Label>
+            </Checkbox.Content>
           </Checkbox>
           <div className="flex gap-x-2">
-            <Button size="sm" variant="light" color="warning" onPress={handleDecline} className="cursor-default">
+            <Button size="sm" variant="danger-soft" onPress={handleDecline}>
               Decline
             </Button>
-            <Button size="sm" variant="flat" color="success" onPress={handleAgree}>
+            <Button size="sm" variant="primary" onPress={handleAgree}>
               Agree
             </Button>
           </div>

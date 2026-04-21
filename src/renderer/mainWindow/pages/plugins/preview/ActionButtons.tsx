@@ -1,4 +1,4 @@
-import {Button, useDisclosure} from '@heroui/react';
+import {Button, useOverlayState} from '@heroui-v3/react';
 import {
   pluginsActions,
   useIsInstallingPlugin,
@@ -97,7 +97,7 @@ interface PluginActionButtonsProps {
 export default function PluginActionButtons({isInstalled, currentVersion}: PluginActionButtonsProps) {
   const selectedPlugin = usePluginsState('selectedPlugin');
   const activeTab = useTabsState('activeTab');
-  const configModal = useDisclosure();
+  const configModal = useOverlayState();
 
   const pluginId = selectedPlugin?.metadata.id || '';
 
@@ -143,19 +143,14 @@ export default function PluginActionButtons({isInstalled, currentVersion}: Plugi
         title={selectedPlugin?.metadata.title}
       />
 
-      {isModuleType && isInstalled && <ModuleConfigModal isOpen={configModal.isOpen} onClose={configModal.onClose} />}
+      {isModuleType && isInstalled && <ModuleConfigModal isOpen={configModal.isOpen} onClose={configModal.close} />}
       {isInstalled && <VersionSelector currentVersion={currentVersion} />}
 
       <div className="flex flex-row items-center gap-x-2">
         {/* Module configuration button – only visible for installed modules */}
         {isModuleType && isInstalled && (
-          <Button
-            size="sm"
-            variant="flat"
-            color="secondary"
-            onPress={configModal.onOpen}
-            aria-label="Open module configuration"
-            startContent={<SettingsMinimalistic />}>
+          <Button size="sm" variant="secondary" onPress={configModal.open} aria-label="Open module configuration">
+            <SettingsMinimalistic />
             Configure
           </Button>
         )}
@@ -163,26 +158,25 @@ export default function PluginActionButtons({isInstalled, currentVersion}: Plugi
         <UpdateButton item={selectedPlugin!} />
 
         {/* Install or uninstall button depending on current installation state */}
-        {isInstalled ? (
+        {!isInstalled ? (
           <Button
             size="sm"
-            color="danger"
-            variant="flat"
+            variant="danger"
             onPress={uninstallPlugin}
-            isLoading={isUninstalling}
-            aria-label="Uninstall plugin"
-            startContent={!isUninstalling && <TrashBin2 />}>
+            isPending={isUninstalling}
+            aria-label="Uninstall plugin">
+            {!isUninstalling && <TrashBin2 />}
             {isUninstalling ? 'Uninstalling...' : 'Uninstall'}
           </Button>
         ) : (
           <Button
             size="sm"
-            isLoading={isInstalling}
+            isPending={isInstalling}
             onPress={handleInstallRequest}
             isDisabled={!isPlatformCompatible}
-            color={isPlatformCompatible ? 'success' : 'warning'}
-            startContent={!isInstalling && <DownloadMinimalistic />}
+            variant={isPlatformCompatible ? 'primary' : 'danger-soft'}
             aria-label={isPlatformCompatible ? 'Install plugin' : 'Plugin not compatible with your platform'}>
+            {!isInstalling && <DownloadMinimalistic />}
             {!isPlatformCompatible ? 'Not Compatible' : isInstalling ? 'Installing...' : 'Install'}
           </Button>
         )}

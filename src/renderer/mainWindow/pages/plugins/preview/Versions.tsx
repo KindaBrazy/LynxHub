@@ -1,4 +1,4 @@
-import {Button, Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, SharedSelection} from '@heroui/react';
+import {Button, Chip, Description, Dropdown, Label, Selection} from '@heroui-v3/react';
 import {usePluginsState} from '@lynx/redux/reducers/plugins';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
 import {BoxMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
@@ -43,7 +43,7 @@ export default function PluginVersionSelector({currentVersion}: PluginVersionSel
    * Updates the sync list via IPC to mark the target version for synchronization.
    */
   const handleSelectionChange = useCallback(
-    (selection: SharedSelection) => {
+    (selection: Selection) => {
       const targetCommit = Array.from(selection)[0] as string;
       const pluginId = selectedPlugin?.metadata.id;
 
@@ -57,33 +57,35 @@ export default function PluginVersionSelector({currentVersion}: PluginVersionSel
   const activeVersionNumber = availableVersions.find(item => item.commit === activeCommit)?.version;
 
   return (
-    <Dropdown size="sm" showArrow>
-      <DropdownTrigger>
-        <Button size="sm" variant="flat" startContent={<BoxMinimalistic className="size-3.5" />}>
+    <Dropdown>
+      <Dropdown.Trigger>
+        <Button size="sm" variant="tertiary">
+          <BoxMinimalistic className="size-3.5" />
           Target v{activeVersionNumber}
         </Button>
-      </DropdownTrigger>
-      <DropdownMenu
-        variant="flat"
-        selectionMode="single"
-        selectedKeys={[activeCommit]}
-        disabledKeys={disabledCommitKeys}
-        onSelectionChange={handleSelectionChange}
-        disallowEmptySelection>
-        {availableVersions.map(version => (
-          <DropdownItem
-            endContent={
-              <Chip size="sm" variant="flat" className="scale-80" color={getStageColor(version.stage)}>
-                {getStageDisplayName(version.stage)}
-              </Chip>
-            }
-            key={version.commit}
-            description={version.incompatibleReason}
-            classNames={{description: 'whitespace-pre text-warning'}}>
-            v{version.version}
-          </DropdownItem>
-        ))}
-      </DropdownMenu>
+      </Dropdown.Trigger>
+      <Dropdown.Popover>
+        <Dropdown.Menu
+          selectionMode="single"
+          selectedKeys={[activeCommit]}
+          disabledKeys={disabledCommitKeys}
+          onSelectionChange={handleSelectionChange}
+          disallowEmptySelection>
+          {availableVersions.map(version => (
+            <Dropdown.Item key={version.commit} className="justify-between">
+              <div className="flex flex-col w-full">
+                <Label className="justify-between w-full flex">
+                  {version.version}
+                  <Chip size="sm" variant="soft" color={getStageColor(version.stage)}>
+                    {getStageDisplayName(version.stage)}
+                  </Chip>
+                </Label>
+                <Description>{version.incompatibleReason}</Description>
+              </div>
+            </Dropdown.Item>
+          ))}
+        </Dropdown.Menu>
+      </Dropdown.Popover>
     </Dropdown>
   );
 }

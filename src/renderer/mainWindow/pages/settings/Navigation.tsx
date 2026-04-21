@@ -184,7 +184,7 @@ const SettingsPageNav = ({sectionTexts}: SettingsPageNavProps) => {
 
   return (
     <Card variant="secondary" className="h-full my-2 w-48 shrink-0">
-      <Card.Header className="flex flex-row gap-x-2">
+      <Card.Header className="flex flex-row gap-x-2 items-center">
         <SettingPage_Icon className="size-5" />
         <SettingsSearchHighlight text="Settings" />
       </Card.Header>

@@ -1,5 +1,4 @@
-import {ButtonProps} from '@heroui/button';
-import {Button} from '@heroui/react';
+import {Button, ButtonProps} from '@heroui-v3/react';
 import {pluginsActions, useIsUpdatingPlugin, usePluginsState} from '@lynx/redux/reducers/plugins';
 import {AppDispatch} from '@lynx/redux/store';
 import {showRestartModal} from '@lynx/utils';
@@ -31,27 +30,18 @@ export function UpdateButton({item}: UpdateButtonProps) {
 
   const {id, title} = useMemo(() => item.metadata, [item]);
 
-  const {updateItem, isUpgrade, color} = useMemo(() => {
+  const {updateItem, isUpgrade, variant} = useMemo(() => {
     const updateTarget = syncList.find(available => available.id === id);
     const upgradeState = updateTarget?.type === 'upgrade';
-    const buttonColor: ButtonProps['color'] = upgradeState ? 'success' : 'warning';
 
-    return {updateItem: updateTarget, isUpgrade: upgradeState, color: buttonColor};
+    const variant: ButtonProps['variant'] = isUpdating ? 'ghost' : 'danger-soft';
+
+    return {updateItem: updateTarget, isUpgrade: upgradeState, variant};
   }, [syncList, id]);
 
-  const {variant, text} = useMemo(() => {
-    const buttonVariant: ButtonProps['variant'] = isUpdating ? 'light' : 'flat';
-
-    // Determine the button text based on update state
-    const buttonText = isUpdating
-      ? isUpgrade
-        ? 'Upgrading...'
-        : 'Downgrading...'
-      : isUpgrade
-        ? 'Upgrade'
-        : 'Downgrade';
-
-    return {variant: buttonVariant, text: buttonText};
+  // Determine the button text based on update state
+  const text = useMemo(() => {
+    return isUpdating ? (isUpgrade ? 'Upgrading...' : 'Downgrading...') : isUpgrade ? 'Upgrade' : 'Downgrade';
   }, [isUpdating, isUpgrade]);
 
   const handleSync = useCallback(() => {
@@ -77,14 +67,8 @@ export function UpdateButton({item}: UpdateButtonProps) {
   }
 
   return (
-    <Button
-      size="sm"
-      color={color}
-      variant={variant}
-      onPress={handleSync}
-      isLoading={isUpdating}
-      isDisabled={updatingAll}
-      startContent={!isUpdating && <DownloadMinimalistic />}>
+    <Button size="sm" variant={variant} onPress={handleSync} isPending={isUpdating} isDisabled={updatingAll}>
+      {!isUpdating && <DownloadMinimalistic className="size-3" />}
       {text}
     </Button>
   );

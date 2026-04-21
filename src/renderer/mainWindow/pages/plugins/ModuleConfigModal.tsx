@@ -1,4 +1,5 @@
-import {Button, Checkbox, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
+import {Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
+import {Button, Checkbox, Label} from '@heroui-v3/react';
 import {AppDispatch} from '@lynx/redux/store';
 import {showRestartModal} from '@lynx/utils';
 import {lynxTopToast} from '@lynx/utils/hooks';
@@ -229,10 +230,10 @@ export default function ModuleConfigModal({isOpen, onClose}: ModuleConfigModalPr
                   {enabledCount} of {allAvailableCards.length} tools enabled
                 </span>
                 <div className="flex gap-2">
-                  <Button size="sm" variant="flat" onPress={enableAll}>
+                  <Button size="sm" variant="secondary" onPress={enableAll}>
                     Enable All
                   </Button>
-                  <Button size="sm" variant="flat" color="danger" onPress={disableAll}>
+                  <Button size="sm" onPress={disableAll} variant="danger-soft">
                     Disable All
                   </Button>
                 </div>
@@ -243,11 +244,16 @@ export default function ModuleConfigModal({isOpen, onClose}: ModuleConfigModalPr
                   <div className="grid grid-cols-2 gap-2">
                     {category.cards.map(card => (
                       <Checkbox
+                        id={card.id}
                         key={card.id}
                         isSelected={card.enabled}
-                        classNames={{label: 'text-small'}}
-                        onValueChange={() => toggleCard(card.id)}>
-                        {card.title}
+                        onChange={() => toggleCard(card.id)}>
+                        <Checkbox.Control>
+                          <Checkbox.Indicator />
+                        </Checkbox.Control>
+                        <Checkbox.Content>
+                          <Label className="cursor-pointer">{card.title}</Label>
+                        </Checkbox.Content>
                       </Checkbox>
                     ))}
                   </div>
@@ -257,10 +263,11 @@ export default function ModuleConfigModal({isOpen, onClose}: ModuleConfigModalPr
           )}
         </ModalBody>
         <ModalFooter>
-          <Button variant="light" color="warning" onPress={onClose}>
+          <Button onPress={onClose} variant="danger-soft">
             Cancel
           </Button>
-          <Button variant="flat" color="success" isLoading={saving} onPress={handleSave} startContent={<Diskette />}>
+          <Button isPending={saving} onPress={handleSave}>
+            <Diskette />
             Save & Restart
           </Button>
         </ModalFooter>

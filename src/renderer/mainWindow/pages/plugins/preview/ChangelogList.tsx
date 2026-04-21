@@ -1,4 +1,4 @@
-import {Chip} from '@heroui/react';
+import {Chip} from '@heroui-v3/react';
 import LynxScroll from '@lynx/components/LynxScroll';
 import {usePluginsState} from '@lynx/redux/reducers/plugins';
 import {SubscribeStages} from '@lynx_common/types';
@@ -88,7 +88,7 @@ function CategoryGroup({category, entries}: {category: string; entries: Changelo
     <div>
       <div className="flex items-center gap-3 my-4">
         <div className="h-px flex-1 bg-linear-to-r from-transparent via-foreground-200 to-transparent" />
-        <Chip variant="flat">{category}</Chip>
+        <Chip>{category}</Chip>
         <div className="h-px flex-1 bg-linear-to-r from-transparent via-foreground-200 to-transparent" />
       </div>
       <div className="space-y-2">
@@ -157,25 +157,25 @@ function VersionHistoryCard({versionData, index, isInstalledVersion, totalCount,
         {/* Version markers (Latest, Current, Version Number) */}
         <div className="flex items-center gap-x-2 relative w-full justify-between">
           <div className="flex items-center gap-x-2">
-            <Chip size="sm" color={isLatest ? 'secondary' : 'default'}>
+            {isLatest && (
+              <Chip size="sm" variant="soft" color="accent">
+                Latest
+              </Chip>
+            )}
+
+            <Chip size="sm" variant="soft" color={isLatest ? 'accent' : 'warning'}>
               {versionData.version}
             </Chip>
 
             {isInstalledVersion && (
-              <Chip size="sm" color="success">
+              <Chip size="sm" variant="soft" color="success">
                 Installed
-              </Chip>
-            )}
-
-            {isLatest && (
-              <Chip size="sm" color="primary">
-                Latest
               </Chip>
             )}
           </div>
 
           {stage && (
-            <Chip size="sm" variant="shadow" color={getStageColor(stage)}>
+            <Chip size="sm" variant="soft" color={getStageColor(stage)}>
               {getStageDisplayName(stage)}
             </Chip>
           )}
