@@ -1,7 +1,5 @@
 import {extensionsData} from '@lynx/plugins/extensions/loader';
-import staticsIpc from '@lynx_shared/ipc/statics';
-import {isEmpty} from 'lodash';
-import {ComponentType, memo, useEffect, useMemo, useState} from 'react';
+import {ComponentType, memo, useMemo} from 'react';
 
 import DashboardAbout, {DashboardAboutId} from './content/About';
 import DashboardCredits, {DashboardCreditsId} from './content/Credits';
@@ -23,26 +21,12 @@ export const dashboardSectionId = {
 export const DashboardSections = memo(() => {
   const content = useMemo(() => extensionsData.customizePages.dashboard.add.content as ComponentType<any>[], []);
 
-  const [creditsAvailable, setCreditsAvailable] = useState<boolean>(false);
-
-  useEffect(() => {
-    let mounted = true;
-    staticsIpc.getPatrons().then(cr => {
-      if (mounted) {
-        setCreditsAvailable(!isEmpty(cr));
-      }
-    });
-    return () => {
-      mounted = false;
-    };
-  }, []);
-
   return (
     <>
       <DashboardProfile />
       <DashboardUpdate />
-      {creditsAvailable && <DashboardCredits />}
       <DashboardReportIssue />
+      <DashboardCredits />
       <DashboardAbout />
 
       {content.map((Content, index) => (

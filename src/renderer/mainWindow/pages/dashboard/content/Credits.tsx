@@ -1,4 +1,4 @@
-import {Button, Card, User} from '@heroui/react';
+import {Avatar, Button, Description, Label} from '@heroui-v3/react';
 import SettingsSection from '@lynx/components/SettingsSection';
 import {Patreon_Icon} from '@lynx_assets/icons';
 import {PATREON_URL} from '@lynx_common/consts';
@@ -14,9 +14,9 @@ const TIER_EMOJI: Record<PatreonSupporterTier, string> = {
   'Diamond Sponsor': '💎',
 };
 
-const TIER_COLORS: Record<PatreonSupporterTier, 'warning' | 'primary'> = {
-  'Platinum Sponsor': 'warning',
-  'Diamond Sponsor': 'primary',
+const TIER_COLORS: Record<PatreonSupporterTier, 'bg-warning' | 'bg-accent'> = {
+  'Platinum Sponsor': 'bg-warning',
+  'Diamond Sponsor': 'bg-accent',
 };
 
 const TIER_GRADIENTS: Record<PatreonSupporterTier, string> = {
@@ -85,7 +85,9 @@ const DashboardCredits = memo(() => {
             }>
             Our Amazing Sponsors
           </h2>
-          <p className="text-sm text-gray-600 dark:text-gray-300">Thank you for making this project possible! 🙏</p>
+          {supporters.length > 0 && (
+            <p className="text-sm text-gray-600 dark:text-gray-300">Thank you for making this project possible! 🙏</p>
+          )}
         </div>
       </div>
 
@@ -96,13 +98,17 @@ const DashboardCredits = memo(() => {
             {/* Tier Header */}
             <div className="mb-6 flex items-center justify-between">
               <div className="flex items-center space-x-2">
-                <div className={`rounded-full bg-linear-to-r ${TIER_GRADIENTS[tier]} p-2 shadow-lg`}>
-                  <span className="text-lg">{TIER_EMOJI[tier]}</span>
+                <div
+                  className={
+                    `rounded-full bg-linear-to-r ${TIER_GRADIENTS[tier]} size-12 flex` +
+                    ` items-center justify-center shadow-lg shrink-0`
+                  }>
+                  <span className="text-2xl">{TIER_EMOJI[tier]}</span>
                 </div>
                 <div className="flex flex-col items-start">
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white">{tier}</h3>
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white">{tier.replace('Sponsor', '')}</h3>
                   <p className="text-xs text-gray-500 dark:text-gray-400">
-                    {groupedSupporters[tier]?.length || 0} amazing supporters
+                    {groupedSupporters[tier]?.length || 0} {tier}'s
                   </p>
                 </div>
               </div>
@@ -110,10 +116,8 @@ const DashboardCredits = memo(() => {
               {groupedSupporters[tier]?.length > MAX_DISPLAYED_SUPPORTERS && (
                 <Button
                   size="sm"
-                  variant="flat"
-                  color={TIER_COLORS[tier]}
-                  onPress={() => setExpandedTier(expandedTier === tier ? null : tier)}
-                  className="font-semibold shadow-lg transition-all duration-300 hover:scale-105">
+                  className={TIER_COLORS[tier]}
+                  onPress={() => setExpandedTier(expandedTier === tier ? null : tier)}>
                   {expandedTier === tier ? 'Show Less' : `Show All ${groupedSupporters[tier].length}`}
                 </Button>
               )}
@@ -124,40 +128,33 @@ const DashboardCredits = memo(() => {
               {(groupedSupporters[tier] || [])
                 .slice(0, expandedTier === tier ? undefined : MAX_DISPLAYED_SUPPORTERS)
                 .map(supporter => (
-                  <Card
+                  <Button
                     className={
-                      'group relative overflow-hidden rounded-xl bg-foreground-50' +
-                      ' p-4 shadow backdrop-blur-xs transition-all duration-300 hover:scale-105' +
-                      ' hover:shadow-lg dark:border-gray-700 dark:bg-gray-800/80 min-w-52!'
+                      'group relative overflow-hidden bg-surface' +
+                      ' size-full py-4 shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105' +
+                      ' min-w-52! justify-start'
                     }
                     key={supporter.name}
-                    isPressable>
+                    onPress={() => window.open(supporter.homePage)}>
                     <div
                       className={
                         `absolute inset-0 bg-linear-to-br ${TIER_GRADIENTS[tier]} opacity-0` +
                         ` transition-opacity duration-300 group-hover:opacity-10`
                       }
                     />
-                    <User
-                      avatarProps={{
-                        src: supporter.imageUrl,
-                        color: TIER_COLORS[tier],
-                        className: 'shrink-0 ring-2 ring-white dark:ring-gray-800 shadow-lg',
-                        size: 'md',
-                      }}
-                      classNames={{
-                        wrapper: 'w-full',
-                        name:
-                          'font-semibold text-gray-900 dark:text-white group-hover:text-gray-700' +
-                          ' dark:group-hover:text-gray-200 text-sm',
-                        description: 'text-gray-500 dark:text-gray-400 text-xs text-start',
-                      }}
-                      name={supporter.name}
-                      className="relative z-10 cursor-pointer"
-                      onClick={() => window.open(supporter.homePage)}
-                      description={`Member Since: ${supporter.memberSince}`}
-                    />
-                  </Card>
+                    <div className="inline-flex items-center gap-2 text-start">
+                      <Avatar className="size-12 shrink-0">
+                        <Avatar.Image alt={supporter.name} src={supporter.imageUrl} className={TIER_COLORS[tier]} />
+                        <Avatar.Fallback className={TIER_COLORS[tier]}>
+                          {...supporter.name.split(' ').map(item => item.slice(0, 1))}
+                        </Avatar.Fallback>
+                      </Avatar>
+                      <div className="flex flex-col">
+                        <Label>{supporter.name}</Label>
+                        <Description>Member Since: {supporter.memberSince}</Description>
+                      </div>
+                    </div>
+                  </Button>
                 ))}
             </div>
 
@@ -176,7 +173,7 @@ const DashboardCredits = memo(() => {
                   <HeartPulse2 className="size-6 text-gray-400" />
                 </div>
                 <h3 className="mb-1 text-lg font-semibold text-gray-900 dark:text-white">No {tier}s Yet</h3>
-                <p className="text-sm text-gray-500 dark:text-gray-400">Be the first to support us at this tier!</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Be the first to support at this tier!</p>
               </div>
             )}
           </div>
@@ -186,11 +183,11 @@ const DashboardCredits = memo(() => {
       {/* Call to Action */}
       <div className="mt-12 mb-4 text-center">
         <div className="mx-auto max-w-xs">
-          <Card
-            as="div"
-            onPress={handleBecomePatron}
-            className={'overflow-hidden p-4 transition-all duration-300 hover:scale-105 dark:bg-foreground-100 '}
-            isPressable>
+          <Button
+            className={
+              'overflow-hidden transition-all duration-300 shadow hover:scale-105 bg-surface size-fit py-5 px-8'
+            }
+            onPress={handleBecomePatron}>
             <div className="flex flex-col items-center space-y-2">
               <div className="rounded-full bg-linear-to-r from-blue-500 to-blue-600 p-2">
                 <Patreon_Icon className="size-5 text-white" />
@@ -204,7 +201,7 @@ const DashboardCredits = memo(() => {
                 <SquareTopDown className="size-3" />
               </div>
             </div>
-          </Card>
+          </Button>
         </div>
       </div>
     </SettingsSection>
