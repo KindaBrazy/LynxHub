@@ -107,8 +107,8 @@ export function showGitOwnershipToast() {
     {
       buttons: ['exit'],
       customButtons: [
-        {id: 'add_safe', color: 'warning', label: 'Add to Safe Directories'},
-        {id: 'change_data_dir', color: 'success', label: 'Change Data Directory'},
+        {id: 'add_safe', color: 'danger-soft', label: 'Add to Safe Directories'},
+        {id: 'change_data_dir', color: 'primary', label: 'Change Data Directory'},
       ],
       title: 'Git Ownership Warning',
       message:
