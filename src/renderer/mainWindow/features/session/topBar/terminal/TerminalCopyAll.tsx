@@ -1,11 +1,9 @@
 import {Button, Tooltip} from '@heroui/react';
-import {AppDispatch} from '@lynx/redux/store';
-import {lynxTopToast} from '@lynx/utils/hooks';
+import {topToast} from '@lynx/layouts/ToastProviders';
 import filesIpc from '@lynx_shared/ipc/files';
 import {FileText} from '@solar-icons/react-perf/BoldDuotone';
 import {SerializeAddon} from '@xterm/addon-serialize';
 import {memo, useCallback} from 'react';
-import {useDispatch} from 'react-redux';
 
 import CopyClipboard from '../../../../components/CopyClipboard';
 
@@ -20,8 +18,6 @@ type Props = {
  * Buttons to copy terminal content to clipboard or save to file.
  */
 const TerminalCopyAll = memo(({serializeAddon}: Props) => {
-  const dispatch = useDispatch<AppDispatch>();
-
   const handleCopy = useCallback(() => {
     const contentToCopy = serializeAddon.serialize();
     if (!contentToCopy) return;
@@ -29,24 +25,24 @@ const TerminalCopyAll = memo(({serializeAddon}: Props) => {
     try {
       navigator.clipboard.writeText(contentToCopy);
     } catch (e) {
-      lynxTopToast(dispatch).error('Failed to copy terminal text to clipboard!');
+      topToast.danger('Failed to copy terminal text to clipboard!');
     }
   }, [serializeAddon]);
 
   const saveFile = useCallback(() => {
     const contentToSave = serializeAddon.serialize();
     if (!contentToSave) {
-      lynxTopToast(dispatch).warning('Failed get terminal text to save!');
+      topToast.warning('Failed get terminal text to save!');
       return;
     }
 
     filesIpc
       .saveToFile(contentToSave)
       .then(result => {
-        if (result) lynxTopToast(dispatch).success(`Successfully saved terminal data.`);
+        if (result) topToast.success(`Successfully saved terminal data.`);
       })
-      .catch(() => lynxTopToast(dispatch).error('Failed to save terminal text to file!'));
-  }, [serializeAddon, dispatch]);
+      .catch(() => topToast.danger('Failed to save terminal text to file!'));
+  }, [serializeAddon]);
 
   return (
     <div className="flex flex-row items-center gap-x-1">

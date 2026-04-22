@@ -1,12 +1,10 @@
 import {Button, Description, Input, Key, Label, ListBox, Select} from '@heroui-v3/react';
-import {AppDispatch} from '@lynx/redux/store';
-import {lynxTopToast} from '@lynx/utils/hooks';
+import {topToast} from '@lynx/layouts/ToastProviders';
 import {AgentTypes} from '@lynx_common/types/ipc';
 import browserIpc from '@lynx_shared/ipc/browser';
 import storageIpc from '@lynx_shared/ipc/storage';
 import {Diskette} from '@solar-icons/react-perf/BoldDuotone';
 import {useCallback, useEffect, useState} from 'react';
-import {useDispatch} from 'react-redux';
 
 import SettingsFilterItem from '../../SettingsFilterItem';
 import SettingsSearchHighlight from '../../SettingsSearchHighlight';
@@ -24,7 +22,6 @@ interface UserAgentOption {
  * Synchronizes the visual state and external storage for browser user agent configuration.
  */
 function useUserAgentSettings() {
-  const dispatch = useDispatch<AppDispatch>();
   const [selectedAgent, setSelectedAgent] = useState<AgentTypes | undefined>('lynxhub');
   const [customValue, setCustomValue] = useState<string>('');
   const [agentDescriptions, setAgentDescriptions] = useState<UserAgentOption[]>([]);
@@ -102,8 +99,8 @@ function useUserAgentSettings() {
   // Save changes to the custom text string explicitly
   const saveCustomAgent = useCallback(() => {
     storageIpc.update('browser', {customUserAgent: customValue, userAgent: 'custom'});
-    lynxTopToast(dispatch).success('Custom user agent saved successfully!');
-  }, [customValue, dispatch]);
+    topToast.success('Custom user agent saved successfully!');
+  }, [customValue]);
 
   return {
     selectedAgent,

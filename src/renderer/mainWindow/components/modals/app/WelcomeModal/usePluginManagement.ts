@@ -4,10 +4,8 @@ import {getPluginIconUrl} from '@lynx_common/utils/plugins';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
 import {compact, isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
-import {useDispatch} from 'react-redux';
 
-import {AppDispatch} from '../../../../redux/store';
-import {lynxTopToast} from '../../../../utils/hooks';
+import {topToast} from '../../../../layouts/ToastProviders';
 import {ExtensionItem} from './types';
 
 export function useAvailablePlugins() {
@@ -38,8 +36,6 @@ export function usePluginInstaller(
   setInstalledPlugins: Dispatch<SetStateAction<string[]>>,
   setInstalling: (value: boolean) => void,
 ) {
-  const dispatch = useDispatch<AppDispatch>();
-
   const installPlugins = async (selectedIds: Set<string>, clearSelection: () => void) => {
     setInstalling(true);
     const urlsToInstall = compact(Array.from(selectedIds).map(id => plugins.find(ext => ext.id === id)?.url));
@@ -59,12 +55,12 @@ export function usePluginInstaller(
         if (isInstalled) {
           setInstalledPlugins(prevState => [...prevState, pluginName]);
           setPlugins(prevState => prevState.filter(item => item.url !== extension));
-          lynxTopToast(dispatch).success(`${pluginName} extension installed successfully.`);
+          topToast.success(`${pluginName} extension installed successfully.`);
         } else {
-          lynxTopToast(dispatch).error(`Failed to install ${pluginName} extension.`);
+          topToast.danger(`Failed to install ${pluginName} extension.`);
         }
       } catch (e) {
-        lynxTopToast(dispatch).error(`Failed to install ${pluginName} extension.`);
+        topToast.danger(`Failed to install ${pluginName} extension.`);
         console.warn(e);
       }
     }

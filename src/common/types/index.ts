@@ -265,12 +265,6 @@ export type ElementResizeData = {width: number; height: number; dpr: number; x?:
 
 export type StorageUnit = 'B' | 'KB' | 'MB' | 'GB' | 'TB' | 'PB' | 'b' | 'kb' | 'mb' | 'gb' | 'tb' | 'pb';
 
-export type HeroToastPlacement =
-  | 'bottom-right'
-  | 'bottom-left'
-  | 'bottom-center'
-  | 'top-right'
-  | 'top-left'
-  | 'top-center';
+export type HeroToastPlacement = 'top' | 'bottom';
 
 export type ConfirmMenuTypes = 'closeConfirm' | 'terminateAIConfirm' | 'closeTabConfirm' | 'exitSignalConfirm';

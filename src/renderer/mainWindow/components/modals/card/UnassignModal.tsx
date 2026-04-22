@@ -1,13 +1,11 @@
 import {Button, ButtonGroup, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
+import {topToast} from '@lynx/layouts/ToastProviders';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {ShieldCross} from '@solar-icons/react-perf/BoldDuotone';
 import {Fragment, memo, useCallback, useMemo} from 'react';
-import {useDispatch} from 'react-redux';
 
 import {extensionsData} from '../../../plugins/extensions/loader';
 import {useModalsState} from '../../../redux/reducers/modals';
-import {AppDispatch} from '../../../redux/store';
-import {lynxTopToast} from '../../../utils/hooks';
 import {useTabModalLifecycle} from '../useTabModalManager';
 
 type Props = {
@@ -17,8 +15,6 @@ type Props = {
 };
 
 const UnassignDialog = memo(({cardId, isOpen, tabID}: Props) => {
-  const dispatch = useDispatch<AppDispatch>();
-
   const {onOpenChange, show} = useTabModalLifecycle('cardUnassign', tabID);
 
   const closeHandle = useCallback(() => {
@@ -32,13 +28,13 @@ const UnassignDialog = memo(({cardId, isOpen, tabID}: Props) => {
       storageUtilsIpc.invoke
         .unassignCard(cardId, clearConfig)
         .then(() => {
-          lynxTopToast(dispatch).success('Unassigned successfully.');
+          topToast.success('Unassigned successfully.');
         })
         .catch(() => {
-          lynxTopToast(dispatch).error('An error occurred while unassigning.');
+          topToast.danger('An error occurred while unassigning.');
         });
     },
-    [cardId, closeHandle, dispatch],
+    [cardId, closeHandle],
   );
 
   return (

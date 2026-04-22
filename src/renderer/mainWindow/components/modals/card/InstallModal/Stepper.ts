@@ -1,4 +1,5 @@
 import {InitialSteps, InstallationStepper} from '@lynx_common/types/plugins/modules';
+import {ToastFunction} from '@lynx_common/utils/toast';
 import filesIpc from '@lynx_shared/ipc/files';
 import gitIpc from '@lynx_shared/ipc/git';
 import lynxIpc from '@lynx_shared/ipc/lynxIpc';
@@ -7,7 +8,6 @@ import utilsIpc from '@lynx_shared/ipc/utils';
 import {Dispatch, FC, SetStateAction} from 'react';
 
 import {extensionRendererApi} from '../../../../plugins/extensions/loader';
-import {lynxTopToast} from '../../../../utils/hooks';
 import {InstallState} from './types';
 
 export interface InstallStepperData {
@@ -25,7 +25,8 @@ export interface InstallStepperData {
   installExtensions: InstallationStepper['postInstall']['installExtensions'];
   progressBar: InstallationStepper['progressBar'];
   setUpdated: InstallationStepper['setUpdated'];
-  showToast: () => ReturnType<typeof lynxTopToast>;
+  topToast: ToastFunction;
+  bottomToast: ToastFunction;
   checkForUpdate: (dir: string | undefined) => void;
   updateState: (newState: Partial<InstallState> | ((prev: InstallState) => Partial<InstallState>)) => void;
 }
@@ -67,7 +68,8 @@ export default class InstallStepper {
       data.checkForUpdate(dir);
     };
 
-    this.showToast = data.showToast;
+    this.topToast = data.topToast;
+    this.bottomToast = data.bottomToast;
 
     this.ipc = {
       on(channel: string, listener: any): () => void {
@@ -161,7 +163,8 @@ export default class InstallStepper {
 
   public setInstalled: InstallationStepper['setInstalled'];
 
-  public showToast: InstallationStepper['showToast'];
+  public topToast: InstallationStepper['topToast'];
+  public bottomToast: InstallationStepper['bottomToast'];
 
   public collectUserInput: InstallationStepper['collectUserInput'];
 

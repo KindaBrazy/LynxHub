@@ -12,11 +12,11 @@ import {isNil} from 'lodash';
 import {Dispatch, RefObject, SetStateAction, useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
+import {bottomToast, topToast} from '../../../../layouts/ToastProviders';
 import {collectExtensionUserInputs} from '../../../../plugins/extensions/utils';
 import {useAllCardMethods} from '../../../../plugins/modules';
 import {cardsActions} from '../../../../redux/reducers/cards';
 import {AppDispatch} from '../../../../redux/store';
-import {lynxTopToast} from '../../../../utils/hooks';
 import InstallStepper from './Stepper';
 import {InstallState} from './types';
 
@@ -203,11 +203,10 @@ export function useStepper({
     [updateType, cardId],
   );
 
-  const showToast = useCallback(() => lynxTopToast(dispatch), [dispatch]);
-
   return useMemo(() => {
     return new InstallStepper({
-      showToast,
+      topToast,
+      bottomToast,
       cardId,
       setSteps,
       setCurrentStep,

@@ -1,10 +1,8 @@
 import {Button, Card, FieldError, Input, Label, Radio, RadioGroup, TextField} from '@heroui-v3/react';
-import {AppDispatch} from '@lynx/redux/store';
-import {lynxTopToast} from '@lynx/utils/hooks';
+import {topToast} from '@lynx/layouts/ToastProviders';
 import downloadManagerIpc from '@lynx_shared/ipc/downloadManager';
 import {MoveToFolder} from '@solar-icons/react-perf/BoldDuotone';
 import {useCallback, useEffect, useMemo, useState} from 'react';
-import {useDispatch} from 'react-redux';
 
 import SettingsFilterItem from '../../SettingsFilterItem';
 import SettingsSearchHighlight from '../../SettingsSearchHighlight';
@@ -14,7 +12,6 @@ import SettingsSearchHighlight from '../../SettingsSearchHighlight';
  * Includes fetching, modifying behavior, and resolving file paths.
  */
 function useDownloadSettings() {
-  const dispatch = useDispatch<AppDispatch>();
   const [downloadLocation, setDownloadLocation] = useState<string>('');
   const [downloadBehavior, setDownloadBehavior] = useState<'ask' | 'default'>('default');
 
@@ -42,7 +39,7 @@ function useDownloadSettings() {
           setLocationError('');
         } else if (locationResult.error) {
           setLocationError(locationResult.error);
-          lynxTopToast(dispatch).warning(`Failed to load download location: ${locationResult.error}`);
+          topToast.warning(`Failed to load download location: ${locationResult.error}`);
         }
 
         if (behaviorResult.success && behaviorResult.behavior) {
@@ -50,11 +47,11 @@ function useDownloadSettings() {
           setBehaviorError('');
         } else if (behaviorResult.error) {
           setBehaviorError(behaviorResult.error);
-          lynxTopToast(dispatch).warning(`Failed to load download behavior: ${behaviorResult.error}`);
+          topToast.warning(`Failed to load download behavior: ${behaviorResult.error}`);
         }
       } catch (error) {
         console.error('Failed to load download settings:', error);
-        if (isMounted) lynxTopToast(dispatch).warning('Failed to load download settings!');
+        if (isMounted) topToast.warning('Failed to load download settings!');
       }
     };
 
@@ -62,7 +59,7 @@ function useDownloadSettings() {
     return () => {
       isMounted = false;
     };
-  }, [dispatch]);
+  }, []);
 
   const handleChangeLocation = useCallback(async () => {
     setIsLoadingLocation(true);
@@ -72,45 +69,42 @@ function useDownloadSettings() {
       if (result.success && result.path) {
         setDownloadLocation(result.path);
         setLocationError('');
-        lynxTopToast(dispatch).success('Download location updated successfully!');
+        topToast.success('Download location updated successfully!');
       } else if (result.error && result.error !== 'Cancelled') {
         setLocationError(result.error);
-        lynxTopToast(dispatch).error(`Failed to update location: ${result.error}`);
+        topToast.danger(`Failed to update location: ${result.error}`);
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       setLocationError(errorMessage);
-      lynxTopToast(dispatch).error('Failed to open location dialog!');
+      topToast.danger('Failed to open location dialog!');
     } finally {
       setIsLoadingLocation(false);
     }
-  }, [dispatch]);
+  }, []);
 
-  const handleBehaviorChange = useCallback(
-    async (value: string) => {
-      const behavior = value as 'ask' | 'default';
-      setIsLoadingBehavior(true);
-      setBehaviorError('');
-      try {
-        const result = await downloadManagerIpc.invoke.setDownloadBehavior(behavior);
-        if (result.success) {
-          setDownloadBehavior(behavior);
-          setBehaviorError('');
-          lynxTopToast(dispatch).success('Download behavior updated successfully!');
-        } else {
-          setBehaviorError(result.error || 'Unknown error');
-          lynxTopToast(dispatch).error(`Failed to update behavior: ${result.error}`);
-        }
-      } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-        setBehaviorError(errorMessage);
-        lynxTopToast(dispatch).error('Failed to update download behavior!');
-      } finally {
-        setIsLoadingBehavior(false);
+  const handleBehaviorChange = useCallback(async (value: string) => {
+    const behavior = value as 'ask' | 'default';
+    setIsLoadingBehavior(true);
+    setBehaviorError('');
+    try {
+      const result = await downloadManagerIpc.invoke.setDownloadBehavior(behavior);
+      if (result.success) {
+        setDownloadBehavior(behavior);
+        setBehaviorError('');
+        topToast.success('Download behavior updated successfully!');
+      } else {
+        setBehaviorError(result.error || 'Unknown error');
+        topToast.danger(`Failed to update behavior: ${result.error}`);
       }
-    },
-    [dispatch],
-  );
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      setBehaviorError(errorMessage);
+      topToast.danger('Failed to update download behavior!');
+    } finally {
+      setIsLoadingBehavior(false);
+    }
+  }, []);
 
   return {
     downloadLocation,

@@ -1,4 +1,5 @@
 import {Button, ButtonGroup, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Tooltip} from '@heroui/react';
+import {topToast} from '@lynx/layouts/ToastProviders';
 import filesIpc from '@lynx_shared/ipc/files';
 import moduleIpc from '@lynx_shared/ipc/plugins/module';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
@@ -10,7 +11,7 @@ import {extensionsData} from '../../../plugins/extensions/loader';
 import {useGetUninstallType} from '../../../plugins/modules';
 import {useModalsState} from '../../../redux/reducers/modals';
 import {AppDispatch} from '../../../redux/store';
-import {lynxTopToast, useDisableTooltip, useInstalledCard} from '../../../utils/hooks';
+import {useDisableTooltip, useInstalledCard} from '../../../utils/hooks';
 import {useTabModalLifecycle} from '../useTabModalManager';
 
 type Props = {
@@ -36,26 +37,21 @@ const UninstallDialog = memo(({cardId, isOpen, tabID}: Props) => {
       if (card) {
         closeHandle();
 
-        const promise = new Promise<void>(resolve => {
+        const promise = new Promise<void>((resolve, reject) => {
           filesIpc[type](card.dir!)
             .then(() => {
               storageUtilsIpc.send.removeInstalledCard(cardId);
               resolve();
-              lynxTopToast(dispatch).success(
-                type === 'removeDir' ? 'Uninstalled successfully.' : 'Moved to trash successfully.',
-              );
             })
-            .catch(() => {
-              resolve();
-              lynxTopToast(dispatch).error(
-                type === 'removeDir'
-                  ? 'An error occurred while uninstalling.'
-                  : 'An error occurred while moving to trash.',
-              );
-            });
+            .catch(reject);
         });
 
-        lynxTopToast(dispatch).loading(type === 'removeDir' ? 'Uninstalling...' : 'Moving to trash...', promise);
+        topToast.promise(promise, {
+          loading: type === 'removeDir' ? 'Uninstalling...' : 'Moving to trash...',
+          success: type === 'removeDir' ? 'Uninstalled successfully.' : 'Moved to trash successfully.',
+          error:
+            type === 'removeDir' ? 'An error occurred while uninstalling.' : 'An error occurred while moving to trash.',
+        });
       }
     },
     [card, cardId, closeHandle, dispatch],
@@ -67,22 +63,21 @@ const UninstallDialog = memo(({cardId, isOpen, tabID}: Props) => {
   const uninstall = useCallback(() => {
     closeHandle();
 
-    const promise = new Promise<void>(resolve => {
+    const promise = new Promise<void>((resolve, reject) => {
       moduleIpc
         .uninstallCardByID(cardId)
         .then(() => {
           storageUtilsIpc.send.removeInstalledCard(cardId);
-          lynxTopToast(dispatch).success('Uninstalled successfully.');
-        })
-        .catch(() => {
-          lynxTopToast(dispatch).error('An error occurred while uninstalling.');
-        })
-        .finally(() => {
           resolve();
-        });
+        })
+        .catch(reject);
     });
 
-    lynxTopToast(dispatch).loading('Uninstalling...', promise);
+    topToast.promise(promise, {
+      loading: 'Uninstalling...',
+      success: 'Uninstalled successfully.',
+      error: 'An error occurred while uninstalling.',
+    });
   }, [cardId, closeHandle, dispatch]);
 
   return (

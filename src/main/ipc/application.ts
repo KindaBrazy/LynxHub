@@ -117,7 +117,7 @@ export const applicationIpc = {
     updateError: () => sendToMain(appChannels.updateError),
 
     /** Shows a toast message */
-    showToast: (message: string, type: ShowToastTypes, placement: HeroToastPlacement = 'bottom-right') =>
+    showToast: (message: string, type: ShowToastTypes, placement: HeroToastPlacement = 'top') =>
       sendToMain(appChannels.showToast, message, type, placement),
     /** Changes window state */
     changeWinState: (state: WinStateChange) => sendToMain(appChannels.onChangeState, state),

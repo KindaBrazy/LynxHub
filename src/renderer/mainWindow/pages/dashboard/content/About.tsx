@@ -1,7 +1,5 @@
 import {Avatar, Button, Card, Chip} from '@heroui-v3/react';
 import SettingsSection from '@lynx/components/SettingsSection';
-import {AppDispatch} from '@lynx/redux/store';
-import {lynxTopToast} from '@lynx/utils/hooks';
 import {DiscordColor_Icon, GitHub_Icon, Gmail_Icon, Reddit_Icon, Scales_Icon, XSite_Icon} from '@lynx_assets/icons';
 import {Youtube_Color_Icon} from '@lynx_assets/icons/Icons_Colorful';
 import {
@@ -21,21 +19,17 @@ import {
 } from '@lynx_common/consts';
 import {Copy, InfoSquare, SquareTopDown} from '@solar-icons/react-perf/BoldDuotone';
 import {memo, useCallback} from 'react';
-import {useDispatch} from 'react-redux';
+
+import {topToast} from '../../../layouts/ToastProviders';
 
 export const DashboardAboutId = 'settings_about_elem';
 
 /** Information about application and developer */
 const DashboardAbout = memo(() => {
-  const dispatch = useDispatch<AppDispatch>();
-
-  const copyText = useCallback(
-    (text: string) => {
-      navigator.clipboard.writeText(text);
-      lynxTopToast(dispatch).info(`Copied to clipboard: ${text}`);
-    },
-    [dispatch],
-  );
+  const copyText = useCallback((text: string) => {
+    navigator.clipboard.writeText(text);
+    topToast.info(`Copied to clipboard: ${text}`);
+  }, []);
 
   const socialLinks = [
     {

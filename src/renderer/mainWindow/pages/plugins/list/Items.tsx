@@ -18,7 +18,6 @@ import {
 } from '@lynx/redux/reducers/plugins';
 import {AppDispatch} from '@lynx/redux/store';
 import {showRestartModal} from '@lynx/utils';
-import {lynxTopToast} from '@lynx/utils/hooks';
 import {Linux_Icon, MacOS_Icon, Windows_Icon} from '@lynx_assets/icons';
 import {PluginInstalledItem, PluginItem} from '@lynx_common/types/plugins';
 import {extractGitUrl, getCacheUrl} from '@lynx_common/utils';
@@ -33,6 +32,7 @@ import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 import {SimpleGitProgressEvent} from 'simple-git';
 
+import {topToast} from '../../../layouts/ToastProviders';
 import {UpdateButton} from '../Elements';
 import ModuleConfigModal from '../ModuleConfigModal';
 
@@ -115,12 +115,12 @@ export function PluginListItem({item, installed}: PluginListItemProps) {
   const handleUninstall = useCallback(() => {
     pluginsIpc.uninstall(item.metadata.id).then(result => {
       if (result) {
-        lynxTopToast(dispatch).success(`${item.metadata.title} uninstalled successfully`);
+        topToast.success(`${item.metadata.title} uninstalled successfully`);
         showRestartModal(dispatch, 'To complete the uninstallation, please restart the app.');
         dispatch(pluginsActions.removeInstalled(item.metadata.id));
       }
     });
-  }, [item, dispatch]);
+  }, [item]);
 
   const handleSelect = useCallback(() => {
     AddBreadcrumb_Renderer(`Plugin Select: id:${item.metadata.id}`);

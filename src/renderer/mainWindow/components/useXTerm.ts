@@ -1,7 +1,6 @@
 import parseTerminalColors from '@lynx/features/session/terminal/colorHandler';
 import {getRendererMode, getTheme, getWindowPty} from '@lynx/features/session/terminal/utils';
 import {AppDispatch} from '@lynx/redux/store';
-import {lynxTopToast} from '@lynx/utils/hooks';
 import {TerminalUseConpty} from '@lynx_common/types/ipc';
 import applicationIpc from '@lynx_shared/ipc/application';
 import ptyIpc from '@lynx_shared/ipc/pty';
@@ -20,6 +19,7 @@ import FontFaceObserver from 'fontfaceobserver';
 import {isEmpty, isEqual} from 'lodash';
 import {RefObject, useCallback, useEffect, useRef} from 'react';
 
+import {topToast} from '../layouts/ToastProviders';
 import {cardsActions} from '../redux/reducers/cards';
 import {useTabsState} from '../redux/reducers/tabs';
 import {triggerActions} from '../redux/reducers/triggers';
@@ -240,7 +240,7 @@ export const useXTerm = ({
       .then(() => loadTerminal(FONT_FAMILY))
       .catch(() => {
         void loadTerminal();
-        lynxTopToast(dispatch).warning('Terminal font failed to load. Using fallback.');
+        topToast.warning('Terminal font failed to load. Using fallback.');
       });
 
     // Resize handler

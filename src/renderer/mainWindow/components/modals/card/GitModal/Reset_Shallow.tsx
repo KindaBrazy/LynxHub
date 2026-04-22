@@ -1,11 +1,8 @@
 import {Button, ButtonGroup, Popover, PopoverContent, PopoverTrigger} from '@heroui/react';
+import {topToast} from '@lynx/layouts/ToastProviders';
 import gitIpc from '@lynx_shared/ipc/git';
 import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
 import {useCallback, useState} from 'react';
-import {useDispatch} from 'react-redux';
-
-import {AppDispatch} from '../../../../redux/store';
-import {lynxTopToast} from '../../../../utils/hooks';
 
 interface ResetShallowProps {
   isShallow: boolean;
@@ -22,8 +19,6 @@ export default function ResetShallow({isShallow, dir, refreshData, title}: Reset
   const [isResetConfirmOpen, setIsResetConfirmOpen] = useState(false);
   const [isShallowConfirmOpen, setIsShallowConfirmOpen] = useState(false);
 
-  const dispatch = useDispatch<AppDispatch>();
-
   const handleUnShallow = useCallback(async () => {
     AddBreadcrumb_Renderer(`unShallow: ${title}`);
     setIsShallowConfirmOpen(false);
@@ -31,14 +26,14 @@ export default function ResetShallow({isShallow, dir, refreshData, title}: Reset
 
     try {
       await gitIpc.unShallow(dir);
-      lynxTopToast(dispatch).success('Successfully unshallowed the repository.');
+      topToast.success('Successfully unshallowed the repository.');
       refreshData();
     } catch {
-      lynxTopToast(dispatch).error('Failed to unshallow the repository.');
+      topToast.danger('Failed to unshallow the repository.');
     } finally {
       setIsLoadingShallow(false);
     }
-  }, [dir, title, dispatch, refreshData]);
+  }, [dir, title, refreshData]);
 
   const handleResetHard = useCallback(async () => {
     AddBreadcrumb_Renderer(`Reset Hard: ${title}`);
@@ -47,14 +42,14 @@ export default function ResetShallow({isShallow, dir, refreshData, title}: Reset
 
     try {
       await gitIpc.resetHard(dir);
-      lynxTopToast(dispatch).success('Successfully reset the repository to its last committed state.');
+      topToast.success('Successfully reset the repository to its last committed state.');
       refreshData();
     } catch {
-      lynxTopToast(dispatch).error('Failed to reset the repository.');
+      topToast.danger('Failed to reset the repository.');
     } finally {
       setIsResetting(false);
     }
-  }, [dir, title, dispatch, refreshData]);
+  }, [dir, title, refreshData]);
 
   const handleStashDrop = useCallback(async () => {
     AddBreadcrumb_Renderer(`Stash Drop: ${title}`);
@@ -62,13 +57,13 @@ export default function ResetShallow({isShallow, dir, refreshData, title}: Reset
 
     try {
       const result = await gitIpc.stashDrop(dir);
-      lynxTopToast(dispatch)[result.type](result.message);
+      topToast[result.type](result.message);
     } catch (error: any) {
-      lynxTopToast(dispatch).error(error.message || 'Stash drop failed');
+      topToast.danger(error.message || 'Stash drop failed');
     } finally {
       setIsStashingDrop(false);
     }
-  }, [dir, title, dispatch]);
+  }, [dir, title]);
 
   return (
     <ButtonGroup fullWidth>

@@ -1,4 +1,5 @@
 import {Card, CardBody, Input, Progress} from '@heroui/react';
+import {topToast} from '@lynx/layouts/ToastProviders';
 import {GitHub_Icon} from '@lynx_assets/icons';
 import {GitProgressCallback} from '@lynx_common/types/ipc';
 import {extractGitUrl, validateGitRepoUrl} from '@lynx_common/utils';
@@ -7,13 +8,10 @@ import {Download} from '@solar-icons/react-perf/BoldDuotone';
 import {motion} from 'framer-motion';
 import {capitalize, startCase} from 'lodash';
 import {useCallback, useEffect, useState} from 'react';
-import {useDispatch} from 'react-redux';
 import {SimpleGitProgressEvent} from 'simple-git';
 
 import {useAppState} from '../../../../redux/reducers/app';
-import {AppDispatch} from '../../../../redux/store';
 import {initGitProgress} from '../../../../utils/constants';
-import {lynxTopToast} from '../../../../utils/hooks';
 import {tabContentVariants} from './Constants';
 
 type Props = {
@@ -36,7 +34,6 @@ export default function Clone({updateTable, visible, installedExtensions, dir}: 
   const [isEmpty, setIsEmpty] = useState<boolean>(true);
   const [cloning, setCloning] = useState<boolean>(false);
   const [alreadyInstalled, setAlreadyInstalled] = useState<boolean>(false);
-  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     if (downloadBox) {
@@ -119,7 +116,7 @@ export default function Clone({updateTable, visible, installedExtensions, dir}: 
         case 'Failed':
           setCloneProgress(initGitProgress);
           setCloning(false);
-          lynxTopToast(dispatch).error('Error: Unable to clone the extension.');
+          topToast.danger('Error: Unable to clone the extension.');
           break;
         case 'Completed':
           setCloneProgress(initGitProgress);
@@ -128,7 +125,7 @@ export default function Clone({updateTable, visible, installedExtensions, dir}: 
           setIsValid(true);
           setResultUrl('');
           setCloning(false);
-          lynxTopToast(dispatch).success('Extension installed successfully.');
+          topToast.success('Extension installed successfully.');
           updateTable();
           break;
       }
@@ -137,7 +134,7 @@ export default function Clone({updateTable, visible, installedExtensions, dir}: 
     const removeListener = gitIpc.onProgress(onProgress);
 
     return () => removeListener();
-  }, [visible, dispatch, updateTable]);
+  }, [visible, updateTable]);
 
   if (!visible) return null;
 

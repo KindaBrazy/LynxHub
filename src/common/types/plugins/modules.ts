@@ -2,6 +2,7 @@ import type {ElectronAPI} from '@electron-toolkit/preload';
 import type * as pty from 'node-pty';
 
 import type {AvailablePageIDs} from '../../consts';
+import type {ToastFunction} from '../../utils/toast';
 import {CustomArg} from '../index';
 import type {CustomRunBehaviorData} from '../ipc';
 
@@ -386,17 +387,8 @@ export type InstallationStepper = {
     openFileOrFolder: (itemPath: string) => void;
   };
 
-  /**
-   * Display toast notifications.
-   */
-  showToast: () => {
-    success: (title: string, timeout?: number) => void;
-    error: (title: string, timeout?: number) => void;
-    warning: (title: string, timeout?: number) => void;
-    info: (title: string, timeout?: number) => void;
-
-    loading: (title: string, promise: Promise<any>) => void;
-  };
+  topToast: ToastFunction;
+  bottomToast: ToastFunction;
 };
 
 /**

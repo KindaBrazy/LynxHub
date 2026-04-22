@@ -1,3 +1,4 @@
+import type {ToastProps} from '@heroui-v3/react';
 import {appChannels} from '@lynx_common/consts/ipcChannels/application';
 import type {HeroToastPlacement} from '@lynx_common/types';
 import type {
@@ -6,7 +7,6 @@ import type {
   ChangeWindowState,
   DarkModeTypes,
   LynxInput,
-  ShowToastTypes,
   SystemInfo,
   TaskbarStatus,
   WinStateChange,
@@ -83,7 +83,7 @@ const applicationIpc = {
 
     // Listens for toast notification events
     onShowToast: (
-      result: (message: string, type: ShowToastTypes, placement?: HeroToastPlacement) => void,
+      result: (message: string, type: NonNullable<ToastProps['variant']>, placement?: HeroToastPlacement) => void,
     ): (() => void) => lynxIpc.on(appChannels.showToast, result),
 
     // Listens for new tab events

@@ -6,7 +6,6 @@ import {settingsActions} from '@lynx/redux/reducers/settings';
 import {useTabsState} from '@lynx/redux/reducers/tabs';
 import {useUserState} from '@lynx/redux/reducers/user';
 import {AppDispatch} from '@lynx/redux/store';
-import {lynxTopToast} from '@lynx/utils/hooks';
 import {APP_BUILD_NUMBER} from '@lynx_common/consts';
 import {toMs} from '@lynx_common/utils';
 import applicationIpc from '@lynx_shared/ipc/application';
@@ -17,6 +16,8 @@ import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
 import {compact, isNil} from 'lodash';
 import {useEffect, useRef} from 'react';
 import {useDispatch} from 'react-redux';
+
+import {topToast} from '../../layouts/ToastProviders';
 
 /**
  * Checks for updates for installed cards.
@@ -107,7 +108,7 @@ export const useListenForUpdateError = () => {
           releases.currentBuild > APP_BUILD_NUMBER
         ) {
           dispatch(settingsActions.setSettingsState({key: 'updateAvailable', value: true}));
-          lynxTopToast(dispatch).info('New Update Available!');
+          topToast.info('New Update Available!');
 
           const isRunningAI = runningCard.some(card => card.tabId === activeTab);
           if (!isRunningAI) {

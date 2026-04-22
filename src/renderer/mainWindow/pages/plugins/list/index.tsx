@@ -4,7 +4,6 @@ import LynxScroll from '@lynx/components/LynxScroll';
 import {pluginsActions, usePluginsState} from '@lynx/redux/reducers/plugins';
 import {AppDispatch} from '@lynx/redux/store';
 import {searchInStrings, showRestartModal} from '@lynx/utils';
-import {lynxTopToast} from '@lynx/utils/hooks';
 import {Circle_Icon} from '@lynx_assets/icons';
 import {PluginPage_Icon} from '@lynx_assets/icons/pages';
 import {PluginFilter} from '@lynx_common/types/plugins';
@@ -14,6 +13,7 @@ import {isEmpty} from 'lodash';
 import {useCallback, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
+import {topToast} from '../../../layouts/ToastProviders';
 import {PluginListItem} from './Items';
 import {FilterMenu, useFetchExtensions, useFilteredList, useSortedList} from './utils';
 
@@ -150,7 +150,7 @@ function SyncAllButton() {
       .syncAll(syncList.map(item => ({id: item.id, commit: item.commit})))
       .then(synced => {
         if (!isEmpty(synced)) {
-          lynxTopToast(dispatch).success(`${synced.length} of ${syncList.length} plugins synced successfully!`);
+          topToast.success(`${synced.length} of ${syncList.length} plugins synced successfully!`);
           showRestartModal(dispatch, 'To apply the changes, please restart the app.');
 
           const updatedList = syncList
@@ -160,7 +160,7 @@ function SyncAllButton() {
           dispatch(pluginsActions.updateInstalledVersion(updatedList));
         }
       })
-      .catch(() => lynxTopToast(dispatch).error('Failed to sync plugins. Please try again later.'))
+      .catch(() => topToast.danger('Failed to sync plugins. Please try again later.'))
       .finally(() => {
         dispatch(pluginsActions.manageSet({key: 'updating', id: syncList.map(item => item.id), operation: 'remove'}));
         dispatch(pluginsActions.setUpdatingAll(false)); // Fixed logical error in the original code, should be false when finally

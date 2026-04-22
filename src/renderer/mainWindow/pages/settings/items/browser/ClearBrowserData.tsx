@@ -1,6 +1,6 @@
 import {Button, Card, Checkbox, CheckboxGroup, Label} from '@heroui-v3/react';
+import {topToast} from '@lynx/layouts/ToastProviders';
 import {AppDispatch} from '@lynx/redux/store';
-import {lynxTopToast} from '@lynx/utils/hooks';
 import browserIpc from '@lynx_shared/ipc/browser';
 import {Broom} from '@solar-icons/react-perf/BoldDuotone';
 import isEmpty from 'lodash/isEmpty';
@@ -50,13 +50,13 @@ function useClearBrowserData() {
 
       // Small UI delay to indicate action completion smoothly
       setTimeout(() => {
-        lynxTopToast(dispatch).success('Selected data cleared successfully!');
+        topToast.success('Selected data cleared successfully!');
         setSelectedOptions([]);
         setIsClearing(false);
       }, 300);
     } catch (error) {
       console.error('Failed to clear browser data:', error);
-      lynxTopToast(dispatch).warning('Failed to clear data, please try again later!');
+      topToast.warning('Failed to clear data, please try again later!');
       setSelectedOptions([]);
       setIsClearing(false);
     }
