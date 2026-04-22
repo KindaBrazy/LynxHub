@@ -1,4 +1,3 @@
-import {HeroToastPlacement} from '@lynx_common/types';
 import {LynxHotkey, LynxInput, OnUpdatingExtensions, TooltipStatus} from '@lynx_common/types/ipc';
 import StorageTypes, {InstalledCards} from '@lynx_common/types/storage';
 
@@ -17,7 +16,6 @@ export type AppState = {
   isOnline: boolean;
   navBar: boolean;
   appTitle: string | undefined;
-  toastPlacement: HeroToastPlacement;
 
   initializer: {
     showWizard: boolean;

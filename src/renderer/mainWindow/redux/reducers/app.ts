@@ -1,5 +1,4 @@
 import {AppState} from '@lynx/types/reducers';
-import {HeroToastPlacement} from '@lynx_common/types';
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {useSelector} from 'react-redux';
 
@@ -22,7 +21,6 @@ const initialState: AppState = {
   onFocus: true,
   navBar: true,
   appTitle: undefined,
-  toastPlacement: 'top-center',
   initializer: {showWizard: false, isUpgradeFlow: false},
 };
 
@@ -35,9 +33,6 @@ const appSlice = createSlice({
     },
     setAppTitle: (state, action: PayloadAction<string | undefined>) => {
       state.appTitle = action.payload;
-    },
-    setToastPlacement: (state, action: PayloadAction<HeroToastPlacement>) => {
-      state.toastPlacement = action.payload;
     },
     toggleAppState: (state, action: PayloadAction<BooleanAppStateKey>) => {
       const key = action.payload;

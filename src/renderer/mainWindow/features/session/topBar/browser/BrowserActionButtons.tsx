@@ -1,4 +1,4 @@
-import {Button, Tooltip} from '@heroui/react';
+import {Button} from '@heroui-v3/react';
 import useHotkeyPress from '@lynx/hooks/hotkeys';
 import {useIsActiveTab} from '@lynx/layouts/tabs/utils';
 import {useTabsState} from '@lynx/redux/reducers/tabs';
@@ -10,6 +10,7 @@ import {X} from 'lucide-react';
 import {memo, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
+import LynxTooltip from '../../../../components/LynxTooltip';
 import {triggerActions} from '../../../../redux/reducers/triggers';
 import {AppDispatch} from '../../../../redux/store';
 
@@ -84,17 +85,11 @@ const BrowserActionButtons = memo(({webuiAddress, tabID, id, isDomReady}: Props)
       <AnimatePresence>
         {canGoBack && (
           <motion.div exit="exit" initial="exit" animate="animate" variants={variants} transition={transition}>
-            <Tooltip delay={1000} content="Click to go back">
-              <Button
-                size="sm"
-                variant="light"
-                onPress={goBack}
-                aria-label="Go Back"
-                className="cursor-default"
-                isIconOnly>
+            <LynxTooltip delay={1000} content="Click to go back">
+              <Button size="sm" variant="ghost" onPress={goBack} aria-label="Go Back" isIconOnly>
                 <ArrowLeft className="size-4" />
               </Button>
-            </Tooltip>
+            </LynxTooltip>
           </motion.div>
         )}
       </AnimatePresence>
@@ -102,59 +97,35 @@ const BrowserActionButtons = memo(({webuiAddress, tabID, id, isDomReady}: Props)
       <AnimatePresence>
         {canGoForward && (
           <motion.div exit="exit" initial="exit" animate="animate" variants={variants} transition={transition}>
-            <Tooltip delay={1000} content="Click to go forward">
-              <Button
-                size="sm"
-                variant="light"
-                onPress={goForward}
-                aria-label="Go Forward"
-                className="cursor-default"
-                isIconOnly>
+            <LynxTooltip delay={1000} content="Click to go forward">
+              <Button size="sm" variant="ghost" onPress={goForward} aria-label="Go Forward" isIconOnly>
                 <ArrowRight className="size-4" />
               </Button>
-            </Tooltip>
+            </LynxTooltip>
           </motion.div>
         )}
       </AnimatePresence>
 
       {isLoading ? (
-        <Tooltip delay={1000} content="Stop loading">
-          <Button
-            size="sm"
-            onPress={stop}
-            variant="light"
-            aria-label="Stop Loading"
-            className="cursor-default"
-            isIconOnly>
+        <LynxTooltip delay={1000} content="Stop loading">
+          <Button size="sm" onPress={stop} variant="ghost" aria-label="Stop Loading" isIconOnly>
             <X className="size-4" />
           </Button>
-        </Tooltip>
+        </LynxTooltip>
       ) : (
-        <Tooltip delay={1000} content="Reload page">
-          <Button
-            size="sm"
-            variant="light"
-            onPress={reload}
-            aria-label="Reload Page"
-            className="cursor-default"
-            isIconOnly>
+        <LynxTooltip delay={1000} content="Reload page">
+          <Button size="sm" variant="ghost" onPress={reload} aria-label="Reload Page" isIconOnly>
             <Restart className="size-4" />
           </Button>
-        </Tooltip>
+        </LynxTooltip>
       )}
 
       {webuiAddress && (
-        <Tooltip delay={1000} content="Go to Home">
-          <Button
-            size="sm"
-            variant="light"
-            aria-label="Go Home"
-            onPress={loadWebuiURL}
-            className="cursor-default"
-            isIconOnly>
+        <LynxTooltip delay={1000} content="Go to Home">
+          <Button size="sm" variant="ghost" aria-label="Go Home" onPress={loadWebuiURL} isIconOnly>
             <Home2 className="size-4" />
           </Button>
-        </Tooltip>
+        </LynxTooltip>
       )}
     </div>
   );

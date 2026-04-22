@@ -1,4 +1,4 @@
-import {Accordion, AccordionItem, Button} from '@heroui/react';
+import {Button, Disclosure} from '@heroui-v3/react';
 import CopyClipboard from '@lynx/components/CopyClipboard';
 import browserIpc from '@lynx_shared/ipc/browser';
 import {LinkBroken, Restart} from '@solar-icons/react-perf/BoldDuotone';
@@ -49,7 +49,8 @@ const BrowserError = memo(({error, onReload, id}: Props) => {
         </div>
 
         <div className="flex items-center gap-4">
-          <Button color="primary" className="w-36" onPress={onReload} startContent={<Restart />}>
+          <Button className="w-36" onPress={onReload}>
+            <Restart />
             Reload
           </Button>
         </div>
@@ -63,16 +64,15 @@ const BrowserError = memo(({error, onReload, id}: Props) => {
           </ul>
         </div>
 
-        <Accordion variant="splitted">
-          <AccordionItem
-            title={
-              <div className="flex items-center gap-x-1 font-semibold">
-                Details
-                <CopyClipboard contentToCopy={details} />
-              </div>
-            }
-            classNames={{trigger: 'cursor-pointer py-2'}}
-            className="shadow-sm place-self-center w-sm border border-foreground-100 mt-4">
+        <Disclosure>
+          <Disclosure.Heading className="flex items-center gap-x-2 justify-center mb-4 mt-2">
+            <Button slot="trigger" className="w-60" variant="secondary">
+              Details
+              <Disclosure.Indicator />
+            </Button>
+            <CopyClipboard contentToCopy={details} tooltipTitle="Copy error details to clipboard" />
+          </Disclosure.Heading>
+          <Disclosure.Content>
             <div className="flex flex-col gap-3 font-JetBrainsMono">
               <div className="flex flex-col gap-2">
                 <div className="flex flex-col gap-1 rounded-lg bg-foreground-100 p-3">
@@ -91,8 +91,8 @@ const BrowserError = memo(({error, onReload, id}: Props) => {
                 </div>
               </div>
             </div>
-          </AccordionItem>
-        </Accordion>
+          </Disclosure.Content>
+        </Disclosure>
       </motion.div>
     </div>
   );

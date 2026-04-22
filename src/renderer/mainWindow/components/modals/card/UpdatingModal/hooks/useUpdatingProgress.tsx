@@ -8,7 +8,6 @@ import {useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 import {PullResult} from 'simple-git';
 
-import {appActions} from '../../../../../redux/reducers/app';
 import {cardsActions, useCardsState} from '../../../../../redux/reducers/cards';
 import {modalActions} from '../../../../../redux/reducers/modals';
 import {useTabsState} from '../../../../../redux/reducers/tabs';
@@ -31,8 +30,6 @@ export function useUpdatingProgress() {
 
       const card = updatingCards.find(value => value.id === id);
       if (!card) return;
-
-      dispatch(appActions.setToastPlacement('bottom-right'));
 
       if (state === 'Failed') {
         addToast({

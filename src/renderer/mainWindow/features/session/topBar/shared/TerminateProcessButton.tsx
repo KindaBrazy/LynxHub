@@ -1,4 +1,4 @@
-import {Button, Tooltip} from '@heroui/react';
+import {Button} from '@heroui-v3/react';
 import {useHotkeysState} from '@lynx/redux/reducers/hotkeys';
 import {useSettingsState} from '@lynx/redux/reducers/settings';
 import {Stop_Icon} from '@lynx_assets/icons';
@@ -8,6 +8,7 @@ import ptyIpc from '@lynx_shared/ipc/pty';
 import {Exit} from '@solar-icons/react-perf/BoldDuotone';
 import {memo, useCallback} from 'react';
 
+import LynxTooltip from '../../../../components/LynxTooltip';
 import {useTerminalState} from '../../../../redux/reducers/terminal';
 
 type Props = {
@@ -48,16 +49,20 @@ const TerminateProcessButton = memo(({id}: Props) => {
 
   return (
     <>
-      <Tooltip delay={500} content="Send exit signal to the process">
-        <Button size="sm" color="warning" variant="light" onPress={handleExit} isIconOnly>
+      <LynxTooltip delay={500} content="Send exit signal to the process">
+        <Button
+          size="sm"
+          onPress={handleExit}
+          className="text-warning-soft-foreground bg-warning-soft hover:bg-warning-soft-hover"
+          isIconOnly>
           <Exit size={16} />
         </Button>
-      </Tooltip>
-      <Tooltip delay={500} content="Terminate Process">
-        <Button size="sm" color="danger" variant="light" onPress={handleStop} aria-label="Terminate Process" isIconOnly>
+      </LynxTooltip>
+      <LynxTooltip delay={500} content="Terminate Process">
+        <Button size="sm" onPress={handleStop} variant="danger-soft" aria-label="Terminate Process" isIconOnly>
           <Stop_Icon className="size-4" />
         </Button>
-      </Tooltip>
+      </LynxTooltip>
     </>
   );
 });

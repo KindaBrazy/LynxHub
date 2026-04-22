@@ -1,4 +1,4 @@
-import {Button, Tooltip} from '@heroui/react';
+import {Button} from '@heroui-v3/react';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import filesIpc from '@lynx_shared/ipc/files';
 import {FileText} from '@solar-icons/react-perf/BoldDuotone';
@@ -6,6 +6,7 @@ import {SerializeAddon} from '@xterm/addon-serialize';
 import {memo, useCallback} from 'react';
 
 import CopyClipboard from '../../../../components/CopyClipboard';
+import LynxTooltip from '../../../../components/LynxTooltip';
 
 type Props = {
   /**
@@ -48,11 +49,11 @@ const TerminalCopyAll = memo(({serializeAddon}: Props) => {
     <div className="flex flex-row items-center gap-x-1">
       <CopyClipboard onCopy={handleCopy} tooltipTitle="Copy all to clipboard" />
 
-      <Tooltip delay={500} content="Export all to file">
-        <Button size="sm" variant="light" onPress={saveFile} aria-label="Export all to file" isIconOnly>
+      <LynxTooltip delay={500} content="Export all to file">
+        <Button size="sm" variant="ghost" onPress={saveFile} aria-label="Export all to file" isIconOnly>
           <FileText className="size-3.5" />
         </Button>
-      </Tooltip>
+      </LynxTooltip>
     </div>
   );
 });

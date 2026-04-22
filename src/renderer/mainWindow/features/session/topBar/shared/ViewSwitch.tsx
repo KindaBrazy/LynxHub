@@ -1,4 +1,4 @@
-import {Button, Tooltip} from '@heroui/react';
+import {Button} from '@heroui-v3/react';
 import {cardsActions} from '@lynx/redux/reducers/cards';
 import {useTabsState} from '@lynx/redux/reducers/tabs';
 import {AppDispatch} from '@lynx/redux/store';
@@ -6,6 +6,8 @@ import {Terminal_Icon} from '@lynx_assets/icons';
 import {Earth} from '@solar-icons/react-perf/BoldDuotone';
 import {memo} from 'react';
 import {useDispatch} from 'react-redux';
+
+import LynxTooltip from '../../../../components/LynxTooltip';
 
 type Props = {
   /**
@@ -29,11 +31,15 @@ const ViewSwitch = memo(({currentView}: Props) => {
   const tooltipContent = isBrowser ? 'Switch to Terminal' : 'Switch to Browser';
 
   return (
-    <Tooltip delay={500} content={tooltipContent}>
-      <Button size="sm" variant="flat" color="primary" onPress={handlePress} aria-label={tooltipContent}>
+    <LynxTooltip delay={500} content={tooltipContent}>
+      <Button
+        size="sm"
+        onPress={handlePress}
+        aria-label={tooltipContent}
+        className="w-18 bg-accent-soft hover:bg-accent/30 text-accent-soft-foreground">
         {isBrowser ? <Terminal_Icon className="size-4" /> : <Earth className="size-4" />}
       </Button>
-    </Tooltip>
+    </LynxTooltip>
   );
 });
 
