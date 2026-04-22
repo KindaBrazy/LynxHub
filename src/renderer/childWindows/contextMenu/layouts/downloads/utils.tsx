@@ -1,12 +1,14 @@
+import {ProgressBarProps} from '@heroui-v3/react';
+
 /**
  * Determines the color status for the progress bar based on the download state.
  * @param status - The current status of the download item.
  * @returns The color string for the progress bar.
  */
-export const getStatusColor = (status: string): 'primary' | 'warning' | 'success' | 'danger' | 'default' => {
+export const getStatusColor = (status: string): ProgressBarProps['color'] => {
   switch (status) {
     case 'downloading':
-      return 'primary';
+      return 'accent';
     case 'paused':
       return 'warning';
     case 'completed':

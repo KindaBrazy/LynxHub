@@ -1,4 +1,4 @@
-import {Button, Chip} from '@heroui/react';
+import {Button, Chip} from '@heroui-v3/react';
 import downloadManagerIpc from '@lynx_shared/ipc/downloadManager';
 import {Broom, DownloadMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
 import {memo, useCallback} from 'react';
@@ -29,11 +29,12 @@ const DownloadMenu = memo(() => {
           Downloads
         </h2>
         <div className="flex items-center gap-3">
-          <Chip size="sm" variant="flat">
+          <Chip size="sm" variant="soft">
             {downloads.length} {downloads.length > 1 ? 'items' : 'item'}
           </Chip>
           {downloads.length > 0 && (
-            <Button size="sm" color="danger" variant="flat" startContent={<Broom />} onPress={handleClearAll}>
+            <Button size="sm" variant="danger-soft" onPress={handleClearAll}>
+              <Broom />
               Cancel & Clear All
             </Button>
           )}
