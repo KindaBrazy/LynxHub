@@ -7,6 +7,7 @@ import ExtensionHooks from '@lynx/plugins/extensions/Hooks';
 import Modals from './components/modals';
 import Initializer from './components/modals/app/WelcomeModal';
 import UIProviders from './contexts/UIProviders';
+import ToastProviders from './layouts/ToastProviders';
 
 /**
  * Root renderer application layout for the main window.
@@ -20,6 +21,7 @@ export default function App() {
       <Background />
       <TitleBar />
       <MainContents />
+      <ToastProviders />
       <Modals />
     </UIProviders>
   );
