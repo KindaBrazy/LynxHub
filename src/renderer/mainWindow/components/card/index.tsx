@@ -1,6 +1,4 @@
-import {Card, CardBody} from '@heroui/react';
 import NavigateToPluginsButton from '@lynx/components/NavigateToPluginsButton';
-import Page from '@lynx/pages/Page';
 import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {useGetCardsByPath} from '@lynx/plugins/modules';
 import {AvailablePageIDs} from '@lynx_common/consts';
@@ -8,6 +6,7 @@ import {LayoutGroup, motion, Variants} from 'framer-motion';
 import {isEmpty, isNil} from 'lodash';
 import {FC, memo, useMemo} from 'react';
 
+import EmptyStateCard from '../EmptyStateCard';
 import RenderCardList from './RenderList';
 
 type GetComponentsByPathProps = {
@@ -36,22 +35,18 @@ export const GetComponentsByPath = memo(({routePath, extensionsElements}: GetCom
   const ReplaceCards = useMemo(() => extensionsData.cards.replace, []);
 
   const renderEmptyState = () => (
-    <Page className="content-center">
-      <div className="flex w-full flex-col items-center justify-center">
-        <Card className="w-full max-w-md border-none bg-transparent shadow-none">
-          <CardBody className="items-center text-center">
-            <h3 className="mb-2 text-xl font-semibold text-foreground">Oops! No cards to display right now</h3>
-            <p className="mb-6 text-foreground-500">Please install related modules to see cards</p>
-            <NavigateToPluginsButton size="md" />
-          </CardBody>
-        </Card>
-      </div>
-    </Page>
+    <div className="size-full flex items-center justify-center">
+      <EmptyStateCard
+        title="Oops! No cards to display right now"
+        action={<NavigateToPluginsButton className="mt-2" />}
+        description="Please install related modules to see cards"
+      />
+    </div>
   );
 
   return (
     <div className="flex size-full flex-row flex-wrap gap-7 overflow-visible">
-      {isEmpty(cards) && isEmpty(extensionsElements) ? (
+      {!isEmpty(cards) && isEmpty(extensionsElements) ? (
         renderEmptyState()
       ) : (
         <>
