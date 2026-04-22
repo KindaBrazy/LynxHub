@@ -1,4 +1,4 @@
-import {Card, CardBody, CardHeader, Image} from '@heroui/react';
+import {Card, Tooltip} from '@heroui-v3/react';
 import {ScreenShareSources} from '@lynx_common/types/shareScreen';
 import {Record} from '@solar-icons/react-perf/BoldDuotone';
 
@@ -19,36 +19,29 @@ type SourceCardProps = {
 export function SourceCard({item, isSelected, onSelect, isScreen}: SourceCardProps) {
   return (
     <Card
-      className={
-        `shadow-md border border-foreground-200 animate-appearance-in ` +
-        `${isScreen ? 'max-w-full' : 'max-w-64'} h-fit`
-      }
-      onPress={onSelect}
-      isPressable>
-      <CardHeader className="p-0 relative overflow-hidden">
-        {/*
-          Using regular img for thumbnail as it's a data URL usually and we want strict control.
-          HeroUI Image component adds wrappers that might interfere with exact layout here if not careful,
-          but we can use it if we want. Original code used `img`.
-        */}
-        <img alt={item.name} src={item.thumbnail} className="size-full object-cover aspect-video" />
+      onClick={onSelect}
+      className={`p-0 animate-appearance-in ${isScreen ? 'max-w-full' : 'max-w-64'} h-fit cursor-pointer`}>
+      <Card.Content>
+        <img alt={item.name} src={item.thumbnail} className="object-cover aspect-video" />
         {isSelected && (
           <div className="absolute inset-0 flex items-center justify-center bg-primary/70 animate-appearance-in z-10">
             <Record className="size-8 text-white animate-appearance-in" />
           </div>
         )}
-      </CardHeader>
+      </Card.Content>
 
-      <CardBody
-        className={
-          'overflow-hidden px-3 text-center max-h-12 border-t border-foreground-100' +
-          ' bg-foreground-50 flex flex-row gap-x-2 items-center'
-        }>
-        {item.icon && (
-          <Image radius="sm" src={item.icon} alt="Source Icon" className="size-6" classNames={{wrapper: 'shrink-0'}} />
-        )}
-        <p className="truncate text-sm font-medium text-foreground">{item.name}</p>
-      </CardBody>
+      <Card.Footer className={'overflow-hidden px-3 pb-3 text-center max-h-12 flex flex-row gap-x-2 items-center'}>
+        {item.icon && <img src={item.icon} alt="Source Icon" className="size-6" />}
+        <Tooltip delay={300}>
+          <Tooltip.Trigger>
+            <p className="line-clamp-2 text-sm text-surface-foreground text-start">{item.name}</p>
+          </Tooltip.Trigger>
+          <Tooltip.Content placement="bottom start" showArrow>
+            <Tooltip.Arrow />
+            <p>{item.name}</p>
+          </Tooltip.Content>
+        </Tooltip>
+      </Card.Footer>
     </Card>
   );
 }
