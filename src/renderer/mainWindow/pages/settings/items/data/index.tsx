@@ -1,12 +1,10 @@
 import {Button} from '@heroui-v3/react';
 import SettingsSection from '@lynx/components/SettingsSection';
-import {AppDispatch} from '@lynx/redux/store';
-import {lynxTopToast} from '@lynx/utils/hooks';
+import {topToast} from '@lynx/layouts/ToastProviders';
 import applicationIpc from '@lynx_shared/ipc/application';
 import filesIpc from '@lynx_shared/ipc/files';
 import {Database, MoveToFolder, Repeat} from '@solar-icons/react-perf/BoldDuotone';
 import {useCallback, useEffect, useState} from 'react';
-import {useDispatch} from 'react-redux';
 
 import SettingsSearchHighlight from '../../SettingsSearchHighlight';
 
@@ -19,7 +17,6 @@ export const SettingsDataId = 'settings_data_elem';
  */
 export default function SettingsData() {
   const [currentPath, setCurrentPath] = useState<string>('');
-  const dispatch = useDispatch<AppDispatch>();
 
   const loadDataPath = async () => {
     try {
@@ -37,10 +34,10 @@ export default function SettingsData() {
   const handleChangeDataPath = async () => {
     try {
       const result = await applicationIpc.invoke.selectAnotherDataPath();
-      lynxTopToast(dispatch).success(result);
+      topToast.success(result);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
-      lynxTopToast(dispatch).error(errorMessage);
+      topToast.danger(errorMessage);
     }
   };
 

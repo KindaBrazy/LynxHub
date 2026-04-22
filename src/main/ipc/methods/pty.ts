@@ -34,7 +34,7 @@ function createPtyManager(id: string, dir: string, useConpty: boolean): LynxTerm
       userMessage = 'Failed to spawn terminal process. Your shell may be misconfigured.';
     }
 
-    applicationIpc.send.showToast(userMessage, 'error');
+    applicationIpc.send.showToast(userMessage, 'danger');
     return null;
   }
 }

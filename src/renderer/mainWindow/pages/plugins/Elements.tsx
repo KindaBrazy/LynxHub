@@ -2,13 +2,14 @@ import {Button, ButtonProps} from '@heroui-v3/react';
 import {pluginsActions, useIsUpdatingPlugin, usePluginsState} from '@lynx/redux/reducers/plugins';
 import {AppDispatch} from '@lynx/redux/store';
 import {showRestartModal} from '@lynx/utils';
-import {lynxTopToast} from '@lynx/utils/hooks';
 import {PluginItem} from '@lynx_common/types/plugins';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
 import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
 import {DownloadMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
 import {useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
+
+import {topToast} from '../../layouts/ToastProviders';
 
 /**
  * Props for the UpdateButton component.
@@ -54,7 +55,7 @@ export function UpdateButton({item}: UpdateButtonProps) {
 
     pluginsIpc.sync(id, commit).then(isUpdated => {
       if (isUpdated) {
-        lynxTopToast(dispatch).success(`${title} synced Successfully`);
+        topToast.success(`${title} synced Successfully`);
         showRestartModal(dispatch, 'To apply the changes, please restart the app.');
         dispatch(pluginsActions.updateInstalledVersion({id, version}));
       }

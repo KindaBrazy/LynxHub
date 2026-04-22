@@ -4,7 +4,6 @@ import {hotkeysActions} from '@lynx/redux/reducers/hotkeys';
 import {settingsActions} from '@lynx/redux/reducers/settings';
 import {tabsActions, useTabsState} from '@lynx/redux/reducers/tabs';
 import {AppDispatch} from '@lynx/redux/store';
-import {lynxTopToast} from '@lynx/utils/hooks';
 import {PageTitleByPageId} from '@lynx_common/consts';
 import applicationIpc from '@lynx_shared/ipc/application';
 import browserIpc from '@lynx_shared/ipc/browser';
@@ -13,6 +12,8 @@ import storageIpc, {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import utilsIpc from '@lynx_shared/ipc/utils';
 import {useEffect} from 'react';
 import {useDispatch} from 'react-redux';
+
+import {bottomToast, topToast} from '../../layouts/ToastProviders';
 
 /**
  * Handles online status events.
@@ -54,15 +55,20 @@ export const useStorageData = () => {
  * Handles toast notifications from the main process.
  */
 export const useShowToast = () => {
-  const dispatch = useDispatch<AppDispatch>();
-
   useEffect(() => {
     const removeListener = applicationIpc.on.onShowToast((message, type, placement) => {
-      lynxTopToast(dispatch, placement || 'bottom-right')[type](message);
+      switch (placement || 'top') {
+        case 'top':
+          topToast[type](message);
+          break;
+        case 'bottom':
+          bottomToast[type](message);
+          break;
+      }
     });
 
     return () => removeListener();
-  }, [dispatch]);
+  }, []);
 };
 
 /**

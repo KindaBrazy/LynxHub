@@ -13,12 +13,10 @@ import {RepositoryInfo} from '@lynx_common/types';
 import gitIpc from '@lynx_shared/ipc/git';
 import {useDebounceBreadcrumb} from '@lynx_shared/sentry/Breadcrumbs';
 import {Fragment, useCallback, useEffect, useMemo, useState} from 'react';
-import {useDispatch} from 'react-redux';
 
+import {topToast} from '../../../../layouts/ToastProviders';
 import {extensionsData} from '../../../../plugins/extensions/loader';
 import {useModalsState} from '../../../../redux/reducers/modals';
-import {AppDispatch} from '../../../../redux/store';
-import {lynxTopToast} from '../../../../utils/hooks';
 import {useTabModalLifecycle} from '../../useTabModalManager';
 import Branches from './Branches';
 import CommitInfo from './CommitInfo';
@@ -32,8 +30,6 @@ interface GitManagerModalContentProps {
 }
 
 function GitManagerModalContent({isOpen, dir, title, tabID}: GitManagerModalContentProps) {
-  const dispatch = useDispatch<AppDispatch>();
-
   const [repoInfo, setRepoInfo] = useState<RepositoryInfo | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -53,12 +49,12 @@ function GitManagerModalContent({isOpen, dir, title, tabID}: GitManagerModalCont
       const repositoryInfo = await gitIpc.getRepoInfo(dir);
       setRepoInfo(repositoryInfo);
     } catch (e) {
-      lynxTopToast(dispatch).error('Something went wrong while getting the repository info.');
+      topToast.danger('Something went wrong while getting the repository info.');
       console.error(e);
     } finally {
       setLoading(false);
     }
-  }, [dir, dispatch]);
+  }, [dir]);
 
   useEffect(() => {
     if (dir && isOpen) {

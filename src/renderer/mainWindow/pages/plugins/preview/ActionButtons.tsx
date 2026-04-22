@@ -8,7 +8,6 @@ import {
 import {useTabsState} from '@lynx/redux/reducers/tabs';
 import {AppDispatch} from '@lynx/redux/store';
 import {showRestartModal} from '@lynx/utils';
-import {lynxTopToast} from '@lynx/utils/hooks';
 import {extractGitUrl} from '@lynx_common/utils';
 import applicationIpc from '@lynx_shared/ipc/application';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
@@ -17,6 +16,7 @@ import {DownloadMinimalistic, SettingsMinimalistic, TrashBin2} from '@solar-icon
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
+import {topToast} from '../../../layouts/ToastProviders';
 import {UpdateButton} from '../Elements';
 import ModuleConfigModal from '../ModuleConfigModal';
 import SecurityWarning from '../SecurityWarning';
@@ -43,7 +43,7 @@ function usePluginActions() {
       pluginsIpc.install(selectedPlugin.url, matchedVersion?.commit).then(wasInstalled => {
         dispatch(pluginsActions.manageSet({key: 'installing', id: pluginId, operation: 'remove'}));
         if (wasInstalled) {
-          lynxTopToast(dispatch).success(`${selectedPlugin.metadata.title} installed successfully`);
+          topToast.success(`${selectedPlugin.metadata.title} installed successfully`);
           showRestartModal(dispatch, 'To apply the installation, please restart the app.');
           if (matchedVersion) {
             dispatch(
@@ -70,7 +70,7 @@ function usePluginActions() {
     pluginsIpc.uninstall(pluginId).then(wasUninstalled => {
       dispatch(pluginsActions.manageSet({key: 'unInstalling', id: pluginId, operation: 'remove'}));
       if (wasUninstalled) {
-        lynxTopToast(dispatch).success(`${selectedPlugin.metadata.title} uninstalled successfully`);
+        topToast.success(`${selectedPlugin.metadata.title} uninstalled successfully`);
         showRestartModal(dispatch, 'To complete the uninstallation, please restart the app.');
         dispatch(pluginsActions.removeInstalled(pluginId));
       }

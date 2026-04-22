@@ -1,10 +1,8 @@
 import {Button, Select, Selection, SelectItem} from '@heroui/react';
 import gitIpc from '@lynx_shared/ipc/git';
 import {useCallback, useEffect, useState} from 'react';
-import {useDispatch} from 'react-redux';
 
-import {AppDispatch} from '../../../../redux/store';
-import {lynxTopToast} from '../../../../utils/hooks';
+import {topToast} from '../../../../layouts/ToastProviders';
 
 interface BranchesProps {
   dir: string;
@@ -16,7 +14,6 @@ interface BranchesProps {
 export default function Branches({dir, availableBranches, currentBranch, refreshData}: BranchesProps) {
   const [loading, setLoading] = useState<boolean>(false);
   const [selectedBranch, setSelectedBranch] = useState<string | undefined>(undefined);
-  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     setSelectedBranch(currentBranch);
@@ -35,14 +32,14 @@ export default function Branches({dir, availableBranches, currentBranch, refresh
     setLoading(true);
     try {
       await gitIpc.changeBranch(dir, selectedBranch);
-      lynxTopToast(dispatch).success(`Successfully switched to branch: ${selectedBranch}`);
+      topToast.success(`Successfully switched to branch: ${selectedBranch}`);
       refreshData();
     } catch (err: any) {
-      lynxTopToast(dispatch).error(`Failed to switch branch: ${err.message || 'Unknown error'}`);
+      topToast.danger(`Failed to switch branch: ${err.message || 'Unknown error'}`);
     } finally {
       setLoading(false);
     }
-  }, [dir, selectedBranch, currentBranch, dispatch, refreshData]);
+  }, [dir, selectedBranch, currentBranch, refreshData]);
 
   return (
     <div className="flex w-full items-center gap-x-4">

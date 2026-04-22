@@ -1,12 +1,10 @@
 import {Card, CardBody, CardHeader, Checkbox, CircularProgress, NumberInput, Select, SelectItem} from '@heroui/react';
+import {topToast} from '@lynx/layouts/ToastProviders';
 import {extractGitUrl} from '@lynx_common/utils';
 import {SettingsMinimalistic, ShieldWarning} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
-import {useDispatch} from 'react-redux';
 
-import {AppDispatch} from '../../../../redux/store';
-import {lynxTopToast} from '../../../../utils/hooks';
 import {CloneOptionsResult} from './CloneRepo';
 
 type Branch = {
@@ -36,7 +34,6 @@ export default function CloneOptions({url, setCloneOptionsResult}: CloneOptionsP
 
   const [selectedBranch, setSelectedBranch] = useState<string[]>([]);
   const [branches, setBranches] = useState<{key: string; value: string}[]>([]);
-  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     setCloneOptionsResult({
@@ -53,7 +50,7 @@ export default function CloneOptions({url, setCloneOptionsResult}: CloneOptionsP
         const {owner, repo} = extractGitUrl(url);
         const repoResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}`);
         if (!repoResponse.ok) {
-          lynxTopToast(dispatch).error(`Failed to fetch repository details: ${repoResponse.status}`);
+          topToast.danger(`Failed to fetch repository details: ${repoResponse.status}`);
           return;
         }
         const repoData = await repoResponse.json();
@@ -61,7 +58,7 @@ export default function CloneOptions({url, setCloneOptionsResult}: CloneOptionsP
 
         const branchesResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}/branches`);
         if (!branchesResponse.ok) {
-          lynxTopToast(dispatch).error(`Failed to fetch branches: ${branchesResponse.status}`);
+          topToast.danger(`Failed to fetch branches: ${branchesResponse.status}`);
           return;
         }
         const branchesData: Branch[] = await branchesResponse.json();
@@ -73,7 +70,7 @@ export default function CloneOptions({url, setCloneOptionsResult}: CloneOptionsP
           }),
         );
       } catch (err: any) {
-        lynxTopToast(dispatch).error(err.message || 'An error occurred while fetching data.');
+        topToast.danger(err.message || 'An error occurred while fetching data.');
       } finally {
         setLoading(false);
       }

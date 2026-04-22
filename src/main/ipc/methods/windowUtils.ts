@@ -353,12 +353,12 @@ export async function downloadImageToClipboard(url: string): Promise<void> {
     const image = nativeImage.createFromBuffer(buffer);
     if (!image.isEmpty()) {
       clipboard.writeImage(image);
-      applicationIpc.send.showToast('Image copied to clipboard', 'success', 'top-center');
+      applicationIpc.send.showToast('Image copied to clipboard', 'success', 'top');
     } else {
-      applicationIpc.send.showToast('Failed to copy image', 'error', 'top-center');
+      applicationIpc.send.showToast('Failed to copy image', 'danger', 'top');
     }
   } catch (error) {
     console.error('Failed to copy image:', error);
-    applicationIpc.send.showToast('Failed to copy image', 'error', 'top-center');
+    applicationIpc.send.showToast('Failed to copy image', 'danger', 'top');
   }
 }

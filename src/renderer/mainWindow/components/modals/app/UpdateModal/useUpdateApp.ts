@@ -7,13 +7,13 @@ import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {useTabVisibility} from '../../../../layouts/tabs/utils';
+import {topToast} from '../../../../layouts/ToastProviders';
 import {useCardsState} from '../../../../redux/reducers/cards';
 import {modalActions, useModalsState} from '../../../../redux/reducers/modals';
 import {settingsActions, useSettingsState} from '../../../../redux/reducers/settings';
 import {useTabsState} from '../../../../redux/reducers/tabs';
 import {useUserState} from '../../../../redux/reducers/user';
 import {AppDispatch} from '../../../../redux/store';
-import {lynxTopToast} from '../../../../utils/hooks';
 
 export type ReleaseNote = {
   version: string;
@@ -46,7 +46,7 @@ export const useUpdateApp = () => {
         case 'update-available': {
           setDownloadProgress(undefined);
           dispatch(settingsActions.setSettingsState({key: 'updateAvailable', value: true}));
-          lynxTopToast(dispatch).info('New Update Available!');
+          topToast.info('New Update Available!');
           const isRunningAI = runningCard.some(card => card.tabId === activeTab);
           if (!isRunningAI) {
             dispatch(modalActions.openUpdateApp());

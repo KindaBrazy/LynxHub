@@ -1,10 +1,8 @@
 import {Button, ButtonGroup, Chip, Popover, Spinner} from '@heroui-v3/react';
-import {AppDispatch} from '@lynx/redux/store';
-import {lynxTopToast} from '@lynx/utils/hooks';
+import {topToast} from '@lynx/layouts/ToastProviders';
 import utilsIpc from '@lynx_shared/ipc/utils';
 import {Broom} from '@solar-icons/react-perf/BoldDuotone';
 import {useCallback, useEffect, useState} from 'react';
-import {useDispatch} from 'react-redux';
 
 import DescriptionGrid from '../../../../components/DescriptionGrid';
 import SettingsSearchHighlight from '../../SettingsSearchHighlight';
@@ -22,7 +20,7 @@ export default function ImageCache() {
   const [cacheStats, setCacheStats] = useState<CacheStats | null>(null);
   const [isLoadingStats, setIsLoadingStats] = useState<boolean>(true);
   const [isClearing, setIsClearing] = useState<boolean>(false);
-  const dispatch = useDispatch<AppDispatch>();
+
   const loadCacheStats = useCallback(async () => {
     try {
       setIsLoadingStats(true);
@@ -30,11 +28,11 @@ export default function ImageCache() {
       setCacheStats(stats);
     } catch (error) {
       console.error('Failed to load cache stats:', error);
-      lynxTopToast(dispatch).error('Failed to load cache statistics');
+      topToast.danger('Failed to load cache statistics');
     } finally {
       setIsLoadingStats(false);
     }
-  }, [dispatch]);
+  }, []);
 
   // Load cache stats on mount
   useEffect(() => {
@@ -46,12 +44,12 @@ export default function ImageCache() {
       setIsClearing(true);
       const result = await utilsIpc.clearImageCache();
       if (result.success) {
-        lynxTopToast(dispatch).success(`Cleared ${result.clearedEntries} cached images`);
+        topToast.success(`Cleared ${result.clearedEntries} cached images`);
         await loadCacheStats();
       }
     } catch (error) {
       console.error('Failed to clear cache:', error);
-      lynxTopToast(dispatch).error('Failed to clear image cache');
+      topToast.danger('Failed to clear image cache');
     } finally {
       setIsClearing(false);
       setIsClearCacheOpen(false);

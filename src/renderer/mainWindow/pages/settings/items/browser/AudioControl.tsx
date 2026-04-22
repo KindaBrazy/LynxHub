@@ -1,8 +1,8 @@
 import {Card, Label, Switch} from '@heroui-v3/react';
+import {topToast} from '@lynx/layouts/ToastProviders';
 import {useCardsState} from '@lynx/redux/reducers/cards';
 import {useVolumeState, volumeActions} from '@lynx/redux/reducers/volume';
 import {AppDispatch} from '@lynx/redux/store';
-import {lynxTopToast} from '@lynx/utils/hooks';
 import browserIpc from '@lynx_shared/ipc/browser';
 import storageIpc from '@lynx_shared/ipc/storage';
 import {Volume, VolumeCross} from '@solar-icons/react-perf/BoldDuotone';
@@ -45,34 +45,31 @@ function useAudioControlSettings() {
   );
 
   // Debounced save to storage
-  const saveToStorage = useCallback(
-    async (muted: boolean) => {
-      if (saveTimeoutRef.current) {
-        clearTimeout(saveTimeoutRef.current);
+  const saveToStorage = useCallback(async (muted: boolean) => {
+    if (saveTimeoutRef.current) {
+      clearTimeout(saveTimeoutRef.current);
+    }
+
+    saveTimeoutRef.current = setTimeout(async () => {
+      try {
+        const currentData = await storageIpc.get('browser');
+        const currentSettings = currentData.volumeSettings || {
+          globalMuted: false,
+          tabVolumes: {},
+        };
+
+        await storageIpc.update('browser', {
+          volumeSettings: {
+            ...currentSettings,
+            globalMuted: muted,
+          },
+        });
+      } catch (error) {
+        console.error('Failed to save volume settings:', error);
+        topToast.danger('Failed to save volume settings!');
       }
-
-      saveTimeoutRef.current = setTimeout(async () => {
-        try {
-          const currentData = await storageIpc.get('browser');
-          const currentSettings = currentData.volumeSettings || {
-            globalMuted: false,
-            tabVolumes: {},
-          };
-
-          await storageIpc.update('browser', {
-            volumeSettings: {
-              ...currentSettings,
-              globalMuted: muted,
-            },
-          });
-        } catch (error) {
-          console.error('Failed to save volume settings:', error);
-          lynxTopToast(dispatch).error('Failed to save volume settings!');
-        }
-      }, 500);
-    },
-    [dispatch],
-  );
+    }, 500);
+  }, []);
 
   // Cleanup timeout on unmount
   useEffect(() => {
@@ -91,7 +88,7 @@ function useAudioControlSettings() {
         applyGlobalMuteToAllTabs(checked);
       } catch (error) {
         console.error('Failed to toggle global mute:', error);
-        lynxTopToast(dispatch).error('Failed to toggle global mute');
+        topToast.danger('Failed to toggle global mute');
       }
     },
     [dispatch, saveToStorage, applyGlobalMuteToAllTabs],

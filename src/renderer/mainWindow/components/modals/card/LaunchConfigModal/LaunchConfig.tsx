@@ -1,14 +1,12 @@
 import {Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Tab, Tabs} from '@heroui/react';
+import {topToast} from '@lynx/layouts/ToastProviders';
 import {ChosenArgumentsData} from '@lynx_common/types';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {useDebounceBreadcrumb} from '@lynx_shared/sentry/Breadcrumbs';
 import {Diskette} from '@solar-icons/react-perf/BoldDuotone';
 import {Key, memo, useCallback, useEffect, useState} from 'react';
-import {useDispatch} from 'react-redux';
 
-import {AppDispatch} from '../../../../redux/store';
 import {modalMotionProps} from '../../../../utils/constants';
-import {lynxTopToast} from '../../../../utils/hooks';
 import {useTabModalLifecycle} from '../../useTabModalManager';
 import CardArguments from './Arguments';
 import CustomRun from './CustomRun';
@@ -33,8 +31,6 @@ const LaunchConfig = memo(({isOpen, title, haveArguments, id, tabID}: Props) => 
   const [chosenArguments, setChosenArguments] = useState<ChosenArgumentsData>({activePreset: '', data: []});
   const [currentTab, setCurrentTab] = useState<Key>(haveArguments ? tabs.arguments : tabs.customRun);
 
-  const dispatch = useDispatch<AppDispatch>();
-
   useDebounceBreadcrumb('Card Launch Config Modal: ', [isOpen, title]);
   useDebounceBreadcrumb('Card Launch Config Tabs Modal: ', [currentTab]);
 
@@ -51,12 +47,12 @@ const LaunchConfig = memo(({isOpen, title, haveArguments, id, tabID}: Props) => 
       .setCardArguments(id, chosenArguments)
       .then(() => {
         setTimeout(() => {
-          lynxTopToast(dispatch).success('Preset and arguments saved successfully.');
+          topToast.success('Preset and arguments saved successfully.');
         }, fakeDelay);
       })
       .catch(() => {
         setTimeout(() => {
-          lynxTopToast(dispatch).error('An error occurred while saving the preset and arguments.');
+          topToast.danger('An error occurred while saving the preset and arguments.');
         }, fakeDelay);
       })
       .finally(() => {
@@ -64,7 +60,7 @@ const LaunchConfig = memo(({isOpen, title, haveArguments, id, tabID}: Props) => 
           setIsSavingArgs(false);
         }, fakeDelay);
       });
-  }, [id, chosenArguments, dispatch]);
+  }, [id, chosenArguments]);
 
   const handleClose = useCallback(() => {
     onOpenChange(false);

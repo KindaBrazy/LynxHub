@@ -1,6 +1,4 @@
 import {Button, Popover, PopoverContent, PopoverTrigger, ScrollShadow, Tooltip} from '@heroui/react';
-import {AppDispatch} from '@lynx/redux/store';
-import {lynxTopToast} from '@lynx/utils/hooks';
 import {terminalLineEnding} from '@lynx_common/utils';
 import filesIpc from '@lynx_shared/ipc/files';
 import ptyIpc from '@lynx_shared/ipc/pty';
@@ -8,7 +6,8 @@ import storageIpc from '@lynx_shared/ipc/storage';
 import {Broom, FolderOpen, MoveToFolder, TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty} from 'lodash';
 import {memo, useCallback, useEffect, useState} from 'react';
-import {useDispatch} from 'react-redux';
+
+import {topToast} from '../../../../layouts/ToastProviders';
 
 type Props = {
   /**
@@ -23,8 +22,6 @@ type Props = {
 const TerminalCDTo = memo(({id}: Props) => {
   const [history, setHistory] = useState<string[]>([]);
   const [isOpen, setIsOpen] = useState<boolean>(false);
-
-  const dispatch = useDispatch<AppDispatch>();
 
   const cdTo = useCallback(
     (dir: string) => {
@@ -62,14 +59,14 @@ const TerminalCDTo = memo(({id}: Props) => {
         if (dir) {
           cdTo(dir);
         } else {
-          lynxTopToast(dispatch).warning('No directory selected');
+          topToast.warning('No directory selected');
         }
       })
       .catch(e => {
         console.error(e);
-        lynxTopToast(dispatch).error('Error opening directory');
+        topToast.danger('Error opening directory');
       });
-  }, [id, cdTo, dispatch]);
+  }, [id, cdTo]);
 
   useEffect(() => {
     storageIpc.get('terminal').then(({cdHistory}) => {

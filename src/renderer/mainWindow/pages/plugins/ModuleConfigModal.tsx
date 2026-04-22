@@ -2,7 +2,6 @@ import {Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/
 import {Button, Checkbox, Label} from '@heroui-v3/react';
 import {AppDispatch} from '@lynx/redux/store';
 import {showRestartModal} from '@lynx/utils';
-import {lynxTopToast} from '@lynx/utils/hooks';
 import {CardModules, RendererModuleImportType} from '@lynx_common/types/plugins/modules';
 import {isDev} from '@lynx_common/utils';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
@@ -11,6 +10,8 @@ import {Diskette, SettingsMinimalistic} from '@solar-icons/react-perf/BoldDuoton
 import {compact} from 'lodash';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
+
+import {topToast} from '../../layouts/ToastProviders';
 
 /** Represents a single tool card item. */
 interface CardItem {
@@ -189,11 +190,11 @@ export default function ModuleConfigModal({isOpen, onClose}: ModuleConfigModalPr
     setSaving(true);
     try {
       await storageIpc.update('plugin', {disabledCards});
-      lynxTopToast(dispatch).success('Module configuration saved');
+      topToast.success('Module configuration saved');
       onClose();
       showRestartModal(dispatch, 'To apply the changes, please restart the app.');
     } catch (e) {
-      lynxTopToast(dispatch).error('Failed to save configuration');
+      topToast.danger('Failed to save configuration');
     } finally {
       setSaving(false);
     }

@@ -1,4 +1,5 @@
 import {Avatar, Button, Chip} from '@heroui/react';
+import {topToast} from '@lynx/layouts/ToastProviders';
 import {extractGitUrl} from '@lynx_common/utils';
 import gitIpc from '@lynx_shared/ipc/git';
 import {Star} from '@solar-icons/react-perf/Bold';
@@ -12,7 +13,6 @@ import {modalActions} from '../../../../../redux/reducers/modals';
 import {useTabsState} from '../../../../../redux/reducers/tabs';
 import {AppDispatch} from '../../../../../redux/store';
 import {formatNumber} from '../../../../../utils';
-import {lynxTopToast} from '../../../../../utils/hooks';
 import {ExtensionsInfo} from '../types';
 
 /* eslint-disable perfectionist/sort-jsx-props */
@@ -42,16 +42,16 @@ const RenderItem = memo(({item, updateTable, dir, searchValue}: Props) => {
         depth: 1,
       })
       .then(() => {
-        lynxTopToast(dispatch).success('Extension installed successfully.');
+        topToast.success('Extension installed successfully.');
         updateTable();
       })
       .catch(() => {
-        lynxTopToast(dispatch).error('Error installing extension');
+        topToast.danger('Error installing extension');
       })
       .finally(() => {
         setInstalling(false);
       });
-  }, [item.url, dir, repo, dispatch, updateTable]);
+  }, [item.url, dir, repo, updateTable]);
 
   const homePage = useCallback(() => {
     dispatch(modalActions.openReadme({url: item.url, title: item.title, tabID: activeTab}));

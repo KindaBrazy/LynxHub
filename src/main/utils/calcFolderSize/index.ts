@@ -42,7 +42,7 @@ export default async function calcFolderSize(target: string): Promise<number> {
     if (!stats.isDirectory()) {
       const message = `The provided path is not a directory: ${target}`;
       console.error(message);
-      applicationIpc.send.showToast(message, 'error');
+      applicationIpc.send.showToast(message, 'danger');
       return 0;
     }
   } catch (err: any) {
@@ -50,11 +50,11 @@ export default async function calcFolderSize(target: string): Promise<number> {
     if (err.code === 'ENOENT') {
       message = `The specified path does not exist: ${target}`;
       console.error(message);
-      applicationIpc.send.showToast(message, 'error');
+      applicationIpc.send.showToast(message, 'danger');
     } else {
       message = `Error accessing the path: ${target}. Details: ${err.message}`;
       console.error(message);
-      applicationIpc.send.showToast(message, 'error');
+      applicationIpc.send.showToast(message, 'danger');
     }
     return 0;
   }
@@ -79,7 +79,7 @@ export default async function calcFolderSize(target: string): Promise<number> {
     default: {
       const message = `Unsupported operating system: ${currentPlatform}`;
       console.error(message);
-      applicationIpc.send.showToast(message, 'error');
+      applicationIpc.send.showToast(message, 'danger');
       return 0;
     }
   }
@@ -90,7 +90,7 @@ export default async function calcFolderSize(target: string): Promise<number> {
   } catch (err) {
     const message = `Failed to calculate folder size for '${target}'. Please check the folder and try again.`;
     console.error('Error calculating folder size:', err);
-    applicationIpc.send.showToast(message, 'error');
+    applicationIpc.send.showToast(message, 'danger');
     return 0;
   }
 }

@@ -246,9 +246,9 @@ class BaseStorage {
       const errorMessage = e instanceof Error ? e.message : String(e);
       // Check for OOM-related errors
       if (errorMessage.includes('memory') || errorMessage.includes('heap') || errorMessage.includes('allocation')) {
-        applicationIpc.send.showToast('Failed to save configs: Out of memory. Try restarting the app.', 'error');
+        applicationIpc.send.showToast('Failed to save configs: Out of memory. Try restarting the app.', 'danger');
       } else {
-        applicationIpc.send.showToast(`Failed to save app configs: ${errorMessage}`, 'error');
+        applicationIpc.send.showToast(`Failed to save app configs: ${errorMessage}`, 'danger');
       }
     }
   }

@@ -1,13 +1,10 @@
+import {topToast} from '@lynx/layouts/ToastProviders';
 import {validateGitRepoUrl} from '@lynx_common/utils';
 import filesIpc from '@lynx_shared/ipc/files';
 import gitIpc from '@lynx_shared/ipc/git';
 import utilsIpc from '@lynx_shared/ipc/utils';
 import {isEmpty} from 'lodash';
 import {useCallback, useState} from 'react';
-import {useDispatch} from 'react-redux';
-
-import {AppDispatch} from '../../../../../redux/store';
-import {lynxTopToast} from '../../../../../utils/hooks';
 
 export type ExtensionData = {
   name: string;
@@ -24,7 +21,6 @@ export type ExtensionStatus = {
 };
 
 export const useInstalledExtensions = (dir: string) => {
-  const dispatch = useDispatch<AppDispatch>();
   const [extensions, setExtensions] = useState<ExtensionData[]>([]);
   const [installedUrls, setInstalledUrls] = useState<string[]>([]);
   const [updatesAvailable, setUpdatesAvailable] = useState<string[]>([]);
@@ -122,7 +118,7 @@ export const useInstalledExtensions = (dir: string) => {
       try {
         await filesIpc[type](`${dir}/${name}`);
         const action = type === 'removeDir' ? 'removed' : 'moved to trash';
-        lynxTopToast(dispatch).success(`${name} extension ${action} successfully.`);
+        topToast.success(`${name} extension ${action} successfully.`);
 
         setExtensions(prev => prev.filter(e => e.name !== name));
         setInstalledUrls(prev => {
@@ -137,11 +133,11 @@ export const useInstalledExtensions = (dir: string) => {
         });
       } catch (error) {
         const action = type === 'removeDir' ? 'remove' : 'move to trash';
-        lynxTopToast(dispatch).error(`Error: Unable to ${action} the folder.`);
+        topToast.danger(`Error: Unable to ${action} the folder.`);
         updateStatus(name, {isDeleting: false});
       }
     },
-    [dir, dispatch, extensions, updateStatus],
+    [dir, extensions, updateStatus],
   );
 
   const disableExtension = useCallback(
@@ -154,12 +150,12 @@ export const useInstalledExtensions = (dir: string) => {
         updateStatus(name, {isDisabled: !isDisabled, resultDir});
       } catch (error) {
         const action = isDisabled ? 'enabling' : 'disabling';
-        lynxTopToast(dispatch).error(`Something went wrong when ${action} extension.`);
+        topToast.danger(`Something went wrong when ${action} extension.`);
         // Revert on error
         updateStatus(name, {isDisabled: isDisabled});
       }
     },
-    [dispatch, updateStatus],
+    [updateStatus],
   );
 
   const updateExtension = useCallback(
@@ -175,12 +171,12 @@ export const useInstalledExtensions = (dir: string) => {
 
           if (state === 'Failed') {
             removeListener();
-            lynxTopToast(dispatch).error(`Error: Unable to update ${name}.`);
+            topToast.danger(`Error: Unable to update ${name}.`);
             updateStatus(name, {isUpdating: false});
             reject(new Error(`Unable to update ${name}`));
           } else if (state === 'Completed') {
             removeListener();
-            lynxTopToast(dispatch).success(`${name} updated successfully!`);
+            topToast.success(`${name} updated successfully!`);
             updateStatus(name, {isUpdating: false, hasUpdate: false});
             setUpdatesAvailable(prev => prev.filter(u => u !== name));
             resolve();
@@ -190,7 +186,7 @@ export const useInstalledExtensions = (dir: string) => {
         gitIpc.pull(extDir, pullId);
       });
     },
-    [dir, dispatch, updateStatus],
+    [dir, updateStatus],
   );
 
   const updateAll = useCallback(async () => {

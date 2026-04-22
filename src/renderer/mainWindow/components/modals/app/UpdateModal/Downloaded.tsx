@@ -4,9 +4,9 @@ import {CheckCircle, ShieldCross} from '@solar-icons/react-perf/BoldDuotone';
 import {useCallback} from 'react';
 import {useDispatch} from 'react-redux';
 
+import {topToast} from '../../../../layouts/ToastProviders';
 import {settingsActions} from '../../../../redux/reducers/settings';
 import {AppDispatch} from '../../../../redux/store';
-import {lynxTopToast} from '../../../../utils/hooks';
 
 type Props = {errMsg?: string; success: boolean; tryAgain: () => void; cancel: () => void; onClose: () => void};
 
@@ -16,9 +16,9 @@ export default function Downloaded({errMsg, success, tryAgain, cancel, onClose}:
 
   const installLater = useCallback(() => {
     dispatch(settingsActions.setSettingsState({key: 'updateAvailable', value: false}));
-    lynxTopToast(dispatch).info('App will be updated when closed.');
+    topToast.info('App will be updated when closed.');
     onClose();
-  }, [onClose, dispatch]);
+  }, [onClose]);
 
   const install = useCallback(() => {
     applicationIpc.send.updateInstall();
