@@ -1,4 +1,4 @@
-import {Button, Input} from '@heroui/react';
+import {Button, Input} from '@heroui-v3/react';
 import windowDialogsIpc from '@lynx_shared/ipc/dialogsWindow';
 import {Check, TextCursorInput, X} from 'lucide-react';
 import {memo, useCallback, useEffect, useState} from 'react';
@@ -47,28 +47,21 @@ const PromptWindow = memo(function PromptWindow() {
           }
         }}
         value={inputValue}
+        variant="secondary"
         className="notDraggable"
-        onValueChange={setInputValue}
         aria-labelledby="prompt-message"
+        onChange={e => setInputValue(e.target.value)}
         autoFocus
       />
 
       <div className="flex justify-between">
-        <Button
-          variant="light"
-          color="warning"
-          aria-label="Cancel"
-          onPress={hideContextWindow}
-          startContent={<X className="size-4" />}>
+        <Button aria-label="Cancel" variant="danger-soft" onPress={hideContextWindow}>
+          <X className="size-4" />
           Cancel
         </Button>
 
-        <Button
-          onPress={done}
-          variant="flat"
-          color="success"
-          aria-label="OK"
-          startContent={<Check className="size-4" />}>
+        <Button onPress={done} aria-label="OK">
+          <Check className="size-4" />
           OK
         </Button>
       </div>

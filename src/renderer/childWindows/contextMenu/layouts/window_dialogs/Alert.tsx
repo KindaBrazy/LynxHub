@@ -1,4 +1,4 @@
-import {Button} from '@heroui/react';
+import {Button} from '@heroui-v3/react';
 import {Check, ShieldAlert} from 'lucide-react';
 import {memo} from 'react';
 
@@ -22,13 +22,8 @@ const AlertWindow = memo(function AlertWindow() {
       </div>
 
       <div className="flex justify-end">
-        <Button
-          variant="flat"
-          color="success"
-          aria-label="OK"
-          className="notDraggable"
-          onPress={hideContextWindow}
-          startContent={<Check className="size-4" />}>
+        <Button aria-label="OK" className="notDraggable" onPress={hideContextWindow}>
+          <Check className="size-4" />
           OK
         </Button>
       </div>

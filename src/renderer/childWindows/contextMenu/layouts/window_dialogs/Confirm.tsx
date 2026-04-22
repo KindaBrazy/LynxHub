@@ -1,4 +1,4 @@
-import {Button} from '@heroui/react';
+import {Button} from '@heroui-v3/react';
 import windowDialogsIpc from '@lynx_shared/ipc/dialogsWindow';
 import {Check, ShieldCheck, X} from 'lucide-react';
 import {memo} from 'react';
@@ -30,26 +30,13 @@ const ConfirmWindow = memo(function ConfirmWindow() {
       </div>
 
       <div className="flex justify-between">
-        <Button
-          tabIndex={1}
-          variant="light"
-          color="warning"
-          aria-label="Cancel"
-          className="notDraggable"
-          onPress={() => handleResult(false)}
-          startContent={<X className="size-4" />}>
+        <Button aria-label="Cancel" variant="danger-soft" className="notDraggable" onPress={() => handleResult(false)}>
+          <X className="size-4" />
           Cancel
         </Button>
 
-        <Button
-          tabIndex={0}
-          variant="flat"
-          ref={focusRef}
-          color="success"
-          aria-label="Confirm"
-          className="notDraggable"
-          onPress={() => handleResult(true)}
-          startContent={<Check className="size-4" />}>
+        <Button ref={focusRef} aria-label="Confirm" className="notDraggable" onPress={() => handleResult(true)}>
+          <Check className="size-4" />
           OK
         </Button>
       </div>

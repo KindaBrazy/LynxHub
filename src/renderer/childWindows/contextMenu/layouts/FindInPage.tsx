@@ -1,7 +1,7 @@
-import {Button, Chip, Input, Switch} from '@heroui/react';
+import {Button, Chip, Label, SearchField, Switch} from '@heroui-v3/react';
 import {Circle_Icon} from '@lynx_assets/icons';
 import browserIpc from '@lynx_shared/ipc/browser';
-import {AltArrowDown, AltArrowUp} from '@solar-icons/react-perf/BoldDuotone';
+import {AltArrowDown, AltArrowUp} from '@solar-icons/react-perf/Bold';
 import {isEmpty} from 'lodash';
 import {X} from 'lucide-react';
 import {type KeyboardEvent, memo, useCallback, useEffect, useRef, useState} from 'react';
@@ -138,27 +138,26 @@ const FindInPage = memo(function FindInPage() {
           <span className="text-sm font-semibold text-foreground-800">Find in Page</span>
         </div>
         {hasResults && (
-          <Chip size="sm" variant="flat" color="primary">
+          <Chip size="sm" variant="soft">
             {result.activeMatchOrdinal} of {result.matches}
           </Chip>
         )}
       </div>
 
-      {/* Search Input */}
-      <Input
-        classNames={{
-          input: 'text-sm',
-          inputWrapper: noResults ? 'border-danger' : '',
-        }}
-        ref={setInputRef}
+      <SearchField
+        name="search"
         value={searchValue}
-        onKeyDown={handleKeyDown}
+        variant="secondary"
         aria-label="Find in page"
-        onValueChange={setSearchValue}
-        placeholder="Type to search..."
-        startContent={<Circle_Icon aria-hidden="true" className="text-foreground-500" />}
-        autoFocus
-      />
+        onChange={setSearchValue}
+        onKeyDown={handleKeyDown}
+        autoFocus>
+        <Label>Search</Label>
+        <SearchField.Group>
+          <SearchField.SearchIcon />
+          <SearchField.Input ref={setInputRef} placeholder="Search..." />
+        </SearchField.Group>
+      </SearchField>
 
       {/* Status Message */}
       {searchValue && (
@@ -178,32 +177,31 @@ const FindInPage = memo(function FindInPage() {
       )}
 
       {/* Navigation Buttons */}
-      <div className="flex gap-2">
+      <div className="flex gap-1">
         <Button
           size="sm"
-          variant="flat"
           onPress={back}
           className="flex-1"
+          variant="secondary"
           isDisabled={isEmpty(searchValue) || !hasResults}
-          startContent={<AltArrowUp className="size-4" />}
           aria-label="Previous match (Shift+Enter or Up Arrow)">
+          <AltArrowUp className="size-4" />
           Previous
         </Button>
         <Button
           size="sm"
-          variant="flat"
           onPress={next}
           className="flex-1"
+          variant="secondary"
           aria-label="Next match (Enter or Down Arrow)"
-          isDisabled={isEmpty(searchValue) || !hasResults}
-          startContent={<AltArrowDown className="size-4" />}>
+          isDisabled={isEmpty(searchValue) || !hasResults}>
+          <AltArrowDown className="size-4" />
           Next
         </Button>
         <Button
           size="sm"
-          variant="flat"
-          color="danger"
           onPress={clear}
+          variant="danger-soft"
           isDisabled={isEmpty(searchValue)}
           aria-label="Clear search (Escape)"
           isIconOnly>
@@ -211,8 +209,13 @@ const FindInPage = memo(function FindInPage() {
         </Button>
       </div>
 
-      <Switch size="sm" isSelected={matchCase} onValueChange={setMatchCase}>
-        Match Case
+      <Switch isSelected={matchCase} onChange={setMatchCase}>
+        <Switch.Control>
+          <Switch.Thumb />
+        </Switch.Control>
+        <Switch.Content>
+          <Label className="cursor-pointer">Match Case</Label>
+        </Switch.Content>
       </Switch>
 
       {/* Keyboard Shortcuts Help */}
