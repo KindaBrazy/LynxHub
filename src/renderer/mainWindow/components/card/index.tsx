@@ -46,7 +46,7 @@ export const GetComponentsByPath = memo(({routePath, extensionsElements}: GetCom
 
   return (
     <div className="flex size-full flex-row flex-wrap gap-7 overflow-visible">
-      {!isEmpty(cards) && isEmpty(extensionsElements) ? (
+      {isEmpty(cards) && isEmpty(extensionsElements) ? (
         renderEmptyState()
       ) : (
         <>
