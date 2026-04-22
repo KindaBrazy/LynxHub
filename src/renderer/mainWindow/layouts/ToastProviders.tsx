@@ -11,7 +11,7 @@ const bottomToast: ToastFunction = createToastFunction(bottomQueue);
 const ToastProviders = memo(() => {
   return (
     <>
-      <Toast.Provider placement="top" queue={topQueue} className="top-11" />
+      <Toast.Provider placement="top" queue={topQueue} />
       <Toast.Provider queue={bottomQueue} placement="bottom end" />
     </>
   );
