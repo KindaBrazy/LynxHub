@@ -35,7 +35,7 @@ export const CardHeaderContent = memo(({modifiedTitle, onTitleChange, updateAvai
       <div className="inline-flex items-center gap-2">
         <Avatar className={`size-12 shrink-0 ${isInstalled && 'ring-LynxBlue ring-2'}`}>
           <Avatar.Image src={avatarSrc} alt={modifiedTitle} />
-          <Avatar.Fallback>{...modifiedTitle.split(' ').map(item => item.slice(0, 1))}</Avatar.Fallback>
+          <Avatar.Fallback>{...modifiedTitle.split(' ').map(item => item.slice(0, 1).toUpperCase())}</Avatar.Fallback>
         </Avatar>
         <div className="flex flex-col">
           <Label

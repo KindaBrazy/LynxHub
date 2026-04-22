@@ -1,4 +1,4 @@
-import {Button, ButtonGroup} from '@heroui/react';
+import {Button, ButtonGroup} from '@heroui-v3/react';
 import {isLinuxPortable} from '@lynx/utils/hooks';
 import {GitHub_Icon} from '@lynx_assets/icons';
 import {ISSUE_PAGE} from '@lynx_common/consts';
@@ -36,7 +36,7 @@ export default function ErrorWrapper({error, resetErrorBoundary}: FallbackProps)
   }, [errorObj]);
 
   return (
-    <div className="bg-foreground-100 absolute inset-0">
+    <div className="bg-surface absolute inset-0">
       <div
         className={
           'absolute inset-2 rounded-lg bg-background flex flex-col items-center justify-center' +
@@ -66,13 +66,13 @@ export default function ErrorWrapper({error, resetErrorBoundary}: FallbackProps)
             <Button size="sm" key="retry" className="notDraggable" onPress={resetErrorBoundary}>
               Retry
             </Button>
-            <Button size="sm" key="reload" color="warning" onPress={handleReload} className="notDraggable">
+            <Button size="sm" key="reload" variant="danger-soft" onPress={handleReload} className="notDraggable">
               Reload
             </Button>
             <Button
               size="sm"
               key="restart"
-              color="danger"
+              variant="danger"
               className="notDraggable"
               onPress={isLinuxPortable ? handleClose : handleRestart}>
               {isLinuxPortable ? 'Exit' : 'Restart'}
@@ -84,13 +84,8 @@ export default function ErrorWrapper({error, resetErrorBoundary}: FallbackProps)
           <span className="text-warning text-sm">
             If the issue persists, please consider reporting it on GitHub issues.
           </span>
-          <Button
-            radius="none"
-            variant="flat"
-            color="warning"
-            onPress={openIssues}
-            startContent={<GitHub_Icon />}
-            className="notDraggable w-full">
+          <Button onPress={openIssues} className="notDraggable w-full rounded-none">
+            <GitHub_Icon />
             GitHub Issues
           </Button>
         </div>
