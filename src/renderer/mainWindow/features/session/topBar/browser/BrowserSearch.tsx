@@ -1,10 +1,12 @@
-import {Button, Tooltip} from '@heroui/react';
+import {Button} from '@heroui-v3/react';
 import useHotkeyPress from '@lynx/hooks/hotkeys';
 import {useTabsState} from '@lynx/redux/reducers/tabs';
 import {Circle_Icon} from '@lynx_assets/icons';
 import {Hotkey_Names} from '@lynx_common/consts/hotkeys';
 import browserIpc from '@lynx_shared/ipc/browser';
 import {memo, useRef} from 'react';
+
+import LynxTooltip from '../../../../components/LynxTooltip';
 
 type Props = {
   /**
@@ -37,18 +39,11 @@ const BrowserSearch = memo(({id, tabID}: Props) => {
   useHotkeyPress([{name: Hotkey_Names.findInPage, method: tabID === activeTab ? openSearchMenu : null}]);
 
   return (
-    <Tooltip delay={1000} content="Find in Page">
-      <Button
-        size="sm"
-        ref={btnRef}
-        variant="light"
-        onPress={openSearchMenu}
-        aria-label="Find in Page"
-        className="cursor-default"
-        isIconOnly>
+    <LynxTooltip delay={1000} content="Find in Page">
+      <Button size="sm" ref={btnRef} variant="ghost" onPress={openSearchMenu} aria-label="Find in Page" isIconOnly>
         <Circle_Icon className="size-4" />
       </Button>
-    </Tooltip>
+    </LynxTooltip>
   );
 });
 

@@ -1,8 +1,10 @@
-import {Button, Tooltip} from '@heroui/react';
+import {Button} from '@heroui-v3/react';
 import {useVolumeState} from '@lynx/redux/reducers/volume';
 import browserIpc from '@lynx_shared/ipc/browser';
 import {Volume, VolumeCross, VolumeLoud} from '@solar-icons/react-perf/BoldDuotone';
 import {memo, useCallback, useMemo, useRef} from 'react';
+
+import LynxTooltip from '../../../../components/LynxTooltip';
 
 type Props = {
   /**
@@ -73,19 +75,18 @@ const BrowserVolume = memo(({id, tabId}: Props) => {
   }, [isMuted, globalMuted, isPlaying, volume]);
 
   return (
-    <Tooltip delay={1000} content={ariaLabel}>
+    <LynxTooltip delay={1000} content={ariaLabel}>
       <Button
         size="sm"
         ref={btnRef}
-        variant="light"
+        variant="ghost"
         aria-label={ariaLabel}
         onPress={openVolumeMenu}
-        className="cursor-default"
         aria-description={ariaDescription}
         isIconOnly>
         {icon}
       </Button>
-    </Tooltip>
+    </LynxTooltip>
   );
 });
 

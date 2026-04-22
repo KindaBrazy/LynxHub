@@ -1,4 +1,4 @@
-import {Button, Input, Popover, PopoverContent, PopoverTrigger, Switch, Tooltip} from '@heroui/react';
+import {Button, Label, Popover, SearchField, Switch} from '@heroui-v3/react';
 import useHotkeyPress from '@lynx/hooks/hotkeys';
 import {useIsActiveTab} from '@lynx/layouts/tabs/utils';
 import {useHotkeysState} from '@lynx/redux/reducers/hotkeys';
@@ -10,6 +10,8 @@ import {AnimatePresence, motion} from 'framer-motion';
 import {isEmpty} from 'lodash';
 import {X} from 'lucide-react';
 import {KeyboardEvent, memo, useCallback, useEffect, useMemo, useState} from 'react';
+
+import LynxTooltip from '../../../../components/LynxTooltip';
 
 type Props = {
   /**
@@ -101,106 +103,116 @@ const TerminalSearchText = memo(({searchAddon, tabId}: Props) => {
   };
 
   return (
-    <Popover
-      isOpen={isOpen}
-      className="w-65"
-      placement="bottom-start"
-      onOpenChange={setIsOpen}
-      classNames={{base: 'before:bg-foreground-100'}}
-      showArrow>
-      <Tooltip
-        content={
-          hasHotkey ? (
-            <div className="flex flex-row items-center gap-x-1">
-              <span>Search for text</span>
-              <span
-                className={
-                  'h-4 font-semibold text-xs rounded-sm bg-foreground-100 p-1 flex items-center justify-center'
-                }>
-                {hotkeyLabel}
-              </span>
-            </div>
-          ) : (
-            'Search for text'
-          )
-        }
-        delay={500}>
-        <div className="max-w-fit">
-          <PopoverTrigger>
-            <Button size="sm" variant="light" aria-label="Search for text" isIconOnly>
-              <Magnifier className="size-3.5" />
+    <Popover isOpen={isOpen} onOpenChange={setIsOpen}>
+      <Popover.Trigger>
+        <LynxTooltip
+          content={
+            hasHotkey ? (
+              <div className="flex flex-row items-center gap-x-1">
+                <span>Search for text</span>
+                <span
+                  className={
+                    'h-4 font-semibold text-xs rounded-sm bg-foreground-100 p-1 flex items-center justify-center'
+                  }>
+                  {hotkeyLabel}
+                </span>
+              </div>
+            ) : (
+              'Search for text'
+            )
+          }
+          delay={500}>
+          <Button size="sm" variant="ghost" aria-label="Search for text" isIconOnly>
+            <Magnifier className="size-3.5" />
+          </Button>
+        </LynxTooltip>
+      </Popover.Trigger>
+
+      <Popover.Content>
+        <Popover.Dialog className="gap-y-4 flex flex-col">
+          <Popover.Heading>Search</Popover.Heading>
+          <SearchField
+            name="search"
+            spellCheck="false"
+            value={searchText}
+            variant="secondary"
+            onKeyUp={onInputKeyUp}
+            onChange={onInputValueChange}
+            autoFocus
+            fullWidth>
+            <SearchField.Group>
+              <SearchField.SearchIcon />
+              <SearchField.Input placeholder="Search for..." />
+              <SearchField.ClearButton />
+            </SearchField.Group>
+          </SearchField>
+
+          <AnimatePresence>
+            {searchText && !foundAny && (
+              <motion.div
+                aria-live="polite"
+                transition={{duration: 0.1}}
+                exit={{translateY: 5, opacity: 0}}
+                initial={{translateY: 5, opacity: 0}}
+                animate={{translateY: 0, opacity: 1}}
+                className="flex items-center justify-center rounded-lg bg-foreground-100 py-2 w-full">
+                <span role="alert" className="text-sm text-danger">
+                  No matches found
+                </span>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <div className="flex gap-x-2">
+            <Button size="sm" className="w-23" onPress={findNext} variant="tertiary">
+              <AltArrowDown className="size-4 shrink-0" />
+              Next
             </Button>
-          </PopoverTrigger>
-        </div>
-      </Tooltip>
+            <Button size="sm" className="w-23" onPress={findPrev} variant="tertiary">
+              <AltArrowUp className="size-4 shrink-0" />
+              Previous
+            </Button>
+            <Button
+              size="sm"
+              onPress={clear}
+              variant="danger-soft"
+              isDisabled={isEmpty(searchText)}
+              aria-label="Clear search (Escape)"
+              isIconOnly>
+              <X className="size-4" />
+            </Button>
+          </div>
 
-      <PopoverContent className="border border-foreground-100 bg-content1/90 p-3 gap-y-4">
-        <Input
-          spellCheck="false"
-          value={searchText}
-          onKeyUp={onInputKeyUp}
-          placeholder="Search for..."
-          onValueChange={onInputValueChange}
-          autoFocus
-        />
+          <div className="flex flex-col w-full gap-y-2">
+            <Switch isSelected={enabledRegex} onChange={setEnabledRegex}>
+              <Switch.Control>
+                <Switch.Thumb />
+              </Switch.Control>
+              <Switch.Content>
+                <Label className="cursor-pointer">Regex</Label>
+              </Switch.Content>
+            </Switch>
 
-        <AnimatePresence>
-          {searchText && !foundAny && (
-            <motion.div
-              aria-live="polite"
-              transition={{duration: 0.1}}
-              exit={{translateY: 5, opacity: 0}}
-              initial={{translateY: 5, opacity: 0}}
-              animate={{translateY: 0, opacity: 1}}
-              className="flex items-center justify-center rounded-lg bg-foreground-100 py-2 w-full">
-              <span role="alert" className="text-sm text-danger">
-                No matches found
-              </span>
-            </motion.div>
-          )}
-        </AnimatePresence>
+            <Switch isSelected={matchCase} onChange={setMatchCase}>
+              <Switch.Control>
+                <Switch.Thumb />
+              </Switch.Control>
+              <Switch.Content>
+                <Label className="cursor-pointer">Match Case</Label>
+              </Switch.Content>
+            </Switch>
 
-        <div className="flex gap-x-2">
-          <Button
-            size="sm"
-            variant="flat"
-            className="w-23"
-            onPress={findNext}
-            startContent={<AltArrowDown className="size-4 shrink-0" />}>
-            Next
-          </Button>
-          <Button
-            size="sm"
-            variant="flat"
-            className="w-23"
-            onPress={findPrev}
-            startContent={<AltArrowUp className="size-4 shrink-0" />}>
-            Previous
-          </Button>
-          <Button
-            size="sm"
-            variant="flat"
-            color="danger"
-            onPress={clear}
-            isDisabled={isEmpty(searchText)}
-            aria-label="Clear search (Escape)"
-            isIconOnly>
-            <X className="size-4" />
-          </Button>
-        </div>
-
-        <div className="flex flex-col w-full gap-y-2">
-          <Switch size="sm" isSelected={enabledRegex} onValueChange={setEnabledRegex}>
-            Regex
-          </Switch>
-          <Switch size="sm" isSelected={matchCase} onValueChange={setMatchCase}>
-            Match Case
-          </Switch>
-          <Switch size="sm" isSelected={matchWord} onValueChange={setMatchWord}>
-            Match whole word
-          </Switch>
-        </div>
-      </PopoverContent>
+            <Switch isSelected={matchWord} onChange={setMatchWord}>
+              <Switch.Control>
+                <Switch.Thumb />
+              </Switch.Control>
+              <Switch.Content>
+                <Label className="cursor-pointer">Match whole word</Label>
+              </Switch.Content>
+            </Switch>
+          </div>
+        </Popover.Dialog>
+      </Popover.Content>
     </Popover>
   );
 });

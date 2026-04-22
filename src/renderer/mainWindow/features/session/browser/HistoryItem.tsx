@@ -1,11 +1,11 @@
-import {Button, Card, CardBody, Image, Tooltip} from '@heroui/react';
+import {Card, CloseButton, Tooltip} from '@heroui-v3/react';
 import {cardsActions} from '@lynx/redux/reducers/cards';
 import {useTabsState} from '@lynx/redux/reducers/tabs';
 import {AppDispatch} from '@lynx/redux/store';
 import {FavIcons} from '@lynx_common/types/ipc';
 import {formatWebAddress, getCacheUrl, getUrlName} from '@lynx_common/utils';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
-import {Earth, TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
+import {Earth} from '@solar-icons/react-perf/BoldDuotone';
 import {memo, MouseEvent, useCallback, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -49,30 +49,35 @@ const HistoryItem = memo(({recent, type, favIconMap, onDataChange}: Props) => {
   }, [type, recent, onDataChange]);
 
   return (
-    <Tooltip radius="sm" delay={300} content={favItem?.title || recent} showArrow>
-      <Card shadow="sm" onPress={openRecent} className="h-32 w-36" onMouseUp={openNewTab} isPressable>
-        <CardBody
-          className={
-            'group flex-col items-center justify-center gap-2 shrink-0 text-center transition-colors duration-300' +
-            ' hover:bg-foreground-100/50 dark:bg-foreground-100 hover:dark:bg-foreground-100/50'
-          }>
-          {favIcon && !imgError ? (
-            <Image alt="" radius="full" src={favIcon} className="size-8" onError={() => setImgError(true)} />
-          ) : (
-            <Earth className="size-8" />
-          )}
-          <span className="w-full truncate text-wrap line-clamp-2 text-sm">{displayName}</span>
-          <Button
-            size="sm"
-            color="danger"
-            variant="light"
-            onPress={handleRemove}
-            className="absolute top-1 right-1 opacity-0 group-hover:opacity-100"
-            isIconOnly>
-            <TrashBin2 className="size-3.5" />
-          </Button>
-        </CardBody>
-      </Card>
+    <Tooltip delay={300}>
+      <Tooltip.Trigger>
+        <Card variant="secondary" onClick={openRecent} onMouseUp={openNewTab} className="h-32 w-36 cursor-pointer">
+          <Card.Content
+            className={
+              'group flex-col items-center justify-center gap-2 shrink-0 text-center transition-colors duration-200'
+            }>
+            {favIcon && !imgError ? (
+              <img
+                src={favIcon}
+                alt={`${displayName} icon`}
+                className="size-8 rounded-xl"
+                onError={() => setImgError(true)}
+              />
+            ) : (
+              <Earth className="size-8" />
+            )}
+            <span className="w-full truncate text-wrap line-clamp-2 text-sm">{displayName}</span>
+            <CloseButton
+              onPress={handleRemove}
+              className="absolute top-1.5 right-1.5 opacity-0 group-hover:opacity-100 transition duration-200"
+            />
+          </Card.Content>
+        </Card>
+      </Tooltip.Trigger>
+      <Tooltip.Content showArrow>
+        <Tooltip.Arrow />
+        <p>{favItem?.title || recent}</p>
+      </Tooltip.Content>
     </Tooltip>
   );
 });

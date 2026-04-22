@@ -1,4 +1,4 @@
-import {Button, Divider, Kbd} from '@heroui/react';
+import {Button, Kbd, Separator} from '@heroui-v3/react';
 import {useHotkeysState} from '@lynx/redux/reducers/hotkeys';
 import {useTerminalState} from '@lynx/redux/reducers/terminal';
 import {formatHotkey} from '@lynx/utils';
@@ -26,9 +26,8 @@ const TerminalQuickCommands = memo(({id}: Props) => {
 
   return (
     <>
-      <div className="mx-1 h-full py-2">
-        <Divider orientation="vertical" />
-      </div>
+      <Separator variant="secondary" className="my-2 mx-1" orientation="vertical" />
+
       {quickCommands.slice(0, 6).map((item, index) => {
         if (!item || !item.command) return null;
 
@@ -51,14 +50,15 @@ const TerminalQuickCommands = memo(({id}: Props) => {
         return (
           <Button
             size="sm"
-            variant="bordered"
+            variant="outline"
             key={`terminal_quick_btn_${index}`}
-            onPress={() => ptyIpc.write(id, command)}
-            className="border-1 border-foreground-100 hover:border-foreground-200">
+            onPress={() => ptyIpc.write(id, command)}>
             <span className="flex flex-row items-center gap-x-1">
               <span>{label}</span>
               {hasHotkey && (
-                <Kbd className="text-[10px] rounded-sm! shadow-none! bg-foreground-100">{displayHotkey}</Kbd>
+                <Kbd className="h-5">
+                  <Kbd.Content className="text-[8pt]">{displayHotkey}</Kbd.Content>
+                </Kbd>
               )}
             </span>
           </Button>

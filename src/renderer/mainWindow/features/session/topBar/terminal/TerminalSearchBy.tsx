@@ -1,9 +1,11 @@
-import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Image, Tooltip} from '@heroui/react';
+import {Avatar, Button, Dropdown, Header, Label} from '@heroui-v3/react';
 import {SearchQuerySites} from '@lynx_common/types';
 import {getCacheUrl, getSearchUrl} from '@lynx_common/utils';
 import {Earth, SquareTopDown} from '@solar-icons/react-perf/BoldDuotone';
 import {AnimatePresence, motion} from 'framer-motion';
 import {memo, useCallback} from 'react';
+
+import LynxTooltip from '../../../../components/LynxTooltip';
 
 const endContent = <SquareTopDown className="size-3 group-hover:opacity-100 opacity-0 transition duration-300" />;
 
@@ -33,89 +35,68 @@ const TerminalSearchBy = memo(({selectedTerminalText}: Props) => {
           animate={{translateY: 0, opacity: 1, scale: 1}}
           initial={{translateY: 5, opacity: 0, scale: 0.7}}>
           <Dropdown>
-            <Tooltip delay={500} content="Search selected text by">
-              <div className="max-w-fit">
-                <DropdownTrigger>
-                  <Button size="sm" variant="light" aria-label="Search selected text" isIconOnly>
-                    <Earth className="size-3.5" />
-                  </Button>
-                </DropdownTrigger>
-              </div>
-            </Tooltip>
-
-            <DropdownMenu
-              topContent={<span className="tracking-tighter text-foreground-700">Search selected text by:</span>}>
-              <DropdownItem
-                startContent={
-                  <Image alt="Google icon" className="size-4" src={getCacheUrl('https://www.google.com/favicon.ico')} />
-                }
-                key="Google"
-                endContent={endContent}
-                onPress={() => searchSelectedText('Google')}>
-                Google
-              </DropdownItem>
-              <DropdownItem
-                startContent={
-                  <Image
-                    className="size-4"
-                    alt="DuckDuckGo icon"
-                    src={getCacheUrl('https://duckduckgo.com/favicon.ico')}
-                  />
-                }
-                key="DuckDuckGo"
-                endContent={endContent}
-                onPress={() => searchSelectedText('DuckDuckGo')}>
-                DuckDuckGo
-              </DropdownItem>
-              <DropdownItem
-                startContent={
-                  <Image alt="Reddit icon" className="size-4" src={getCacheUrl('https://www.reddit.com/favicon.ico')} />
-                }
-                key="Reddit"
-                endContent={endContent}
-                onPress={() => searchSelectedText('Reddit')}>
-                Reddit
-              </DropdownItem>
-              <DropdownItem
-                startContent={
-                  <Image
-                    alt="ChatGPT icon"
-                    className="size-4"
-                    src={getCacheUrl('https://chat.openai.com/favicon.ico')}
-                  />
-                }
-                key="ChatGPT"
-                endContent={endContent}
-                onPress={() => searchSelectedText('ChatGPT')}>
-                ChatGPT
-              </DropdownItem>
-              <DropdownItem
-                startContent={
-                  <Image
-                    className="size-4"
-                    alt="Perplexity icon"
-                    src={getCacheUrl('https://www.perplexity.ai/favicon.ico')}
-                  />
-                }
-                key="Perplexity"
-                endContent={endContent}
-                onPress={() => searchSelectedText('Perplexity')}>
-                Perplexity
-              </DropdownItem>
-              <DropdownItem
-                startContent={
-                  <Image
-                    alt="Claude icon"
-                    className="size-4"
-                    src={getCacheUrl('https://www.anthropic.com/favicon.ico')}
-                  />
-                }
-                key="Claude"
-                endContent={endContent}
-                onPress={() => searchSelectedText('Claude')}>
-                Claude
-              </DropdownItem>
-            </DropdownMenu>
+            <Dropdown.Trigger>
+              <LynxTooltip delay={500} content="Search selected text by">
+                <Button size="sm" variant="ghost" aria-label="Search selected text" isIconOnly>
+                  <Earth className="size-3.5" />
+                </Button>
+              </LynxTooltip>
+            </Dropdown.Trigger>
+            <Dropdown.Popover>
+              <Dropdown.Menu onAction={key => console.log(`Selected: ${key}`)}>
+                <Dropdown.Section>
+                  <Header>Search selected text by</Header>
+                  <Dropdown.Item textValue="Google" onPress={() => searchSelectedText('Google')}>
+                    <Avatar className="size-6">
+                      <Avatar.Image alt="Google icon" src={getCacheUrl('https://www.google.com/favicon.ico')} />
+                      <Avatar.Fallback>G</Avatar.Fallback>
+                    </Avatar>
+                    <Label>Google</Label>
+                    {endContent}
+                  </Dropdown.Item>
+                  <Dropdown.Item textValue="DuckDuckGo" onPress={() => searchSelectedText('DuckDuckGo')}>
+                    <Avatar className="size-6">
+                      <Avatar.Image alt="DuckDuckGo icon" src={getCacheUrl('https://duckduckgo.com/favicon.ico')} />
+                      <Avatar.Fallback>D</Avatar.Fallback>
+                    </Avatar>
+                    <Label>DuckDuckGo</Label>
+                    {endContent}
+                  </Dropdown.Item>
+                  <Dropdown.Item textValue="Reddit" onPress={() => searchSelectedText('Reddit')}>
+                    <Avatar className="size-6">
+                      <Avatar.Image alt="Reddit icon" src={getCacheUrl('https://www.reddit.com/favicon.ico')} />
+                      <Avatar.Fallback>R</Avatar.Fallback>
+                    </Avatar>
+                    <Label>Reddit</Label>
+                    {endContent}
+                  </Dropdown.Item>
+                  <Dropdown.Item textValue="ChatGPT" onPress={() => searchSelectedText('ChatGPT')}>
+                    <Avatar className="size-6">
+                      <Avatar.Image alt="ChatGPT icon" src={getCacheUrl('https://chat.openai.com/favicon.ico')} />
+                      <Avatar.Fallback>C</Avatar.Fallback>
+                    </Avatar>
+                    <Label>ChatGPT</Label>
+                    {endContent}
+                  </Dropdown.Item>
+                  <Dropdown.Item textValue="Perplexity" onPress={() => searchSelectedText('Perplexity')}>
+                    <Avatar className="size-6">
+                      <Avatar.Image alt="Perplexity icon" src={getCacheUrl('https://www.perplexity.ai/favicon.ico')} />
+                      <Avatar.Fallback>P</Avatar.Fallback>
+                    </Avatar>
+                    <Label>Perplexity</Label>
+                    {endContent}
+                  </Dropdown.Item>
+                  <Dropdown.Item textValue="Claude" onPress={() => searchSelectedText('Claude')}>
+                    <Avatar className="size-6">
+                      <Avatar.Image alt="Claude icon" src={getCacheUrl('https://www.anthropic.com/favicon.ico')} />
+                      <Avatar.Fallback>C</Avatar.Fallback>
+                    </Avatar>
+                    <Label>Claude</Label>
+                    {endContent}
+                  </Dropdown.Item>
+                </Dropdown.Section>
+              </Dropdown.Menu>
+            </Dropdown.Popover>
           </Dropdown>
         </motion.div>
       )}

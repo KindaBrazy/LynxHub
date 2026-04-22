@@ -1,9 +1,10 @@
-import {Button, Tooltip} from '@heroui/react';
+import {Button} from '@heroui-v3/react';
 import {AltArrowDown, AltArrowUp} from '@solar-icons/react-perf/Linear';
 import {IDisposable} from '@xterm/xterm';
 import {AnimatePresence, motion} from 'framer-motion';
 import {ReactNode, RefObject, useEffect, useState} from 'react';
 
+import LynxTooltip from '../../../../components/LynxTooltip';
 import {XTermAPI} from '../../../../components/useXTerm';
 
 type AnimProp = {
@@ -80,19 +81,19 @@ export default function TerminalScroll({xtermRef}: Props) {
   return (
     <>
       <AnimateChild show={currentScroll !== 0 && currentScroll !== undefined}>
-        <Tooltip delay={500} content="Scroll to top">
-          <Button size="sm" variant="light" onPress={scrollTop} isIconOnly>
-            <AltArrowUp size={20} />
+        <LynxTooltip delay={500} content="Scroll to top">
+          <Button size="sm" variant="ghost" onPress={scrollTop} isIconOnly>
+            <AltArrowUp />
           </Button>
-        </Tooltip>
+        </LynxTooltip>
       </AnimateChild>
 
       <AnimateChild show={currentScroll !== undefined && currentScroll < (baseY || 0)}>
-        <Tooltip delay={500} content="Scroll to bottom">
-          <Button size="sm" variant="light" onPress={scrollBottom} isIconOnly>
-            <AltArrowDown size={20} />
+        <LynxTooltip delay={500} content="Scroll to bottom">
+          <Button size="sm" variant="ghost" onPress={scrollBottom} isIconOnly>
+            <AltArrowDown />
           </Button>
-        </Tooltip>
+        </LynxTooltip>
       </AnimateChild>
     </>
   );

@@ -1,5 +1,4 @@
-import {HeroUIProvider, ToastProvider} from '@heroui/react';
-import {useAppState} from '@lynx/redux/reducers/app';
+import {HeroUIProvider} from '@heroui/react';
 import {ReactNode} from 'react';
 
 /**
@@ -10,12 +9,5 @@ import {ReactNode} from 'react';
  * @param props.children - The child components to wrap
  */
 export default function UIProviders({children}: {children: ReactNode}) {
-  const toastPlacement = useAppState('toastPlacement');
-
-  return (
-    <HeroUIProvider>
-      <ToastProvider placement={toastPlacement} />
-      {children}
-    </HeroUIProvider>
-  );
+  return <HeroUIProvider>{children}</HeroUIProvider>;
 }

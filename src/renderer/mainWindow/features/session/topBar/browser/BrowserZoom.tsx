@@ -1,7 +1,9 @@
-import {Button, Tooltip} from '@heroui/react';
+import {Button} from '@heroui-v3/react';
 import browserIpc from '@lynx_shared/ipc/browser';
-import {MagniferZoomIn} from '@solar-icons/react-perf/BoldDuotone';
+import {MagnifierZoomIn} from '@solar-icons/react-perf/BoldDuotone';
 import {memo, useEffect, useRef} from 'react';
+
+import LynxTooltip from '../../../../components/LynxTooltip';
 
 type Props = {
   /**
@@ -38,18 +40,11 @@ const BrowserZoom = memo(({id}: Props) => {
   }, [id]);
 
   return (
-    <Tooltip delay={1000} content="Zoom Control">
-      <Button
-        size="sm"
-        ref={btnRef}
-        variant="light"
-        onPress={openZoomMenu}
-        aria-label="Zoom Control"
-        className="cursor-default"
-        isIconOnly>
-        <MagniferZoomIn className="size-4" />
+    <LynxTooltip delay={1000} content="Zoom Control">
+      <Button size="sm" ref={btnRef} variant="ghost" onPress={openZoomMenu} aria-label="Zoom Control" isIconOnly>
+        <MagnifierZoomIn className="size-4" />
       </Button>
-    </Tooltip>
+    </LynxTooltip>
   );
 });
 

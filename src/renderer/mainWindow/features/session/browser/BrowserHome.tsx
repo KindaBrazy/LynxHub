@@ -1,4 +1,4 @@
-import {Button, Spinner} from '@heroui/react';
+import {Button, Spinner, Surface} from '@heroui-v3/react';
 import LynxScroll from '@lynx/components/LynxScroll';
 import {cardsActions} from '@lynx/redux/reducers/cards';
 import {useTabsState} from '@lynx/redux/reducers/tabs';
@@ -16,6 +16,8 @@ import HistorySection from './HistorySection';
 import {getCachedHistoryData} from './utils';
 
 type Props = {type: 'browser' | 'terminal' | 'both'};
+
+const MotionSurface = motion.create(Surface);
 
 const fadeIn = {
   hidden: {opacity: 0},
@@ -92,7 +94,7 @@ export default function BrowserHome({type}: Props) {
   if (isLoading) {
     return (
       <div className="flex size-full items-center justify-center">
-        <Spinner size="lg" color="default" />
+        <Spinner size="lg" color="current" />
       </div>
     );
   }
@@ -107,36 +109,21 @@ export default function BrowserHome({type}: Props) {
           className="mx-auto flex max-w-7xl flex-col gap-5 p-5 md:p-6 lg:p-8">
           <AnimatePresence>
             {type === 'both' && (
-              <motion.div
-                className={
-                  'flex flex-col items-center rounded-2xl border border-foreground-200/50 bg-foreground-50/50 px-6' +
-                  ' py-8 text-center dark:border-foreground-100/20 dark:bg-foreground-50/30'
-                }
+              <MotionSurface
                 variants={fadeIn}
-                exit={{opacity: 0}}>
-                <div className="mb-6">
-                  <Spinner
-                    size="lg"
-                    color="secondary"
-                    classNames={{label: 'mt-4 text-base font-medium text-foreground-600'}}>
-                    Waiting for address...
-                  </Spinner>
-                </div>
+                variant="secondary"
+                exit={{opacity: 0}}
+                className={'flex flex-col items-center rounded-3xl px-6 py-8 text-center'}>
+                <Spinner size="xl" color="accent" />
+                <span className="text-xs text-muted">Waiting for address...</span>
 
-                <p className="mb-6 max-w-sm text-sm text-foreground-500">
-                  The terminal will capture the web interface address automatically
-                </p>
+                <div className="my-3" />
 
-                <Button
-                  size="md"
-                  variant="flat"
-                  color="default"
-                  className="font-medium"
-                  onPress={switchToTerminal}
-                  startContent={<Terminal_Icon className="size-4" />}>
+                <Button onPress={switchToTerminal}>
+                  <Terminal_Icon className="size-4" />
                   Switch to Terminal
                 </Button>
-              </motion.div>
+              </MotionSurface>
             )}
           </AnimatePresence>
 

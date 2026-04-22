@@ -1,7 +1,9 @@
-import {Badge, Button, Tooltip} from '@heroui/react';
+import {Badge, Button} from '@heroui-v3/react';
 import downloadManagerIpc from '@lynx_shared/ipc/downloadManager';
 import {DownloadMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
 import {memo, useEffect, useState} from 'react';
+
+import LynxTooltip from '../../../../components/LynxTooltip';
 
 /**
  * A button that shows the number of active downloads and opens the download manager.
@@ -22,25 +24,17 @@ const BrowserDownloadManager = memo(() => {
   if (itemCount === 0) return null;
 
   return (
-    <Badge
-      size="sm"
-      color="success"
-      variant="solid"
-      content={itemCount}
-      placement="bottom-right"
-      className="border-0 mr-1.5 mb-1.5 scale-75 pointer-events-none">
-      <Tooltip delay={1000} content="Show Downloads">
-        <Button
-          size="sm"
-          variant="light"
-          aria-label="Downloads"
-          className="cursor-default"
-          onPress={openDownloadsWindow}
-          isIconOnly>
+    <Badge.Anchor>
+      <LynxTooltip delay={1000} content="Show Downloads">
+        <Button size="sm" variant="ghost" aria-label="Downloads" onPress={openDownloadsWindow} isIconOnly>
           <DownloadMinimalistic className="size-4" />
         </Button>
-      </Tooltip>
-    </Badge>
+      </LynxTooltip>
+
+      <Badge size="sm" color="success" variant="primary">
+        {itemCount}
+      </Badge>
+    </Badge.Anchor>
   );
 });
 
