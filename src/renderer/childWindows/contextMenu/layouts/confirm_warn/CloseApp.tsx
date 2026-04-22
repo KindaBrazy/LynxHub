@@ -1,4 +1,4 @@
-import {Button} from '@heroui/react';
+import {Button} from '@heroui-v3/react';
 import {isLinuxPortable} from '@lynx/utils/hooks';
 import {Power_Icon} from '@lynx_assets/icons';
 import applicationIpc from '@lynx_shared/ipc/application';
@@ -22,35 +22,19 @@ const CloseApp = memo(() => {
     <ConfirmElement
       buttons={
         <>
-          <Button
-            size="sm"
-            tabIndex={2}
-            color="success"
-            className="w-20"
-            onPress={hideContextWindow}
-            startContent={<Forward2 className="rotate-180 shrink-0 size-3.5" />}>
+          <Button size="sm" className="w-22" variant="secondary" onPress={hideContextWindow}>
+            <Forward2 className="rotate-180 shrink-0 size-3.5" />
             Stay
           </Button>
           <div className="space-x-2">
             {!isLinuxPortable && (
-              <Button
-                size="sm"
-                tabIndex={1}
-                color="warning"
-                className="w-25"
-                onPress={onRestart}
-                startContent={<Restart className="shrink-0 size-3.5" />}>
+              <Button size="sm" className="w-25" onPress={onRestart} variant="danger-soft">
+                <Restart className="shrink-0 size-3.5" />
                 Restart
               </Button>
             )}
-            <Button
-              size="sm"
-              tabIndex={0}
-              color="danger"
-              ref={focusRef}
-              className="w-25"
-              onPress={onClose}
-              startContent={<Power_Icon className="shrink-0 size-3.5" />}>
+            <Button size="sm" ref={focusRef} className="w-27" variant="danger" autoFocus={true} onPress={onClose}>
+              <Power_Icon className="shrink-0 size-3.5" />
               Exit
             </Button>
           </div>
