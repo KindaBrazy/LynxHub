@@ -1,4 +1,4 @@
-import {Kbd, Spinner} from '@heroui/react';
+import {Spinner} from '@heroui-v3/react';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import {extractGitUrl} from '@lynx_common/utils';
 import {Link} from '@solar-icons/react-perf/BoldDuotone';
@@ -256,7 +256,7 @@ const MarkdownViewer = ({url, rounded = true, showBackground, urlType}: Markdown
           </p>
         );
       },
-      kbd: ({...props}) => <Kbd {...props} />,
+      kbd: ({...props}) => <kbd {...props} />,
       details: ({...props}) => <details className="my-4 rounded-lg bg-gray-50 p-4 dark:bg-gray-800/50" {...props} />,
       summary: ({...props}) => <summary className="cursor-pointer font-medium" {...props} />,
     }),
@@ -264,7 +264,10 @@ const MarkdownViewer = ({url, rounded = true, showBackground, urlType}: Markdown
   );
 
   return loading ? (
-    <Spinner size="lg" color="primary" label="Please wait..." className="size-full my-16" />
+    <div className="flex flex-col items-center gap-2 size-full justify-center py-4">
+      <Spinner size="lg" color="accent" />
+      <span className="text-xs text-muted">Please wait...</span>
+    </div>
   ) : error ? (
     <EmptyStateCard
       title={error}

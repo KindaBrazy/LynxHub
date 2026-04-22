@@ -1,4 +1,5 @@
 import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger} from '@heroui/react';
+import {Tooltip} from '@heroui-v3/react';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import {Terminal_Icon} from '@lynx_assets/icons';
 import filesIpc from '@lynx_shared/ipc/files';
@@ -8,7 +9,6 @@ import {isEmpty} from 'lodash';
 import {Plus} from 'lucide-react';
 import {useCallback} from 'react';
 
-import LynxTooltip from '../../../../LynxTooltip';
 import {useTerminalCommands} from '../hooks/useTerminalCommands';
 import LaunchConfigSection from '../LaunchConfigSection';
 import TerminalCommandItem from '../TerminalCommandItem';
@@ -33,15 +33,19 @@ export default function Commands({id}: Props) {
     <LaunchConfigSection
       customButton={
         <Dropdown aria-label="Add new command">
-          <LynxTooltip content="Add New Command" isEssential>
-            <div>
+          <Tooltip delay={300}>
+            <Tooltip.Trigger>
               <DropdownTrigger>
                 <Button size="sm" variant="light" isIconOnly>
                   <Plus className="size-4" />
                 </Button>
               </DropdownTrigger>
-            </div>
-          </LynxTooltip>
+            </Tooltip.Trigger>
+            <Tooltip.Content showArrow>
+              <Tooltip.Arrow />
+              <p>Add New Command</p>
+            </Tooltip.Content>
+          </Tooltip>
           <DropdownMenu aria-label="Add new command">
             <DropdownSection title="Add">
               <DropdownItem key="add_folder" onPress={() => addCommand()} startContent={<Terminal_Icon />}>

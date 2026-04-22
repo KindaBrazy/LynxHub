@@ -1,8 +1,5 @@
-import {Card, User} from '@heroui/react';
-import {useAppState} from '@lynx/redux/reducers/app';
+import {Avatar, Card, Description, Label} from '@heroui-v3/react';
 import {ReactNode} from 'react';
-
-import SpotlightCard from './SpotlightCard';
 
 type Props = {title: string; description: string; icon: string; onPress: () => void; footer?: ReactNode};
 
@@ -10,50 +7,29 @@ type Props = {title: string; description: string; icon: string; onPress: () => v
  * A card component for the Tools page, featuring a spotlight effect and hover animations.
  */
 export function ToolsCard({title, description, icon, onPress, footer}: Props) {
-  const isDarkMode = useAppState('darkMode');
-
   return (
     <Card
       className={
-        `w-75 ${footer ? 'h-52.5' : 'h-45'} relative group transform border border-foreground/5 ` +
-        'transition-all duration-500 hover:-translate-y-0.5 shadow-small hover:shadow-medium ' +
-        'bg-white dark:bg-stone-900 pt-3 pb-2 rounded-3xl hover:border-foreground/15'
+        `w-75 h-46 relative group transform border border-surface ` +
+        ' hover:shadow-lg hover:scale-[1.02] transition-all duration-200 cursor-pointer'
       }
-      onPress={onPress}
-      isPressable>
-      <SpotlightCard className="size-full" spotlightColor={isDarkMode ? '#353535' : '#dadada'}>
-        <div
-          className={
-            'absolute top-0 left-1/2 transform -translate-x-1/2 h-px bg-linear-to-r from-transparent' +
-            ' via-LynxOrange to-transparent rounded-t-full opacity-0 group-hover:opacity-100 transition-all' +
-            ' duration-700 w-0 group-hover:w-[90%]'
-          }
-        />
-
-        {/* Content container */}
-        <div className={`relative h-full flex flex-col ${footer ? 'gap-y-5' : 'gap-y-7'} px-5 pt-4`}>
-          {/* Icon section */}
-          <div className="flex">
-            <User
-              name={title}
-              className="scale-120 ml-4 font-semibold"
-              avatarProps={{src: icon, className: '!bg-transparent', radius: 'none', showFallback: true, name: title}}
-            />
+      onClick={onPress}>
+      <Card.Header>
+        <div className="inline-flex items-center gap-2">
+          <Avatar className={`size-12 shrink-0 ring-LynxPurple ring-2`}>
+            <Avatar.Image src={icon} alt={title} />
+            <Avatar.Fallback>{...title.split(' ').map(item => item.slice(0, 1).toUpperCase())}</Avatar.Fallback>
+          </Avatar>
+          <div className="flex flex-col">
+            <Label>{title}</Label>
           </div>
-
-          {/* Title and Description */}
-          <p className="text-foreground-500 text-sm line-clamp-3 text-start">{description}</p>
-
-          {footer}
         </div>
-      </SpotlightCard>
+      </Card.Header>
+      <Card.Content>
+        <Description className="line-clamp-3 text-xs">{description}</Description>
+      </Card.Content>
 
-      <div
-        className={
-          'absolute bottom-0 left-1/2 transform -translate-x-1/2 w-20 h-0.5 bg-linear-to-r from-secondary/0' +
-          ' via-secondary to-secondary/0 rounded-t-full group-active:via-foreground transition-colors duration-100'
-        }
-      />
+      <Card.Footer>{footer}</Card.Footer>
     </Card>
   );
 }

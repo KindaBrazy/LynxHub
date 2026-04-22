@@ -1,4 +1,4 @@
-import {Button, ButtonGroup, Input} from '@heroui/react';
+import {Button, ButtonGroup, FieldError, InputGroup, TextField} from '@heroui-v3/react';
 import {isWin} from '@lynx_common/utils';
 import applicationIpc from '@lynx_shared/ipc/application';
 import filesIpc from '@lynx_shared/ipc/files';
@@ -82,25 +82,28 @@ export default function OpenDialog({dialogType, directory, extraFolder = '', set
 
   return (
     <ButtonGroup className="items-start" fullWidth>
-      <Input
-        classNames={{
-          inputWrapper: 'rounded-r-none transition! duration-150!',
-        }}
-        ref={inputRef}
-        color="primary"
+      <TextField
         value={directory}
-        variant="bordered"
+        className="w-full"
         isInvalid={isInvalid}
         defaultValue={directory}
-        aria-label="Directory path"
-        errorMessage={errorMessage}
-        onValueChange={changeDirectory}
-        multiple
-      />
-
-      <Button variant="solid" onPress={chooseDirectory} aria-label="Choose directory" isIconOnly>
-        {<MoveToFolder className="size-4.5" />}
-      </Button>
+        onChange={changeDirectory}>
+        <InputGroup>
+          <InputGroup.Input ref={inputRef} className="w-full " />
+          <InputGroup.Suffix className="pr-1">
+            <Button
+              size="sm"
+              variant="ghost"
+              className="shrink-0"
+              onPress={chooseDirectory}
+              aria-label="Choose directory"
+              isIconOnly>
+              <MoveToFolder className="size-4" />
+            </Button>
+          </InputGroup.Suffix>
+        </InputGroup>
+        <FieldError>{errorMessage}</FieldError>
+      </TextField>
     </ButtonGroup>
   );
 }

@@ -1,4 +1,5 @@
 import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger} from '@heroui/react';
+import {Tooltip} from '@heroui-v3/react';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import filesIpc from '@lynx_shared/ipc/files';
 import {File, Folder, Inbox} from '@solar-icons/react-perf/BoldDuotone';
@@ -6,7 +7,6 @@ import {isEmpty} from 'lodash';
 import {Plus} from 'lucide-react';
 import {useCallback} from 'react';
 
-import LynxTooltip from '../../../../LynxTooltip';
 import {usePreOpenPath} from '../hooks/usePreOpenPath';
 import LaunchConfigSection from '../LaunchConfigSection';
 import PreOpenPathItem from './OpenPathItem';
@@ -35,15 +35,19 @@ export default function PreOpenPath({id}: Props) {
     <LaunchConfigSection
       customButton={
         <Dropdown aria-label="Open file or folder">
-          <LynxTooltip content="Add New Path" isEssential>
-            <div>
+          <Tooltip delay={300}>
+            <Tooltip.Trigger>
               <DropdownTrigger>
                 <Button size="sm" variant="light" isIconOnly>
                   <Plus className="size-4" />
                 </Button>
               </DropdownTrigger>
-            </div>
-          </LynxTooltip>
+            </Tooltip.Trigger>
+            <Tooltip.Content showArrow>
+              <Tooltip.Arrow />
+              <p>Add New Path</p>
+            </Tooltip.Content>
+          </Tooltip>
           <DropdownMenu aria-label="Open file or folder">
             <DropdownSection title="Select">
               <DropdownItem key="add_folder" onPress={selectFolder} startContent={<Folder />}>

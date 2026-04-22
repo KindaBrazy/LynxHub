@@ -1,9 +1,8 @@
 import {Button, Card, CardBody, CardHeader} from '@heroui/react';
+import {Tooltip} from '@heroui-v3/react';
 import {isEmpty, isString} from 'lodash';
 import {Plus} from 'lucide-react';
 import {ReactNode} from 'react';
-
-import LynxTooltip from '../../../LynxTooltip';
 
 type Props = {
   /** The content of the section */
@@ -38,11 +37,17 @@ export default function LaunchConfigSection({
         <div className="flex w-full flex-row items-center justify-between">
           {isString(title) ? <span>{title}</span> : title}
           {customButton || (
-            <LynxTooltip content={addTooltipTitle} isEssential>
-              <Button size="sm" variant="light" onPress={onAddPress} isIconOnly>
-                <Plus className="size-4" />
-              </Button>
-            </LynxTooltip>
+            <Tooltip delay={300}>
+              <Tooltip.Trigger>
+                <Button size="sm" variant="light" onPress={onAddPress} isIconOnly>
+                  <Plus className="size-4" />
+                </Button>
+              </Tooltip.Trigger>
+              <Tooltip.Content showArrow>
+                <Tooltip.Arrow />
+                <p>{addTooltipTitle}</p>
+              </Tooltip.Content>
+            </Tooltip>
           )}
         </div>
         {!isEmpty(description) && <span className="text-sm font-normal text-foreground-500">{description}</span>}
