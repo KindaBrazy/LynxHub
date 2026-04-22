@@ -1,12 +1,7 @@
-import {Button, Slider} from '@heroui/react';
+import {Button, Label, Slider} from '@heroui-v3/react';
 import browserIpc from '@lynx_shared/ipc/browser';
 import storageIpc from '@lynx_shared/ipc/storage';
-import {
-  Magnifier,
-  MinimalisticMagnifierZoomIn,
-  MinimalisticMagnifierZoomOut,
-  Refresh,
-} from '@solar-icons/react-perf/BoldDuotone';
+import {Magnifier, Refresh} from '@solar-icons/react-perf/BoldDuotone';
 import {isArray} from 'lodash';
 import {memo, useCallback} from 'react';
 import {useDispatch} from 'react-redux';
@@ -53,12 +48,11 @@ const BrowserScale = memo(function BrowserScale() {
         </div>
         <Button
           size="sm"
-          variant="flat"
-          color="default"
+          variant="secondary"
           onPress={handleReset}
           isDisabled={factor === 100}
-          aria-label="Reset zoom to 100%"
-          startContent={<Refresh className="size-4" />}>
+          aria-label="Reset zoom to 100%">
+          <Refresh className="size-4" />
           Reset
         </Button>
       </div>
@@ -70,27 +64,18 @@ const BrowserScale = memo(function BrowserScale() {
 
       {/* Slider */}
       <div className="flex flex-col gap-3">
-        <Slider
-          classNames={{
-            thumb: 'cursor-default',
-            track: 'h-1.5',
-            filler: 'bg-primary',
-          }}
-          step={5}
-          size="md"
-          minValue={10}
-          value={factor}
-          maxValue={300}
-          color="primary"
-          fillOffset={100}
-          className="w-full"
-          onChange={onChange}
-          aria-label="Browser zoom level"
-          getValue={value => `${value}%`}
-          aria-valuetext={`${factor} percent`}
-          endContent={<MinimalisticMagnifierZoomIn aria-hidden="true" className="size-5 text-foreground-500" />}
-          startContent={<MinimalisticMagnifierZoomOut aria-hidden="true" className="size-4 text-foreground-500" />}
-        />
+        <Slider step={5} minValue={10} value={factor} maxValue={300} onChange={onChange} className="w-full max-w-xs">
+          <Label>Volume</Label>
+          <Slider.Output>
+            {values => {
+              return `${values.defaultChildren}%`;
+            }}
+          </Slider.Output>
+          <Slider.Track>
+            <Slider.Fill />
+            <Slider.Thumb />
+          </Slider.Track>
+        </Slider>
 
         {/* Scale markers */}
         <div className="flex justify-between px-1 text-tiny text-foreground-500">
@@ -110,7 +95,7 @@ const BrowserScale = memo(function BrowserScale() {
       <div className="flex gap-2">
         <Button
           size="sm"
-          variant="flat"
+          variant="tertiary"
           className="flex-1"
           aria-label="Decrease zoom by 10%"
           onPress={() => updateZoom(Math.max(10, factor - 10))}>
@@ -118,8 +103,8 @@ const BrowserScale = memo(function BrowserScale() {
         </Button>
         <Button
           size="sm"
-          variant="flat"
           className="flex-1"
+          variant="secondary"
           aria-label="Reset to 100%"
           isDisabled={factor === 100}
           onPress={() => updateZoom(100)}>
@@ -127,7 +112,7 @@ const BrowserScale = memo(function BrowserScale() {
         </Button>
         <Button
           size="sm"
-          variant="flat"
+          variant="tertiary"
           className="flex-1"
           aria-label="Increase zoom by 10%"
           onPress={() => updateZoom(Math.min(300, factor + 10))}>

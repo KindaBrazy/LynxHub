@@ -1,4 +1,4 @@
-import {Button} from '@heroui/react';
+import {Button, Chip} from '@heroui-v3/react';
 import {terminalLineEnding} from '@lynx_common/utils';
 import ptyIpc from '@lynx_shared/ipc/pty';
 import {Exit, Forward2} from '@solar-icons/react-perf/BoldDuotone';
@@ -27,34 +27,21 @@ export default function ProcessExitSignal() {
       <ConfirmElement
         buttons={
           <>
-            <Button
-              size="sm"
-              tabIndex={2}
-              color="success"
-              className="w-20"
-              onPress={hideContextWindow}
-              startContent={<Forward2 className="rotate-180 shrink-0 size-3.5" />}>
+            <Button size="sm" className="w-20" variant="secondary" onPress={hideContextWindow}>
+              <Forward2 className="rotate-180 shrink-0 size-3.5" />
               Cancel
             </Button>
             <div className="space-x-2">
-              <Button
-                size="sm"
-                tabIndex={1}
-                onPress={exit}
-                color="warning"
-                className="w-25"
-                startContent={<Exit className="shrink-0 size-3.5" />}>
+              <Button size="sm" onPress={exit} className="w-25" variant="danger-soft">
+                <Exit className="shrink-0 size-3.5" />
                 Exit
               </Button>
-              <Button
-                size="sm"
-                tabIndex={0}
-                color="danger"
-                ref={focusRef}
-                className="w-25"
-                onPress={exitWithY}
-                startContent={<Exit className="shrink-0 size-3.5" />}>
-                Exit <span className="bg-danger-600 px-1 py-0.5 rounded-sm">Y</span>
+              <Button size="sm" ref={focusRef} variant="danger" className="w-25" onPress={exitWithY}>
+                <Exit className="shrink-0 size-3.5" />
+                Exit
+                <Chip size="sm" color="danger" className="scale-90">
+                  Y
+                </Chip>
               </Button>
             </div>
           </>

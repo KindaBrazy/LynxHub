@@ -1,4 +1,4 @@
-import {Divider} from '@heroui/react';
+import {Separator} from '@heroui-v3/react';
 import {memo} from 'react';
 
 import {useContextState} from '../../redux/reducer';
@@ -28,7 +28,7 @@ const RightClick = memo(function RightClick() {
     <div className="overflow-hidden">
       <div className="w-full h-2" />
       <Navigation id={id} navHistory={navigationHistory} />
-      <Divider className="my-1" />
+      <Separator className="my-1" />
 
       {contextMenuParams && (
         <>

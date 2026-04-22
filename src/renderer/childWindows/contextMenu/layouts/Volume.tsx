@@ -1,4 +1,4 @@
-import {Button, Slider} from '@heroui/react';
+import {Button, Label, Slider} from '@heroui-v3/react';
 import {Volume, VolumeCross, VolumeLoud} from '@solar-icons/react-perf/BoldDuotone';
 import {memo, useMemo} from 'react';
 
@@ -23,11 +23,10 @@ const VolumeMenu = memo(() => {
         </div>
         <Button
           size="sm"
-          variant="flat"
           onPress={toggleMute}
-          color={effectiveMuted ? 'danger' : 'default'}
           aria-label={muted ? 'Unmute audio' : 'Mute audio'}
-          startContent={effectiveMuted ? <VolumeCross className="size-4" /> : <VolumeLoud className="size-4" />}>
+          variant={effectiveMuted ? 'danger-soft' : 'tertiary'}>
+          {effectiveMuted ? <VolumeCross className="size-4" /> : <VolumeLoud className="size-4" />}
           {effectiveMuted ? 'Unmute' : 'Mute'}
         </Button>
       </div>
@@ -51,26 +50,24 @@ const VolumeMenu = memo(() => {
       {/* Slider */}
       <div className="flex flex-col gap-3">
         <Slider
-          classNames={{
-            thumb: 'cursor-default',
-            track: 'h-1.5',
-            filler: 'bg-primary',
-          }}
           step={1}
-          size="md"
           minValue={0}
-          maxValue={100}
           value={volume}
-          color="primary"
-          className="w-full"
-          aria-label="Volume level"
-          isDisabled={effectiveMuted}
+          maxValue={100}
+          className="w-full max-w-xs"
           onChange={handleVolumeChange}
-          getValue={value => `${value}%`}
-          aria-valuetext={`${volume} percent`}
-          startContent={<Volume className="size-4 text-foreground-500" />}
-          endContent={<VolumeLoud className="size-5 text-foreground-500" />}
-        />
+          aria-valuetext={`${volume} percent`}>
+          <Label>Volume</Label>
+          <Slider.Output>
+            {values => {
+              return `${values.defaultChildren}%`;
+            }}
+          </Slider.Output>
+          <Slider.Track>
+            <Slider.Fill />
+            <Slider.Thumb />
+          </Slider.Track>
+        </Slider>
 
         {/* Volume markers */}
         <div className="flex justify-between px-1 text-tiny text-foreground-500">
@@ -90,8 +87,8 @@ const VolumeMenu = memo(() => {
       <div className="flex gap-2">
         <Button
           size="sm"
-          variant="flat"
           className="flex-1"
+          variant="tertiary"
           aria-label="Decrease volume by 10%"
           isDisabled={effectiveMuted || volume === 0}
           onPress={() => handleVolumeChange(Math.max(0, volume - 10))}>
@@ -99,8 +96,8 @@ const VolumeMenu = memo(() => {
         </Button>
         <Button
           size="sm"
-          variant="flat"
           className="flex-1"
+          variant="secondary"
           isDisabled={effectiveMuted}
           aria-label="Set volume to 50%"
           onPress={() => handleVolumeChange(50)}>
@@ -108,8 +105,8 @@ const VolumeMenu = memo(() => {
         </Button>
         <Button
           size="sm"
-          variant="flat"
           className="flex-1"
+          variant="tertiary"
           aria-label="Increase volume by 10%"
           isDisabled={effectiveMuted || volume === 100}
           onPress={() => handleVolumeChange(Math.min(100, volume + 10))}>

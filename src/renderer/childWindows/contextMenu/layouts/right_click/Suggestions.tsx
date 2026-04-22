@@ -1,4 +1,4 @@
-import {Divider} from '@heroui/react';
+import {Separator} from '@heroui-v3/react';
 import contextMenuIpc from '@lynx_shared/ipc/contextMenu';
 import {isEmpty} from 'lodash';
 import {memo} from 'react';
@@ -29,7 +29,7 @@ export const Suggestions = memo(function Suggestions({suggestions, id}: Suggesti
           key={`suggestion_${text}_${index}`}
         />
       ))}
-      <Divider className="my-2" />
+      <Separator className="my-2" />
     </>
   );
 });

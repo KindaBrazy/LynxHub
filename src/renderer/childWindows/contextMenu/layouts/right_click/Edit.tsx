@@ -1,4 +1,4 @@
-import {Divider} from '@heroui/react';
+import {Separator} from '@heroui-v3/react';
 import contextMenuIpc from '@lynx_shared/ipc/contextMenu';
 import {ClipboardText, Copy, Scissors, TextSelection, UndoLeftRound} from '@solar-icons/react-perf/BoldDuotone';
 import type {EditFlags} from 'electron';
@@ -69,7 +69,7 @@ export const Edit = memo(({flags, selection, id}: EditProps) => {
           icon={<TextSelection className="size-4" />}
         />
       )}
-      <Divider className="my-2" key="sep_edit_page" />
+      <Separator className="my-2" key="sep_edit_page" />
     </>
   );
 });
