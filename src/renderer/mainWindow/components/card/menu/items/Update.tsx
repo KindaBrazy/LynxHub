@@ -1,5 +1,4 @@
-import {Checkbox, Spinner} from '@heroui/react';
-import {DropdownItem} from '@heroui-v3/react';
+import {Checkbox, DropdownItem, Label, Spinner} from '@heroui-v3/react';
 import {getCardMethod, useAllCardMethods} from '@lynx/plugins/modules';
 import {cardsActions} from '@lynx/redux/reducers/cards';
 import {AppDispatch} from '@lynx/redux/store';
@@ -55,10 +54,12 @@ export const UpdateMenuItem = () => {
       key="update"
       onPress={onPress}
       isDisabled={updating}
-      className={updateAvailable ? 'text-success' : 'cursor-default'}>
-      <DownloadMinimalistic className="size-4" />
-      Update
-      {updating && <Spinner size="sm" color="primary" />}
+      className={`${updateAvailable && 'text-success'} justify-between`}>
+      <div className="flex items-center gap-x-4">
+        <DownloadMinimalistic className="size-4" />
+        Update
+      </div>
+      {updating && <Spinner size="sm" color="success" />}
     </DropdownItem>
   );
 };
@@ -94,11 +95,7 @@ export const CheckForUpdateMenuItem = () => {
 
   return (
     <DropdownItem onPress={onPress} key="check-update" isDisabled={checkingForUpdate}>
-      {checkingForUpdate ? (
-        <Spinner size="sm" color="primary" variant="gradient" className="scale-95" />
-      ) : (
-        <Refresh className="size-4" />
-      )}
+      {checkingForUpdate ? <Spinner size="sm" color="current" /> : <Refresh className="size-4" />}
       Check For Updates
     </DropdownItem>
   );
@@ -112,11 +109,12 @@ export const AutoUpdateMenuItem = () => {
   const repoUrl = useCardStore(state => state.repoUrl);
   const title = useCardStore(state => state.title);
 
+  const [customUpdate, setCustomUpdate] = useState<boolean>(false);
+
   const devName = useMemo(() => extractGitUrl(repoUrl).owner, [repoUrl]);
   const autoUpdate = useIsAutoUpdateCard(id);
   const updateAvailable = useUpdateAvailable(id);
   const webUi = useInstalledCard(id);
-  const [customUpdate, setCustomUpdate] = useState<boolean>(false);
   const allMethods = useAllCardMethods();
 
   const dispatch = useDispatch<AppDispatch>();
@@ -128,6 +126,7 @@ export const AutoUpdateMenuItem = () => {
   }, [id, allMethods]);
 
   const onPress = useCallback(() => {
+    console.log('pressed');
     AddBreadcrumb_Renderer(`Toggle AutoUpdate AI: id:${id}, !autoUpdate:${!autoUpdate}`);
     if (autoUpdate) {
       storageUtilsIpc.send.removeAutoUpdateCard(id);
@@ -146,9 +145,20 @@ export const AutoUpdateMenuItem = () => {
   if (customUpdate) return null;
 
   return (
-    <DropdownItem key="auto-update" onPress={onPress} textValue="Auto Update">
-      <Checkbox size="sm" isSelected={autoUpdate} onValueChange={onPress} classNames={{hiddenInput: 'cursor-default'}}>
-        Auto Update
+    <DropdownItem
+      onClick={e => {
+        e.stopPropagation();
+        onPress();
+      }}
+      key="auto-update"
+      textValue="Auto Update">
+      <Checkbox variant="secondary" isSelected={autoUpdate}>
+        <Checkbox.Control>
+          <Checkbox.Indicator />
+        </Checkbox.Control>
+        <Checkbox.Content>
+          <Label>Auto Update</Label>
+        </Checkbox.Content>
       </Checkbox>
     </DropdownItem>
   );

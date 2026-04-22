@@ -1,5 +1,4 @@
-import {Chip, Spinner} from '@heroui/react';
-import {Avatar, CardHeader, Description, Label} from '@heroui-v3/react';
+import {Avatar, CardHeader, Chip, Description, Label, Spinner} from '@heroui-v3/react';
 import {extractGitUrl, getCacheUrl} from '@lynx_common/utils';
 import {DownloadMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
 import {AnimatePresence, motion} from 'framer-motion';
@@ -32,7 +31,7 @@ export const CardHeaderContent = memo(({modifiedTitle, onTitleChange, updateAvai
   }, [repoUrl]);
 
   return (
-    <CardHeader className="justify-between">
+    <CardHeader className="justify-between flex-row">
       <div className="inline-flex items-center gap-2">
         <Avatar className={`size-12 shrink-0 ${isInstalled && 'ring-LynxBlue ring-2'}`}>
           <Avatar.Image src={avatarSrc} alt={modifiedTitle} />
@@ -72,36 +71,29 @@ export const CardHeaderContent = memo(({modifiedTitle, onTitleChange, updateAvai
           <Description>By {developer}</Description>
         </div>
       </div>
+
       <AnimatePresence>
         {isInstalled && updateAvailable && (
-          <Chip
-            size="sm"
-            variant="flat"
-            as={motion.div}
-            color="success"
-            key="chip_update"
+          <motion.div
             exit={{opacity: 0, translateY: 2}}
-            className="flex flex-row gap-x-0.5"
             animate={{opacity: 1, translateY: 0}}
-            initial={{opacity: 0, translateY: 2}}
-            startContent={<DownloadMinimalistic className="size-3" />}>
-            Update
-          </Chip>
+            initial={{opacity: 0, translateY: 2}}>
+            <Chip size="sm" variant="soft" color="success" className="px-2" key="chip_update">
+              <DownloadMinimalistic />
+              Update
+            </Chip>
+          </motion.div>
         )}
       </AnimatePresence>
 
       <AnimatePresence>
         {isInstalled && updateChecking === id && (
-          <Spinner
-            size="sm"
-            variant="dots"
-            as={motion.div}
-            color="success"
-            className="absolute top-1 right-3"
+          <motion.div
             exit={{opacity: 0, translateY: 2}}
             animate={{opacity: 1, translateY: 0}}
-            initial={{opacity: 0, translateY: 2}}
-          />
+            initial={{opacity: 0, translateY: 2}}>
+            <Spinner size="sm" color="success" className="absolute top-1.5 right-1.5" />
+          </motion.div>
         )}
       </AnimatePresence>
     </CardHeader>
