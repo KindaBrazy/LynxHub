@@ -1,4 +1,3 @@
-import {cn} from '@heroui/react';
 import React, {ComponentPropsWithoutRef, CSSProperties} from 'react';
 
 /**
@@ -26,10 +25,10 @@ export const Ripple = React.memo(function Ripple({
 }: RippleProps) {
   return (
     <div
-      className={cn(
-        'pointer-events-none absolute inset-0 select-none [mask-image:linear-gradient(to_bottom,white,transparent)]',
+      className={[
+        'pointer-events-none absolute inset-0 select-none mask-[linear-gradient(to_bottom,white,transparent)]',
         className,
-      )}
+      ].join(' ')}
       {...props}>
       {Array.from({length: numCircles}, (_, i) => {
         const size = mainCircleSize + i * 70;

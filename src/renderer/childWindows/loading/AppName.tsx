@@ -1,4 +1,3 @@
-import {cn} from '@heroui/react';
 import ShinyText from '@lynx/components/ShinyText';
 import {APP_NAME} from '@lynx_common/consts';
 
@@ -19,7 +18,7 @@ export function AppName({className, textClassName}: AppNameProps) {
         speed={2}
         text={APP_NAME}
         darkMode={true}
-        className={cn('text-[2.5rem] font-semibold tracking-tighter', textClassName)}
+        className={['text-[2.5rem] font-semibold tracking-tighter', textClassName].join(' ')}
       />
     </div>
   );
