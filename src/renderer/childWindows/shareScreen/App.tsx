@@ -1,4 +1,5 @@
-import {Button, Card, CardBody, Spinner, Switch, Tab, Tabs} from '@heroui/react';
+import {Button, Label, Spinner, Switch, Tabs} from '@heroui-v3/react';
+import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import {ScreenShareSources, ScreenShareStart} from '@lynx_common/types/shareScreen';
 import shareScreenIpc from '@lynx_shared/ipc/shareScreen';
 import {Monitor, Screencast, VolumeLoud, WindowFrame} from '@solar-icons/react-perf/BoldDuotone';
@@ -46,15 +47,12 @@ export default function ScreenShare() {
   };
 
   const renderEmptyState = () => (
-    <div className="flex size-full flex-col items-center justify-center gap-4">
-      <Card className="w-full max-w-sm border-none bg-transparent shadow-none">
-        <CardBody className="items-center text-center">
-          <Monitor className="mb-4 size-12 text-default-300" />
-          <h3 className="text-lg font-medium text-foreground">Nothing to share</h3>
-          <p className="text-small text-default-500">No {activeTab} available to capture.</p>
-        </CardBody>
-      </Card>
-    </div>
+    <EmptyStateCard
+      className="size-full"
+      title="Nothing to share"
+      icon={<Monitor className="size-12" />}
+      description="No {activeTab} available to capture."
+    />
   );
 
   return (
@@ -69,25 +67,21 @@ export default function ScreenShare() {
 
         {/* Tabs */}
         <div className="px-6 py-1.5">
-          <Tabs size="sm" color="secondary" selectedKey={activeTab} onSelectionChange={handleTabChange} fullWidth>
-            <Tab
-              title={
-                <div className="flex items-center space-x-2">
+          <Tabs className="w-full" selectedKey={activeTab} onSelectionChange={handleTabChange}>
+            <Tabs.ListContainer>
+              <Tabs.List aria-label="Options">
+                <Tabs.Tab id="windows" className="gap-x-1">
                   <WindowFrame className="size-4" />
-                  <span>Application Window</span>
-                </div>
-              }
-              key="windows"
-            />
-            <Tab
-              title={
-                <div className="flex items-center space-x-2">
+                  Application Window
+                  <Tabs.Indicator />
+                </Tabs.Tab>
+                <Tabs.Tab id="screens" className="gap-x-1">
                   <Monitor className="size-4" />
-                  <span>Entire Screen</span>
-                </div>
-              }
-              key="screens"
-            />
+                  Entire Screen
+                  <Tabs.Indicator />
+                </Tabs.Tab>
+              </Tabs.List>
+            </Tabs.ListContainer>
           </Tabs>
         </div>
 
@@ -95,7 +89,10 @@ export default function ScreenShare() {
         <div className="flex-1 overflow-hidden pl-6 pr-1">
           {isLoading ? (
             <div className="flex size-full items-center justify-center">
-              <Spinner size="lg" label="Detecting available windows and screens..." />
+              <div className="flex flex-col items-center gap-2">
+                <Spinner size="xl" />
+                <span className="text-xs text-muted">Detecting available windows and screens...</span>
+              </div>
             </div>
           ) : (
             <div className="h-full overflow-y-auto pb-4 pr-2 pt-2">
@@ -121,30 +118,22 @@ export default function ScreenShare() {
         {/* Footer */}
         <div className="border-t border-foreground-200 bg-foreground-100 px-4 py-2">
           <div className="flex justify-between gap-x-3">
-            <Switch
-              classNames={{
-                label: 'flex flex-row items-center gap-x-1.5',
-                startContent: 'size-[0.65rem]',
-                endContent: 'size-[0.65rem]',
-              }}
-              size="sm"
-              endContent={<X />}
-              isSelected={shareAudio}
-              startContent={<VolumeLoud />}
-              onValueChange={setShareAudio}>
-              Share audio
+            <Switch isSelected={shareAudio} onChange={setShareAudio}>
+              <Switch.Control>
+                <Switch.Thumb>
+                  <Switch.Icon>{shareAudio ? <VolumeLoud className="size-3" /> : <X className="size-3" />}</Switch.Icon>
+                </Switch.Thumb>
+              </Switch.Control>
+              <Switch.Content>
+                <Label className="cursor-pointer">Share audio</Label>
+              </Switch.Content>
             </Switch>
             <div className="flex justify-between gap-x-3">
-              <Button size="sm" color="warning" variant="light" onPress={handleCancel}>
+              <Button size="sm" variant="danger-soft" onPress={handleCancel}>
                 Cancel
               </Button>
-              <Button
-                size="sm"
-                variant="flat"
-                color="primary"
-                onPress={handleShare}
-                isDisabled={!selectedItem}
-                startContent={<Screencast className="size-4" />}>
+              <Button size="sm" onPress={handleShare} isDisabled={!selectedItem}>
+                <Screencast className="size-4" />
                 Share
               </Button>
             </div>
