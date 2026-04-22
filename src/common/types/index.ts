@@ -1,5 +1,7 @@
 // Card Repository information type
 
+import type {ButtonProps} from '@heroui-v3/react';
+
 import type {
   AvailablePageIDs,
   BINARIES_FOLDER_NAME,
@@ -216,7 +218,7 @@ export type PatreonSupporter = {
 export type CustomBtn = {
   id: string;
   label: string;
-  color: 'success' | 'danger' | 'warning' | 'default';
+  color: ButtonProps['variant'];
   cursor?: 'default' | 'pointer';
 };
 

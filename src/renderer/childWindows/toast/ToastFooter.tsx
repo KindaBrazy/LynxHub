@@ -1,4 +1,4 @@
-import {Button} from '@heroui/react';
+import {Button} from '@heroui-v3/react';
 import {Power_Icon} from '@lynx_assets/icons';
 import {ToastWindowMessageType} from '@lynx_common/types';
 import {Refresh} from '@solar-icons/react-perf/BoldDuotone';
@@ -26,7 +26,8 @@ export function ToastFooter({buttons, customButtons, onClose, onExit, onRestart,
       {/* Left side: Close button */}
       <div>
         {buttons?.includes('close') && (
-          <Button size="sm" onPress={onClose} className="notDraggable" startContent={<X className="size-3.5" />}>
+          <Button size="sm" variant="danger" onPress={onClose} className="notDraggable">
+            <X className="size-3.5" />
             Close Toast
           </Button>
         )}
@@ -35,23 +36,15 @@ export function ToastFooter({buttons, customButtons, onClose, onExit, onRestart,
       {/* Right side: Action buttons */}
       <div className="flex items-center gap-3">
         {buttons?.includes('restart') && (
-          <Button
-            size="sm"
-            color="primary"
-            onPress={onRestart}
-            className="notDraggable"
-            startContent={<Refresh className="size-3.5" />}>
+          <Button size="sm" onPress={onRestart} variant="danger-soft" className="notDraggable">
+            <Refresh className="size-3.5" />
             Restart LynxHub
           </Button>
         )}
 
         {buttons?.includes('exit') && (
-          <Button
-            size="sm"
-            color="danger"
-            onPress={onExit}
-            className="notDraggable"
-            startContent={<Power_Icon className="size-3.5" />}>
+          <Button size="sm" variant="danger" onPress={onExit} className="notDraggable">
+            <Power_Icon className="size-3.5" />
             Exit LynxHub
           </Button>
         )}
@@ -60,8 +53,8 @@ export function ToastFooter({buttons, customButtons, onClose, onExit, onRestart,
           <Button
             size="sm"
             key={btn.id}
+            variant={btn.color}
             onPress={() => onCustomClick(btn.id)}
-            color={btn.color === 'default' ? 'default' : btn.color} // Map 'default' color correctly if needed by HeroUI, though 'default' is usually valid
             className={`notDraggable ${btn.cursor === 'default' ? 'cursor-default' : ''}`}>
             {btn.label}
           </Button>
