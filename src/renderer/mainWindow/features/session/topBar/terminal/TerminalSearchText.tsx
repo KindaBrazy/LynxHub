@@ -164,11 +164,11 @@ const TerminalSearchText = memo(({searchAddon, tabId}: Props) => {
           </AnimatePresence>
 
           <div className="flex gap-x-2">
-            <Button size="sm" className="w-23" onPress={findNext} variant="tertiary">
+            <Button size="sm" className="w-23" onPress={findNext} variant="tertiary" isDisabled={isEmpty(searchText)}>
               <AltArrowDown className="size-4 shrink-0" />
               Next
             </Button>
-            <Button size="sm" className="w-23" onPress={findPrev} variant="tertiary">
+            <Button size="sm" className="w-23" onPress={findPrev} variant="tertiary" isDisabled={isEmpty(searchText)}>
               <AltArrowUp className="size-4 shrink-0" />
               Previous
             </Button>
