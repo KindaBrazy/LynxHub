@@ -6,6 +6,7 @@ import isEmpty from 'lodash/isEmpty';
 import {memo, useMemo} from 'react';
 
 import TabContainer from '../tabs';
+import useInertRemover from './useInertRemover';
 import WindowButtons from './WindowButtons';
 
 const TITLE_BAR_HEIGHT = 'h-10';
@@ -30,12 +31,15 @@ const TitleBar = memo(() => {
     return fullscreen || !onFocus ? BACKGROUND_CLASSES.default : BACKGROUND_CLASSES.focused;
   }, [fullscreen, onFocus]);
 
+  const onRef = useInertRemover();
+
   return (
     <div
       className={
         `draggable absolute inset-x-0 top-0 z-50 flex ${TITLE_BAR_HEIGHT} flex-row items-center ` +
         ` justify-between overflow-hidden transition-colors duration-500 ${backgroundClass}`
-      }>
+      }
+      ref={onRef}>
       {showWizard ? (
         <Button
           className={
