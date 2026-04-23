@@ -1,4 +1,3 @@
-import {TRANSITION_EASINGS} from '@heroui/framer-utils';
 import {Avatar, Spinner} from '@heroui-v3/react';
 import {Terminal_Icon} from '@lynx_assets/icons';
 import {
@@ -18,16 +17,16 @@ import {APP_ICON_TRANSPARENT, PageID} from '@lynx_common/consts';
 import {TabInfo} from '@lynx_common/types';
 import {getCacheUrl} from '@lynx_common/utils';
 import {Earth} from '@solar-icons/react-perf/BoldDuotone';
-import {AnimatePresence, motion} from 'framer-motion';
+import {AnimatePresence, motion, MotionProps} from 'framer-motion';
 import {memo, useCallback, useEffect, useMemo, useState} from 'react';
 
 type Props = {tab: TabInfo; currentView: 'browser' | 'terminal' | undefined};
 
-const iconTransition = {
+const iconTransition: MotionProps = {
   initial: {opacity: 0, scale: 0.6},
   animate: {opacity: 1, scale: 1},
   exit: {opacity: 0, scale: 0.6},
-  transition: {duration: 0.15, ease: TRANSITION_EASINGS.easeOut},
+  transition: {duration: 0.15, ease: 'easeOut'},
 };
 
 /**
