@@ -8,20 +8,15 @@ import {memo} from 'react';
 import CardsContainer, {CardContainerClasses} from '../CardsContainer';
 import Page from '../Page';
 
-type Props = {
-  /** Whether the page is currently visible */
-  show: boolean;
-};
-
 /**
  * Agents Page Component
  * Renders the Agents page with customized sections from extensions.
  */
-const AgentsPage = memo(({show}: Props) => {
+const AgentsPage = memo(() => {
   const {top, scrollTop, scrollBottom, bottom, cardsContainer} = extensionsData.customizePages.agents.add;
 
   return (
-    <Page show={show}>
+    <Page>
       {top?.map((Top, index) => (
         <Top key={index} />
       ))}

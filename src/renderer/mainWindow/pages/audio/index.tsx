@@ -8,20 +8,15 @@ import {memo} from 'react';
 import CardsContainer, {CardContainerClasses} from '../CardsContainer';
 import Page from '../Page';
 
-type Props = {
-  /** Whether the page is currently visible */
-  show: boolean;
-};
-
 /**
  * Audio Generation Page Component
  * Renders the Audio Generation page with customized sections from extensions.
  */
-const AudioGenerationPage = memo(({show}: Props) => {
+const AudioGenerationPage = memo(() => {
   const {top, scrollTop, scrollBottom, bottom, cardsContainer} = extensionsData.customizePages.audio.add;
 
   return (
-    <Page show={show}>
+    <Page>
       {top?.map((Top, index) => (
         <Top key={index} />
       ))}

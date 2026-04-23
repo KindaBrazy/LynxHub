@@ -8,20 +8,15 @@ import {memo} from 'react';
 import CardsContainer, {CardContainerClasses} from '../CardsContainer';
 import Page from '../Page';
 
-type Props = {
-  /** Whether the page is currently visible */
-  show: boolean;
-};
-
 /**
  * Games Page Component
  * Renders the Games page with customized sections from extensions.
  */
-const GamesPage = memo(({show}: Props) => {
+const GamesPage = memo(() => {
   const {top, scrollTop, scrollBottom, bottom, cardsContainer} = extensionsData.customizePages.games.add;
 
   return (
-    <Page show={show}>
+    <Page>
       {top?.map((Top, index) => (
         <Top key={index} />
       ))}

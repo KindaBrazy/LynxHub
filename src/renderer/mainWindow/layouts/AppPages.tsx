@@ -2,7 +2,6 @@ import SessionView from '@lynx/features/session';
 import HomePage from '@lynx/pages/home';
 import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {useCardsState} from '@lynx/redux/reducers/cards';
-import {useTabsState} from '@lynx/redux/reducers/tabs';
 import {useTerminalState} from '@lynx/redux/reducers/terminal';
 import {PageComponents} from '@lynx/utils/constants';
 import ptyIpc from '@lynx_shared/ipc/pty';
@@ -10,16 +9,17 @@ import {memo, useEffect, useMemo} from 'react';
 
 import {useRemoveTab} from './tabs/utils';
 
+type Props = {tabID: string; pageID: string};
+
 /**
  * Component that renders the content of the active tab.
  * It maps through all tabs and renders either the session view (browser/terminal) or the internal page.
  */
-const AppPages = memo(() => {
+const AppPages = memo(({tabID, pageID}: Props) => {
   const runningCards = useCardsState('runningCard');
   const closeTabOnExit = useTerminalState('closeTabOnExit');
-  const tabs = useTabsState('tabs');
-  const activePage = useTabsState('activePage');
-  const activeTab = useTabsState('activeTab');
+
+  const foundRunningCard = runningCards.find(card => card.tabId === tabID);
 
   const removeTab = useRemoveTab();
 
@@ -37,31 +37,10 @@ const AppPages = memo(() => {
     return () => removeListener();
   }, [closeTabOnExit, removeTab]);
 
-  return (
-    <>
-      {tabs.map(tab => {
-        const isActiveTab = activeTab === tab.id;
-        const show = activePage === tab.pageID && activeTab === tab.id;
-        const foundRunningCard = runningCards.find(card => card.tabId === tab.id);
+  if (foundRunningCard) return <RunningView runningCard={foundRunningCard} />;
 
-        if (foundRunningCard) {
-          return (
-            <div key={tab.id} className={isActiveTab ? 'block h-full' : 'hidden'}>
-              <RunningView runningCard={foundRunningCard} />
-            </div>
-          );
-        }
-
-        const Component = PageComponents[tab.pageID];
-
-        if (Component) {
-          return <Component show={show} key={tab.id} />;
-        }
-
-        return <HomePage show={true} key={tab.id} />;
-      })}
-    </>
-  );
+  const Component = PageComponents[pageID] || HomePage;
+  return <Component />;
 });
 
 export default AppPages;

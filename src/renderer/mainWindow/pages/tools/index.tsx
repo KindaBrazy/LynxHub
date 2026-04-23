@@ -8,20 +8,15 @@ import {memo} from 'react';
 import CardsContainer, {CardContainerClasses} from '../CardsContainer';
 import Page from '../Page';
 
-type Props = {
-  /** Whether the page is currently visible */
-  show: boolean;
-};
-
 /**
  * Tools Page Component
  * Renders the Tools page with customized sections from extensions.
  */
-const ToolsPage = memo(({show}: Props) => {
+const ToolsPage = memo(() => {
   const {top, scrollTop, scrollBottom, bottom, cardsContainer} = extensionsData.customizePages.tools.add;
 
   return (
-    <Page show={show}>
+    <Page>
       {top?.map((Top, index) => (
         <Top key={index} />
       ))}

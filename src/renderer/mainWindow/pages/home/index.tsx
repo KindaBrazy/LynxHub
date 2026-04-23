@@ -14,18 +14,10 @@ import HomeSearchBox from './SearchBox';
 import HomeTopBar from './TopBar';
 
 /**
- * Props for the HomePage component.
- */
-type props = {
-  /** Controls the visibility of the Home page within the tab system. */
-  show: boolean;
-};
-
-/**
  * The main Home Page component.
  * It renders the search, categories, extension injects, top bars, and cards grid.
  */
-const HomePage = memo(({show}: props) => {
+const HomePage = memo(() => {
   const homeCategory = useCardsState('homeCategory');
   const [searchValue, setSearchValue] = useState<string>('');
 
@@ -39,7 +31,7 @@ const HomePage = memo(({show}: props) => {
   const {bottom, scrollBottom, scrollTop, top} = useMemo(() => extensionsData.customizePages.home.add, []);
 
   return (
-    <Page show={show}>
+    <Page>
       <div className="flex size-full shrink-0 flex-col">
         {SearchAndFilter ? (
           <SearchAndFilter />

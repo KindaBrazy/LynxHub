@@ -1,5 +1,5 @@
 import {useAppState} from '@lynx/redux/reducers/app';
-import {tabsActions, useTabsState} from '@lynx/redux/reducers/tabs';
+import {tabsActions} from '@lynx/redux/reducers/tabs';
 import {AppDispatch} from '@lynx/redux/store';
 import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
 import {AltArrowDown, AltArrowUp} from '@solar-icons/react-perf/Linear';
@@ -18,6 +18,8 @@ export type NavItem = {
 
 type Props = {
   items: NavItem[];
+  tabId: string;
+  pageID: string;
 };
 
 const springTransition: Transition = {type: 'spring', stiffness: 400, damping: 40};
@@ -43,9 +45,9 @@ const ScrollArrow = memo(
   },
 );
 
-type ItemProp = {item: NavItem; activePage: string; isDark: boolean};
+type ItemProp = {item: NavItem; activePage: string; isDark: boolean; tabID: string};
 
-const RenderItem = memo(function RenderItem({item, activePage, isDark}: ItemProp) {
+const RenderItem = memo(function RenderItem({item, activePage, isDark, tabID}: ItemProp) {
   const [isHovered, setIsHovered] = useState<boolean>(false);
   const dispatch = useDispatch<AppDispatch>();
 
@@ -70,11 +72,12 @@ const RenderItem = memo(function RenderItem({item, activePage, isDark}: ItemProp
   const mutedText = isDark ? '#9ca3af' : '#6b7280';
 
   return (
-    <Tooltip key={item.path} isDark={isDark} content={item.title}>
+    <Tooltip isDark={isDark} content={item.title}>
       <motion.button
         onClick={handleClick}
         whileTap={{scale: 0.95}}
         className="relative group"
+        key={`${tabID}_${item.path}_btn`}
         onHoverEnd={() => setIsHovered(false)}
         onHoverStart={() => setIsHovered(true)}>
         {/* Active indicator */}
@@ -82,7 +85,7 @@ const RenderItem = memo(function RenderItem({item, activePage, isDark}: ItemProp
           {isActive && (
             <motion.div
               initial={false}
-              layoutId="activeIndicator"
+              layoutId={`${tabID}_indicator`}
               transition={springTransitionSnappy}
               className="absolute inset-0 rounded-xl shadow-lg bg-primary"
             />
@@ -155,9 +158,8 @@ const RenderItem = memo(function RenderItem({item, activePage, isDark}: ItemProp
  * NavigationDock component that displays a list of navigation items.
  * Handles responsive layout, scrolling, and hover effects.
  */
-const NavigationDock = memo(({items}: Props) => {
+const NavigationDock = memo(({items, tabId, pageID}: Props) => {
   const isDark = useAppState('darkMode');
-  const activePage = useTabsState('activePage');
 
   const [mousePosition, setMousePosition] = useState({x: 0, y: 0});
   const [isHoveringDock, setIsHoveringDock] = useState(false);
@@ -248,7 +250,7 @@ const NavigationDock = memo(({items}: Props) => {
       className="flex flex-col gap-y-0.5"
       animate={{y: showScrollControls ? -startIndex * ITEM_TOTAL_HEIGHT : 0}}>
       {items.map(item => (
-        <RenderItem item={item} isDark={isDark} activePage={activePage} key={`${item.title}_nav`} />
+        <RenderItem item={item} tabID={tabId} isDark={isDark} activePage={pageID} key={`${item.title}_nav`} />
       ))}
     </motion.div>
   );
