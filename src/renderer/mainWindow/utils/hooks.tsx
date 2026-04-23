@@ -1,10 +1,8 @@
 import {addToast, Button} from '@heroui/react';
-import {appActions} from '@lynx/redux/reducers/app';
 import {useCardsState} from '@lynx/redux/reducers/cards';
 import {useSettingsState} from '@lynx/redux/reducers/settings';
 import {ChangelogItem, type ElementResizeData, HeroToastPlacement} from '@lynx_common/types';
 import {InstalledCard} from '@lynx_common/types/storage';
-import {Dispatch} from '@reduxjs/toolkit';
 import {isEmpty, isNil} from 'lodash';
 import {Fragment, useEffect, useRef, useState} from 'react';
 
@@ -124,8 +122,7 @@ function topToast(options: {
  * @param placement - Toast placement on screen
  * @returns Object with toast methods (success, error, warning, info, loading)
  */
-export const lynxTopToast = (dispatch: Dispatch, placement: HeroToastPlacement = 'top-center') => {
-  dispatch(appActions.setToastPlacement(placement));
+export const lynxTopToast = (_d, placement?) => {
   return {
     success: (title: string, timeout?: number) => topToast({title, color: 'success', timeout, placement}),
     error: (title: string, timeout?: number) => topToast({title, color: 'danger', timeout, placement}),
