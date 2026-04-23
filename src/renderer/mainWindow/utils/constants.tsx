@@ -1,4 +1,3 @@
-import {TRANSITION_EASINGS} from '@heroui/framer-utils';
 import Agents from '@lynx/pages/agents';
 import AudioGenerationPage from '@lynx/pages/audio';
 import DashboardPage from '@lynx/pages/dashboard';
@@ -89,11 +88,11 @@ export const modalMotionProps: Omit<HTMLMotionProps<'section'>, 'ref'> = {
       transition: {
         opacity: {
           duration: 0.4,
-          ease: TRANSITION_EASINGS.ease,
+          ease: 'easeOut',
         },
         scale: {
           duration: 0.4,
-          ease: TRANSITION_EASINGS.ease,
+          ease: 'easeOut',
         },
         y: {
           bounce: 0,
@@ -108,7 +107,7 @@ export const modalMotionProps: Omit<HTMLMotionProps<'section'>, 'ref'> = {
       scale: 1.1, // HeroUI default 1.03
       transition: {
         duration: 0.3,
-        ease: TRANSITION_EASINGS.ease,
+        ease: 'easeOut',
       },
       y: 'var(--slide-exit)',
     },
