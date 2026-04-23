@@ -1,5 +1,5 @@
 import {motion, Variants} from 'framer-motion';
-import {ReactNode, useState} from 'react';
+import {ReactNode} from 'react';
 
 const pageTransitionVariants: Variants = {
   enter: {opacity: 1},
@@ -12,33 +12,20 @@ export interface PageProps {
   children: ReactNode;
   /** Optional custom class names for styling */
   className?: string;
-  /** Whether the page is currently visible */
-  show?: boolean;
 }
 
 /**
  * A wrapper component that provides fade in/out transitions for pages.
  * Handles the `display: none` toggle automatically after exit animations.
  */
-export default function Page({children, className, show}: PageProps) {
-  const [isHidden, setIsHidden] = useState<boolean>(!show);
-
-  if (show && isHidden) {
-    setIsHidden(false);
-  }
-
+export default function Page({children, className}: PageProps) {
   return (
     <motion.div
-      onAnimationComplete={variant => {
-        if (variant === 'exit' && !show) {
-          setIsHidden(true);
-        }
-      }}
       initial="exit"
+      animate={'enter'}
       variants={pageTransitionVariants}
-      animate={show ? 'enter' : 'exit'}
       transition={{duration: 0.2, ease: [0.25, 0.1, 0.25, 1]}}
-      className={['size-full', isHidden ? 'hidden' : 'block', className].filter(Boolean).join(' ')}>
+      className={['size-full', className].filter(Boolean).join(' ')}>
       {children}
     </motion.div>
   );

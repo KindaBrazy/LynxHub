@@ -31,22 +31,14 @@ function useInitializePlugins() {
 }
 
 /**
- * Props for the PluginsPage component.
- */
-type props = {
-  /** Determines if the plugins page is currently visible. */
-  show: boolean;
-};
-
-/**
  * The main entry point for the Plugins page.
  * Manages the layout for the plugin list and plugin preview components.
  */
-const PluginsPage = memo(({show}: props) => {
+const PluginsPage = memo(() => {
   useInitializePlugins();
 
   return (
-    <PageView show={show} className="gap-x-6">
+    <PageView className="gap-x-6">
       <List />
       <Preview />
     </PageView>

@@ -12,6 +12,9 @@ import StatusBar from './statusBar';
  * Renders the Navigation Bar, the main content area (AppPages), and the Status Bar.
  */
 const MainContents = memo(() => {
+  const tabs = useTabsState('tabs');
+  const activeTab = useTabsState('activeTab');
+
   const navBar = useAppState('navBar');
   const activePage = useTabsState('activePage');
 
@@ -20,12 +23,23 @@ const MainContents = memo(() => {
 
   return (
     <div className="absolute inset-0 top-10! flex flex-col transition duration-300">
-      <div className="relative flex size-full flex-row overflow-hidden">
-        <NavBar />
-        <div className={`size-full p-3 pt-1.5 ${paddingClass} transition-all duration-300`}>
-          <AppPages />
-        </div>
-      </div>
+      {tabs.map(tab => {
+        const isActive = tab.id === activeTab;
+
+        return (
+          <div
+            id={`${tab.id}_wrapper`}
+            key={`${tab.id}_wrapper`}
+            style={{transform: 'translate(0)'}}
+            className={`${isActive ? 'flex' : 'hidden'} size-full flex flex-row overflow-hidden`}>
+            <NavBar tabID={tab.id} pageID={tab.pageID} />
+            <div className={`size-full p-3 pt-1.5 ${paddingClass} transition-all duration-300`}>
+              <AppPages tabID={tab.id} pageID={tab.pageID} />
+            </div>
+          </div>
+        );
+      })}
+
       <StatusBar />
     </div>
   );

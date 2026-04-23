@@ -21,11 +21,13 @@ import {useMemo} from 'react';
 
 import NavigationDock, {NavItem} from './Dock';
 
+type Props = {tabID: string; pageID: string};
+
 /**
  * Navigation component for the main content pages (Home, Image Gen, Text Gen, etc.).
  * Dynamically renders items based on available modules and extensions.
  */
-export const ContentsNav = () => {
+export const ContentsNav = ({tabID, pageID}: Props) => {
   const contentBar = useMemo(() => extensionsData.navBar.addButton.contentBar, []);
 
   const contentItems: NavItem[] = useMemo(() => {
@@ -94,7 +96,7 @@ export const ContentsNav = () => {
 
   return (
     <>
-      <NavigationDock items={contentItems} />
+      <NavigationDock key={tabID} tabId={tabID} pageID={pageID} items={contentItems} />
       {!isEmpty(contentBar) && contentBar.map((NavButton, index) => <NavButton key={index} />)}
     </>
   );
@@ -104,7 +106,7 @@ export const ContentsNav = () => {
  * Navigation component for settings and system pages (Dashboard, Plugins, Settings).
  * Displays badges for updates and sync status.
  */
-export function SettingsNav() {
+export function SettingsNav({tabID, pageID}: Props) {
   const settingsBar = useMemo(() => extensionsData.navBar.addButton.settingsBar, []);
 
   const syncList = usePluginsState('syncList');
@@ -133,7 +135,7 @@ export function SettingsNav() {
 
   return (
     <>
-      <NavigationDock items={settingsItems} />
+      <NavigationDock key={tabID} tabId={tabID} pageID={pageID} items={settingsItems} />
       {!isEmpty(settingsBar) && settingsBar.map((NavButton, index) => <NavButton key={index} />)}
     </>
   );
