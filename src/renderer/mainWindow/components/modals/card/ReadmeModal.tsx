@@ -1,11 +1,12 @@
-import {Button, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, User} from '@heroui/react';
+import {Avatar, Button, Description, Label, Link, Modal} from '@heroui-v3/react';
 import {extractGitUrl, getCacheUrl} from '@lynx_common/utils';
 import {isEmpty, isNil} from 'lodash';
-import {Fragment, memo, useMemo} from 'react';
+import {Fragment, memo, useCallback, useMemo} from 'react';
 
 import {extensionsData} from '../../../plugins/extensions/loader';
 import {useModalsState} from '../../../redux/reducers/modals';
 import MarkdownViewer from '../../MarkdownViewer';
+import TabModal from '../../TabModal';
 import {useTabModalLifecycle} from '../useTabModalManager';
 
 type Props = {
@@ -16,54 +17,49 @@ type Props = {
 };
 
 const CardReadmeDialog = memo(({isOpen, url, title, tabID}: Props) => {
-  const {onOpenChange, show} = useTabModalLifecycle('readme', tabID);
+  const {onOpenChange} = useTabModalLifecycle('readme', tabID);
 
   const ReplaceMd = useMemo(() => extensionsData.replaceMarkdownViewer, []);
 
+  const handleClose = useCallback(() => {
+    onOpenChange(false);
+  }, []);
+
   return (
-    <Modal
-      classNames={{
-        backdrop: `top-10! ${show}`,
-        closeButton: 'cursor-default',
-        wrapper: `top-10! ${show}`,
-      }}
-      size="2xl"
-      isOpen={isOpen}
-      backdrop="blur"
-      placement="center"
-      isDismissable={false}
-      scrollBehavior="inside"
-      className="max-w-[95%]"
-      onOpenChange={onOpenChange}
-      hideCloseButton>
-      <ModalContent className="overflow-hidden">
-        <ModalHeader
-          className={'shrink-0 justify-center overflow-hidden bg-foreground-200 shadow-md dark:bg-foreground-100'}>
-          <User
-            description={
-              <Link size="sm" href={url} isExternal>
-                {url}
-              </Link>
-            }
-            name={title}
-            avatarProps={{src: getCacheUrl(extractGitUrl(url).avatarUrl)}}
-          />
-        </ModalHeader>
-        <ModalBody className="p-0">
-          {!isEmpty(url) &&
-            (isNil(ReplaceMd) ? (
-              <MarkdownViewer url={url} rounded={false} />
-            ) : (
-              <ReplaceMd repoPath={url} rounded={false} />
-            ))}
-        </ModalBody>
-        <ModalFooter>
-          <Button variant="light" color="warning" onPress={() => onOpenChange(false)}>
-            Close
-          </Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+    <TabModal isOpen={isOpen}>
+      <Modal.Header>
+        <Modal.Heading className={'justify-center overflow-hidden'}>
+          <div className="inline-flex items-center gap-2">
+            <Avatar>
+              <Avatar.Image alt={title} src={getCacheUrl(extractGitUrl(url).avatarUrl)} />
+              <Avatar.Fallback>{...title.split(' ').map(item => item.slice(0, 1).toUpperCase())}</Avatar.Fallback>
+            </Avatar>
+            <div className="flex flex-col">
+              <Label>{title}</Label>
+              <Description>
+                <Link href={url} className="group no-underline hover:underline">
+                  {url}
+                  <Link.Icon />
+                </Link>
+              </Description>
+            </div>
+          </div>
+        </Modal.Heading>
+      </Modal.Header>
+      <Modal.Body className="p-0">
+        {!isEmpty(url) &&
+          (isNil(ReplaceMd) ? (
+            <MarkdownViewer url={url} rounded={false} />
+          ) : (
+            <ReplaceMd repoPath={url} rounded={false} />
+          ))}
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onPress={handleClose}>
+          Close
+        </Button>
+      </Modal.Footer>
+    </TabModal>
   );
 });
 

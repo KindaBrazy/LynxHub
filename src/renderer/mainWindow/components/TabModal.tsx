@@ -11,6 +11,7 @@ type Props = {
   size?: ModalContainerProps['size'];
   isDismissable?: boolean;
   backdropVariant?: ModalBackdropProps['variant'];
+  dialogClassName?: string;
 };
 
 export default function TabModal({
@@ -20,6 +21,7 @@ export default function TabModal({
   size = 'cover',
   isDismissable = false,
   backdropVariant,
+  dialogClassName,
 }: Props) {
   const activeTab = useTabsState('activeTab');
 
@@ -35,7 +37,7 @@ export default function TabModal({
         <UNSAFE_PortalProvider getContainer={() => targetContainer}>
           <Modal.Backdrop className="h-full" variant={backdropVariant} isDismissable={isDismissable}>
             <Modal.Container size={size} scroll="inside" className="h-full max-h-full">
-              <Modal.Dialog className="h-full max-h-full">
+              <Modal.Dialog className={size === 'cover' ? `h-full max-h-full ${dialogClassName}` : dialogClassName}>
                 <UNSAFE_PortalProvider getContainer={() => document.body}>{children}</UNSAFE_PortalProvider>
               </Modal.Dialog>
             </Modal.Container>

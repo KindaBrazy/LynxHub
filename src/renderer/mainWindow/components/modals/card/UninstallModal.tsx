@@ -1,4 +1,4 @@
-import {Button, ButtonGroup, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Tooltip} from '@heroui/react';
+import {Button, ButtonGroup, Modal} from '@heroui-v3/react';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import filesIpc from '@lynx_shared/ipc/files';
 import moduleIpc from '@lynx_shared/ipc/plugins/module';
@@ -11,7 +11,8 @@ import {extensionsData} from '../../../plugins/extensions/loader';
 import {useGetUninstallType} from '../../../plugins/modules';
 import {useModalsState} from '../../../redux/reducers/modals';
 import {AppDispatch} from '../../../redux/store';
-import {useDisableTooltip, useInstalledCard} from '../../../utils/hooks';
+import {useInstalledCard} from '../../../utils/hooks';
+import TabModal from '../../TabModal';
 import {useTabModalLifecycle} from '../useTabModalManager';
 
 type Props = {
@@ -23,10 +24,9 @@ type Props = {
 const UninstallDialog = memo(({cardId, isOpen, tabID}: Props) => {
   const card = useInstalledCard(cardId);
   const dispatch = useDispatch<AppDispatch>();
-  const disableTooltip = useDisableTooltip(true);
   const uninstallType = useGetUninstallType(cardId);
 
-  const {onOpenChange, show} = useTabModalLifecycle('cardUninstall', tabID);
+  const {onOpenChange} = useTabModalLifecycle('cardUninstall', tabID);
 
   const closeHandle = useCallback(() => {
     onOpenChange(false);
@@ -81,65 +81,39 @@ const UninstallDialog = memo(({cardId, isOpen, tabID}: Props) => {
   }, [cardId, closeHandle, dispatch]);
 
   return (
-    <Modal
-      classNames={{
-        backdrop: `top-10! z-10! ${show}`,
-        wrapper: `top-10! scrollbar-hide ${show}`,
-      }}
-      size="xl"
-      isOpen={isOpen}
-      placement="center"
-      onClose={closeHandle}
-      scrollBehavior="inside"
-      onOpenChange={onOpenChange}
-      className="overflow-hidden"
-      hideCloseButton>
-      <ModalContent>
-        <ModalHeader className="items-center gap-x-2">
+    <TabModal size="lg" isOpen={isOpen}>
+      <Modal.Header>
+        <Modal.Heading className="items-center gap-x-2 flex">
           <ShieldCross className="text-danger size-7" />
           <span className="text-danger">Confirm Uninstallation</span>
-        </ModalHeader>
-        <ModalBody className="py-0">
-          <span>This action will remove the AI interface and all its associated data from your device.</span>
-          <span className="font-semibold">Are you sure you want to proceed?</span>
-        </ModalBody>
-        <ModalFooter>
-          <ButtonGroup size="sm" variant="flat" fullWidth>
-            <Button color="success" onPress={closeHandle}>
-              Cancel
-            </Button>
-            {uninstallType === 'removeFolder' ? (
-              <>
-                <Button color="warning" onPress={trash}>
-                  Move to Trash
-                </Button>
-                <Tooltip
-                  content={
-                    <div className="flex-col flex px-1 py-2">
-                      <div className="text-small font-semibold">This action can not be undone.</div>
-                      <div>The folder and its contents will be permanently deleted.</div>
-                    </div>
-                  }
-                  size="sm"
-                  delay={200}
-                  color="danger"
-                  className="max-w-64"
-                  isDisabled={disableTooltip}
-                  showArrow>
-                  <Button color="danger" onPress={remove}>
-                    Delete Permanently
-                  </Button>
-                </Tooltip>
-              </>
-            ) : (
-              <Button color="danger" onPress={uninstall}>
-                Uninstall
+        </Modal.Heading>
+      </Modal.Header>
+      <Modal.Body>
+        <span>This action will remove the AI interface and all its associated data from your device.</span>
+        <span className="font-semibold">Are you sure you want to proceed?</span>
+      </Modal.Body>
+      <Modal.Footer>
+        <ButtonGroup size="sm" fullWidth>
+          <Button className="flex-1" onPress={closeHandle}>
+            Cancel
+          </Button>
+          {uninstallType === 'removeFolder' ? (
+            <>
+              <Button size="sm" onPress={trash} className="flex-1" variant="danger-soft">
+                Move to Trash
               </Button>
-            )}
-          </ButtonGroup>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+              <Button size="sm" variant="danger" onPress={remove} className="flex-1">
+                Delete Permanently
+              </Button>
+            </>
+          ) : (
+            <Button size="sm" variant="danger" className="flex-1" onPress={uninstall}>
+              Uninstall
+            </Button>
+          )}
+        </ButtonGroup>
+      </Modal.Footer>
+    </TabModal>
   );
 });
 

@@ -1,4 +1,4 @@
-import {Button, ButtonGroup, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
+import {Button, ButtonGroup, Modal} from '@heroui-v3/react';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {ShieldCross} from '@solar-icons/react-perf/BoldDuotone';
@@ -6,6 +6,7 @@ import {Fragment, memo, useCallback, useMemo} from 'react';
 
 import {extensionsData} from '../../../plugins/extensions/loader';
 import {useModalsState} from '../../../redux/reducers/modals';
+import TabModal from '../../TabModal';
 import {useTabModalLifecycle} from '../useTabModalManager';
 
 type Props = {
@@ -15,7 +16,7 @@ type Props = {
 };
 
 const UnassignDialog = memo(({cardId, isOpen, tabID}: Props) => {
-  const {onOpenChange, show} = useTabModalLifecycle('cardUnassign', tabID);
+  const {onOpenChange} = useTabModalLifecycle('cardUnassign', tabID);
 
   const closeHandle = useCallback(() => {
     onOpenChange(false);
@@ -38,43 +39,31 @@ const UnassignDialog = memo(({cardId, isOpen, tabID}: Props) => {
   );
 
   return (
-    <Modal
-      classNames={{
-        backdrop: `top-10! z-10! ${show}`,
-        wrapper: `top-10! scrollbar-hide ${show}`,
-      }}
-      size="xl"
-      isOpen={isOpen}
-      placement="center"
-      onClose={closeHandle}
-      scrollBehavior="inside"
-      onOpenChange={onOpenChange}
-      className="overflow-hidden"
-      hideCloseButton>
-      <ModalContent>
-        <ModalHeader className="items-center gap-x-2">
+    <TabModal size="lg" isOpen={isOpen}>
+      <Modal.Header>
+        <Modal.Heading className="flex items-center gap-x-2">
           <ShieldCross className="text-warning size-7" />
           <span className="text-warning">Confirm Unassign</span>
-        </ModalHeader>
-        <ModalBody className="py-0">
-          <span>This action will remove the AI interface from LynxHub and all files and data will remain on disk.</span>
-          <span className="font-semibold">Are you sure you want to proceed?</span>
-        </ModalBody>
-        <ModalFooter>
-          <ButtonGroup size="sm" variant="flat" fullWidth>
-            <Button color="success" onPress={closeHandle}>
-              Cancel
-            </Button>
-            <Button color="warning" onPress={() => unassign(false)}>
-              Unassign
-            </Button>
-            <Button color="danger" onPress={() => unassign(true)}>
-              Unassign & Clear Configs
-            </Button>
-          </ButtonGroup>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+        </Modal.Heading>
+      </Modal.Header>
+      <Modal.Body>
+        <span>This action will remove the AI interface from LynxHub and all files and data will remain on disk.</span>
+        <span className="font-semibold">Are you sure you want to proceed?</span>
+      </Modal.Body>
+      <Modal.Footer>
+        <ButtonGroup size="sm" fullWidth>
+          <Button variant="primary" onPress={closeHandle}>
+            Cancel
+          </Button>
+          <Button variant="danger-soft" onPress={() => unassign(false)}>
+            Unassign
+          </Button>
+          <Button variant="danger" onPress={() => unassign(true)}>
+            Unassign & Clear Configs
+          </Button>
+        </ButtonGroup>
+      </Modal.Footer>
+    </TabModal>
   );
 });
 
