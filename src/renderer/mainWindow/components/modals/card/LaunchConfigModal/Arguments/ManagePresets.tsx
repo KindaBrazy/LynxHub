@@ -1,16 +1,17 @@
 import {
   Button,
   ButtonGroup,
+  CloseButton,
+  FieldError,
   Input,
+  Key,
+  Label,
+  ListBox,
   Popover,
-  PopoverContent,
-  PopoverTrigger,
   Select,
-  Selection,
-  SelectItem,
-} from '@heroui/react';
+  TextField,
+} from '@heroui-v3/react';
 import {ChosenArgumentsData} from '@lynx_common/types';
-import {TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
 import {motion} from 'framer-motion';
 import {isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useCallback, useMemo, useState} from 'react';
@@ -43,9 +44,6 @@ export default function PresetsManager({chosenArguments, presets, setChosenArgum
 
   const isInputValid = isEmpty(inputErrorMessage) && !isEmpty(inputValue);
 
-  // Sync selected key with active preset
-  const selectedKey = useMemo(() => new Set([chosenArguments.activePreset]), [chosenArguments.activePreset]);
-
   const deletePreset = useCallback(
     (name: string) => {
       setChosenArguments(prevState => {
@@ -63,12 +61,12 @@ export default function PresetsManager({chosenArguments, presets, setChosenArgum
   );
 
   const changeActivePreset = useCallback(
-    (keys: Selection) => {
-      if (keys !== 'all') {
-        const activePreset = keys.values().next().value?.toString();
-        if (activePreset) {
-          setChosenArguments(prevState => ({...prevState, activePreset}));
-        }
+    (key: Key | null) => {
+      if (!key || typeof key === 'number') return;
+
+      const activePreset = key;
+      if (activePreset) {
+        setChosenArguments(prevState => ({...prevState, activePreset}));
       }
     },
     [setChosenArguments],
@@ -105,40 +103,32 @@ export default function PresetsManager({chosenArguments, presets, setChosenArgum
     <motion.div animate={{opacity: 1}} initial={{opacity: 0}} className="flex flex-row space-x-2 items-end">
       {!isEmpty(sectionItems) && (
         <Select
-          classNames={{
-            trigger: 'min-w-[150px]',
-          }}
-          label="Preset:"
-          items={sectionItems}
+          variant="secondary"
+          placeholder="Preset"
           selectionMode="single"
           aria-label="Select Preset"
-          selectedKeys={selectedKey}
-          labelPlacement="outside-left"
-          onSelectionChange={changeActivePreset}
-          disallowEmptySelection>
-          {item => (
-            <SelectItem
-              endContent={
-                item.name !== 'Default' && (
-                  <button
-                    onClick={e => {
-                      e.stopPropagation();
-                      e.preventDefault();
-                      deletePreset(item.name);
-                    }}
-                    className={
-                      'rounded-sm transition-all duration-300 hover:bg-danger/30 size-[1.4rem] flex' +
-                      ' items-center justify-center cursor-pointer text-danger'
-                    }
-                    aria-label={`Delete ${item.name} preset`}>
-                    <TrashBin2 size={16} />
-                  </button>
-                )
-              }
-              key={item.name}>
-              {item.name}
-            </SelectItem>
-          )}
+          allowsEmptyCollection={false}
+          onChange={changeActivePreset}
+          value={chosenArguments.activePreset}
+          fullWidth>
+          <Label>Preset:</Label>
+          <Select.Trigger>
+            <Select.Value>{chosenArguments.activePreset}</Select.Value>
+            <Select.Indicator />
+          </Select.Trigger>
+          <Select.Popover>
+            <ListBox>
+              {sectionItems.map(item => (
+                <>
+                  <ListBox.Item id={item.name} textValue={item.name}>
+                    <ListBox.ItemIndicator />
+                    {item.name}
+                    {item.name !== 'Default' && <CloseButton onPress={() => deletePreset(item.name)}></CloseButton>}
+                  </ListBox.Item>
+                </>
+              ))}
+            </ListBox>
+          </Select.Popover>
         </Select>
       )}
       <Popover
@@ -146,38 +136,37 @@ export default function PresetsManager({chosenArguments, presets, setChosenArgum
           setCreateIsOpen(isOpen);
           if (!isOpen) setInputValue('');
         }}
-        size="sm"
-        placement="bottom"
-        isOpen={createIsOpen}
-        classNames={{content: 'border border-foreground/5'}}
-        showArrow>
-        <PopoverTrigger>
-          <Button variant="flat">New</Button>
-        </PopoverTrigger>
-        <PopoverContent className="gap-y-2 p-4 items-start w-[250px]">
-          <h4 className="font-bold text-small">New Preset</h4>
-          <Input
-            onKeyUp={e => {
-              if (e.key === 'Enter') handleCreateNew();
-            }}
-            size="sm"
-            spellCheck="false"
-            value={inputValue}
-            label="Preset Name"
-            onValueChange={setInputValue}
-            errorMessage={inputErrorMessage}
-            isInvalid={!!inputErrorMessage && !isEmpty(inputValue)}
-            autoFocus
-          />
-          <ButtonGroup size="sm" variant="flat" className="w-full" isDisabled={!isInputValid}>
-            <Button className="flex-1" onPress={handleCreateNew}>
-              Create
-            </Button>
-            <Button className="flex-1" onPress={handleDuplicateExisting}>
-              Duplicate
-            </Button>
-          </ButtonGroup>
-        </PopoverContent>
+        isOpen={createIsOpen}>
+        <Button variant="secondary">New</Button>
+        <Popover.Content>
+          <Popover.Dialog className="gap-y-2 flex flex-col">
+            <Popover.Arrow />
+            <Popover.Heading>New Preset</Popover.Heading>
+            <TextField
+              onKeyUp={e => {
+                if (e.key === 'Enter') handleCreateNew();
+              }}
+              value={inputValue}
+              spellCheck="false"
+              variant="secondary"
+              onChange={setInputValue}
+              isInvalid={!!inputErrorMessage && !isEmpty(inputValue)}
+              fullWidth
+              autoFocus>
+              <Input placeholder="Preset name..." />
+              <FieldError>{inputErrorMessage}</FieldError>
+            </TextField>
+
+            <ButtonGroup className="w-full" isDisabled={!isInputValid}>
+              <Button size="sm" className="flex-1" onPress={handleCreateNew}>
+                Create
+              </Button>
+              <Button size="sm" className="flex-1" onPress={handleDuplicateExisting}>
+                Duplicate
+              </Button>
+            </ButtonGroup>
+          </Popover.Dialog>
+        </Popover.Content>
       </Popover>
     </motion.div>
   );

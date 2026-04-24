@@ -1,4 +1,4 @@
-import {Button, Chip, Tooltip, useDisclosure} from '@heroui/react';
+import {Button, Chip, useOverlayState} from '@heroui-v3/react';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import {ArgumentsPresets, ChosenArgumentsData} from '@lynx_common/types';
 import {ChosenArgument} from '@lynx_common/types/plugins/modules';
@@ -8,11 +8,12 @@ import {isEmpty} from 'lodash';
 import {Plus} from 'lucide-react';
 import {Dispatch, SetStateAction, useCallback} from 'react';
 
+import LynxTooltip from '../../../../LynxTooltip';
 import LaunchConfigSection from '../LaunchConfigSection';
 import ManageArgumentsItem from './ManageItem';
 
 type Props = {
-  addArgumentsModal: ReturnType<typeof useDisclosure>;
+  addArgumentsModal: ReturnType<typeof useOverlayState>;
   chosenArguments: ArgumentsPresets;
   setChosenArguments: Dispatch<SetStateAction<ChosenArgumentsData>>;
   id: string;
@@ -22,7 +23,7 @@ type Props = {
  * Show selected arguments and allow reordering.
  */
 export default function ManageArguments({addArgumentsModal, chosenArguments, setChosenArguments, id}: Props) {
-  const openAddArguments = useCallback(() => addArgumentsModal.onOpen(), [addArgumentsModal]);
+  const openAddArguments = useCallback(() => addArgumentsModal.open(), [addArgumentsModal]);
 
   const onReorder = useCallback(
     (items: string[]) => {
@@ -47,26 +48,18 @@ export default function ManageArguments({addArgumentsModal, chosenArguments, set
 
   return (
     <LaunchConfigSection
-      customButton={
-        <Tooltip radius="sm" delay={500} content={'Add New Arguments'} showArrow>
-          <Button size="sm" variant="light" onPress={openAddArguments} isIconOnly>
-            <Plus className="size-4" />
-          </Button>
-        </Tooltip>
-      }
       title={
         <div className="flex flex-row items-center gap-x-1">
           <span>Arguments</span>
-          {chosenArguments.arguments.length > 0 && (
-            <Chip
-              size="sm"
-              radius="full"
-              variant="flat"
-              className="scale-85 hover:bg-success/10 transition-colors duration-300">
-              {chosenArguments.arguments.length}
-            </Chip>
-          )}
+          {chosenArguments.arguments.length > 0 && <Chip size="sm">{chosenArguments.arguments.length}</Chip>}
         </div>
+      }
+      customButton={
+        <LynxTooltip delay={500} content={'Add New Arguments'}>
+          <Button size="sm" variant="ghost" onPress={openAddArguments} isIconOnly>
+            <Plus className="size-4" />
+          </Button>
+        </LynxTooltip>
       }
       description="Configurate environments and command lines">
       {isEmpty(chosenArguments.arguments) ? (

@@ -5,8 +5,8 @@ import {HomePage_Icon} from '@lynx_assets/icons/pages';
 import isEmpty from 'lodash/isEmpty';
 import {memo, useMemo} from 'react';
 
+import useInertRemover from '../../utils/useInertRemover';
 import TabContainer from '../tabs';
-import useInertRemover from './useInertRemover';
 import WindowButtons from './WindowButtons';
 
 const TITLE_BAR_HEIGHT = 'h-10';

@@ -1,4 +1,4 @@
-import {NumberInput} from '@heroui/react';
+import {NumberField} from '@heroui-v3/react';
 import {ChosenArgument} from '@lynx_common/types/plugins/modules';
 import {Text} from '@solar-icons/react-perf/BoldDuotone';
 import {useCallback, useEffect, useMemo, useState} from 'react';
@@ -21,8 +21,6 @@ type Props = {
 /**
  * Renders an Input argument item for free-form text entry.
  * Updates the value on blur to minimize re-renders in parent.
- *
- * @returns {JSX.Element} The rendered InputArgItem component.
  */
 export default function NumberArgItem({argument, changeValue, removeArg, id}: Props) {
   const cardArgument = useGetArgumentsByID(id);
@@ -50,18 +48,22 @@ export default function NumberArgItem({argument, changeValue, removeArg, id}: Pr
 
   return (
     <ArgumentItemBase id={id} name={argument.name} removeArg={removeArg} icon={<Text className="size-3.5" />}>
-      <NumberInput
-        size="sm"
+      <NumberField
         onBlur={onBlur}
         step={numberStep}
         value={inputValue}
+        variant="secondary"
+        onChange={onChange}
         minValue={numberMin}
         maxValue={numberMax}
-        onValueChange={onChange}
         aria-label="Argument number input"
-        placeholder="Enter argument value here..."
-        classNames={{inputWrapper: 'dark:bg-LynxRaisinBlack bg-LynxWhiteThird'}}
-      />
+        fullWidth>
+        <NumberField.Group>
+          <NumberField.DecrementButton />
+          <NumberField.Input className="w-full" placeholder="Enter argument value here..." />
+          <NumberField.IncrementButton />
+        </NumberField.Group>
+      </NumberField>
     </ArgumentItemBase>
   );
 }

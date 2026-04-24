@@ -1,4 +1,4 @@
-import {Button, Input} from '@heroui/react';
+import {Button, Input} from '@heroui-v3/react';
 import {TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
 import {Reorder} from 'framer-motion';
 import {isEmpty} from 'lodash';
@@ -44,24 +44,24 @@ const TerminalCommandItem = memo(({initialValue, onEdit, index, onRemove, onDone
       animate={{opacity: 1}}
       initial={{opacity: 0}}
       onPointerUp={onDoneReorder}
-      className="rounded-medium bg-foreground-50 cursor-grab active:cursor-grabbing flex items-center gap-x-2 p-2">
-      <GripVertical className="text-foreground-500 size-4" />
-      <span className="text-sm">{index + 1}</span>
+      className="rounded-2xl bg-surface-tertiary cursor-grab active:cursor-grabbing flex items-center gap-x-2 p-2">
+      <GripVertical className="text-muted size-4" />
+      <span className="text-muted">{index + 1}</span>
       <Input
-        classNames={{
-          input: 'font-JetBrainsMono! text-xs!',
-          inputWrapper: 'bg-LynxWhiteThird dark:bg-LynxRaisinBlack',
-        }}
-        size="sm"
-        variant="flat"
         onKeyUp={onKeyUp}
         spellCheck="false"
         value={inputValue}
         onBlur={handleEdit}
-        onValueChange={setInputValue}
         autoFocus={isEmpty(initialValue)}
+        onChange={e => setInputValue(e.target.value)}
+        fullWidth
       />
-      <Button size="sm" color="danger" variant="light" onPress={remove} isIconOnly>
+      <Button
+        size="sm"
+        variant="ghost"
+        onPress={remove}
+        className="text-danger-soft-foreground shrink-0 hover:bg-danger-soft-hover"
+        isIconOnly>
         <TrashBin2 className="size-3.5" />
       </Button>
     </Reorder.Item>

@@ -1,40 +1,13 @@
-import {
-  Accordion,
-  AccordionItem,
-  Button,
-  Link,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-} from '@heroui/react';
+import {Button, Modal} from '@heroui-v3/react';
 import {ISSUE_PAGE} from '@lynx_common/consts';
 import {useDebounceBreadcrumb} from '@lynx_shared/sentry/Breadcrumbs';
+import {SquareTopDown} from '@solar-icons/react-perf/BoldDuotone';
 import {ReactNode, useCallback} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {modalActions, useModalsState} from '../../../redux/reducers/modals';
 import {AppDispatch} from '../../../redux/store';
-
-/**
- * Component to display "Open Issue" instructions in the warning modal.
- */
-const OpenIssue = () => (
-  <Accordion
-    className="px-0"
-    variant="splitted"
-    selectionMode="multiple"
-    itemClasses={{base: 'bg-foreground-100 shadow-none', trigger: 'cursor-default'}}>
-    <AccordionItem key="report" title={<span className="text-warning">📣 Report an Issue</span>}>
-      <p className="text-sm text-warning">
-        <span>If you continue to experience problems, please open a new issue on my GitHub repository.</span>
-        <br />
-        <span>This will allow me to investigate and address the issue more effectively.</span>
-      </p>
-    </AccordionItem>
-  </Accordion>
-);
+import TabModal from '../../TabModal';
 
 /**
  * Titles for warning modals mapped by content ID.
@@ -59,7 +32,6 @@ const warnContent: Record<string, ReactNode> = {
         <li>The repository is too large, and your network is unable to handle the file transfer.</li>
         <li>Firewalls or proxy settings are blocking the connection.</li>
       </ul>
-      <OpenIssue />
     </>
   ),
   LOCATE_REPO: (
@@ -69,7 +41,6 @@ const warnContent: Record<string, ReactNode> = {
         <li>The directory exists and you have the necessary permissions to access it.</li>
         <li>The directory is a valid Git repository matching the URL.</li>
       </ul>
-      <OpenIssue />
     </>
   ),
 };
@@ -90,35 +61,29 @@ const WarningModal = () => {
 
   return (
     <Modal
-      onOpenChange={open => {
-        if (!open) handleClose();
+      onOpenChange={value => {
+        if (!value) handleClose();
       }}
-      isOpen={isOpen}
-      placement="center"
-      classNames={{backdrop: 'top-10!', wrapper: 'top-10! scrollbar-hide'}}
-      isDismissable
-      hideCloseButton>
-      <ModalContent>
-        <ModalHeader>{warnTitle[contentId]}</ModalHeader>
-        <ModalBody>{warnContent[contentId]}</ModalBody>
-        <ModalFooter>
-          <div className="flex flex-row gap-x-2">
-            <Button
-              as={Link}
-              variant="light"
-              color="warning"
-              href={ISSUE_PAGE}
-              className="hover:text-warning"
-              isExternal
-              showAnchorIcon>
-              Report
-            </Button>
-            <Button color="danger" variant="light" onPress={handleClose} className="cursor-default">
-              Close
-            </Button>
-          </div>
-        </ModalFooter>
-      </ModalContent>
+      isOpen={isOpen}>
+      <TabModal isOpen={isOpen}>
+        <Modal.Backdrop>
+          <Modal.Container>
+            <Modal.Dialog>
+              <Modal.CloseTrigger /> {/* Optional: Close button */}
+              <Modal.Header>
+                <Modal.Heading>{warnTitle[contentId]}</Modal.Heading>
+              </Modal.Header>
+              <Modal.Body>{warnContent[contentId]}</Modal.Body>
+              <Modal.Footer>
+                <Button variant="secondary" onPress={() => window.open(ISSUE_PAGE)}>
+                  Report
+                  <SquareTopDown />
+                </Button>
+              </Modal.Footer>
+            </Modal.Dialog>
+          </Modal.Container>
+        </Modal.Backdrop>
+      </TabModal>
     </Modal>
   );
 };

@@ -1,4 +1,17 @@
-import {Button, Chip, Divider, Input, NumberInput, Select, SelectItem, SharedSelection, Textarea} from '@heroui/react';
+import {
+  Button,
+  Chip,
+  CloseButton,
+  Description,
+  Input,
+  Key,
+  Label,
+  ListBox,
+  NumberField,
+  Select,
+  Separator,
+  TextArea,
+} from '@heroui-v3/react';
 import {CustomArg} from '@lynx_common/types';
 import {ArgumentType} from '@lynx_common/types/plugins/modules';
 import filesIpc from '@lynx_shared/ipc/files';
@@ -35,6 +48,39 @@ type RenderProps = {
   removeItem: (item: CustomArg) => void;
 };
 
+const itemTypes: {id: string; label: string; description: string}[] = [
+  {
+    label: 'Text Input',
+    id: 'Input',
+    description: 'Text input field for free-form text entries',
+  },
+  {
+    label: 'Number',
+    id: 'Number',
+    description: 'Input field for numeric values only',
+  },
+  {
+    label: 'Folder',
+    id: 'Directory',
+    description: 'Select a folder from the system',
+  },
+  {
+    label: 'File',
+    id: 'File',
+    description: 'Select a file from the system',
+  },
+  {
+    label: 'Boolean',
+    id: 'CheckBox',
+    description: 'Value that is either present (enabled) or absent (disabled)',
+  },
+  {
+    label: 'Select',
+    id: 'DropDown',
+    description: 'Select from a predefined list of values',
+  },
+];
+
 export default function RenderCustomItem({item, isAdded, setCustomList, addItem, removeItem}: RenderProps) {
   const onNameChange = (value: string) => {
     setCustomList(prevState =>
@@ -52,8 +98,10 @@ export default function RenderCustomItem({item, isAdded, setCustomList, addItem,
     );
   };
 
-  const onTypeChange = (keys: SharedSelection) => {
-    const targetKey = Array.from(keys)[0] as ArgumentType;
+  const onTypeChange = (key: Key | null) => {
+    if (!key || typeof key === 'number') return;
+
+    const targetKey = key as ArgumentType;
     setCustomList(prevState =>
       prevState.map(listItem => (listItem.name === item.name ? {...listItem, type: targetKey} : listItem)),
     );
@@ -80,7 +128,7 @@ export default function RenderCustomItem({item, isAdded, setCustomList, addItem,
         <motion.div
           animate={{translateY: 0, opacity: 1, scale: 1}}
           initial={{translateY: 5, opacity: 0, scale: 0.9}}
-          className="text-sm bg-background dark:bg-LynxNearBlack flex flex-col px-4 py-3 rounded-xl gap-y-2"
+          className="text-sm bg-surface flex flex-col px-4 py-3 rounded-xl gap-y-2"
           layout>
           <div className="flex justify-between items-center">
             <div
@@ -93,17 +141,17 @@ export default function RenderCustomItem({item, isAdded, setCustomList, addItem,
             </div>
             <div className="flex items-center gap-x-1">
               <AnimateChild show={isAdded}>
-                <Button size="sm" variant="flat" color="success" isDisabled isIconOnly>
+                <Button size="sm" variant="ghost" className="text-success" isDisabled isIconOnly>
                   <CheckRead className="size-4.5" />
                 </Button>
               </AnimateChild>
               <AnimateChild show={!isAdded}>
-                <Button size="sm" variant="light" onPress={() => addItem(item)} isIconOnly>
+                <Button size="sm" variant="secondary" onPress={() => addItem(item)} isIconOnly>
                   <Unread className="size-4.5" />
                 </Button>
               </AnimateChild>
 
-              <Button size="sm" color="danger" variant="light" onPress={() => removeItem(item)} isIconOnly>
+              <Button size="sm" variant="danger-soft" onPress={() => removeItem(item)} isIconOnly>
                 <TrashBin2 className="size-3.5" />
               </Button>
             </div>
@@ -112,41 +160,37 @@ export default function RenderCustomItem({item, isAdded, setCustomList, addItem,
           <div className="flex items-center gap-x-4">
             <div className="flex items-center gap-x-2">
               <span className="shrink-0">Name:</span>
-              <Input size="sm" value={item.name} onValueChange={onNameChange} />
+              <Input value={item.name} variant="secondary" onChange={e => onNameChange(e.target.value)} />
             </div>
 
-            <Divider className="h-4" orientation="vertical" />
+            <Separator className="my-3" orientation="vertical" />
 
             <div className="flex items-center gap-x-2 flex-1">
-              <span className="shrink-0">Type:</span>
               <Select
-                size="sm"
-                selectedKeys={[item.type]}
-                onSelectionChange={onTypeChange}
-                classNames={{label: 'truncate'}}
+                value={item.type}
+                variant="secondary"
+                onChange={onTypeChange}
+                className="flex-row items-center"
                 aria-label="Select the argument type"
-                label="Choose how this argument will be processed">
-                <SelectItem key="Input" variant="flat" description="Text input field for free-form text entries">
-                  Text Input
-                </SelectItem>
-                <SelectItem key="Number" variant="flat" description="Input field for numeric values only">
-                  Number
-                </SelectItem>
-                <SelectItem variant="flat" key="Directory" description="Select a folder from the system">
-                  Folder
-                </SelectItem>
-                <SelectItem key="File" variant="flat" description="Select a file from the system">
-                  File
-                </SelectItem>
-                <SelectItem
-                  key="CheckBox"
-                  variant="flat"
-                  description="Value that is either present (enabled) or absent (disabled)">
-                  Boolean
-                </SelectItem>
-                <SelectItem key="DropDown" variant="flat" description="Select from a predefined list of values">
-                  Select
-                </SelectItem>
+                placeholder="Choose how this argument will be processed"
+                fullWidth>
+                <Label>Type:</Label>
+                <Select.Trigger>
+                  <Select.Value>{itemTypes.find(it => it.id === item.type)?.label}</Select.Value>
+                  <Select.Indicator />
+                </Select.Trigger>
+                <Select.Popover>
+                  <ListBox>
+                    {itemTypes.map(item => (
+                      <ListBox.Item id={item.id} key={item.id} textValue={item.label}>
+                        <div className="flex flex-col">
+                          <Label>{item.label}</Label>
+                          <Description>{item.description}</Description>
+                        </div>
+                      </ListBox.Item>
+                    ))}
+                  </ListBox>
+                </Select.Popover>
               </Select>
             </div>
           </div>
@@ -156,48 +200,47 @@ export default function RenderCustomItem({item, isAdded, setCustomList, addItem,
               <>
                 <span className="shrink-0">Default Value:</span>
                 <Input
-                  size="sm"
                   spellCheck="false"
-                  onValueChange={onDefaultValueChange}
+                  variant="secondary"
                   placeholder="Enter defualt value..."
+                  onChange={e => onDefaultValueChange(e.target.value)}
                   value={typeof item.defaultValue !== 'string' ? '' : item.defaultValue}
                   fullWidth
-                  isClearable
                 />
               </>
             )}
             {item.type === 'Number' && (
               <>
                 <span className="shrink-0">Default Value:</span>
-                <NumberInput
-                  size="sm"
-                  spellCheck="false"
+                <NumberField
+                  variant="secondary"
                   aria-label="Number value"
-                  onValueChange={onDefaultValueChange}
-                  placeholder="Enter defualt value..."
+                  onChange={onDefaultValueChange}
                   value={typeof item.defaultValue === 'string' ? 0 : item.defaultValue}
-                  fullWidth
-                  isClearable
-                />
+                  fullWidth>
+                  <NumberField.Group>
+                    <NumberField.DecrementButton />
+                    <NumberField.Input />
+                    <NumberField.IncrementButton />
+                  </NumberField.Group>
+                </NumberField>
               </>
             )}
             {item.type === 'Directory' && (
               <>
                 <span className="shrink-0">Folder:</span>
                 <Button
-                  endContent={
-                    item.defaultValue && (
-                      <Button size="sm" variant="light" className="size-6" onPress={clearDefaultValue} isIconOnly>
-                        <CloseCircle className="size-4" />
-                      </Button>
-                    )
-                  }
                   size="sm"
-                  variant="flat"
+                  variant="secondary"
                   onPress={selectFolder}
                   className={`justify-between ${item.defaultValue && 'text-foreground'}`}
                   fullWidth>
                   {item.defaultValue || 'Press to set default folder...'}
+                  {item.defaultValue && (
+                    <Button size="sm" variant="ghost" className="size-6" onPress={clearDefaultValue} isIconOnly>
+                      <CloseCircle className="size-4" />
+                    </Button>
+                  )}
                 </Button>
               </>
             )}
@@ -205,19 +248,17 @@ export default function RenderCustomItem({item, isAdded, setCustomList, addItem,
               <>
                 <span className="shrink-0">Folder:</span>
                 <Button
-                  endContent={
-                    item.defaultValue && (
-                      <Button size="sm" variant="light" className="size-6" onPress={clearDefaultValue} isIconOnly>
-                        <CloseCircle className="size-4" />
-                      </Button>
-                    )
-                  }
                   size="sm"
-                  variant="flat"
+                  variant="secondary"
                   onPress={selectFile}
                   className={`justify-between ${item.defaultValue && 'text-foreground'}`}
                   fullWidth>
                   {item.defaultValue || 'Press to set default file...'}
+                  {item.defaultValue && (
+                    <Button size="sm" variant="ghost" className="size-6" onPress={clearDefaultValue} isIconOnly>
+                      <CloseCircle className="size-4" />
+                    </Button>
+                  )}
                 </Button>
               </>
             )}
@@ -226,13 +267,12 @@ export default function RenderCustomItem({item, isAdded, setCustomList, addItem,
                 <div className="flex items-center gap-x-2 w-full">
                   <span className="shrink-0">Default Values:</span>
                   <Input
-                    size="sm"
                     spellCheck="false"
-                    onValueChange={onDefaultValueChange}
+                    variant="secondary"
+                    onChange={e => onDefaultValueChange(e.target.value)}
                     placeholder="Enter values comma separated (value1, value2)"
                     value={typeof item.defaultValue !== 'string' ? '' : item.defaultValue}
                     fullWidth
-                    isClearable
                   />
                 </div>
                 {item.defaultValue && (
@@ -252,8 +292,9 @@ export default function RenderCustomItem({item, isAdded, setCustomList, addItem,
                         };
 
                         return (
-                          <Chip size="sm" key={value} variant="flat" color="success" onClose={removeValue} isCloseable>
-                            {targetValue}
+                          <Chip size="sm" key={value} variant="soft" color="success">
+                            <Chip.Label>{targetValue}</Chip.Label>
+                            <CloseButton className="scale-70" onPress={removeValue} />
                           </Chip>
                         );
                       })}
@@ -284,17 +325,17 @@ export default function RenderCustomItem({item, isAdded, setCustomList, addItem,
             </div>
             <div className="flex items-center gap-x-1">
               <AnimateChild show={isAdded}>
-                <Button size="sm" variant="flat" color="success" isDisabled isIconOnly>
+                <Button size="sm" variant="ghost" className="text-success" isDisabled isIconOnly>
                   <CheckRead className="size-4.5" />
                 </Button>
               </AnimateChild>
               <AnimateChild show={!isAdded}>
-                <Button size="sm" variant="light" onPress={() => addItem(item)} isIconOnly>
+                <Button size="sm" variant="secondary" onPress={() => addItem(item)} isIconOnly>
                   <Unread className="size-4.5" />
                 </Button>
               </AnimateChild>
 
-              <Button size="sm" color="danger" variant="light" onPress={() => removeItem(item)} isIconOnly>
+              <Button size="sm" variant="danger-soft" onPress={() => removeItem(item)} isIconOnly>
                 <TrashBin2 className="size-3.5" />
               </Button>
             </div>
@@ -303,28 +344,28 @@ export default function RenderCustomItem({item, isAdded, setCustomList, addItem,
           <div className="flex items-center gap-x-4 size-full">
             <div className="flex items-center gap-x-2">
               <span className="shrink-0">Name:</span>
-              <Input size="sm" value={item.name} onValueChange={onNameChange} />
+              <Input value={item.name} variant="secondary" onChange={e => onNameChange(e.target.value)} />
             </div>
             <div className="flex items-center gap-x-2 flex-1">
               <span className="shrink-0">{item.kind === 'comment' ? 'Comment Text' : 'Custom Data'}:</span>
               {item.kind === 'comment' ? (
                 <Input
-                  size="sm"
                   spellCheck="false"
+                  variant="secondary"
                   value={item.defaultValue}
-                  onValueChange={onDefaultValueChange}
                   placeholder="Enter defualt value..."
+                  onChange={e => onDefaultValueChange(e.target.value)}
                   fullWidth
-                  isClearable
                 />
               ) : (
-                <Textarea
+                <TextArea
+                  className="h-20"
                   spellCheck="false"
+                  variant="secondary"
                   value={item.defaultValue}
-                  onValueChange={onDefaultValueChange}
                   placeholder="Enter defualt value..."
+                  onChange={e => onDefaultValueChange(e.target.value)}
                   fullWidth
-                  isClearable
                 />
               )}
             </div>
