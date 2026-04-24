@@ -1,10 +1,11 @@
-import {Button, Input, Textarea, Tooltip} from '@heroui/react';
+import {Button, Input, TextArea} from '@heroui-v3/react';
 import {ChosenArgument} from '@lynx_common/types/plugins/modules';
 import {Restart, Text} from '@solar-icons/react-perf/BoldDuotone';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {useGetArgumentsByID} from '../../../../../../plugins/modules';
 import {getArgumentDefaultValue} from '../../../../../../utils/moduleArguments';
+import LynxTooltip from '../../../../../LynxTooltip';
 import ArgumentItemBase from './Base';
 
 type Props = {
@@ -56,38 +57,39 @@ export default function InputArgItem({argument, changeValue, removeArg, id}: Pro
   return (
     <ArgumentItemBase
       extra={
-        <Tooltip delay={800} content={`Change to ${isInputBox ? 'One line' : 'Multiline'}`} showArrow>
-          <Button size="sm" variant="light" onPress={toggleInput} aria-label="Toggle path type" isIconOnly>
+        <LynxTooltip delay={800} content={`Change to ${isInputBox ? 'One line' : 'Multiline'}`}>
+          <Button size="sm" variant="ghost" onPress={toggleInput} aria-label="Toggle path type" isIconOnly>
             <Restart
               onAnimationEnd={() => setRotateEffect(false)}
-              className={`${rotateEffect && 'animate-[spin_0.5s]'}`}
+              className={`${rotateEffect && 'animate-[spin_0.5s]'} size-3.5`}
             />
           </Button>
-        </Tooltip>
+        </LynxTooltip>
       }
       id={id}
       name={argument.name}
       removeArg={removeArg}
       icon={<Text className="size-3.5" />}>
       {isInputBox || isCustomArg ? (
-        <Textarea
-          size="sm"
+        <TextArea
           onBlur={onBlur}
+          className="h-20"
           value={inputValue}
           spellCheck="false"
-          onValueChange={onChange}
+          variant="secondary"
+          onChange={e => onChange(e.target.value)}
           placeholder="Enter argument value here..."
-          classNames={{inputWrapper: 'dark:bg-LynxRaisinBlack bg-LynxWhiteThird'}}
+          fullWidth
         />
       ) : (
         <Input
-          size="sm"
           onBlur={onBlur}
           spellCheck="false"
           value={inputValue}
-          onValueChange={onChange}
+          variant="secondary"
+          onChange={e => onChange(e.target.value)}
           placeholder="Enter argument value here..."
-          classNames={{inputWrapper: 'dark:bg-LynxRaisinBlack bg-LynxWhiteThird'}}
+          fullWidth
         />
       )}
     </ArgumentItemBase>

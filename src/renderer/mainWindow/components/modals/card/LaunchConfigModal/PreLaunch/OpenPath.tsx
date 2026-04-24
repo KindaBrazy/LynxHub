@@ -1,5 +1,4 @@
-import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger} from '@heroui/react';
-import {Tooltip} from '@heroui-v3/react';
+import {Button, Dropdown, Label} from '@heroui-v3/react';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import filesIpc from '@lynx_shared/ipc/files';
 import {File, Folder, Inbox} from '@solar-icons/react-perf/BoldDuotone';
@@ -7,6 +6,7 @@ import {isEmpty} from 'lodash';
 import {Plus} from 'lucide-react';
 import {useCallback} from 'react';
 
+import LynxTooltip from '../../../../LynxTooltip';
 import {usePreOpenPath} from '../hooks/usePreOpenPath';
 import LaunchConfigSection from '../LaunchConfigSection';
 import PreOpenPathItem from './OpenPathItem';
@@ -34,30 +34,24 @@ export default function PreOpenPath({id}: Props) {
   return (
     <LaunchConfigSection
       customButton={
-        <Dropdown aria-label="Open file or folder">
-          <Tooltip delay={300}>
-            <Tooltip.Trigger>
-              <DropdownTrigger>
-                <Button size="sm" variant="light" isIconOnly>
-                  <Plus className="size-4" />
-                </Button>
-              </DropdownTrigger>
-            </Tooltip.Trigger>
-            <Tooltip.Content showArrow>
-              <Tooltip.Arrow />
-              <p>Add New Path</p>
-            </Tooltip.Content>
-          </Tooltip>
-          <DropdownMenu aria-label="Open file or folder">
-            <DropdownSection title="Select">
-              <DropdownItem key="add_folder" onPress={selectFolder} startContent={<Folder />}>
-                Folder
-              </DropdownItem>
-              <DropdownItem key="add_file" onPress={selectFile} startContent={<File />}>
-                File
-              </DropdownItem>
-            </DropdownSection>
-          </DropdownMenu>
+        <Dropdown>
+          <LynxTooltip delay={300} content="Add New Path">
+            <Button size="sm" variant="ghost" isIconOnly>
+              <Plus className="size-4" />
+            </Button>
+          </LynxTooltip>
+          <Dropdown.Popover>
+            <Dropdown.Menu>
+              <Dropdown.Item textValue="Folder" onPress={selectFolder}>
+                <Folder />
+                <Label>Folder</Label>
+              </Dropdown.Item>
+              <Dropdown.Item textValue="File" onPress={selectFile}>
+                <File />
+                <Label>File</Label>
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown.Popover>
         </Dropdown>
       }
       title="Open"

@@ -1,7 +1,9 @@
-import {Button, Tooltip} from '@heroui-v3/react';
+import {Button} from '@heroui-v3/react';
 import {Copy} from '@solar-icons/react-perf/BoldDuotone';
 import {CheckRead} from '@solar-icons/react-perf/LineDuotone';
 import {memo, useCallback, useEffect, useRef, useState} from 'react';
+
+import LynxTooltip from './LynxTooltip';
 
 type Props = {
   /** Optional custom tooltip text */
@@ -46,7 +48,10 @@ const CopyClipboard = memo(({showTooltip = true, tooltipTitle, contentToCopy, cl
   }, [contentToCopy, onCopy]);
 
   return (
-    <Tooltip delay={500} isDisabled={!showTooltip}>
+    <LynxTooltip
+      delay={500}
+      isDisabled={!showTooltip}
+      content={copied ? 'Copied!' : tooltipTitle || 'Copy to clipboard'}>
       <Button size="sm" variant="ghost" onPress={handleCopy} className={className} isIconOnly>
         {copied ? (
           <CheckRead className="size-5 animate-appearance-in" />
@@ -54,11 +59,7 @@ const CopyClipboard = memo(({showTooltip = true, tooltipTitle, contentToCopy, cl
           <Copy className="size-4 animate-appearance-in" />
         )}
       </Button>
-      <Tooltip.Content showArrow>
-        <Tooltip.Arrow />
-        <p>{copied ? 'Copied!' : tooltipTitle || 'Copy to clipboard'}</p>
-      </Tooltip.Content>
-    </Tooltip>
+    </LynxTooltip>
   );
 });
 

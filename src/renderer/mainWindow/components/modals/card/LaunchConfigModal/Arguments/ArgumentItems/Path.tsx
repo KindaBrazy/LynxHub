@@ -1,4 +1,4 @@
-import {Button, Tooltip} from '@heroui/react';
+import {Button} from '@heroui-v3/react';
 import {ChosenArgument} from '@lynx_common/types/plugins/modules';
 import {replaceSlashes} from '@lynx_common/utils';
 import filesIpc from '@lynx_shared/ipc/files';
@@ -8,6 +8,7 @@ import {ReactNode, useCallback, useEffect, useMemo, useState} from 'react';
 import {useGetArgumentsByID} from '../../../../../../plugins/modules';
 import {useCardsState} from '../../../../../../redux/reducers/cards';
 import {getArgumentDefaultValue} from '../../../../../../utils/moduleArguments';
+import LynxTooltip from '../../../../../LynxTooltip';
 import ArgumentItemBase from './Base';
 import AutoCompletePath from './Path_AutoComplete';
 
@@ -91,14 +92,14 @@ export default function PathArgItem({type, icon, placeholder, argument, changeVa
     <ArgumentItemBase
       extra={
         baseDir ? (
-          <Tooltip delay={800} content={`Change to ${isRelative ? 'Absolute' : 'Relative'}`} showArrow>
-            <Button size="sm" variant="light" onPress={changePathType} aria-label="Toggle path type" isIconOnly>
+          <LynxTooltip delay={800} content={`Change to ${isRelative ? 'Absolute' : 'Relative'}`}>
+            <Button size="sm" variant="ghost" onPress={changePathType} aria-label="Toggle path type" isIconOnly>
               <Restart
                 onAnimationEnd={() => setRotateEffect(false)}
-                className={`${rotateEffect && 'animate-[spin_0.5s]'}`}
+                className={`${rotateEffect && 'animate-[spin_0.5s]'} size-3.5`}
               />
             </Button>
-          </Tooltip>
+          </LynxTooltip>
         ) : undefined
       }
       id={id}

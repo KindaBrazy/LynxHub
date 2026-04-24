@@ -1,5 +1,4 @@
-import {Card} from '@heroui/card';
-import {Button} from '@heroui/react';
+import {Button, Card} from '@heroui-v3/react';
 import {TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
 import {memo, ReactNode, useCallback} from 'react';
 
@@ -21,14 +20,21 @@ const PreOpenPathItem = memo(({path, icon, index, onRemove}: Props) => {
   const remove = useCallback(() => onRemove?.(index), [onRemove, index]);
 
   return (
-    <Card shadow="none" className="flex flex-row items-center p-2 gap-x-2">
-      {icon}
-      <span title={path} className="w-full truncate text-xs">
-        {path}
-      </span>
-      <Button size="sm" color="danger" variant="light" onPress={remove} isIconOnly>
-        <TrashBin2 className="size-4" />
-      </Button>
+    <Card className="py-2 px-4">
+      <Card.Content className="flex flex-row items-center gap-x-2">
+        {icon}
+        <span title={path} className="w-full truncate text-xs">
+          {path}
+        </span>
+        <Button
+          size="sm"
+          variant="ghost"
+          onPress={remove}
+          className="shrnik-0 hover:bg-danger-soft-hover text-danger-soft-foreground"
+          isIconOnly>
+          <TrashBin2 className="size-3.5" />
+        </Button>
+      </Card.Content>
     </Card>
   );
 });

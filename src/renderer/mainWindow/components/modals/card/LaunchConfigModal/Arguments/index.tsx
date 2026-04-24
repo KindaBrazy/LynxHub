@@ -1,4 +1,4 @@
-import {useDisclosure} from '@heroui/react';
+import {useOverlayState} from '@heroui-v3/react';
 import {ChosenArgumentsData} from '@lynx_common/types';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {motion} from 'framer-motion';
@@ -15,17 +15,16 @@ type Props = {
   setChosenArguments: Dispatch<SetStateAction<ChosenArgumentsData>>;
   chosenArguments: ChosenArgumentsData;
   id: string;
-  tabId: string;
 };
 
 /**
  * Manage card arguments: add, edit, or remove.
  * Orchestrates presets, argument list, adding new arguments, and preview.
  */
-export default function ArgumentsManager({chosenArguments, setChosenArguments, id, tabId}: Props) {
+export default function ArgumentsManager({chosenArguments, setChosenArguments, id}: Props) {
   const [previewText, setPreviewText] = useState<string>('');
 
-  const addArgumentsModal = useDisclosure();
+  const addArgumentsModal = useOverlayState();
   const allMethods = useAllCardMethods();
 
   // Load initial arguments
@@ -73,7 +72,6 @@ export default function ArgumentsManager({chosenArguments, setChosenArguments, i
       <ArgumentsPreview text={previewText} />
       <AddArgumentModal
         id={id}
-        tabId={tabId}
         chosenArguments={chosenArguments}
         addArgumentsModal={addArgumentsModal}
         setChosenArguments={setChosenArguments}

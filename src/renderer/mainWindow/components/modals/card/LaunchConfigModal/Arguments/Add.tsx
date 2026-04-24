@@ -1,43 +1,24 @@
-import {
-  Button,
-  Chip,
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownSection,
-  DropdownTrigger,
-  Input,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  Tab,
-  Tabs,
-  useDisclosure,
-} from '@heroui/react';
+import {Button, Chip, Dropdown, Label, Modal, SearchField, Tabs, useOverlayState} from '@heroui-v3/react';
 import {useSupportCustomArg} from '@lynx/plugins/modules';
-import {Circle_Icon} from '@lynx_assets/icons';
 import {ChosenArgumentsData, CustomArg} from '@lynx_common/types';
 import {ChosenArgument} from '@lynx_common/types/plugins/modules';
-import {Filter} from '@solar-icons/react-perf/BoldDuotone';
+import {Filter, Monitor, WindowFrame} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty, some} from 'lodash';
 import {Plus} from 'lucide-react';
 import {Dispatch, Key, SetStateAction, useCallback, useEffect, useMemo, useState} from 'react';
 
-import {useTabVisibility} from '../../../../../layouts/tabs/utils';
 import {useGetArgumentsByID} from '../../../../../plugins/modules';
 import {getArgumentDefaultValue, getFilteredArguments} from '../../../../../utils/moduleArguments';
 import LynxScroll from '../../../../LynxScroll';
+import TabModal from '../../../../TabModal';
 import ArgumentSelectionList from './AddCategory';
 import CustomArguments from './CustomArguments';
 
 type Props = {
-  addArgumentsModal: ReturnType<typeof useDisclosure>;
+  addArgumentsModal: ReturnType<typeof useOverlayState>;
   chosenArguments: ChosenArgumentsData;
   setChosenArguments: Dispatch<SetStateAction<ChosenArgumentsData>>;
   id: string;
-  tabId: string;
 };
 
 const isEmptyData = (data: any): boolean => {
@@ -53,7 +34,7 @@ const isEmptyData = (data: any): boolean => {
 /**
  * Modal to select and add new arguments to the configuration.
  */
-export default function AddArgumentModal({addArgumentsModal, chosenArguments, setChosenArguments, id, tabId}: Props) {
+export default function AddArgumentModal({addArgumentsModal, chosenArguments, setChosenArguments, id}: Props) {
   const [filterArguments, setFilterArguments] = useState<Set<string>>(new Set(['all']));
   const [selectedArguments, setSelectedArguments] = useState<Set<string>>(new Set([]));
   const [searchValue, setSearchValue] = useState<string>('');
@@ -100,7 +81,7 @@ export default function AddArgumentModal({addArgumentsModal, chosenArguments, se
   const onClose = useCallback(() => {
     setSearchValue('');
     clearSelected();
-    addArgumentsModal.onClose();
+    addArgumentsModal.close();
   }, [clearSelected, addArgumentsModal]);
 
   const onAdd = useCallback(() => {
@@ -149,90 +130,98 @@ export default function AddArgumentModal({addArgumentsModal, chosenArguments, se
 
   const supportCustomArg = useSupportCustomArg(id);
 
-  const show = useTabVisibility(tabId);
-
   return (
-    <Modal
-      placement="center"
-      isDismissable={false}
-      scrollBehavior="inside"
-      className="z-50 max-w-[75%]"
-      isOpen={addArgumentsModal.isOpen}
-      onOpenChange={addArgumentsModal.onOpenChange}
-      classNames={{backdrop: `top-10! ${show}`, wrapper: `top-10! scrollbar-hide ${show}`}}
-      hideCloseButton>
-      <ModalContent>
-        <ModalHeader className="flex flex-col gap-y-2">
-          <div className="flex w-full flex-row space-x-2 items-center">
-            <span className="font-bold">Add Argument</span>
-            {!isEmpty(selectedArguments) && (
-              <Button size="sm" color="danger" variant="light" onPress={clearSelected}>
-                Clear All
-              </Button>
-            )}
-          </div>
+    <TabModal backdropVariant="transparent" isOpen={addArgumentsModal.isOpen} onOpenChange={addArgumentsModal.setOpen}>
+      <Modal.Header className="flex flex-col gap-y-2">
+        <div className="flex w-full flex-row space-x-2 items-center">
+          <span className="font-bold">Add Argument</span>
           {!isEmpty(selectedArguments) && (
-            <div className={'flex w-full flex-row flex-wrap gap-1 px-2 py-0.5 max-h-15 overflow-y-auto scrollbar-hide'}>
-              {Array.from(selectedArguments).map((value: string) => (
-                <Chip
-                  size="sm"
-                  key={value}
-                  variant="flat"
-                  color="success"
-                  onClick={() => removeSelected(value)}
-                  className="transition-colors duration-300 hover:bg-success/10 cursor-pointer">
-                  {value}
-                </Chip>
-              ))}
-            </div>
+            <Button size="sm" variant="danger-soft" onPress={clearSelected}>
+              Clear All
+            </Button>
           )}
-          <div className="flex w-full flex-row gap-x-2">
-            <Input
-              spellCheck="false"
-              value={searchValue}
-              onValueChange={setSearchValue}
-              placeholder="Search by name or description..."
-              startContent={<Circle_Icon className="size-4" />}
-              autoFocus
-              isClearable
-            />
-            <Dropdown>
-              <DropdownTrigger>
-                <Button variant="flat" isIconOnly>
-                  <Filter />
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu
+        </div>
+        {!isEmpty(selectedArguments) && (
+          <div className={'flex w-full flex-row flex-wrap gap-1 px-2 py-0.5 max-h-15 overflow-y-auto scrollbar-hide'}>
+            {Array.from(selectedArguments).map((value: string) => (
+              <Chip
+                size="sm"
+                key={value}
+                variant="soft"
+                color="success"
+                onClick={() => removeSelected(value)}
+                className="hover:bg-success-soft-hover cursor-pointer">
+                {value}
+              </Chip>
+            ))}
+          </div>
+        )}
+        <div className="flex w-full flex-row gap-x-2">
+          <SearchField
+            spellCheck="false"
+            variant="secondary"
+            value={searchValue}
+            onChange={setSearchValue}
+            fullWidth
+            autoFocus>
+            <SearchField.Group>
+              <SearchField.SearchIcon />
+              <SearchField.Input placeholder="Search by name or description..." />
+              <SearchField.ClearButton />
+            </SearchField.Group>
+          </SearchField>
+
+          <Dropdown>
+            <Button variant="tertiary" isIconOnly>
+              <Filter />
+            </Button>
+            <Dropdown.Popover>
+              <Dropdown.Menu
                 onSelectionChange={keys => {
                   setFilterArguments(keys as Set<string>);
                 }}
-                closeOnSelect={false}
                 selectionMode="single"
-                aria-label="Filter Arguments"
+                shouldCloseOnSelect={false}
                 selectedKeys={filterArguments}
                 disallowEmptySelection>
-                <DropdownSection title="Show">
-                  <DropdownItem key="all" className="cursor-default">
-                    All
-                  </DropdownItem>
-                  <DropdownItem key="selected" className="cursor-default">
-                    Selected
-                  </DropdownItem>
-                  <DropdownItem key="notSelected" className="cursor-default">
-                    Not Selected
-                  </DropdownItem>
-                </DropdownSection>
-              </DropdownMenu>
-            </Dropdown>
-          </div>
-          {supportCustomArg && (
-            <Tabs className="my-2" onSelectionChange={setCurrentTab} selectedKey={currentTab.toString()} fullWidth>
-              <Tab key="module" title="Module Provided" />
-              <Tab key="custom" title="Custom" />
-            </Tabs>
-          )}
-        </ModalHeader>
-        <ModalBody as={LynxScroll} className="mr-2 pr-4">
+                <Dropdown.Item id="all" textValue="All">
+                  <Dropdown.ItemIndicator />
+                  <Label>All</Label>
+                </Dropdown.Item>
+                <Dropdown.Item id="selected" textValue="Selected">
+                  <Dropdown.ItemIndicator />
+                  <Label>Selected</Label>
+                </Dropdown.Item>
+                <Dropdown.Item id="notSelected" textValue="Not Selected">
+                  <Dropdown.ItemIndicator />
+                  <Label>Not Selected</Label>
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown.Popover>
+          </Dropdown>
+        </div>
+
+        {supportCustomArg && (
+          <Tabs className="w-full my-2 px-4" onSelectionChange={setCurrentTab} selectedKey={currentTab.toString()}>
+            <Tabs.ListContainer>
+              <Tabs.List aria-label="Options">
+                <Tabs.Tab id="module" className="gap-x-1">
+                  <WindowFrame className="size-4" />
+                  Module Provided
+                  <Tabs.Indicator />
+                </Tabs.Tab>
+                <Tabs.Tab id="custom" className="gap-x-1">
+                  <Monitor className="size-4" />
+                  Custom
+                  <Tabs.Indicator />
+                </Tabs.Tab>
+              </Tabs.List>
+            </Tabs.ListContainer>
+          </Tabs>
+        )}
+      </Modal.Header>
+      <Modal.Body className="pl-2">
+        <LynxScroll className="pr-2">
           {currentTab === 'module' && (
             <div className="space-y-2">
               {listData?.map((data, index) => {
@@ -269,21 +258,17 @@ export default function AddArgumentModal({addArgumentsModal, chosenArguments, se
               selectedArguments={selectedArguments}
             />
           )}
-        </ModalBody>
-        <ModalFooter>
-          <Button
-            variant="flat"
-            color="success"
-            onPress={onAdd}
-            isDisabled={isEmpty(selectedArguments)}
-            startContent={<Plus className="size-4" />}>
-            Add
-          </Button>
-          <Button color="warning" variant="light" onPress={onClose}>
-            Close
-          </Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+        </LynxScroll>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button onPress={onClose} variant="secondary">
+          Close
+        </Button>
+        <Button onPress={onAdd} isDisabled={isEmpty(selectedArguments)}>
+          <Plus className="size-4" />
+          Add
+        </Button>
+      </Modal.Footer>
+    </TabModal>
   );
 }

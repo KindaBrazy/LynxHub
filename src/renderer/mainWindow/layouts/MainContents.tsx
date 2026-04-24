@@ -6,6 +6,7 @@ import {memo} from 'react';
 import AppPages from './AppPages';
 import NavBar from './navBar';
 import StatusBar from './statusBar';
+import TabWrapper from './TabWrapper';
 
 /**
  * Main layout component for the application content area.
@@ -27,16 +28,12 @@ const MainContents = memo(() => {
         const isActive = tab.id === activeTab;
 
         return (
-          <div
-            id={`${tab.id}_wrapper`}
-            key={`${tab.id}_wrapper`}
-            style={{transform: 'translate(0)'}}
-            className={`${isActive ? 'flex' : 'hidden'} size-full flex flex-row overflow-hidden`}>
+          <TabWrapper tabID={tab.id} isActive={isActive} key={`${tab.id}_wrapper`}>
             <NavBar tabID={tab.id} pageID={tab.pageID} />
             <div className={`size-full p-3 pt-1.5 ${paddingClass} transition-all duration-300`}>
               <AppPages tabID={tab.id} pageID={tab.pageID} />
             </div>
-          </div>
+          </TabWrapper>
         );
       })}
 

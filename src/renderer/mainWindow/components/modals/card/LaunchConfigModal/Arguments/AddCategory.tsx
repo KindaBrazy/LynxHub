@@ -1,10 +1,12 @@
-import {Card, CardBody, CardHeader, Listbox, ListboxItem, ListboxSection, Selection} from '@heroui/react';
+import {Card, Description, Header, Label, ListBox, Selection} from '@heroui-v3/react';
 import {ArgumentItem, ArgumentSection} from '@lynx_common/types/plugins/modules';
 import {isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useCallback, useMemo} from 'react';
 import Highlighter from 'react-highlight-words';
 
 import {searchInStrings} from '../../../../../utils';
+
+// TODO: improve long list performance
 
 type Props = {
   listData: ArgumentSection[] | ArgumentItem[];
@@ -91,22 +93,29 @@ export default function ArgumentSelectionList({
     (item: ArgumentItem) => {
       const searchWords = searchValue.split(/\s+/);
       return (
-        <ListboxItem key={item.name} className="cursor-default" textValue={`Select ${item.name}`}>
-          <Highlighter
-            searchWords={searchWords}
-            textToHighlight={item.name}
-            className="flex flex-wrap font-medium"
-            highlightClassName="bg-warning/40 rounded-sm px-0.5"
-            autoEscape
-          />
-          <Highlighter
-            searchWords={searchWords}
-            textToHighlight={item.description || ''}
-            highlightClassName="bg-warning/40 rounded-sm px-0.5"
-            className="text-wrap text-xs text-foreground/50 mt-0.5"
-            autoEscape
-          />
-        </ListboxItem>
+        <ListBox.Item id={item.name} textValue={`Select ${item.name}`}>
+          <ListBox.ItemIndicator />
+          <div className="flex flex-col">
+            <Label>
+              <Highlighter
+                searchWords={searchWords}
+                textToHighlight={item.name}
+                className="flex flex-wrap font-medium"
+                highlightClassName="bg-warning/40 rounded-sm px-0.5"
+                autoEscape
+              />
+            </Label>
+            <Description>
+              <Highlighter
+                searchWords={searchWords}
+                textToHighlight={item.description || ''}
+                highlightClassName="bg-warning/40 rounded-sm px-0.5"
+                className="text-wrap text-xs text-foreground/50 mt-0.5"
+                autoEscape
+              />
+            </Description>
+          </div>
+        </ListBox.Item>
       );
     },
     [searchValue],
@@ -115,31 +124,29 @@ export default function ArgumentSelectionList({
   if (isEmptyData(filteredData)) return null;
 
   return (
-    <Card shadow="none" className="bg-foreground-100">
-      <CardHeader className="justify-center text-LynxOrange pt-4 font-bold">{title}</CardHeader>
-      <CardBody>
+    <Card variant="secondary">
+      <Card.Header>
+        <Card.Title className="justify-center flex text-LynxOrange font-bold">{title}</Card.Title>
+      </Card.Header>
+      <Card.Content>
         {!isEmpty(filteredData) && 'items' in filteredData[0] ? (
-          <Listbox
-            variant="flat"
+          <ListBox
             selectionMode="multiple"
             aria-label="Arguments List"
             selectedKeys={selectedArguments}
             key={`${searchValue}_argumentList`}
-            onSelectionChange={onSelectionChange}
-            items={filteredData as ArgumentSection[]}>
-            {section => (
-              <ListboxSection
-                key={section.section}
-                items={section.items}
-                title={section.section}
-                classNames={{heading: 'text-warning font-semibold'}}>
-                {item => renderItem(item)}
-              </ListboxSection>
+            onSelectionChange={onSelectionChange}>
+            {(filteredData as ArgumentSection[]).map(section =>
+              section.items.length > 0 ? (
+                <ListBox.Section id={section.section} key={section.section}>
+                  <Header>{section.section}</Header>
+                  {section.items.map(item => renderItem(item))}
+                </ListBox.Section>
+              ) : null,
             )}
-          </Listbox>
+          </ListBox>
         ) : (
-          <Listbox
-            variant="flat"
+          <ListBox
             selectionMode="multiple"
             aria-label="Arguments List"
             selectedKeys={selectedArguments}
@@ -147,9 +154,9 @@ export default function ArgumentSelectionList({
             onSelectionChange={onSelectionChange}
             items={filteredData as ArgumentItem[]}>
             {item => renderItem(item)}
-          </Listbox>
+          </ListBox>
         )}
-      </CardBody>
+      </Card.Content>
     </Card>
   );
 }

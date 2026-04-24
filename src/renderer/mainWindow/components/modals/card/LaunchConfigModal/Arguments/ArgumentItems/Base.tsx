@@ -1,4 +1,4 @@
-import {Button, Card, CardBody, CardHeader, Divider, Tooltip} from '@heroui/react';
+import {Button, Separator, Surface} from '@heroui-v3/react';
 import {TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
 import {Reorder, useDragControls} from 'framer-motion';
 import {GripVertical} from 'lucide-react';
@@ -6,6 +6,7 @@ import {ReactNode, useMemo} from 'react';
 
 import {useGetArgumentsByID} from '../../../../../../plugins/modules';
 import {getArgumentDescription} from '../../../../../../utils/moduleArguments';
+import LynxTooltip from '../../../../../LynxTooltip';
 
 type Props = {
   onClick?: () => void;
@@ -47,28 +48,21 @@ export default function ArgumentItemBase({
       <div
         className={
           'w-5 active:cursor-grabbing cursor-grab text-foreground-500 hover:text-foreground-600 transition-all' +
-          ' duration-300 flex items-center justify-center dark:bg-foreground-50 bg-white rounded-l-medium relative'
+          ' duration-300 flex items-center justify-center dark:bg-foreground-50 bg-white rounded-l-3xl relative'
         }
         onPointerDown={e => controls.start(e)}>
         <GripVertical className="size-4" />
-        <Divider orientation="vertical" className="absolute right-0 bg-LynxWhiteSecond dark:bg-LynxRaisinBlack" />
+        <Separator
+          orientation="vertical"
+          className="absolute right-0 h-full bg-LynxWhiteSecond dark:bg-LynxRaisinBlack"
+        />
       </div>
-      <Tooltip
-        delay={800}
-        placement="top"
-        content={tooltipText}
-        isDisabled={!tooltipText}
-        classNames={{content: 'max-w-[65%] whitespace-pre-line'}}
-        showArrow>
-        <Card
-          as="div"
+      <LynxTooltip delay={1000} content={tooltipText} triggerClassName="w-full" isDisabled={!tooltipText}>
+        <Surface
           key={name}
-          shadow="none"
-          isPressable={!!onClick && !defaultCursor}
-          onPress={defaultCursor ? undefined : onClick}
-          className={`${defaultCursor ? 'cursor-default' : ''} rounded-l-none`}
-          fullWidth>
-          <CardHeader className={`justify-between pt-1 ${children ? 'pb-0' : 'pb-1'} text-xs`}>
+          onClick={defaultCursor ? undefined : onClick}
+          className={`${!!onClick && !defaultCursor ? 'cursor-pointer' : ''} rounded-l-none px-2 py-0 rounded-r-3xl`}>
+          <div className={`justify-between ${children ? 'pb-0' : 'pb-1'} pt-1 text-xs flex flex-row items-center`}>
             <div className="flex gap-x-1 text-success-700 dark:text-success-300">
               <div className="flex items-center justify-center">{icon}</div>
               <span className="font-JetBrainsMono font-semibold">{name}</span>
@@ -77,18 +71,19 @@ export default function ArgumentItemBase({
               {extra}
               <Button
                 size="sm"
-                color="danger"
-                variant="light"
+                variant="ghost"
                 onPress={removeArg}
                 aria-label="Remove argument"
+                className="text-danger-soft-foreground hover:bg-danger-soft-hover"
                 isIconOnly>
                 <TrashBin2 className="size-3.5" />
               </Button>
             </div>
-          </CardHeader>
-          {children && <CardBody className="p-2">{children}</CardBody>}
-        </Card>
-      </Tooltip>
+          </div>
+
+          {children && <div className="pb-2 mt-1">{children}</div>}
+        </Surface>
+      </LynxTooltip>
     </Reorder.Item>
   );
 }

@@ -1,9 +1,9 @@
-import {Autocomplete, AutocompleteItem} from '@heroui/react';
+import {Autocomplete, Description, EmptyState, Key, Label, ListBox, SearchField} from '@heroui-v3/react';
 import {FolderListData} from '@lynx_common/types';
 import {replaceSlashes} from '@lynx_common/utils';
 import filesIpc from '@lynx_shared/ipc/files';
 import {File, Folder} from '@solar-icons/react-perf/BoldDuotone';
-import {Key, useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 
 import {searchInStrings} from '../../../../../../utils';
 
@@ -17,6 +17,11 @@ type Props = {
   /** Initial value */
   defaultValue?: string;
 };
+
+/* TODO
+ * 1. Fix escape press to not clear input
+ * 2. First time open can not use arrows until first text change
+ */
 
 /**
  * Autocomplete component for file system paths.
@@ -87,51 +92,60 @@ export default function PathAutoComplete({baseDir, onValueChange, defaultValue =
   };
 
   const onSelectionChange = (key: Key | null) => {
-    if (key !== null) {
-      let currentSelection = key.toString();
-      currentSelection = replaceSlashes(currentSelection);
-      if (!currentSelection.endsWith('/')) {
-        currentSelection = currentSelection + '/';
-      }
+    if (!key || typeof key === 'number') return;
 
-      setInputValue(prev => {
-        const segments = prev.split('/');
-        segments[segments.length - 1] = currentSelection;
-        const newValue = segments.join('/');
-
-        // Defer the callback to avoid side effects in render/state update cycle
-        setTimeout(() => onValueChange?.(newValue), 0);
-        return newValue;
-      });
+    let currentSelection = key;
+    currentSelection = replaceSlashes(currentSelection);
+    if (!currentSelection.endsWith('/')) {
+      currentSelection = currentSelection + '/';
     }
+
+    setInputValue(prev => {
+      const segments = prev.split('/');
+      segments[segments.length - 1] = currentSelection;
+      const newValue = segments.join('/');
+
+      // Defer the callback to avoid side effects in render/state update cycle
+      setTimeout(() => onValueChange?.(newValue), 0);
+      return newValue;
+    });
   };
 
   return (
     <Autocomplete
-      inputProps={{
-        classNames: {
-          input: 'text-xs',
-          inputWrapper: 'dark:bg-LynxRaisinBlack bg-LynxWhiteThird',
-        },
-      }}
-      size="sm"
-      items={searchData}
-      selectedKey={null}
-      inputValue={inputValue}
-      onInputChange={handleInputChange}
-      onSelectionChange={onSelectionChange}
-      aria-label="Relative Path Autocomplete"
-      selectorButtonProps={{className: 'hidden'}}
-      classNames={{selectorButton: 'bg-red-500!'}}
-      allowsCustomValue>
-      {item => (
-        <AutocompleteItem
-          key={item.name}
-          textValue={item.name}
-          startContent={item.type === 'folder' ? <Folder className="size-4" /> : <File className="size-4" />}>
-          {item.name}
-        </AutocompleteItem>
-      )}
+      variant="secondary"
+      shouldCloseOnSelect={false}
+      onChange={onSelectionChange}
+      aria-label="Relative Path Autocomplete">
+      <Label />
+      <Autocomplete.Trigger>
+        <Autocomplete.Value className="text-xs text-foreground place-content-center">{inputValue}</Autocomplete.Value>
+        <Autocomplete.Indicator />
+      </Autocomplete.Trigger>
+      <Description />
+      <Autocomplete.Popover>
+        <Autocomplete.Filter>
+          <SearchField
+            value={inputValue}
+            variant="secondary"
+            aria-label="Search for path"
+            onChange={handleInputChange}
+            autoFocus>
+            <SearchField.Group>
+              <SearchField.SearchIcon />
+              <SearchField.Input />
+            </SearchField.Group>
+          </SearchField>
+          <ListBox renderEmptyState={() => <EmptyState>No results found</EmptyState>}>
+            {searchData.map(item => (
+              <ListBox.Item id={item.name} key={item.name} textValue={item.name}>
+                {item.type === 'folder' ? <Folder className="size-4" /> : <File className="size-4" />}
+                <Label>{item.name}</Label>
+              </ListBox.Item>
+            ))}
+          </ListBox>
+        </Autocomplete.Filter>
+      </Autocomplete.Popover>
     </Autocomplete>
   );
 }

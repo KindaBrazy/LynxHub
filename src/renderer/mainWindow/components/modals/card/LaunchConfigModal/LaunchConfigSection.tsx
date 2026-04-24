@@ -1,5 +1,4 @@
-import {Button, Card, CardBody, CardHeader} from '@heroui/react';
-import {Tooltip} from '@heroui-v3/react';
+import {Button, Card, Tooltip} from '@heroui-v3/react';
 import {isEmpty, isString} from 'lodash';
 import {Plus} from 'lucide-react';
 import {ReactNode} from 'react';
@@ -32,14 +31,14 @@ export default function LaunchConfigSection({
   customButton,
 }: Props) {
   return (
-    <Card shadow="none" className="bg-foreground-100">
-      <CardHeader className="px-4 flex-col items-start">
+    <Card variant="secondary">
+      <Card.Header className="px-4 flex-col items-start">
         <div className="flex w-full flex-row items-center justify-between">
           {isString(title) ? <span>{title}</span> : title}
           {customButton || (
             <Tooltip delay={300}>
               <Tooltip.Trigger>
-                <Button size="sm" variant="light" onPress={onAddPress} isIconOnly>
+                <Button size="sm" variant="ghost" onPress={onAddPress} isIconOnly>
                   <Plus className="size-4" />
                 </Button>
               </Tooltip.Trigger>
@@ -51,8 +50,8 @@ export default function LaunchConfigSection({
           )}
         </div>
         {!isEmpty(description) && <span className="text-sm font-normal text-foreground-500">{description}</span>}
-      </CardHeader>
-      <CardBody>{children}</CardBody>
+      </Card.Header>
+      <Card.Content>{children}</Card.Content>
     </Card>
   );
 }

@@ -1,4 +1,4 @@
-import {Select, Selection, SelectItem} from '@heroui/react';
+import {Description, Key, Label, ListBox, Select} from '@heroui-v3/react';
 import {CustomRunBehaviorData} from '@lynx_common/types/ipc';
 import {Fragment, useCallback} from 'react';
 
@@ -15,21 +15,19 @@ export default function Behavior({id}: Props) {
   const {terminal = 'runScript', browser = 'appBrowser', urlCatch} = behavior;
 
   const onTerminalChange = useCallback(
-    (value: Selection) => {
-      if (value && value !== 'all') {
-        const result = value.values().next().value as TerminalType;
-        updateBehavior({terminal: result});
-      }
+    (key: Key | null) => {
+      if (!key || typeof key === 'number') return;
+      const result = key as TerminalType;
+      updateBehavior({terminal: result});
     },
     [updateBehavior],
   );
 
   const onBrowserChange = useCallback(
-    (value: Selection) => {
-      if (value && value !== 'all') {
-        const result = value.values().next().value as BrowserType;
-        updateBehavior({browser: result});
-      }
+    (key: Key | null) => {
+      if (!key || typeof key === 'number') return;
+      const result = key as BrowserType;
+      updateBehavior({browser: result});
     },
     [updateBehavior],
   );
@@ -46,45 +44,67 @@ export default function Behavior({id}: Props) {
       title="Launch Behavior"
       customButton={<Fragment />}
       description="Configure custom startup commands and manage terminal, browser, and URL detection behaviors">
-      <div className="flex flex-col">
-        <Select
-          classNames={{
-            trigger: 'bg-LynxWhiteThird dark:bg-LynxRaisinBlack',
-          }}
-          label="Terminal"
-          selectionMode="single"
-          labelPlacement="outside"
-          selectedKeys={[terminal]}
-          onSelectionChange={onTerminalChange}
-          description="Configure how the terminal behaves when launching the AI."
-          disallowEmptySelection>
-          <SelectItem key="runScript" description="Execute the designated script (e.g., webui.bat).">
-            Run Script
-          </SelectItem>
-          <SelectItem key="empty" description="Open an empty terminal without executing any commands.">
-            Open Empty Terminal
-          </SelectItem>
+      <div className="flex flex-col gap-y-4">
+        <Select value={terminal} onChange={onTerminalChange} fullWidth>
+          <Label>Terminal</Label>
+          <Select.Trigger>
+            <Select.Value>
+              {({selectedText}) => {
+                return <span>{selectedText}</span>;
+              }}
+            </Select.Value>
+            <Select.Indicator />
+          </Select.Trigger>
+          <Select.Popover>
+            <ListBox>
+              <ListBox.Item id="runScript" textValue="Run Script">
+                <div className="flex flex-col">
+                  <Label>Run Script</Label>
+                  <Description>Execute the designated script (e.g., webui.bat).</Description>
+                </div>
+              </ListBox.Item>
+              <ListBox.Item id="empty" textValue="Open Empty Terminal">
+                <div className="flex flex-col">
+                  <Label>Open Empty Terminal</Label>
+                  <Description>Open an empty terminal without executing any commands.</Description>
+                </div>
+              </ListBox.Item>
+            </ListBox>
+          </Select.Popover>
+          <Description>Configure how the terminal behaves when launching the AI.</Description>
         </Select>
-        <Select
-          label="Browser"
-          selectionMode="single"
-          labelPlacement="outside"
-          selectedKeys={[browser]}
-          onSelectionChange={onBrowserChange}
-          classNames={{trigger: 'bg-LynxWhiteThird dark:bg-LynxRaisinBlack'}}
-          description="Define what happens when the application detects an address to launch."
-          disallowEmptySelection>
-          <SelectItem key="appBrowser" description="Open the address in the integrated in-app browser.">
-            In-App Browser
-          </SelectItem>
-          <SelectItem key="defaultBrowser" description="Open the address in your system default browser.">
-            Default Browser
-          </SelectItem>
+
+        <Select value={browser} onChange={onBrowserChange} fullWidth>
+          <Label>Browser</Label>
+          <Select.Trigger>
+            <Select.Value>
+              {({selectedText}) => {
+                return <span>{selectedText}</span>;
+              }}
+            </Select.Value>
+            <Select.Indicator />
+          </Select.Trigger>
+          <Select.Popover>
+            <ListBox>
+              <ListBox.Item id="appBrowser" textValue="In-App Browser">
+                <div className="flex flex-col">
+                  <Label>In-App Browser</Label>
+                  <Description>Execute the designated script (e.g., webui.bat).</Description>
+                </div>
+              </ListBox.Item>
+              <ListBox.Item id="defaultBrowser" textValue="Default Browser">
+                <div className="flex flex-col">
+                  <Label>Default Browser</Label>
+                  <Description>Open the address in your system default browser.</Description>
+                </div>
+              </ListBox.Item>
+            </ListBox>
+          </Select.Popover>
+          <Description>Define what happens when the application detects an address to launch.</Description>
         </Select>
       </div>
-      <div className="flex w-full flex-col items-center gap-y-2">
-        <UrlCatch value={urlCatch} onUpdate={onUrlCatchUpdate} />
-      </div>
+
+      <UrlCatch value={urlCatch} onUpdate={onUrlCatchUpdate} />
     </LaunchConfigSection>
   );
 }

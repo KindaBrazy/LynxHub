@@ -1,5 +1,4 @@
-import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger} from '@heroui/react';
-import {Tooltip} from '@heroui-v3/react';
+import {Button, Dropdown, Label} from '@heroui-v3/react';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import {Terminal_Icon} from '@lynx_assets/icons';
 import filesIpc from '@lynx_shared/ipc/files';
@@ -9,6 +8,7 @@ import {isEmpty} from 'lodash';
 import {Plus} from 'lucide-react';
 import {useCallback} from 'react';
 
+import LynxTooltip from '../../../../LynxTooltip';
 import {useTerminalCommands} from '../hooks/useTerminalCommands';
 import LaunchConfigSection from '../LaunchConfigSection';
 import TerminalCommandItem from '../TerminalCommandItem';
@@ -32,30 +32,24 @@ export default function PreTerminalCommands({id}: Props) {
   return (
     <LaunchConfigSection
       customButton={
-        <Dropdown aria-label="Add new command">
-          <Tooltip delay={300}>
-            <Tooltip.Trigger>
-              <DropdownTrigger>
-                <Button size="sm" variant="light" isIconOnly>
-                  <Plus className="size-4" />
-                </Button>
-              </DropdownTrigger>
-            </Tooltip.Trigger>
-            <Tooltip.Content showArrow>
-              <Tooltip.Arrow />
-              <p>Add New Command</p>
-            </Tooltip.Content>
-          </Tooltip>
-          <DropdownMenu aria-label="Add new command">
-            <DropdownSection title="Add">
-              <DropdownItem key="add_folder" onPress={() => addCommand()} startContent={<Terminal_Icon />}>
-                Command
-              </DropdownItem>
-              <DropdownItem key="add_file" onPress={cdFolder} startContent={<MoveToFolder className="size-3.5" />}>
-                Cd Folder
-              </DropdownItem>
-            </DropdownSection>
-          </DropdownMenu>
+        <Dropdown>
+          <LynxTooltip delay={300} content="Add New Command">
+            <Button size="sm" variant="ghost" isIconOnly>
+              <Plus className="size-4" />
+            </Button>
+          </LynxTooltip>
+          <Dropdown.Popover>
+            <Dropdown.Menu>
+              <Dropdown.Item textValue="Command" onPress={() => addCommand()}>
+                <Terminal_Icon />
+                <Label>Command</Label>
+              </Dropdown.Item>
+              <Dropdown.Item onPress={cdFolder} textValue="Cd Folder">
+                <MoveToFolder className="size-3.5" />
+                <Label>Cd Folder</Label>
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown.Popover>
         </Dropdown>
       }
       title="Terminal Commands"

@@ -1,4 +1,4 @@
-import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger} from '@heroui/react';
+import {Button, Dropdown, Label} from '@heroui-v3/react';
 import {getTitleById} from '@lynx/plugins/modules';
 import {CustomArg, CustomArgKinds} from '@lynx_common/types';
 import storageIpc from '@lynx_shared/ipc/storage';
@@ -80,51 +80,52 @@ const CustomArgComp = memo(({title, description, list, setList, addItem, isAdded
 
   return (
     <div className="flex flex-col relative gap-y-2">
-      <div className="bg-foreground-100 rounded-xl flex flex-col inset-0 items-center p-4 relative">
+      <div className="bg-surface-secondary rounded-xl flex flex-col inset-0 items-center p-4 relative">
         <div className="size-full flex justify-center mb-4">
           <div className="flex flex-col text-center">
             <span className="font-bold">{title}</span>
             <span className="font-semibold text-foreground-500 text-xs">{description}</span>
           </div>
-          <Dropdown showArrow>
-            <DropdownTrigger>
-              <Button size="sm" variant="light" className="absolute right-3 top-3" isIconOnly>
-                <Plus className="size-4" />
-              </Button>
-            </DropdownTrigger>
-            <DropdownMenu>
-              <DropdownItem key="envVar" startContent={<HomeAdd />} onPress={() => addCustom('envVar')}>
-                Environment Variable
-              </DropdownItem>
-              <DropdownItem
-                key="commandLine"
-                startContent={<SettingsMinimalistic />}
-                onPress={() => addCustom('commandLine')}>
-                Command Line
-              </DropdownItem>
-              <DropdownItem key="custom" startContent={<Notes />} onPress={() => addCustom('custom')}>
-                Custom
-              </DropdownItem>
-              <DropdownItem key="comment" startContent={<Pen2 />} onPress={() => addCustom('comment')}>
-                Comment
-              </DropdownItem>
-            </DropdownMenu>
+          <Dropdown>
+            <Button size="sm" variant="ghost" className="absolute right-3 top-3" isIconOnly>
+              <Plus className="size-4" />
+            </Button>
+            <Dropdown.Popover>
+              <Dropdown.Menu>
+                <Dropdown.Item id="envVar" onPress={() => addCustom('envVar')}>
+                  <HomeAdd />
+                  <Label>Environment Variable</Label>
+                </Dropdown.Item>
+                <Dropdown.Item id="commandLine" onPress={() => addCustom('commandLine')}>
+                  <SettingsMinimalistic />
+                  <Label>Command Line</Label>
+                </Dropdown.Item>
+                <Dropdown.Item id="custom" onPress={() => addCustom('custom')}>
+                  <Notes />
+                  <Label>Custom</Label>
+                </Dropdown.Item>
+                <Dropdown.Item id="comment" onPress={() => addCustom('comment')}>
+                  <Pen2 />
+                  <Label>Comment</Label>
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown.Popover>
           </Dropdown>
         </div>
 
         <AnimatePresence mode="popLayout">
           {list.length === 0 ? (
             <motion.div
+              className="w-full"
               animate={{translateY: 0, opacity: 1, scale: 1}}
               initial={{translateY: 5, opacity: 0, scale: 0.9}}>
               <EmptyStateCard
                 description={
-                  <span className="flex items-center gap-x-1 text-sm text-foreground-500">
-                    Use <Plus className="size-3 text-foreground" /> Button to add new item.
+                  <span className="flex items-center gap-x-1 text-sm text-muted">
+                    Use <Plus className="size-3" /> Button to add new item.
                   </span>
                 }
                 icon={<Inbox size={40} />}
-                className="bg-foreground-50 w-120"
                 title="No custom argument available to display"
               />
             </motion.div>

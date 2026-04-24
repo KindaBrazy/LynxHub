@@ -1,4 +1,4 @@
-import {Select, Selection, SelectItem} from '@heroui/react';
+import {Description, Key, Label, ListBox, Select} from '@heroui-v3/react';
 import {ArgumentDropdownValues, ChosenArgument} from '@lynx_common/types/plugins/modules';
 import {isStringArray} from '@lynx_common/utils';
 import {ListDownMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
@@ -33,27 +33,25 @@ export default function DropdownArgItem({argument, changeValue, removeArg, id}: 
     [argument.name, cardArgument],
   );
 
-  const [selectedKey, setSelectedKey] = useState<Selection>(
-    new Set(argument.value ? [argument.value] : defaultValue ? [defaultValue] : []),
+  const [selectedKey, setSelectedKey] = useState<Key | null>(
+    argument.value ? argument.value : defaultValue ? defaultValue : null,
   );
 
   // Sync state with prop updates
   useEffect(() => {
     if (argument.value) {
-      setSelectedKey(new Set([argument.value]));
+      setSelectedKey(argument.value);
     } else if (defaultValue) {
-      setSelectedKey(new Set([defaultValue]));
+      setSelectedKey(defaultValue);
     }
   }, [argument.value, defaultValue]);
 
   const onChange = useCallback(
-    (keys: Selection) => {
-      // keys is a Set of strings (or 'all', but we don't support multiple selection here likely)
-      if (keys !== 'all') {
-        const value = Array.from(keys)[0]?.toString();
-        setSelectedKey(keys);
-        changeValue(value);
-      }
+    (key: Key | null) => {
+      if (!key || typeof key === 'number') return;
+
+      setSelectedKey(key);
+      changeValue(key);
     },
     [changeValue],
   );
@@ -74,23 +72,28 @@ export default function DropdownArgItem({argument, changeValue, removeArg, id}: 
       removeArg={removeArg}
       icon={<ListDownMinimalistic className="size-4.5" />}>
       <Select
-        size="sm"
-        items={items}
-        variant="flat"
-        selectedKeys={selectedKey}
+        variant="secondary"
+        value={selectedKey}
+        onChange={onChange}
         aria-label="Select an item"
-        onSelectionChange={onChange}
-        placeholder="Select an item"
-        classNames={{trigger: 'dark:bg-LynxRaisinBlack bg-LynxWhiteThird', value: 'text-xs'}}>
-        {item => (
-          <SelectItem
-            key={item.value}
-            textValue={item.value}
-            description={item.description}
-            classNames={{title: 'text-xs'}}>
-            {item.value}
-          </SelectItem>
-        )}
+        placeholder="Select an item">
+        <Select.Trigger>
+          <Select.Value />
+          <Select.Indicator />
+        </Select.Trigger>
+        <Select.Popover>
+          <ListBox>
+            {items.map(item => (
+              <ListBox.Item id={item.value} key={item.value} textValue={item.value}>
+                <ListBox.ItemIndicator />
+                <div className="flex flex-col">
+                  <Label>{item.value}</Label>
+                  <Description>{item.description}</Description>
+                </div>
+              </ListBox.Item>
+            ))}
+          </ListBox>
+        </Select.Popover>
       </Select>
     </ArgumentItemBase>
   );
