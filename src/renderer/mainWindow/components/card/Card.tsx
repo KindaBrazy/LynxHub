@@ -5,7 +5,7 @@ import {extractGitUrl} from '@lynx_common/utils';
 import {motion} from 'framer-motion';
 import {CSSProperties, memo, useMemo} from 'react';
 
-const MotionCard = motion(Card);
+const MotionCard = motion.create(Card);
 
 import Footer from './Footer';
 import {CardHeaderContent} from './Header';
