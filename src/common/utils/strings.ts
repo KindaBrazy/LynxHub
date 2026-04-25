@@ -29,3 +29,11 @@ export function removeExtraEndings(source: string, target: string): string {
     return source;
   }
 }
+
+export function getFallbackString(value: string) {
+  return value
+    .replace(/[^a-zA-Z0-9\s]/g, '')
+    .split(' ')
+    .map(item => item.slice(0, 1).toUpperCase())
+    .join('');
+}
