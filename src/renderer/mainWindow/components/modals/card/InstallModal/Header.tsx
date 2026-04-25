@@ -1,4 +1,4 @@
-import {ModalHeader} from '@heroui/react';
+import {ModalHeader, ModalHeading} from '@heroui-v3/react';
 import {InitialSteps} from '@lynx_common/types/plugins/modules';
 import {memo, useMemo} from 'react';
 
@@ -20,16 +20,18 @@ const InstallHeader = ({steps, currentStep}: InstallHeaderProps) => {
   const maxTitleWidth = useMemo(() => (steps.length > 5 ? 'max-w-16' : 'max-w-24'), [steps.length]);
 
   return (
-    <ModalHeader className="shrink-0 overflow-hidden bg-foreground-100 shadow-sm">
-      <div className="flex w-full justify-center">
-        <StepProgress
-          steps={steps}
-          current={currentStep}
-          className="max-w-full"
-          orientation="horizontal"
-          titleClassName={maxTitleWidth}
-        />
-      </div>
+    <ModalHeader>
+      <ModalHeading>
+        <div className="flex w-full justify-center">
+          <StepProgress
+            steps={steps}
+            current={currentStep}
+            className="max-w-full"
+            orientation="horizontal"
+            titleClassName={maxTitleWidth}
+          />
+        </div>
+      </ModalHeading>
     </ModalHeader>
   );
 };

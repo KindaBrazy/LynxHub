@@ -60,31 +60,24 @@ const WarningModal = () => {
   }, [dispatch]);
 
   return (
-    <Modal
+    <TabModal
       onOpenChange={value => {
         if (!value) handleClose();
       }}
+      size="lg"
       isOpen={isOpen}>
-      <TabModal isOpen={isOpen}>
-        <Modal.Backdrop>
-          <Modal.Container>
-            <Modal.Dialog>
-              <Modal.CloseTrigger /> {/* Optional: Close button */}
-              <Modal.Header>
-                <Modal.Heading>{warnTitle[contentId]}</Modal.Heading>
-              </Modal.Header>
-              <Modal.Body>{warnContent[contentId]}</Modal.Body>
-              <Modal.Footer>
-                <Button variant="secondary" onPress={() => window.open(ISSUE_PAGE)}>
-                  Report
-                  <SquareTopDown />
-                </Button>
-              </Modal.Footer>
-            </Modal.Dialog>
-          </Modal.Container>
-        </Modal.Backdrop>
-      </TabModal>
-    </Modal>
+      <Modal.CloseTrigger /> {/* Optional: Close button */}
+      <Modal.Header>
+        <Modal.Heading>{warnTitle[contentId]}</Modal.Heading>
+      </Modal.Header>
+      <Modal.Body>{warnContent[contentId]}</Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onPress={() => window.open(ISSUE_PAGE)}>
+          Report
+          <SquareTopDown />
+        </Button>
+      </Modal.Footer>
+    </TabModal>
   );
 };
 

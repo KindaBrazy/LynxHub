@@ -1,4 +1,4 @@
-import {Spinner} from '@heroui/react';
+import {Spinner} from '@heroui-v3/react';
 import {extractGitUrl, validateGitRepoUrl} from '@lynx_common/utils';
 import gitIpc from '@lynx_shared/ipc/git';
 import {startCase} from 'lodash';
@@ -13,6 +13,8 @@ export interface InstallExtensionsProps {
   extensionsResolver: RefObject<(() => void) | null>;
 }
 
+// TODO: test functionality and ui
+
 /**
  * Handles the background cloning/installation of any required sub-extensions for a module.
  *
@@ -22,12 +24,9 @@ export default function InstallExtensions({extensionsURLs, extensionsResolver}: 
   const [current, setCurrent] = useState<number>(0);
   const stepItems = useMemo(
     () =>
-      (extensionsURLs?.urls || []).map((url, index) => {
+      (extensionsURLs?.urls || []).map(url => {
         const validUrl = validateGitRepoUrl(url);
-        return {
-          key: index,
-          title: startCase(extractGitUrl(validUrl).repo),
-        };
+        return startCase(extractGitUrl(validUrl).repo);
       }),
     [extensionsURLs?.urls],
   );
@@ -63,9 +62,9 @@ export default function InstallExtensions({extensionsURLs, extensionsResolver}: 
     <div className="flex flex-col items-center justify-center space-y-8">
       <span className="mt-4 text-xl font-semibold">Installing extensions, Please wait...</span>
       {stepItems.length === 0 ? (
-        <Spinner size="lg" color="primary" />
+        <Spinner size="lg" color="accent" />
       ) : (
-        <StepProgress items={stepItems} current={current} orientation="vertical" className="w-full max-w-md" />
+        <StepProgress steps={stepItems} current={current} orientation="vertical" className="w-full max-w-md" />
       )}
     </div>
   );

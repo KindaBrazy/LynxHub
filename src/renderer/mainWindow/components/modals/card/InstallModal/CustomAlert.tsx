@@ -1,13 +1,12 @@
-import {Alert, AlertProps, Button, Link} from '@heroui/react';
+import {Alert, AlertProps, Link} from '@heroui-v3/react';
 import {AlertTypes, CustomAlertParams, InitialStep} from '@lynx_common/types/plugins/modules';
-import {SquareTopDown} from '@solar-icons/react-perf/BoldDuotone';
 
-function getAlertColor(type?: AlertTypes): AlertProps['color'] {
+function getAlertColor(type?: AlertTypes): AlertProps['status'] {
   if (!type) return 'default';
 
   switch (type) {
     case 'note':
-      return 'primary';
+      return 'accent';
     case 'warning':
       return 'warning';
     case 'danger':
@@ -21,34 +20,27 @@ function getAlertColor(type?: AlertTypes): AlertProps['color'] {
 type Props = {alert: CustomAlertParams};
 export default function CustomAlert({alert}: Props) {
   return (
-    <Alert
-      description={
-        alert.urls && alert.urls.length > 0 ? (
-          <div className="flex flex-col gap-y-2 w-full">
-            <span>{alert.description}</span>
-            {alert.urls.map(url => (
-              <Link
-                size="sm"
-                as={Button}
-                variant="flat"
-                key={url.title}
-                color="foreground"
-                endContent={<SquareTopDown />}
-                onPress={() => window.open(url.url)}
-                isExternal>
-                {url.title}
-              </Link>
-            ))}
-          </div>
-        ) : (
-          alert.description
-        )
-      }
-      key={alert.title}
-      title={alert.title}
-      color={getAlertColor(alert.type)}
-      classNames={{title: alert.description && 'text-start font-bold', description: 'w-full text-start'}}
-    />
+    <Alert className="bg-surface-secondary" status={getAlertColor(alert.type)}>
+      <Alert.Indicator />
+      <Alert.Content>
+        <Alert.Title>{alert.title}</Alert.Title>
+        <Alert.Description className="w-full text-start">
+          {alert.urls && alert.urls.length > 0 ? (
+            <div className="flex flex-col gap-y-2 w-full">
+              <span>{alert.description}</span>
+              {alert.urls.map(url => (
+                <Link key={url.title} onPress={() => window.open(url.url)}>
+                  {url.title}
+                  <Link.Icon />
+                </Link>
+              ))}
+            </div>
+          ) : (
+            alert.description
+          )}
+        </Alert.Description>
+      </Alert.Content>
+    </Alert>
   );
 }
 

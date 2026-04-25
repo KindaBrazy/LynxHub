@@ -1,4 +1,4 @@
-import {Card, CardBody, CardHeader, Link, ModalBody, Progress} from '@heroui/react';
+import {Card, Link, ProgressBar} from '@heroui-v3/react';
 import DescriptionGrid, {DescriptionGridItem} from '@lynx/components/DescriptionGrid';
 import {GitHub_Icon} from '@lynx_assets/icons';
 import {GitProgressCallback} from '@lynx_common/types/ipc';
@@ -109,54 +109,58 @@ export default function CloneRepo({url, start, done, isOpen, updateState, curren
   }, [start, cloneOptionsResult, url, directory, isOpen, dispatch, done]);
 
   return (
-    <ModalBody className="overflow-visible px-0">
+    <>
       {downloading ? (
         <>
-          <Progress
-            color="secondary"
-            aria-label="Clone Progress"
+          <ProgressBar
+            size="lg"
             value={downloadProgress.progress}
-            isIndeterminate={downloadProgress.stage === 'unknown'}
-            showValueLabel
+            isIndeterminate={downloadProgress.stage === 'unknown'}>
+            <ProgressBar.Output />
+            <ProgressBar.Track>
+              <ProgressBar.Fill />
+            </ProgressBar.Track>
+          </ProgressBar>
+
+          <DescriptionGrid
+            columns={2}
+            items={progressItems}
+            itemClassName="bg-surface"
+            className="mt-6 bg-surface-secondary"
           />
-          <DescriptionGrid columns={2} className="mt-6" items={progressItems} />
         </>
       ) : (
-        <div className="space-y-4">
-          <Card className="dark:bg-foreground-100">
-            <CardHeader className="gap-x-2">
+        <div className="flex flex-col gap-y-4">
+          <Card variant="secondary">
+            <Card.Header className="gap-x-2 flex flex-row items-center text-surface-secondary-foreground">
               <GitHub_Icon />
               <span>Clone Url</span>
-            </CardHeader>
-            <CardBody>
-              <Link
-                href={url}
-                color="foreground"
-                className="transition-colors duration-150 hover:text-primary"
-                isExternal
-                showAnchorIcon>
+            </Card.Header>
+            <Card.Content>
+              <Link onPress={() => window.open(url)}>
                 {url}
+                <Link.Icon />
               </Link>
-            </CardBody>
+            </Card.Content>
           </Card>
-          <Card className="dark:bg-foreground-100">
-            <CardHeader className="gap-x-2">
+          <Card variant="secondary">
+            <Card.Header className="gap-x-2 flex flex-row items-center text-surface-secondary-foreground">
               <Folder2 />
               <span>Save to</span>
-            </CardHeader>
-            <CardBody>
+            </Card.Header>
+            <Card.Content>
               <OpenDialog
                 directory={directory}
                 setDirectory={setDirectory}
                 extraFolder={extractGitUrl(url).repo}
                 dialogType={{properties: ['openDirectory']}}
               />
-            </CardBody>
+            </Card.Content>
           </Card>
           <CloneOptions url={url} setCloneOptionsResult={setCloneOptionsResult} />
           {renderAlerts(currentStep)}
         </div>
       )}
-    </ModalBody>
+    </>
   );
 }

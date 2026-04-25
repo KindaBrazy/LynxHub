@@ -83,6 +83,7 @@ export default function OpenDialog({dialogType, directory, extraFolder = '', set
   return (
     <ButtonGroup className="items-start" fullWidth>
       <TextField
+        type="text"
         value={directory}
         className="w-full"
         isInvalid={isInvalid}

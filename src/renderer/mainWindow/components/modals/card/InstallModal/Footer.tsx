@@ -1,4 +1,4 @@
-import {Button, ButtonGroup, ModalFooter} from '@heroui/react';
+import {Button, ButtonGroup, ModalFooter} from '@heroui-v3/react';
 import {DownloadProgress} from '@lynx_common/types/ipc';
 import {InstallationMethod, UserInputResult} from '@lynx_common/types/plugins/modules';
 import applicationIpc from '@lynx_shared/ipc/application';
@@ -39,8 +39,6 @@ export interface InstallFooterProps {
   progressInfo: DownloadProgress | undefined;
   /** Unique card ID driving this installation. */
   cardId: string;
-  /** The ID of the web tab handling this instance. */
-  tabId: string;
   /** Computed check indicating whether user fields are correctly filled to enable next actions. */
   canContinue: boolean;
   /** Trigger for stepping into the next sequence of an extension-custom UI. */
@@ -68,7 +66,6 @@ const InstallFooter = memo(
     urlToDownload,
     progressInfo,
     cardId,
-    tabId,
     canContinue,
     nextStep,
     xtermRef,
@@ -102,12 +99,11 @@ const InstallFooter = memo(
 
       return (
         <>
-          <LocateWarning tabId={tabId} isOpen={locateWarnIsOpen} setIsOpen={setLocateWarnIsOpen} />
           <Button
-            variant="flat"
+            className="flex-1"
             onPress={handleClose}
-            color={isDone && isSuccess ? 'success' : 'danger'}
-            startContent={isDone && isSuccess ? <CheckRead className="size-5" /> : <X className="size-3.5" />}>
+            variant={!isDone ? 'danger-soft' : isSuccess ? 'primary' : 'secondary'}>
+            {isDone && isSuccess ? <CheckRead className="size-5" /> : <X className="size-3.5" />}
             {!isDone ? 'Cancel' : isSuccess ? 'Finish' : 'Close'}
           </Button>
           {state.body === 'terminal' && (
@@ -121,25 +117,20 @@ const InstallFooter = memo(
           {state.body === 'starter' && (
             <>
               {!state.disableSelectDir && (
-                <Button variant="flat" onPress={locate} startContent={<FolderOpen />}>
+                <Button onPress={locate} className="flex-1" variant="secondary">
+                  <FolderOpen />
                   Locate
                 </Button>
               )}
-              <Button
-                variant="flat"
-                color="success"
-                endContent={<ArrowRight className="size-4" />}
-                onPress={() => starterResolver.current?.({chosen: 'install'})}>
+              <Button className="flex-1" onPress={() => starterResolver.current?.({chosen: 'install'})}>
                 Start Installation
+                <ArrowRight className="size-4" />
               </Button>
             </>
           )}
           {state.body === 'clone' && !state.startClone && (
-            <Button
-              variant="flat"
-              color="success"
-              startContent={<Download className="size-4" />}
-              onPress={() => updateState({startClone: true})}>
+            <Button className="flex-1" onPress={() => updateState({startClone: true})}>
+              <Download className="size-4" />
               Download
             </Button>
           )}
@@ -148,23 +139,21 @@ const InstallFooter = memo(
               onPress={() => {
                 userInputResolver.current?.(userElementsReturn);
               }}
-              variant="flat"
-              color="success"
-              isDisabled={!canContinue}
-              endContent={<ArrowRight className="size-4" />}>
+              className="flex-1"
+              isDisabled={!canContinue}>
               Next
+              <ArrowRight className="size-4" />
             </Button>
           )}
           {state.body === 'extension-custom' && (
-            <Button variant="flat" color="success" onPress={nextStep} endContent={<ArrowRight className="size-4" />}>
+            <Button className="flex-1" onPress={nextStep}>
               Next
+              <ArrowRight className="size-4" />
             </Button>
           )}
           {progressInfo?.stage === 'failed' && urlToDownload && (
-            <Button
-              variant="flat"
-              startContent={<Restart className="size-4" />}
-              onPress={() => downloadFileFromUrl(urlToDownload)}>
+            <Button className="flex-1" variant="secondary" onPress={() => downloadFileFromUrl(urlToDownload)}>
+              <Restart className="size-4" />
               Try Again
             </Button>
           )}
@@ -173,7 +162,8 @@ const InstallFooter = memo(
     };
 
     return (
-      <ModalFooter className="shrink-0 justify-between overflow-hidden bg-foreground-100">
+      <ModalFooter>
+        <LocateWarning isOpen={locateWarnIsOpen} setIsOpen={setLocateWarnIsOpen} />
         <ButtonGroup fullWidth>{renderFooterButtons()}</ButtonGroup>
       </ModalFooter>
     );

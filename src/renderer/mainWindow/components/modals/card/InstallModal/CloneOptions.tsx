@@ -1,4 +1,4 @@
-import {Card, CardBody, CardHeader, Checkbox, CircularProgress, NumberInput, Select, SelectItem} from '@heroui/react';
+import {Card, Checkbox, Key, Label, ListBox, NumberField, Select, Spinner} from '@heroui-v3/react';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import {extractGitUrl} from '@lynx_common/utils';
 import {SettingsMinimalistic, ShieldWarning} from '@solar-icons/react-perf/BoldDuotone';
@@ -32,15 +32,17 @@ export default function CloneOptions({url, setCloneOptionsResult}: CloneOptionsP
 
   const [enabledSingleBranch, setEnabledSingleBranch] = useState<boolean>(true);
 
-  const [selectedBranch, setSelectedBranch] = useState<string[]>([]);
+  const [selectedBranch, setSelectedBranch] = useState<Key | null>(null);
   const [branches, setBranches] = useState<{key: string; value: string}[]>([]);
 
   useEffect(() => {
-    setCloneOptionsResult({
-      branch: selectedBranch[0],
-      singleBranch: enabledSingleBranch,
-      depth: enabledDepth ? depthValue : undefined,
-    });
+    if (selectedBranch || typeof selectedBranch === 'string') {
+      setCloneOptionsResult({
+        branch: selectedBranch.toString(),
+        singleBranch: enabledSingleBranch,
+        depth: enabledDepth ? depthValue : undefined,
+      });
+    }
   }, [selectedBranch, enabledSingleBranch, enabledDepth, depthValue]);
 
   useEffect(() => {
@@ -63,7 +65,7 @@ export default function CloneOptions({url, setCloneOptionsResult}: CloneOptionsP
         }
         const branchesData: Branch[] = await branchesResponse.json();
 
-        setSelectedBranch([defaultBranch]);
+        setSelectedBranch(defaultBranch);
         setBranches(
           branchesData.map(b => {
             return {key: b.name, value: b.name};
@@ -80,15 +82,16 @@ export default function CloneOptions({url, setCloneOptionsResult}: CloneOptionsP
   }, [url]);
 
   return (
-    <Card className="dark:bg-foreground-100">
-      <CardHeader className="gap-x-2">
+    <Card variant="secondary">
+      <Card.Header className="gap-x-2 flex flex-row items-center text-surface-secondary-foreground">
         <SettingsMinimalistic />
         <span>Clone Options</span>
-      </CardHeader>
-      <CardBody>
+      </Card.Header>
+      <Card.Content>
         {loading ? (
-          <div className="w-full flex justify-center mb-2">
-            <CircularProgress size="lg" label="Fetching repository info..." />
+          <div className="w-full flex flex-col items-center gap-2 mb-2">
+            <Spinner size="xl" />
+            <span className="text-sm text-muted">Fetching repository information...</span>
           </div>
         ) : isEmpty(branches) ? (
           <div className="flex flex-col items-center justify-center p-2 gap-y-1">
@@ -99,48 +102,60 @@ export default function CloneOptions({url, setCloneOptionsResult}: CloneOptionsP
         ) : (
           <div className="flex flex-col gap-y-4">
             <div className="space-x-2 flex flex-row items-center">
-              <Select
-                size="sm"
-                label="Branch:"
-                items={branches}
-                selectionMode="single"
-                className="items-center"
-                labelPlacement="outside-left"
-                selectedKeys={selectedBranch}
-                // @ts-ignore-next-line
-                onSelectionChange={setSelectedBranch}
-                classNames={{trigger: 'transition duration-300 data-[hover=true]:bg-foreground-300 bg-foreground-200'}}>
-                {item => {
-                  return <SelectItem key={item.key}>{item.value}</SelectItem>;
-                }}
+              <Select value={selectedBranch} onChange={setSelectedBranch} placeholder="Select target branch" fullWidth>
+                <Label>Branch:</Label>
+                <Select.Trigger>
+                  <Select.Value />
+                  <Select.Indicator />
+                </Select.Trigger>
+                <Select.Popover>
+                  <ListBox>
+                    {branches.map(branch => (
+                      <ListBox.Item id={branch.key} key={branch.key} textValue={branch.value}>
+                        {branch.value}
+                        <ListBox.ItemIndicator />
+                      </ListBox.Item>
+                    ))}
+                  </ListBox>
+                </Select.Popover>
               </Select>
             </div>
-            <Checkbox isSelected={enabledSingleBranch} onValueChange={setEnabledSingleBranch}>
-              Limit clone to a single branch
-            </Checkbox>
-            <div className="flex flex-row items-center justify-between">
-              <Checkbox isSelected={enabledDepth} onValueChange={setEnabledDepth}>
-                Perform a shallow clone
-              </Checkbox>
 
-              <NumberInput
-                classNames={{
-                  inputWrapper: 'bg-foreground-200 hover:bg-foreground-300! group-data-[focus=true]:bg-foreground-200',
-                  base: 'w-fit',
-                }}
-                size="sm"
-                minValue={1}
-                label="Depth:"
-                value={depthValue}
-                className="max-w-72"
-                isDisabled={!enabledDepth}
-                labelPlacement="outside-left"
-                onValueChange={setDepthValue}
-              />
+            <div className="flex gap-x-4">
+              <Checkbox isSelected={enabledSingleBranch} onChange={setEnabledSingleBranch}>
+                <Checkbox.Control>
+                  <Checkbox.Indicator />
+                </Checkbox.Control>
+                <Checkbox.Content>
+                  <Label className="cursor-pointer">Limit clone to a single branch</Label>
+                </Checkbox.Content>
+              </Checkbox>
+              <Checkbox isSelected={enabledDepth} onChange={setEnabledDepth}>
+                <Checkbox.Control>
+                  <Checkbox.Indicator />
+                </Checkbox.Control>
+                <Checkbox.Content>
+                  <Label className="cursor-pointer">Perform a shallow clone</Label>
+                </Checkbox.Content>
+              </Checkbox>
             </div>
+
+            <NumberField
+              minValue={1}
+              onChange={setDepthValue}
+              defaultValue={depthValue}
+              isDisabled={!enabledDepth}
+              fullWidth>
+              <Label>Depth:</Label>
+              <NumberField.Group>
+                <NumberField.DecrementButton />
+                <NumberField.Input />
+                <NumberField.IncrementButton />
+              </NumberField.Group>
+            </NumberField>
           </div>
         )}
-      </CardBody>
+      </Card.Content>
     </Card>
   );
 }
