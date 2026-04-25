@@ -32,7 +32,7 @@ export default function DescriptionGrid({title, items, columns = 2, className, i
         {items.map(item => (
           <div
             className={cn(
-              'min-w-0 rounded-xl bg-foreground-100/70 dark:bg-foreground-100/70 px-3 py-3 space-y-1',
+              'min-w-0 rounded-3xl bg-foreground-100/70 dark:bg-foreground-100/70 px-3 py-3 space-y-1',
               itemClassName,
             )}
             key={item.key}>
