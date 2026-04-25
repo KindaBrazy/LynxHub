@@ -1,14 +1,4 @@
-import {
-  Button,
-  CircularProgress,
-  Divider,
-  Link,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-} from '@heroui/react';
+import {Description, Link, Modal, Separator, Spinner} from '@heroui-v3/react';
 import {RepositoryInfo} from '@lynx_common/types';
 import gitIpc from '@lynx_shared/ipc/git';
 import {useDebounceBreadcrumb} from '@lynx_shared/sentry/Breadcrumbs';
@@ -17,6 +7,7 @@ import {Fragment, useCallback, useEffect, useMemo, useState} from 'react';
 import {topToast} from '../../../../layouts/ToastProviders';
 import {extensionsData} from '../../../../plugins/extensions/loader';
 import {useModalsState} from '../../../../redux/reducers/modals';
+import TabModal from '../../../TabModal';
 import {useTabModalLifecycle} from '../../useTabModalManager';
 import Branches from './Branches';
 import CommitInfo from './CommitInfo';
@@ -62,7 +53,7 @@ function GitManagerModalContent({isOpen, dir, title, tabID}: GitManagerModalCont
     }
   }, [isOpen, dir, getRepoInfo]);
 
-  const {onOpenChange, show} = useTabModalLifecycle('gitManager', tabID);
+  const {onOpenChange} = useTabModalLifecycle('gitManager', tabID);
 
   const handleOpenRemote = useCallback(() => {
     if (repoInfo?.remoteUrl) {
@@ -71,60 +62,48 @@ function GitManagerModalContent({isOpen, dir, title, tabID}: GitManagerModalCont
   }, [repoInfo?.remoteUrl]);
 
   return (
-    <Modal
-      size="3xl"
-      isOpen={isOpen}
-      backdrop="blur"
-      placement="center"
-      isDismissable={false}
-      scrollBehavior="inside"
-      onOpenChange={() => onOpenChange(false)}
-      classNames={{backdrop: `top-10! ${show}`, closeButton: 'cursor-default', wrapper: `top-10! ${show}`}}
-      hideCloseButton>
-      <ModalContent className="overflow-hidden">
-        <ModalHeader
-          className={
-            'shrink-0 items-center overflow-hidden bg-foreground-200' + ' flex-col shadow-md dark:bg-foreground-100'
-          }>
-          <span className="text-lg font-semibold">{title}</span>
+    <TabModal size="lg" isOpen={isOpen} onOpenChange={onOpenChange} dialogClassName="w-3xl! max-w-3xl!">
+      <Modal.CloseTrigger />
+      <Modal.Header>
+        <Modal.Heading className="flex flex-col items-center">
+          {title}
           {repoInfo && (
-            <Link className="cursor-pointer" onPress={handleOpenRemote}>
+            <Link onPress={handleOpenRemote}>
               {repoInfo.remoteUrl}
+              <Link.Icon />
             </Link>
           )}
-        </ModalHeader>
-        <ModalBody className="py-8 scrollbar-hide">
-          {loading ? (
-            <div className="size-full flex justify-center my-6">
-              <CircularProgress size="lg" label="Gathering the repository intel, one moment!" />
-            </div>
-          ) : (
-            <div className="space-y-8 size-full">
-              {repoInfo && (
-                <>
-                  <Branches
-                    dir={dir}
-                    refreshData={getRepoInfo}
-                    currentBranch={repoInfo.currentBranch}
-                    availableBranches={repoInfo.availableBranches}
-                  />
+        </Modal.Heading>
+      </Modal.Header>
 
-                  <ResetShallow dir={dir} title={title} refreshData={getRepoInfo} isShallow={repoInfo.isShallow} />
+      <Modal.Body className="scrollbar-hide">
+        {loading ? (
+          <div className="flex flex-col justify-center items-center gap-y-2 mt-2 py-6 card card--secondary">
+            <Spinner size="lg" />
+            <Description className="text-sm">Gathering the repository intel, one moment!</Description>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-y-4 size-full">
+            {repoInfo && (
+              <>
+                <Branches
+                  dir={dir}
+                  refreshData={getRepoInfo}
+                  currentBranch={repoInfo.currentBranch}
+                  availableBranches={repoInfo.availableBranches}
+                />
 
-                  <Divider />
-                  <CommitInfo repoInfo={repoInfo} />
-                </>
-              )}
-            </div>
-          )}
-        </ModalBody>
-        <ModalFooter>
-          <Button variant="light" color="warning" onPress={() => onOpenChange(false)}>
-            <span className="font-semibold">Close</span>
-          </Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+                <ResetShallow dir={dir} title={title} refreshData={getRepoInfo} isShallow={repoInfo.isShallow} />
+
+                <Separator />
+
+                <CommitInfo repoInfo={repoInfo} />
+              </>
+            )}
+          </div>
+        )}
+      </Modal.Body>
+    </TabModal>
   );
 }
 

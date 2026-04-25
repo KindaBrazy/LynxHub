@@ -1,4 +1,4 @@
-import {Button, Select, Selection, SelectItem} from '@heroui/react';
+import {Button, Key, Label, ListBox, Select} from '@heroui-v3/react';
 import gitIpc from '@lynx_shared/ipc/git';
 import {useCallback, useEffect, useState} from 'react';
 
@@ -13,21 +13,21 @@ interface BranchesProps {
 
 export default function Branches({dir, availableBranches, currentBranch, refreshData}: BranchesProps) {
   const [loading, setLoading] = useState<boolean>(false);
-  const [selectedBranch, setSelectedBranch] = useState<string | undefined>(undefined);
+  const [selectedBranch, setSelectedBranch] = useState<Key | null>(null);
 
   useEffect(() => {
     setSelectedBranch(currentBranch);
   }, [currentBranch]);
 
-  const onSelectionChange = useCallback((keys: Selection) => {
-    if (keys !== 'all') {
-      const value = keys.values().next().value?.toString();
-      setSelectedBranch(value);
-    }
+  const onSelectionChange = useCallback((key: Key | null) => {
+    if (!key || typeof key === 'number') return;
+
+    setSelectedBranch(key);
   }, []);
 
   const handleBranchChange = useCallback(async () => {
     if (!dir || !selectedBranch || selectedBranch === currentBranch) return;
+    if (!selectedBranch || typeof selectedBranch === 'number') return;
 
     setLoading(true);
     try {
@@ -42,26 +42,32 @@ export default function Branches({dir, availableBranches, currentBranch, refresh
   }, [dir, selectedBranch, currentBranch, refreshData]);
 
   return (
-    <div className="flex w-full items-center gap-x-4">
+    <div className="flex w-full items-end gap-x-4">
       <Select
-        size="sm"
-        isDisabled={loading}
-        label="Available Branches"
+        variant="secondary"
+        value={selectedBranch}
+        onChange={onSelectionChange}
         placeholder="Select a branch"
-        onSelectionChange={onSelectionChange}
-        aria-label="Select branch to switch to"
-        selectedKeys={selectedBranch ? [selectedBranch] : []}
         fullWidth>
-        {availableBranches.map(branch => (
-          <SelectItem key={branch} textValue={branch}>
-            {branch}
-          </SelectItem>
-        ))}
+        <Label>Branch</Label>
+        <Select.Trigger>
+          <Select.Value />
+          <Select.Indicator />
+        </Select.Trigger>
+        <Select.Popover>
+          <ListBox>
+            {availableBranches.map(branch => (
+              <ListBox.Item id={branch} key={branch} textValue={branch}>
+                {branch}
+                <ListBox.ItemIndicator />
+              </ListBox.Item>
+            ))}
+          </ListBox>
+        </Select.Popover>
       </Select>
       <Button
-        variant="flat"
-        color="primary"
-        isLoading={loading}
+        variant="secondary"
+        isPending={loading}
         className="shrink-0"
         onPress={handleBranchChange}
         isDisabled={!selectedBranch || selectedBranch === currentBranch}>

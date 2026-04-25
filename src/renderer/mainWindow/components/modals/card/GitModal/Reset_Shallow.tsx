@@ -1,4 +1,4 @@
-import {Button, ButtonGroup, Popover, PopoverContent, PopoverTrigger} from '@heroui/react';
+import {Button, ButtonGroup, Description, Popover, useOverlayState} from '@heroui-v3/react';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import gitIpc from '@lynx_shared/ipc/git';
 import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
@@ -16,12 +16,12 @@ export default function ResetShallow({isShallow, dir, refreshData, title}: Reset
   const [isResetting, setIsResetting] = useState(false);
   const [isStashingDrop, setIsStashingDrop] = useState(false);
 
-  const [isResetConfirmOpen, setIsResetConfirmOpen] = useState(false);
-  const [isShallowConfirmOpen, setIsShallowConfirmOpen] = useState(false);
+  const resetDialog = useOverlayState();
+  const shallowDialog = useOverlayState();
 
   const handleUnShallow = useCallback(async () => {
     AddBreadcrumb_Renderer(`unShallow: ${title}`);
-    setIsShallowConfirmOpen(false);
+    shallowDialog.close();
     setIsLoadingShallow(true);
 
     try {
@@ -36,8 +36,9 @@ export default function ResetShallow({isShallow, dir, refreshData, title}: Reset
   }, [dir, title, refreshData]);
 
   const handleResetHard = useCallback(async () => {
+    console.log('pressed');
     AddBreadcrumb_Renderer(`Reset Hard: ${title}`);
-    setIsResetConfirmOpen(false);
+    resetDialog.close();
     setIsResetting(true);
 
     try {
@@ -67,47 +68,45 @@ export default function ResetShallow({isShallow, dir, refreshData, title}: Reset
 
   return (
     <ButtonGroup fullWidth>
-      <Popover placement="bottom" isOpen={isResetConfirmOpen} onOpenChange={setIsResetConfirmOpen} showArrow>
-        <PopoverTrigger>
-          <Button variant="flat" color="danger" isLoading={isResetting} fullWidth>
-            Reset Hard
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="p-4 max-w-72 border border-foreground-200">
-          <div className="flex flex-col gap-y-2">
-            <span className="font-bold">{"Warning: Can't be undone!"}</span>
-            <span>Any changes will be discarded. Sure?</span>
-            <div>
-              <Button size="sm" color="danger" onPress={handleResetHard} fullWidth>
+      <Popover isOpen={resetDialog.isOpen} onOpenChange={resetDialog.setOpen}>
+        <Button className="flex-1" variant="danger-soft" isPending={isResetting} fullWidth>
+          Reset Hard
+        </Button>
+        <Popover.Content>
+          <Popover.Dialog>
+            <Popover.Arrow />
+            <Popover.Heading>Reset Hard Confirmation</Popover.Heading>
+            <div className="flex flex-col gap-y-2">
+              <Description>Any changes will be discarded.</Description>
+              <Button size="sm" variant="danger-soft" onPress={handleResetHard} fullWidth>
                 Confirm Reset
               </Button>
             </div>
-          </div>
-        </PopoverContent>
+          </Popover.Dialog>
+        </Popover.Content>
       </Popover>
 
       {isShallow && (
-        <Popover placement="bottom" isOpen={isShallowConfirmOpen} onOpenChange={setIsShallowConfirmOpen} showArrow>
-          <PopoverTrigger>
-            <Button variant="flat" color="secondary" isLoading={isLoadingShallow} fullWidth>
-              UnShallow
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="p-4 max-w-72 border border-foreground-200">
-            <div className="flex flex-col gap-y-2">
-              <span className="font-bold">Unshallowing downloads full history.</span>
-              <span>May increase disk/data usage. Proceed if needed.</span>
-              <div>
-                <Button size="sm" color="secondary" onPress={handleUnShallow} fullWidth>
+        <Popover isOpen={shallowDialog.isOpen} onOpenChange={shallowDialog.setOpen}>
+          <Button className="flex-1" variant="secondary" isPending={isLoadingShallow} fullWidth>
+            UnShallow
+          </Button>
+          <Popover.Content>
+            <Popover.Dialog>
+              <Popover.Arrow />
+              <Popover.Heading>UnShallow Confirmation.</Popover.Heading>
+              <div className="flex flex-col gap-y-2">
+                <Description>May increase disk/data usage. Proceed if needed.</Description>
+                <Button size="sm" variant="secondary" onPress={handleUnShallow} fullWidth>
                   Confirm Unshallow
                 </Button>
               </div>
-            </div>
-          </PopoverContent>
+            </Popover.Dialog>
+          </Popover.Content>
         </Popover>
       )}
 
-      <Button variant="flat" onPress={handleStashDrop} isLoading={isStashingDrop} fullWidth>
+      <Button className="flex-1" variant="tertiary" onPress={handleStashDrop} isPending={isStashingDrop} fullWidth>
         Stash & Drop
       </Button>
     </ButtonGroup>
