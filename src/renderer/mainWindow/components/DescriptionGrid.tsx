@@ -26,7 +26,7 @@ export default function DescriptionGrid({title, items, columns = 2, className, i
 
   return (
     <section
-      className={cn('rounded-2xl border border-foreground-100 bg-content1/80 px-4 py-4 shadow-xs sm:px-5', className)}>
+      className={cn('rounded-3xl border border-foreground-100 bg-content1/80 px-4 py-4 shadow-xs sm:px-5', className)}>
       {title ? <h4 className="mb-4 text-base font-semibold text-foreground">{title}</h4> : null}
       <div className={cn('grid gap-3', columnClass[columns])}>
         {items.map(item => (
