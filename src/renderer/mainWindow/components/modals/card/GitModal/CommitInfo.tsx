@@ -23,7 +23,13 @@ function CommitInfo({repoInfo}: CommitInfoProps) {
   ];
 
   return (
-    <DescriptionGrid title="Commit Info" items={commitItems} columns={2} />
+    <DescriptionGrid
+      columns={2}
+      title="Commit Info"
+      items={commitItems}
+      itemClassName="bg-surface"
+      className="bg-surface-secondary"
+    />
   );
 }
 
