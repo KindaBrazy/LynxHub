@@ -1,18 +1,16 @@
-import {Button, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, User} from '@heroui/react';
+import {Avatar, Description, Label, Link, Modal} from '@heroui-v3/react';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import {CardInfoDescriptions} from '@lynx_common/types/plugins/modules';
 import {extractGitUrl, getCacheUrl, validateGitRepoUrl} from '@lynx_common/utils';
 import {useDebounceBreadcrumb} from '@lynx_shared/sentry/Breadcrumbs';
 import {Inbox} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty, startCase} from 'lodash';
-import {Fragment, useCallback, useEffect, useMemo, useState} from 'react';
-import {useDispatch} from 'react-redux';
+import {Fragment, useEffect, useMemo, useState} from 'react';
 
 import {extensionsData} from '../../../../plugins/extensions/loader';
-import {modalActions, useModalsState} from '../../../../redux/reducers/modals';
-import {useTabsState} from '../../../../redux/reducers/tabs';
-import {AppDispatch} from '../../../../redux/store';
+import {useModalsState} from '../../../../redux/reducers/modals';
 import {useInstalledCard} from '../../../../utils/hooks';
+import TabModal from '../../../TabModal';
 import {useTabModalLifecycle} from '../../useTabModalManager';
 import CardInfoDescription from './Description';
 import useCardInfoApi from './useCardInfoApi';
@@ -26,8 +24,6 @@ interface CardInfoModalContentProps {
 }
 
 const CardInfoModalContent = ({cardId, isOpen, devName, url, tabID}: CardInfoModalContentProps) => {
-  const activeTab = useTabsState('activeTab');
-  const dispatch = useDispatch<AppDispatch>();
   const webUI = useInstalledCard(cardId);
 
   const [openFolders, setOpenFolders] = useState<string[] | undefined>(undefined);
@@ -46,62 +42,49 @@ const CardInfoModalContent = ({cardId, isOpen, devName, url, tabID}: CardInfoMod
 
   useCardInfoApi(cardId, setOpenFolders, setCardInfoDescriptions, webUI?.dir);
 
-  const {onOpenChange, show} = useTabModalLifecycle('cardInfo', tabID);
-
-  const onClose = useCallback(() => {
-    dispatch(modalActions.setInfoCardId({cardID: '', tabID: activeTab}));
-  }, [dispatch, activeTab]);
+  const {onOpenChange} = useTabModalLifecycle('cardInfo', tabID);
 
   return (
-    <Modal
-      classNames={{
-        backdrop: `top-10! ${show}`,
-        wrapper: `top-10! scrollbar-hide ${show}`,
-        base: 'pb-0!',
-      }}
-      size="xl"
-      isOpen={isOpen}
-      onClose={onClose}
-      placement="center"
-      isDismissable={false}
-      scrollBehavior="inside"
-      onOpenChange={onOpenChange}
-      className="overflow-hidden border-2 border-foreground-100 drop-shadow-lg"
-      hideCloseButton>
-      <ModalContent className="pb-4">
-        <ModalHeader className="bg-foreground-100 shadow-md">
+    <TabModal size="lg" isOpen={isOpen} onOpenChange={onOpenChange} dialogClassName="w-3xl! max-w-3xl!">
+      <Modal.CloseTrigger />
+      <Modal.Header>
+        <Modal.Heading>
           {validateGitRepoUrl(url) && avatarUrl && (
-            <User
-              description={
-                <Link size="sm" href={url} isExternal>
-                  {url}
-                </Link>
-              }
-              name={startCase(devName)}
-              avatarProps={{src: avatarUrl}}
-            />
+            <div className="inline-flex items-center gap-2">
+              <Avatar>
+                <Avatar.Image alt={startCase(devName)} src={getCacheUrl(extractGitUrl(url).avatarUrl)} />
+                <Avatar.Fallback>
+                  {...startCase(devName)
+                    .split(' ')
+                    .map(item => item.slice(0, 1).toUpperCase())}
+                </Avatar.Fallback>
+              </Avatar>
+              <div className="flex flex-col">
+                <Label>{startCase(devName)}</Label>
+                <Description>
+                  <Link href={url} className="group no-underline hover:underline">
+                    {url}
+                    <Link.Icon />
+                  </Link>
+                </Description>
+              </div>
+            </div>
           )}
-        </ModalHeader>
-        <ModalBody className="my-4 pb-0 scrollbar-hide">
-          {isEmpty(openFolders) && isEmpty(cardInfoDescriptions) ? (
-            <EmptyStateCard bodyClassName="py-8" icon={<Inbox size={40} />} title="No data available to display!" />
-          ) : (
-            <CardInfoDescription folders={openFolders} descriptions={cardInfoDescriptions} />
-          )}
-        </ModalBody>
-        <ModalFooter>
-          <Button
-            onPress={() => {
-              onOpenChange(false);
-              onClose();
-            }}
-            color="warning"
-            variant="light">
-            Close
-          </Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+        </Modal.Heading>
+      </Modal.Header>
+      <Modal.Body className="scrollbar-hide">
+        {isEmpty(openFolders) && isEmpty(cardInfoDescriptions) ? (
+          <EmptyStateCard
+            bodyClassName="my-6"
+            icon={<Inbox size={40} />}
+            className="bg-surface-secondary"
+            title="No data available to display!"
+          />
+        ) : (
+          <CardInfoDescription folders={openFolders} descriptions={cardInfoDescriptions} />
+        )}
+      </Modal.Body>
+    </TabModal>
   );
 };
 
