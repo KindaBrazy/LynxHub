@@ -17,7 +17,7 @@ import InstalledMenu from './menu/Installed';
 import UninstalledMenu from './menu/Uninstalled';
 import {useCardStore} from './store';
 
-const MotionButton = motion(Button);
+const MotionButton = motion.create(Button);
 
 type Props = {
   isRunning: boolean;
