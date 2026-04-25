@@ -1,13 +1,13 @@
-import {getKeyValue, Spinner, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow} from '@heroui/react';
+import {Description, Link, Spinner, Table} from '@heroui-v3/react';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import filesIpc from '@lynx_shared/ipc/files';
 import {Inbox} from '@solar-icons/react-perf/BoldDuotone';
 import {motion} from 'framer-motion';
 import {startCase} from 'lodash';
-import {Key, memo, useCallback, useEffect, useMemo, useState} from 'react';
+import {memo, useCallback, useEffect, useMemo, useState} from 'react';
 
 import {DisableButton, RemoveButton, UpdateButton} from './components/ExtensionActions';
-import {extensionsColumns, tabContentVariants} from './Constants';
+import {tabContentVariants} from './Constants';
 import {ExtensionData, ExtensionStatus} from './hooks/useInstalledExtensions';
 
 type Props = {
@@ -60,7 +60,8 @@ const Installed = memo(
     }, [isLoading, extensions.length, checkUpdates]);
 
     const onDoubleClick = useCallback(
-      (name: Key) => {
+      (name: string) => {
+        console.log('double clicked');
         filesIpc.openPath(`${dir}/${name}`);
       },
       [dir],
@@ -90,31 +91,25 @@ const Installed = memo(
     }, [extensions, statusMap, deleteModalStates, dir]);
 
     const renderCell = useCallback(
-      (row: any, columnKey: string | number) => {
+      (row: any) => {
         const status = row.status as ExtensionStatus;
 
-        switch (columnKey) {
-          case 'name':
-            return (
-              <a
-                target="_blank"
-                rel="noreferrer"
-                href={row.remoteUrl}
-                className="text-small text-foreground hover:underline">
+        return (
+          <>
+            <Table.Cell>
+              <Link onPress={() => window.open(row.remoteUrl)}>
                 {startCase(row.name)}
-              </a>
-            );
-          case 'size':
-            return row.size;
-          case 'update':
-            return (
+                <Link.Icon />
+              </Link>
+            </Table.Cell>
+            <Table.Cell>{row.size}</Table.Cell>
+            <Table.Cell>
               <UpdateButton
                 onPress={() => updateExtension(row.name)}
                 status={status.isUpdating ? 'updating' : status.hasUpdate ? 'available' : 'updated'}
               />
-            );
-          case 'remove':
-            return (
+            </Table.Cell>
+            <Table.Cell>
               <RemoveButton
                 name={row.name}
                 isDisabled={status.isDeleting}
@@ -123,18 +118,16 @@ const Installed = memo(
                 onMoveToTrash={() => deleteExtension(row.name, 'trashDir')}
                 onDeletePerman={() => deleteExtension(row.name, 'removeDir')}
               />
-            );
-          case 'disable':
-            return (
+            </Table.Cell>
+            <Table.Cell>
               <DisableButton
                 isLoading={false} // Loading state not fully tracked for disable in hook yet, or we can add it
                 isDisabled={status.isDisabled}
                 onPress={() => disableExtension(row.name, status.isDisabled, status.resultDir || `${dir}/${row.name}`)}
               />
-            );
-          default:
-            return getKeyValue(row, columnKey);
-        }
+            </Table.Cell>
+          </>
+        );
       },
       [toggleDeleteModal, deleteExtension, disableExtension, updateExtension, dir],
     );
@@ -142,32 +135,39 @@ const Installed = memo(
     if (!visible) return null;
 
     const emptyContent = isLoading ? (
-      <Spinner label="Checking Extensions" />
+      <div className="flex flex-col gap-y-2 items-center">
+        <Spinner size="lg" />
+        <Description className="text-sm">Checking for installed extensions</Description>
+      </div>
     ) : (
       <EmptyStateCard
-        bodyClassName="py-8"
         icon={<Inbox size={40} />}
+        bodyClassName="py-8 bg-surface-secondary"
         description="No extension installed to display."
       />
     );
 
     return (
       <motion.div initial="init" animate="animate" variants={tabContentVariants}>
-        <Table
-          selectionMode="multiple"
-          selectionBehavior="replace"
-          onRowAction={onDoubleClick}
-          hideHeader={extensions.length === 0}
-          aria-label="Installed extensions table"
-          removeWrapper>
-          <TableHeader columns={extensionsColumns}>
-            {column => <TableColumn key={column.key}>{column.label}</TableColumn>}
-          </TableHeader>
-          <TableBody items={rows} emptyContent={emptyContent}>
-            {row => (
-              <TableRow key={row.key}>{columnKey => <TableCell>{renderCell(row, columnKey)}</TableCell>}</TableRow>
-            )}
-          </TableBody>
+        <Table>
+          <Table.ScrollContainer>
+            <Table.Content>
+              <Table.Header>
+                <Table.Column isRowHeader>Name</Table.Column>
+                <Table.Column>Size</Table.Column>
+                <Table.Column>Update Status</Table.Column>
+                <Table.Column>Remove</Table.Column>
+                <Table.Column>Disable</Table.Column>
+              </Table.Header>
+              <Table.Body renderEmptyState={() => emptyContent}>
+                {rows.map(row => (
+                  <Table.Row key={row.key} onDoubleClick={() => onDoubleClick(row.name)}>
+                    {renderCell(row)}
+                  </Table.Row>
+                ))}
+              </Table.Body>
+            </Table.Content>
+          </Table.ScrollContainer>
         </Table>
       </motion.div>
     );
