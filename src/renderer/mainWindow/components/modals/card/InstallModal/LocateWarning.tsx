@@ -1,16 +1,14 @@
-import {Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
+import {Modal} from '@heroui-v3/react';
 import {ShieldWarning} from '@solar-icons/react-perf/BoldDuotone';
 import {Dispatch, SetStateAction} from 'react';
 
-import {useTabVisibility} from '../../../../layouts/tabs/utils';
+import TabModal from '../../../TabModal';
 
 export interface LocateWarningProps {
   /** Enables or disables the visibility of the modal. */
   isOpen: boolean;
   /** Sets the state of the modal's visibility. */
   setIsOpen: Dispatch<SetStateAction<boolean>>;
-  /** The id of the current tab for syncing visibility logic. */
-  tabId: string;
 }
 
 /**
@@ -19,34 +17,24 @@ export interface LocateWarningProps {
  *
  * @param {LocateWarningProps} props - The component props.
  */
-export default function LocateWarning({isOpen, setIsOpen, tabId}: LocateWarningProps) {
+export default function LocateWarning({isOpen, setIsOpen}: LocateWarningProps) {
   const onClose = () => setIsOpen(false);
-  const show = useTabVisibility(tabId);
 
   return (
-    <Modal
-      isOpen={isOpen}
-      placement="center"
-      onOpenChange={setIsOpen}
-      classNames={{backdrop: `top-10! ${show}`, wrapper: `top-10! ${show}`}}
-      hideCloseButton>
-      <ModalContent>
-        <ModalHeader className="text-warning items-center gap-x-2">
+    <TabModal size="sm" isOpen={isOpen}>
+      <Modal.CloseTrigger onPress={onClose} />
+      <Modal.Header>
+        <Modal.Heading className="text-warning-soft-foreground items-center gap-x-2 flex flex-row">
           <ShieldWarning className="size-8" />
           <span className="font-bold">Installation Directory</span>
-        </ModalHeader>
-        <ModalBody>
-          <p>
-            Saving data to an application&#39;s installation directory can result in{' '}
-            <span className="text-warning font-semibold">data loss</span>. Please move your data to a different folder.
-          </p>
-        </ModalBody>
-        <ModalFooter>
-          <Button variant="light" color="warning" onPress={onClose} className="cursor-default">
-            OK
-          </Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+        </Modal.Heading>
+      </Modal.Header>
+
+      <Modal.Body>
+        Saving data to an application's installation directory can result in{' '}
+        <span className="text-warning-soft-foreground font-semibold">data loss</span>. Please move your data to a
+        different folder.
+      </Modal.Body>
+    </TabModal>
   );
 }

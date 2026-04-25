@@ -1,4 +1,4 @@
-import {Button, Input, Select, SelectItem} from '@heroui/react';
+import {Button, InputGroup, Label, ListBox, Select, TextField} from '@heroui-v3/react';
 import {UserInputField, UserInputResult} from '@lynx_common/types/plugins/modules';
 import filesIpc from '@lynx_shared/ipc/files';
 import {File, FolderOpen} from '@solar-icons/react-perf/BoldDuotone';
@@ -130,7 +130,7 @@ export default function UserInputs({inputElements, setResult, extensionElements}
   }, [inputElements.elements]);
 
   return (
-    <div className="mb-6 mt-4 flex flex-col items-center justify-center gap-y-6">
+    <div className="mb-6 mt-4 flex flex-col items-center justify-center gap-y-4 px-2">
       <span className="text-large font-semibold">
         {inputElements.title || 'Please fill in the required information and click Next'}
       </span>
@@ -144,55 +144,69 @@ export default function UserInputs({inputElements, setResult, extensionElements}
               <LynxSwitch
                 key={label}
                 title={label}
+                variant="secondary"
                 enabled={!!defaultValue}
                 onEnabledChange={value => onSwitchChange(value, id)}
               />
             );
           case 'text-input':
             return (
-              <Input
-                key={label}
-                label={label}
+              <TextField
+                variant="secondary"
                 isRequired={isRequired}
-                labelPlacement="outside"
+                onChange={value => onInputChange(value, id)}
                 defaultValue={defaultValue as string | undefined}
-                onValueChange={value => onInputChange(value, id)}
-                fullWidth
-              />
+                fullWidth>
+                <Label>{label}</Label>
+                <InputGroup>
+                  <InputGroup.Input />
+                </InputGroup>
+              </TextField>
             );
           case 'select':
             return (
               <Select
-                onChange={e => {
-                  onSelectChange(e.target.value, id);
+                onChange={key => {
+                  if (key) onSelectChange(key.toString(), id);
                 }}
-                key={label}
-                label={label}
-                className="mt-4"
+                variant="secondary"
                 isRequired={isRequired}
-                labelPlacement="outside"
-                defaultSelectedKeys={defaultValue ? [defaultValue as string] : []}>
-                {selectOptions!.map(option => {
-                  return <SelectItem key={option}>{option}</SelectItem>;
-                })}
+                defaultValue={defaultValue ? (defaultValue as string) : undefined}
+                fullWidth>
+                <Label>{label}</Label>
+                <Select.Trigger>
+                  <Select.Value />
+                  <Select.Indicator />
+                </Select.Trigger>
+                <Select.Popover>
+                  <ListBox>
+                    {selectOptions!.map(option => {
+                      return (
+                        <ListBox.Item id={option} key={option} textValue={option}>
+                          {option}
+                          <ListBox.ItemIndicator />
+                        </ListBox.Item>
+                      );
+                    })}
+                  </ListBox>
+                </Select.Popover>
               </Select>
             );
           case 'directory':
             return (
               <div key={`${label}_div`} className="flex w-full flex-col gap-y-2">
-                <span
+                <Label
                   key={`${label}_text`}
                   className={`text-small ${isRequired ? 'after:content-["*"] after:text-red-500 after:ml-1' : ''}`}>
                   {label}
-                </span>
+                </Label>
                 <Button
                   key={label}
-                  variant="flat"
-                  endContent={<div />}
-                  startContent={<FolderOpen />}
+                  variant="secondary"
                   onPress={() => selectPath('folder', id, isRequired)}
-                  className={`justify-between ${hasError ? 'border-red-500 border-2' : ''}`}
+                  className={`${hasError ? 'border-red-500 border-2' : ''}`}
                   fullWidth>
+                  <FolderOpen />
                   <span className={selectedFolder === 'Click here to select folder' && hasError ? 'text-red-500' : ''}>
                     {selectedFolder}
                   </span>
@@ -203,19 +217,18 @@ export default function UserInputs({inputElements, setResult, extensionElements}
           case 'file':
             return (
               <div key={`${label}_div`} className="flex w-full flex-col gap-y-2">
-                <span
+                <Label
                   key={`${label}_text`}
                   className={`text-small ${isRequired ? 'after:content-["*"] after:text-red-500 after:ml-1' : ''}`}>
                   {label}
-                </span>
+                </Label>
                 <Button
                   key={label}
-                  variant="flat"
-                  endContent={<div />}
-                  startContent={<File />}
+                  variant="secondary"
                   onPress={() => selectPath('file', id, isRequired)}
-                  className={`justify-between ${hasError ? 'border-red-500 border-2' : ''}`}
+                  className={`${hasError ? 'border-red-500 border-2' : ''}`}
                   fullWidth>
+                  <File />
                   <span className={selectedFile === 'Click here to select file' && hasError ? 'text-red-500' : ''}>
                     {selectedFile}
                   </span>

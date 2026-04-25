@@ -1,4 +1,3 @@
-import {Modal, ModalContent} from '@heroui/react';
 import {DownloadProgress} from '@lynx_common/types/ipc';
 import {
   CardRendererMethods,
@@ -20,6 +19,7 @@ import {cardsActions} from '../../../../redux/reducers/cards';
 import {useModalsState} from '../../../../redux/reducers/modals';
 import {AppDispatch} from '../../../../redux/store';
 import {useInstalledCard} from '../../../../utils/hooks';
+import TabModal from '../../../TabModal';
 import {XTermAPI} from '../../../useXTerm';
 import {useTabModalLifecycle} from '../../useTabModalManager';
 import InstallBody from './Body';
@@ -197,7 +197,7 @@ const InstallModal = memo(({isOpen, cardId, title, type, tabID}: InstallModalPro
   }, [isOpen, methods, stepper, type]);
 
   // -----------------------------------------------> Handle UI
-  const {onOpenChange, show} = useTabModalLifecycle('installUI', tabID);
+  const {onOpenChange} = useTabModalLifecycle('installUI', tabID);
 
   useEffect(() => {
     return () => {
@@ -223,60 +223,47 @@ const InstallModal = memo(({isOpen, cardId, title, type, tabID}: InstallModalPro
   const xtermRef = useRef<XTermAPI | null>(null);
 
   return (
-    <Modal
-      classNames={{
-        backdrop: `top-10! ${show}`,
-        closeButton: 'cursor-default',
-        wrapper: `top-10! ${show}`,
-      }}
-      size="3xl"
-      shadow="lg"
-      backdrop="blur"
+    <TabModal
       isOpen={isOpen}
-      placement="center"
-      isDismissable={false}
-      scrollBehavior="inside"
+      backdropVariant="blur"
       onOpenChange={onOpenChange}
-      className={`${state.body === 'terminal' && 'max-w-[80%]'}`}
-      hideCloseButton>
-      <ModalContent className="overflow-hidden">
-        <InstallHeader steps={steps} currentStep={currentStep} />
-        <InstallBody
-          title={title}
-          state={state}
-          isOpen={isOpen}
-          cardId={cardId}
-          xtermRef={xtermRef}
-          updateState={updateState}
-          progressInfo={progressInfo}
-          cloneResolver={cloneResolver}
-          currentStep={steps[currentStep]}
-          progressBarState={progressBarState}
-          userInputElements={userInputElements}
-          extensionsResolver={extensionsResolver}
-          extensionsToInstall={extensionsToInstall}
-          setUserElementsReturn={setUserElementsReturn}
-        />
-        <InstallFooter
-          state={state}
-          tabId={tabID}
-          cardId={cardId}
-          nextStep={nextStep}
-          xtermRef={xtermRef}
-          canContinue={canContinue}
-          updateState={updateState}
-          handleClose={handleClose}
-          progressInfo={progressInfo}
-          urlToDownload={urlToDownload}
-          restartTerminal={restartTerminal}
-          starterResolver={starterResolver}
-          terminalResolver={terminalResolver}
-          userInputResolver={userInputResolver}
-          userElementsReturn={userElementsReturn}
-          downloadFileFromUrl={downloadFileFromUrl}
-        />
-      </ModalContent>
-    </Modal>
+      dialogClassName="h-fit! max-h-full! w-fit! min-w-3xl!"
+      containerClassName={`${state.body === 'terminal' && 'max-w-full!'} w-fit! h-fit! max-w-4xl!`}>
+      <InstallHeader steps={steps} currentStep={currentStep} />
+      <InstallBody
+        title={title}
+        state={state}
+        isOpen={isOpen}
+        cardId={cardId}
+        xtermRef={xtermRef}
+        updateState={updateState}
+        progressInfo={progressInfo}
+        cloneResolver={cloneResolver}
+        currentStep={steps[currentStep]}
+        progressBarState={progressBarState}
+        userInputElements={userInputElements}
+        extensionsResolver={extensionsResolver}
+        extensionsToInstall={extensionsToInstall}
+        setUserElementsReturn={setUserElementsReturn}
+      />
+      <InstallFooter
+        state={state}
+        cardId={cardId}
+        nextStep={nextStep}
+        xtermRef={xtermRef}
+        canContinue={canContinue}
+        updateState={updateState}
+        handleClose={handleClose}
+        progressInfo={progressInfo}
+        urlToDownload={urlToDownload}
+        restartTerminal={restartTerminal}
+        starterResolver={starterResolver}
+        terminalResolver={terminalResolver}
+        userInputResolver={userInputResolver}
+        userElementsReturn={userElementsReturn}
+        downloadFileFromUrl={downloadFileFromUrl}
+      />
+    </TabModal>
   );
 });
 

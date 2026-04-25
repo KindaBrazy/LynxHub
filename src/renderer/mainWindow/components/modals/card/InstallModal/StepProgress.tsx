@@ -1,17 +1,17 @@
-import {cn, Spinner} from '@heroui/react';
+import {cn, Spinner} from '@heroui-v3/react';
 import {InitialSteps} from '@lynx_common/types/plugins/modules';
-import {CheckRead} from '@solar-icons/react-perf/LineDuotone';
+import {Unread} from '@solar-icons/react-perf/Linear';
 import {memo, useEffect, useRef} from 'react';
 
 import {useHasScroll} from '../../../../utils/hooks';
 
-interface StepProgressProps {
+type StepProgressProps = {
   steps: InitialSteps;
   current: number;
   orientation?: 'horizontal' | 'vertical';
   className?: string;
   titleClassName?: string;
-}
+};
 
 function getStatus(index: number, current: number): 'complete' | 'current' | 'upcoming' {
   if (index < current) return 'complete';
@@ -23,15 +23,15 @@ function StepIndicator({status}: {status: 'complete' | 'current' | 'upcoming'}) 
   if (status === 'current') {
     return (
       <div className="flex size-5 items-center justify-center rounded-full border border-primary/40 bg-primary/10">
-        <Spinner size="sm" color="primary" />
+        <Spinner color="accent" className="flex" />
       </div>
     );
   }
 
   if (status === 'complete') {
     return (
-      <div className="flex size-5 items-center justify-center rounded-full bg-success/20 text-success">
-        <CheckRead className="size-4" />
+      <div className="flex size-5 items-center justify-center rounded-full bg-success-soft-hover text-success">
+        <Unread className="size-4" />
       </div>
     );
   }

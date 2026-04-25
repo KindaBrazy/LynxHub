@@ -1,4 +1,4 @@
-import {ModalBody, Progress} from '@heroui/react';
+import {Label, ModalBody, ProgressBar} from '@heroui-v3/react';
 import DescriptionGrid, {DescriptionGridItem} from '@lynx/components/DescriptionGrid';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import {DownloadProgress} from '@lynx_common/types/ipc';
@@ -132,16 +132,24 @@ const InstallBody = memo(
           return (
             <div className="mb-8 mt-4 text-center flex flex-col">
               {progressBarState.title && <span className="text-large font-semibold">{progressBarState.title}</span>}
-              <Progress
-                className="mt-4"
-                color="secondary"
-                aria-label="Download Progress"
+              <ProgressBar
+                size="lg"
                 value={progressBarState.percentage}
-                isIndeterminate={progressBarState.isIndeterminate}
-                showValueLabel
-              />
+                isIndeterminate={progressBarState.isIndeterminate}>
+                <Label>{progressBarState.percentage}</Label>
+                <ProgressBar.Output />
+                <ProgressBar.Track>
+                  <ProgressBar.Fill />
+                </ProgressBar.Track>
+              </ProgressBar>
+
               {progressBarItems.length > 0 && (
-                <DescriptionGrid columns={2} items={progressBarItems} className="mt-8 text-start" />
+                <DescriptionGrid
+                  columns={2}
+                  items={progressBarItems}
+                  itemClassName="bg-surface"
+                  className="mt-8 text-start bg-surface-secondary"
+                />
               )}
 
               <div className="flex flex-col py-2 gap-y-2">{renderAlerts(currentStep)}</div>
@@ -157,13 +165,19 @@ const InstallBody = memo(
             />
           ) : (
             <div className="my-6">
-              <Progress
-                color="secondary"
-                aria-label="Download Progress"
-                value={progressInfo?.percentage}
-                showValueLabel
+              <ProgressBar size="lg" value={progressInfo?.percentage || 70}>
+                <Label>{progressBarState.percentage}</Label>
+                <ProgressBar.Output />
+                <ProgressBar.Track>
+                  <ProgressBar.Fill />
+                </ProgressBar.Track>
+              </ProgressBar>
+              <DescriptionGrid
+                columns={2}
+                items={downloadItems}
+                itemClassName="bg-surface"
+                className="mt-6 bg-surface-secondary"
               />
-              <DescriptionGrid columns={2} className="mt-6" items={downloadItems} />
               <div className="flex flex-col py-2 gap-y-2">{renderAlerts(currentStep)}</div>
             </div>
           );
