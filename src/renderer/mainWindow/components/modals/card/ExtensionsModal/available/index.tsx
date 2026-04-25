@@ -1,9 +1,8 @@
-import {Input, Pagination, Spinner} from '@heroui/react';
+import {Description, Pagination, SearchField, Spinner} from '@heroui-v3/react';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
-import {Circle_Icon} from '@lynx_assets/icons';
 import {validateGitRepoUrl} from '@lynx_common/utils';
 import {Inbox} from '@solar-icons/react-perf/BoldDuotone';
-import {memo, useEffect, useMemo, useState} from 'react';
+import {useEffect, useMemo, useState} from 'react';
 
 import {getCardMethod, useAllCardMethods} from '../../../../../plugins/modules';
 import {searchInStrings} from '../../../../../utils';
@@ -18,7 +17,7 @@ type Props = {
   dir: string;
 };
 
-const Available = memo(({visible, updateTable, installedExtensions, id, dir}: Props) => {
+const useAvailableExtensions = ({visible, updateTable, installedExtensions, id, dir}: Props) => {
   const [page, setPage] = useState(1);
   const [pageSize] = useState(10);
   const [data, setData] = useState<ExtensionsInfo[]>([]);
@@ -64,51 +63,72 @@ const Available = memo(({visible, updateTable, installedExtensions, id, dir}: Pr
     if (visible) fetchModules();
   }, [visible, allMethods, id]);
 
-  if (!visible) return null;
+  const totalPages = useMemo(() => {
+    return Math.ceil(searchedData.length / pageSize);
+  }, [searchedData, pageSize]);
 
-  return (
-    <div className="flex h-full flex-col">
-      <div className="mb-4 flex w-full justify-center">
-        <Input
-          type="search"
-          spellCheck="false"
-          value={searchValue}
-          onValueChange={setSearchValue}
-          startContent={<Circle_Icon />}
-          placeholder="Search by title, description or url..."
-          fullWidth
-          autoFocus
-          isClearable
-        />
+  if (!visible) return {Body: null, Footer: null};
+
+  return {
+    Body: (
+      <div className="flex h-full flex-col">
+        <div className="mb-4 p-1 flex w-full justify-center">
+          <SearchField className="w-full" variant="secondary" value={searchValue} onChange={setSearchValue} autoFocus>
+            <SearchField.Group>
+              <SearchField.SearchIcon />
+              <SearchField.Input placeholder="Search by title, description or url..." />
+              <SearchField.ClearButton />
+            </SearchField.Group>
+          </SearchField>
+        </div>
+
+        {isLoading ? (
+          <div className="flex flex-col size-full items-center justify-center text-center gap-y-2">
+            <Spinner size="lg" />
+            <Description className="text-sm">Loading extensions list...</Description>
+          </div>
+        ) : searchedData.length === 0 ? (
+          <EmptyStateCard
+            icon={<Inbox size={40} />}
+            className="bg-surface-secondary"
+            description="There are no extensions available at the moment!"
+          />
+        ) : (
+          <div className="flex flex-1 flex-col gap-2">
+            {paginatedData.map(item => (
+              <RenderItem dir={dir} item={item} key={item.url} updateTable={updateTable} searchValue={searchValue} />
+            ))}
+          </div>
+        )}
       </div>
+    ),
+    Footer:
+      searchedData.length > pageSize ? (
+        <Pagination className="w-full justify-center">
+          <Pagination.Content>
+            <Pagination.Item>
+              <Pagination.Previous isDisabled={page === 1} onPress={() => setPage(p => p - 1)}>
+                <Pagination.PreviousIcon />
+                <span>Previous</span>
+              </Pagination.Previous>
+            </Pagination.Item>
+            {Array.from({length: totalPages}, (_, i) => i + 1).map(p => (
+              <Pagination.Item key={p}>
+                <Pagination.Link isActive={p === page} onPress={() => setPage(p)}>
+                  {p}
+                </Pagination.Link>
+              </Pagination.Item>
+            ))}
+            <Pagination.Item>
+              <Pagination.Next isDisabled={page === totalPages} onPress={() => setPage(p => p + 1)}>
+                <span>Next</span>
+                <Pagination.NextIcon />
+              </Pagination.Next>
+            </Pagination.Item>
+          </Pagination.Content>
+        </Pagination>
+      ) : null,
+  };
+};
 
-      {isLoading ? (
-        <div className="flex size-full items-center justify-center text-center">
-          <Spinner label="Loading extensions list..." />
-        </div>
-      ) : searchedData.length === 0 ? (
-        <EmptyStateCard icon={<Inbox size={40} />} description="There are no extensions available at the moment!" />
-      ) : (
-        <div className="flex flex-1 flex-col gap-2">
-          {paginatedData.map(item => (
-            <RenderItem dir={dir} item={item} key={item.url} updateTable={updateTable} searchValue={searchValue} />
-          ))}
-
-          {searchedData.length > pageSize && (
-            <div className="mt-4 flex justify-center">
-              <Pagination
-                page={page}
-                color="secondary"
-                onChange={setPage}
-                total={Math.ceil(searchedData.length / pageSize)}
-                showControls
-              />
-            </div>
-          )}
-        </div>
-      )}
-    </div>
-  );
-});
-
-export default Available;
+export default useAvailableExtensions;

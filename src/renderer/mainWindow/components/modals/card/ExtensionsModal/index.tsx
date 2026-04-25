@@ -1,4 +1,4 @@
-import {Button, Checkbox, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Tab, Tabs} from '@heroui/react';
+import {Button, Checkbox, Label, Modal, Tabs} from '@heroui-v3/react';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {useDebounceBreadcrumb} from '@lynx_shared/sentry/Breadcrumbs';
 import {Download} from '@solar-icons/react-perf/BoldDuotone';
@@ -7,10 +7,10 @@ import {Fragment, useCallback, useEffect, useMemo, useState} from 'react';
 
 import {extensionsData} from '../../../../plugins/extensions/loader';
 import {useModalsState} from '../../../../redux/reducers/modals';
-import {modalMotionProps} from '../../../../utils/constants';
 import {useIsAutoUpdateExtensions} from '../../../../utils/hooks';
+import TabModal from '../../../TabModal';
 import {useTabModalLifecycle} from '../../useTabModalManager';
-import Available from './available';
+import useAvailableExtensions from './available';
 import Clone from './Clone';
 import {useInstalledExtensions} from './hooks/useInstalledExtensions';
 import Installed from './Installed';
@@ -39,7 +39,7 @@ const ExtensionsModalContent = ({isOpen, title, id, dir, tabID}: Props) => {
   useDebounceBreadcrumb('Card Extension Modal: ', [isOpen, title]);
   useDebounceBreadcrumb('Card Extension Modal Tabs: ', [currentTab]);
 
-  const {onOpenChange, show} = useTabModalLifecycle('cardExtensions', tabID);
+  const {onOpenChange} = useTabModalLifecycle('cardExtensions', tabID);
 
   useEffect(() => {
     setCurrentTab('installed');
@@ -61,72 +61,84 @@ const ExtensionsModalContent = ({isOpen, title, id, dir, tabID}: Props) => {
     return !isEmpty(extensions);
   }, [extensions]);
 
+  const {Body, Footer} = useAvailableExtensions({
+    id: id,
+    dir: dir,
+    updateTable: getExtensions,
+    installedExtensions: installedUrls,
+    visible: currentTab === 'available',
+  });
+
   return (
-    <Modal
-      isOpen={isOpen}
-      placement="center"
-      isDismissable={false}
-      scrollBehavior="inside"
-      onOpenChange={onOpenChange}
-      motionProps={modalMotionProps}
-      classNames={{backdrop: `top-10! ${show}`, wrapper: `top-10! scrollbar-hide ${show}`}}
-      className="max-w-[80%] border-2 border-foreground/10 overflow-hidden dark:border-foreground/5"
-      hideCloseButton>
-      <ModalContent>
-        <ModalHeader className="flex-col gap-y-2 text-center">
+    <TabModal size="lg" isOpen={isOpen} onOpenChange={onOpenChange} dialogClassName="w-4xl! max-w-4xl!">
+      <Modal.CloseTrigger />
+      <Modal.Header>
+        <Modal.Heading className="flex-col gap-y-2 text-center">
           {title || 'Extensions'}
-          <Tabs
-            variant="solid"
-            className="mt-3"
-            color="secondary"
-            selectedKey={currentTab}
-            onSelectionChange={setCurrentTab}
-            fullWidth>
-            <Tab key="installed" title="Installed" className="cursor-default" />
-            <Tab key="available" title="Available" className="cursor-default" />
-            <Tab key="clone" title="Clone" className="cursor-default" />
+
+          <Tabs className="w-full mt-3" onSelectionChange={setCurrentTab} selectedKey={currentTab.toString()}>
+            <Tabs.ListContainer>
+              <Tabs.List>
+                <Tabs.Tab id="installed" className="gap-x-1">
+                  Installed
+                  <Tabs.Indicator />
+                </Tabs.Tab>
+                <Tabs.Tab id="available" className="gap-x-1">
+                  Available
+                  <Tabs.Indicator />
+                </Tabs.Tab>
+                <Tabs.Tab id="clone" className="gap-x-1">
+                  Clone
+                  <Tabs.Indicator />
+                </Tabs.Tab>
+              </Tabs.List>
+            </Tabs.ListContainer>
           </Tabs>
-        </ModalHeader>
-        <ModalBody className="scrollbar-hide">
-          <div className="relative h-fit">
-            <Installed
-              dir={dir}
-              isOpen={isOpen}
-              statusMap={statusMap}
-              isLoading={isLoading}
-              extensions={extensions}
-              checkUpdates={checkUpdates}
-              getExtensions={getExtensions}
-              deleteExtension={deleteExtension}
-              updateExtension={updateExtension}
-              disableExtension={disableExtension}
-              visible={currentTab === 'installed'}
-            />
-            <Clone
-              dir={dir}
-              updateTable={getExtensions}
-              visible={currentTab === 'clone'}
-              installedExtensions={installedUrls}
-            />
-            <Available
-              id={id}
-              dir={dir}
-              updateTable={getExtensions}
-              installedExtensions={installedUrls}
-              visible={currentTab === 'available'}
-            />
-          </div>
-        </ModalBody>
-        <ModalFooter>
+        </Modal.Heading>
+      </Modal.Header>
+
+      <Modal.Body className="scrollbar-hide">
+        <div className="relative h-fit">
+          <Installed
+            dir={dir}
+            isOpen={isOpen}
+            statusMap={statusMap}
+            isLoading={isLoading}
+            extensions={extensions}
+            checkUpdates={checkUpdates}
+            getExtensions={getExtensions}
+            deleteExtension={deleteExtension}
+            updateExtension={updateExtension}
+            disableExtension={disableExtension}
+            visible={currentTab === 'installed'}
+          />
+          <Clone
+            dir={dir}
+            updateTable={getExtensions}
+            visible={currentTab === 'clone'}
+            installedExtensions={installedUrls}
+          />
+
+          {Body}
+        </div>
+      </Modal.Body>
+
+      <Modal.Footer>
+        {currentTab !== 'available' && (
           <div className="flex w-full flex-row justify-between">
             <div>
               {currentTab === 'installed' && (
                 <Checkbox
-                  size="sm"
+                  variant="secondary"
                   isSelected={autoUpdate}
-                  onValueChange={onAutoUpdateChange}
+                  onChange={onAutoUpdateChange}
                   isDisabled={!isExtensionAvailable}>
-                  Auto Update on Launch
+                  <Checkbox.Control>
+                    <Checkbox.Indicator />
+                  </Checkbox.Control>
+                  <Checkbox.Content>
+                    <Label className="cursor-pointer">Auto Update on Launch</Label>
+                  </Checkbox.Content>
                 </Checkbox>
               )}
             </div>
@@ -134,22 +146,19 @@ const ExtensionsModalContent = ({isOpen, title, id, dir, tabID}: Props) => {
               {currentTab === 'installed' && (
                 <Button
                   onPress={updateAll}
-                  variant={isUpdateAvailable ? 'flat' : 'light'}
                   isDisabled={!isUpdateAvailable || isUpdatingAll}
-                  color={isUpdateAvailable ? 'success' : 'default'}
-                  className={`${!isUpdateAvailable && 'cursor-default'}`}
-                  startContent={isUpdateAvailable && !isUpdatingAll && <Download />}>
+                  variant={isUpdateAvailable ? 'primary' : 'tertiary'}>
+                  {isUpdateAvailable && !isUpdatingAll && <Download />}
                   {!isUpdateAvailable ? 'No Updates Available' : isUpdatingAll ? 'Updating...' : 'Update All'}
                 </Button>
               )}
-              <Button color="warning" variant="light" onPress={() => onOpenChange(false)}>
-                Close
-              </Button>
             </div>
           </div>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+        )}
+
+        {currentTab === 'available' && <div className="flex w-full justify-center">{Footer}</div>}
+      </Modal.Footer>
+    </TabModal>
   );
 };
 

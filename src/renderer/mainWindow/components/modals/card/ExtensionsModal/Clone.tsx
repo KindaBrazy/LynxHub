@@ -1,4 +1,4 @@
-import {Card, CardBody, Input, Progress} from '@heroui/react';
+import {Card, FieldError, InputGroup, Label, ProgressBar, Separator, TextField} from '@heroui-v3/react';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import {GitHub_Icon} from '@lynx_assets/icons';
 import {GitProgressCallback} from '@lynx_common/types/ipc';
@@ -146,26 +146,27 @@ export default function Clone({updateTable, visible, installedExtensions, dir}: 
           animate="animate"
           variants={tabContentVariants}
           className="flex flex-col gap-y-2 items-center">
-          <Input
-            variant="flat"
-            color="default"
-            className="my-4"
+          <TextField
+            className="p-1"
             value={resultUrl}
-            onValueChange={onValueChange}
-            startContent={<GitHub_Icon />}
+            variant="secondary"
+            onChange={onValueChange}
             isInvalid={!isEmpty && !isValid}
-            placeholder="Enter a GitHub repository URL..."
-            errorMessage="Please enter a valid GitHub repository URL"
-          />
+            fullWidth>
+            <InputGroup>
+              <InputGroup.Prefix>
+                <GitHub_Icon />
+              </InputGroup.Prefix>
+              <InputGroup.Input placeholder="Enter a GitHub repository URL..." />
+            </InputGroup>
+            <FieldError>Please enter a valid GitHub repository URL</FieldError>
+          </TextField>
           {downloadBox && (
             <Card
-              className={`mb-4 overflow-hidden bg-default-100 text-center transition duration-300 w-[90%] ${
-                !alreadyInstalled ? 'hover:bg-default-200' : ''
-              }`}
-              shadow="none"
-              onPress={clone}
-              isPressable={!alreadyInstalled}>
-              <CardBody className="items-center justify-center p-4">
+              variant="secondary"
+              onClick={!alreadyInstalled ? clone : undefined}
+              className={`mt-2 text-center w-full ${!alreadyInstalled && 'cursor-pointer'}`}>
+              <Card.Content className="items-center justify-center p-4">
                 {alreadyInstalled ? (
                   <span className="font-semibold text-success">This extension has already been installed.</span>
                 ) : (
@@ -181,22 +182,25 @@ export default function Clone({updateTable, visible, installedExtensions, dir}: 
                     <div className="text-small text-default-500">{downloadBox.url}</div>
                   </div>
                 )}
-              </CardBody>
+              </Card.Content>
             </Card>
           )}
         </motion.div>
       ) : (
-        <Card shadow="none" className="bg-default-100">
-          <CardBody>
-            <Progress
-              label={`Stage: ${capitalize(cloneProgress.stage)} | Item: ${cloneProgress.processed} | Total: ${
-                cloneProgress.total
-              }`}
-              color="secondary"
-              value={cloneProgress.progress}
-              showValueLabel
-            />
-          </CardBody>
+        <Card className="mt-4" variant="secondary">
+          <Card.Content>
+            <ProgressBar size="lg" value={cloneProgress.progress}>
+              <Label className="flex flex-row gap-x-3 items-center">
+                Stage: {capitalize(cloneProgress.stage)}{' '}
+                <Separator className="my-1" variant="tertiary" orientation="vertical" /> Item: {cloneProgress.processed}
+                <Separator className="my-1" variant="tertiary" orientation="vertical" /> Total: {cloneProgress.total}
+              </Label>
+              <ProgressBar.Output />
+              <ProgressBar.Track className="bg-surface">
+                <ProgressBar.Fill />
+              </ProgressBar.Track>
+            </ProgressBar>
+          </Card.Content>
         </Card>
       )}
     </>
