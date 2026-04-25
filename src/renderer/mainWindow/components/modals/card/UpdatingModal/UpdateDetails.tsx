@@ -1,28 +1,15 @@
-import {
-  Accordion,
-  AccordionItem,
-  Button,
-  getKeyValue,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  Table,
-  TableBody,
-  TableCell,
-  TableColumn,
-  TableHeader,
-  TableRow,
-} from '@heroui/react';
-import {CheckRead} from '@solar-icons/react-perf/LineDuotone';
+import {Accordion, Chip, Modal, Table} from '@heroui-v3/react';
+import {AltArrowDown} from '@solar-icons/react-perf/Linear';
 import {isEmpty} from 'lodash';
+import {LucideReplace, Minus, Plus} from 'lucide-react';
 import {ReactNode, useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {useTabVisibility} from '../../../../layouts/tabs/utils';
 import {modalActions, useModalsState} from '../../../../redux/reducers/modals';
 import {AppDispatch} from '../../../../redux/store';
+import DescriptionGrid from '../../../DescriptionGrid';
+import LynxTooltip from '../../../LynxTooltip';
+import TabModal from '../../../TabModal';
 
 type DetailsRow = {
   key: number;
@@ -31,19 +18,12 @@ type DetailsRow = {
   deletions: number;
 }[];
 
-const columns = [
-  {key: 'name', label: 'File Name'},
-  {key: 'insertions', label: 'Insertions'},
-  {key: 'deletions', label: 'Deletions'},
-];
-
 /**
  * Modal showing details and changes about updated card.
  */
 export default function UpdateDetails() {
-  const {details, isOpen, title, tabID} = useModalsState('updateDetails');
+  const {details, isOpen, title} = useModalsState('updateDetails');
   const dispatch = useDispatch<AppDispatch>();
-  const show = useTabVisibility(tabID);
 
   const handleClose = useCallback(() => {
     dispatch(modalActions.closeUpdateDetails());
@@ -54,7 +34,11 @@ export default function UpdateDetails() {
       deletions: details.deletions[file] || 0,
       insertions: details.insertions[file] || 0,
       key: index,
-      name: <p className="md:max-w-72! lg:max-w-full! truncate overflow-hidden">{file}</p>,
+      name: (
+        <LynxTooltip delay={700} content={file}>
+          <p className="sm:max-w-150 xl:max-w-full truncate overflow-hidden">{file}</p>
+        </LynxTooltip>
+      ),
     }));
   }, [details]);
 
@@ -71,69 +55,135 @@ export default function UpdateDetails() {
   }, []);
 
   return (
-    <Modal
-      classNames={{
-        backdrop: `top-10! ${show}`,
-        closeButton: 'cursor-default',
-        wrapper: `top-10! scrollbar-hide ${show}`,
-      }}
-      isOpen={isOpen}
-      placement="center"
-      isDismissable={false}
-      scrollBehavior="inside"
-      className="max-w-[70%] overflow-hidden"
-      hideCloseButton>
-      <ModalContent>
-        <ModalHeader className="justify-center bg-foreground-100">
-          {title || <span className="text-foreground-700">Update Details.</span>}
-        </ModalHeader>
-        <ModalBody className="scrollbar-hide">
-          <Accordion
-            className="mt-4"
-            variant="splitted"
-            selectionMode="multiple"
-            defaultExpandedKeys={['summary']}
-            itemClasses={{trigger: 'cursor-default', base: 'bg-foreground-100 shadow'}}
-            isCompact>
-            <AccordionItem key="created" title="Created Files" subtitle={details.created.length}>
-              {renderFileList(details.created)}
-            </AccordionItem>
-            <AccordionItem key="deleted" title="Deleted Files" subtitle={details.deleted.length}>
-              {renderFileList(details.deleted)}
-            </AccordionItem>
-            <AccordionItem key="files" title="Changed Files" subtitle={details.files.length}>
-              {!isEmpty(details.files) ? (
-                <Table aria-label="Update changed files">
-                  <TableHeader columns={columns}>
-                    {col => <TableColumn key={col.key}>{col.label}</TableColumn>}
-                  </TableHeader>
-                  <TableBody items={rows}>
-                    {row => (
-                      <TableRow key={row.key}>
-                        {columnKey => <TableCell>{getKeyValue(row, columnKey)}</TableCell>}
-                      </TableRow>
-                    )}
-                  </TableBody>
-                </Table>
-              ) : (
-                <p className="text-sm text-foreground-500">No files have been modified.</p>
-              )}
-            </AccordionItem>
-            <AccordionItem key="summary" title="Summary">
-              <ul className="list-disc pl-5 text-sm text-foreground-600">
-                <li>Deletions: {details.summary.deletions}</li>
-                <li>Insertions: {details.summary.insertions}</li>
-                <li>Changes: {details.summary.changes}</li>
-              </ul>
-            </AccordionItem>
+    <TabModal isOpen={isOpen}>
+      <Modal.CloseTrigger onPress={handleClose} />
+
+      <Modal.Header>
+        <Modal.Heading>{title || 'Update Details.'}</Modal.Heading>
+      </Modal.Header>
+
+      <Modal.Body className="flex flex-col gap-y-6 pt-4">
+        <DescriptionGrid
+          items={[
+            {
+              key: 'Insertions',
+              label: (
+                <div className="flex flex-row items-center gap-x-1">
+                  <Plus className="size-4 shrink-0 text-success-soft-foreground" />
+                  <span>Insertions</span>
+                </div>
+              ),
+              content: <span className="ml-5">{details.summary.insertions}</span>,
+            },
+            {
+              key: 'Deletions',
+              label: (
+                <div className="flex flex-row items-center gap-x-1">
+                  <Minus className="size-4 shrink-0 text-danger-soft-foreground" />
+                  <span>Deletions</span>
+                </div>
+              ),
+              content: <span className="ml-5">{details.summary.deletions}</span>,
+            },
+            {
+              key: 'Changes',
+              label: (
+                <div className="flex flex-row items-center gap-x-1">
+                  <LucideReplace className="size-4 shrink-0 text-warning-soft-foreground" />
+                  <span>Changes</span>
+                </div>
+              ),
+              content: <span className="ml-5">{details.summary.changes}</span>,
+            },
+          ]}
+          columns={3}
+          title="Summary"
+          itemClassName="bg-surface! shadow-none!"
+          className="bg-surface-secondary! shadow-none!"
+        />
+
+        <div className="rounded-3xl bg-surface-secondary py-4 px-5">
+          <h4 className="mb-4 text-base font-semibold text-foreground">Details</h4>
+          <Accordion variant="surface" allowsMultipleExpanded>
+            <Accordion.Item>
+              <Accordion.Heading>
+                <Accordion.Trigger>
+                  <Plus className="mr-3 size-4 shrink-0 text-success-soft-foreground" />
+                  <span>Created Files</span>
+                  <Chip color="success" className="ml-2 size-5 justify-center">
+                    {details.created.length}
+                  </Chip>
+                  <Accordion.Indicator>
+                    <AltArrowDown />
+                  </Accordion.Indicator>
+                </Accordion.Trigger>
+              </Accordion.Heading>
+              <Accordion.Panel>
+                <Accordion.Body>{renderFileList(details.created)}</Accordion.Body>
+              </Accordion.Panel>
+            </Accordion.Item>
+            <Accordion.Item>
+              <Accordion.Heading>
+                <Accordion.Trigger>
+                  <Minus className="mr-3 size-4 shrink-0 text-danger-soft-foreground" />
+                  <span>Deleted Files</span>
+                  <Chip color="danger" className="ml-2 size-5 justify-center">
+                    {details.deleted.length}
+                  </Chip>
+                  <Accordion.Indicator>
+                    <AltArrowDown />
+                  </Accordion.Indicator>
+                </Accordion.Trigger>
+              </Accordion.Heading>
+              <Accordion.Panel>
+                <Accordion.Body>{renderFileList(details.deleted)}</Accordion.Body>
+              </Accordion.Panel>
+            </Accordion.Item>
+            <Accordion.Item>
+              <Accordion.Heading>
+                <Accordion.Trigger>
+                  <LucideReplace className="mr-3 size-4 shrink-0 text-warning-soft-foreground" />
+                  <span>Changed Files</span>
+                  <Chip color="warning" className="ml-2 size-5 justify-center">
+                    {details.files.length}
+                  </Chip>
+                  <Accordion.Indicator>
+                    <AltArrowDown />
+                  </Accordion.Indicator>
+                </Accordion.Trigger>
+              </Accordion.Heading>
+              <Accordion.Panel>
+                <Accordion.Body>
+                  {!isEmpty(details.files) ? (
+                    <Table>
+                      <Table.ScrollContainer>
+                        <Table.Content>
+                          <Table.Header>
+                            <Table.Column isRowHeader>File Name</Table.Column>
+                            <Table.Column>Insertions</Table.Column>
+                            <Table.Column>Deletions</Table.Column>
+                          </Table.Header>
+                          <Table.Body>
+                            {rows.map(row => (
+                              <Table.Row key={row.key}>
+                                <Table.Cell>{row.name}</Table.Cell>
+                                <Table.Cell className="text-success-soft-foreground">{row.insertions}</Table.Cell>
+                                <Table.Cell className="text-danger-soft-foreground">{row.deletions}</Table.Cell>
+                              </Table.Row>
+                            ))}
+                          </Table.Body>
+                        </Table.Content>
+                      </Table.ScrollContainer>
+                    </Table>
+                  ) : (
+                    <p className="text-sm text-foreground-500">No files have been modified.</p>
+                  )}
+                </Accordion.Body>
+              </Accordion.Panel>
+            </Accordion.Item>
           </Accordion>
-        </ModalBody>
-        <ModalFooter>
-          <Button variant="flat" color="success" onPress={handleClose}>
-            <CheckRead className="size-5" />
-          </Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+        </div>
+      </Modal.Body>
+    </TabModal>
   );
 }
