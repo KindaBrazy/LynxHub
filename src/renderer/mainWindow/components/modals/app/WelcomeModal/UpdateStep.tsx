@@ -1,4 +1,4 @@
-import {Alert, Button} from '@heroui/react';
+import {Alert, Button, buttonVariants, Link} from '@heroui-v3/react';
 import {APP_NAME} from '@lynx_common/consts';
 import applicationIpc from '@lynx_shared/ipc/application';
 import {CheckRead} from '@solar-icons/react-perf/LineDuotone';
@@ -17,6 +17,8 @@ const containerVariants = {
 const itemVariants = {hidden: {opacity: 0, y: 10}, enter: {opacity: 1, y: 0}};
 
 type Props = {onComplete: () => void};
+
+const PWS7ReleasePage = 'https://github.com/PowerShell/PowerShell/releases/latest';
 
 export default function StepUpdate({onComplete}: Props) {
   const [pwsh, setPwsh] = useState<RowData>({result: 'unknown'});
@@ -40,41 +42,39 @@ export default function StepUpdate({onComplete}: Props) {
         Welcome back to {APP_NAME}!
       </motion.h1>
       <motion.p variants={itemVariants} className="max-w-3xl text-lg text-gray-600 dark:text-gray-300 mb-8">
-        I've updated some system requirements. Before you continue, I just need to ensure you have PowerShell 7+
+        Some system requirements have been updated . Before you continue, just need to ensure you have PowerShell 7+
         installed.
       </motion.p>
 
-      <motion.div variants={itemVariants} className="bg-gray-50 dark:bg-white/10 p-6 rounded-xl my-6">
+      <motion.div variants={itemVariants} className="bg-gray-50 dark:bg-white/10 p-6 rounded-3xl my-6">
         <CheckRow status={pwsh} label="PowerShell 7+" description="Required for new features (pwsh v7 or later)" />
+
         {pwsh.result === 'failed' && (
-          <Alert
-            endContent={
-              <Button
-                onPress={() =>
-                  applicationIpc.send.openUrlDefaultBrowser('https://github.com/PowerShell/PowerShell/releases/latest')
-                }
-                size="sm"
-                variant="flat"
-                color="warning">
-                Download
-              </Button>
-            }
-            color="warning"
-            className="mt-4"
-            title="PowerShell 7+ is Missing"
-            description="PowerShell 7 or later is now required. Please install it to continue."
-          />
+          <Alert status="warning">
+            <Alert.Indicator />
+            <Alert.Content>
+              <Alert.Title>PowerShell 7+ is Missing</Alert.Title>
+              <Alert.Description>
+                PowerShell 7 or later is now required. Please install it to continue.
+              </Alert.Description>
+            </Alert.Content>
+            <Link
+              className={buttonVariants({variant: 'primary', size: 'sm'})}
+              onPress={() => applicationIpc.send.openUrlDefaultBrowser(PWS7ReleasePage)}>
+              Releases Page
+              <Link.Icon />
+            </Link>
+          </Alert>
         )}
       </motion.div>
 
-      <motion.div className="flex gap-3" variants={itemVariants}>
+      <motion.div variants={itemVariants} className="flex w-full justify-end">
         <Button
-          variant="shadow"
           onPress={onComplete}
-          className="font-semibold"
           isDisabled={!pwshSatisfied}
-          color={pwshSatisfied ? 'success' : 'default'}
-          startContent={pwshSatisfied && <CheckRead className="size-5" />}>
+          className="font-semibold h-12"
+          variant={pwshSatisfied ? 'primary' : 'secondary'}>
+          {pwshSatisfied && <CheckRead className="size-5" />}
           {pwshSatisfied ? `Finish & Restart ${APP_NAME}` : 'Waiting for PowerShell...'}
         </Button>
       </motion.div>

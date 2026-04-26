@@ -1,4 +1,6 @@
-import {Button, Checkbox, cn, User} from '@heroui/react';
+import {Avatar, Button, Checkbox, CheckboxGroup, cn, Description, Label} from '@heroui-v3/react';
+import {getFallbackString} from '@lynx_common/utils';
+import {ArrowRight} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useState} from 'react';
 
@@ -10,6 +12,13 @@ type Props = {
   setInstalling: (value: boolean) => void;
   setInstalledPlugins: Dispatch<SetStateAction<string[]>>;
   installedPlugins: string[];
+};
+
+const addon = {
+  description: 'Receive updates via email',
+  icon: ArrowRight,
+  title: 'Email Notifications',
+  value: 'email',
 };
 
 export default function PluginSelector({
@@ -41,7 +50,7 @@ export default function PluginSelector({
   };
 
   return (
-    <div className="bg-gray-50 dark:bg-white/5 p-4 rounded-xl h-full flex flex-col">
+    <div className="bg-gray-50 dark:bg-white/5 p-4 rounded-3xl h-full flex flex-col">
       <div className="flex items-center justify-between mb-3">
         <h3 className="font-semibold text-gray-800 dark:text-gray-100">Optional Extensions</h3>
         <p className="text-xs text-gray-500 dark:text-gray-400">Choose which to install</p>
@@ -63,28 +72,34 @@ export default function PluginSelector({
         ) : (
           <div className="flex flex-col p-2 gap-y-6 overflow-hidden size-full">
             {plugins.map(ext => (
-              <Checkbox
-                classNames={{
-                  base: cn(
-                    'inline-flex w-full max-w-full bg-white dark:bg-gray-900/50',
-                    'hover:bg-gray-100 dark:hover:bg-gray-900/80 items-center justify-start',
-                    'cursor-pointer rounded-lg gap-2 p-4 border-2 border-foreground-100',
-                    'data-[selected=true]:border-primary data-[selected=true]:ring-blue-500/20',
-                    'transition-all duration-200',
-                  ),
-                  label: 'w-full',
-                }}
-                key={ext.id}
-                aria-label={ext.name}
-                isDisabled={!requirementsSatisfied}
-                isSelected={selectedPlugins.has(ext.id)}
-                onValueChange={() => handleSelectionChange(ext.id)}>
-                <User
-                  name={<span className="font-medium text-gray-800 dark:text-gray-100">{ext.name}</span>}
-                  avatarProps={{size: 'md', radius: 'sm', className: 'shrink-0 bg-transparent', src: ext.icon}}
-                  description={<span className="text-xs text-gray-500 dark:text-gray-400">{ext.description}</span>}
-                />
-              </Checkbox>
+              <CheckboxGroup key={ext.name} isDisabled={!requirementsSatisfied}>
+                <div className="flex flex-col gap-2">
+                  <Checkbox
+                    className={cn(
+                      'group relative flex-col gap-4 rounded-3xl bg-surface px-5 py-4 transition-all',
+                      'data-[selected=true]:bg-accent/10',
+                    )}
+                    key={addon.value}
+                    value={addon.value}
+                    variant="secondary"
+                    isSelected={selectedPlugins.has(ext.id)}
+                    onChange={() => handleSelectionChange(ext.id)}>
+                    <Checkbox.Control className="absolute top-3 right-4 size-5 rounded-full before:rounded-full">
+                      <Checkbox.Indicator />
+                    </Checkbox.Control>
+                    <Checkbox.Content className="flex flex-row items-start justify-start gap-4">
+                      <Avatar>
+                        <Avatar.Image src={ext.icon} alt={`${ext.name} icon`} />
+                        <Avatar.Fallback>{getFallbackString(ext.name)}</Avatar.Fallback>
+                      </Avatar>
+                      <div className="flex flex-col gap-1">
+                        <Label>{ext.name}</Label>
+                        <Description>{ext.description}</Description>
+                      </div>
+                    </Checkbox.Content>
+                  </Checkbox>
+                </div>
+              </CheckboxGroup>
             ))}
           </div>
         )}
@@ -92,8 +107,9 @@ export default function PluginSelector({
 
       <Button
         onPress={handleInstall}
-        isLoading={isInstalling}
-        isDisabled={!requirementsSatisfied || isEmpty(selectedPlugins)}>
+        isPending={isInstalling}
+        isDisabled={!requirementsSatisfied || isEmpty(selectedPlugins)}
+        fullWidth>
         {requirementsSatisfied ? 'Install Selected' : 'Complete Requirements First'}
       </Button>
     </div>

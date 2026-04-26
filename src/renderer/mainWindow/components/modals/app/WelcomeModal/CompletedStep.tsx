@@ -1,4 +1,4 @@
-import {Button} from '@heroui/react';
+import {Button} from '@heroui-v3/react';
 import {APP_NAME} from '@lynx_common/consts';
 import {CheckRead} from '@solar-icons/react-perf/LineDuotone';
 import {motion} from 'framer-motion';
@@ -43,9 +43,9 @@ export default function StepComplete({onComplete, installedPlugins, requirementS
 
       <motion.div
         variants={itemVariants}
-        className="w-full max-w-lg bg-gray-50 dark:bg-white/10 p-4 rounded-lg text-left mb-8">
+        className="w-full max-w-lg bg-gray-50 dark:bg-white/10 p-4 rounded-3xl text-left mb-8">
         <h3 className="font-semibold mb-3 text-gray-800 dark:text-gray-100">Setup Summary</h3>
-        <div className="text-sm text-gray-600 dark:text-gray-300 space-y-2">
+        <div className="text-sm text-gray-600 dark:text-gray-300 space-y-1 font-bold">
           <p>
             <span className="font-medium">Git:</span> {requirementStatus?.git || 'Checked'}
           </p>
@@ -64,13 +64,8 @@ export default function StepComplete({onComplete, installedPlugins, requirementS
       </motion.div>
 
       <motion.div variants={itemVariants}>
-        <Button
-          size="lg"
-          color="success"
-          variant="shadow"
-          onPress={onComplete}
-          className="font-semibold"
-          startContent={<CheckRead className="size-5" />}>
+        <Button size="lg" variant="primary" onPress={onComplete} className="font-semibold h-12">
+          <CheckRead className="size-5" />
           Finish & Restart {APP_NAME}
         </Button>
       </motion.div>
