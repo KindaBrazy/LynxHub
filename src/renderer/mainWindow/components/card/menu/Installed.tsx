@@ -30,11 +30,11 @@ export const InstalledMenu = memo(() => {
 
   return (
     <Dropdown isOpen={menuIsOpen} onOpenChange={setMenuIsOpen}>
-      <Button variant="tertiary" isPending={updating} isIconOnly>
-        {!updating && (
+      {!updating && (
+        <Button variant="tertiary" isPending={updating} isIconOnly>
           <MenuDots className={`size-[1.3rem] ${menuIsOpen ? 'rotate-90' : 'rotate-0'} transition-all duration-500`} />
-        )}
-      </Button>
+        </Button>
+      )}
       <Dropdown.Popover>
         <Dropdown.Menu aria-label="Card Menu" shouldCloseOnSelect={false}>
           {first.map((Comp, index) => {
