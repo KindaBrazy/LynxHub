@@ -96,14 +96,19 @@ const TabsList = memo(() => {
               transition={{
                 layout: {duration: 0.2, type: 'spring', bounce: 0, visualDuration: 0.2},
               }}
+              animate={{
+                scale: 1,
+                translateY: 0,
+                opacity: 1,
+                transition: {duration: 0.25, ease: 'backOut'},
+              }}
               as="div"
               key={tab.id}
               value={tab.id}
               layout="position"
-              initial={{scale: 0.8, y: 10, x: 20, opacity: 0}}
+              initial={{scale: 0.9, translateY: 10, opacity: 0}}
               className="h-full flex items-center max-w-60 min-w-24"
-              exit={{scale: 0.5, y: 10, x: 20, transition: {duration: 0.07, ease: 'backIn'}}}
-              animate={{scale: 1, y: 0, x: 0, opacity: 1, transition: {duration: 0.25, ease: 'backOut'}}}>
+              exit={{scale: 0.9, translateY: 10, transition: {duration: 0.07, ease: 'backIn'}}}>
               <TabItem tab={tab} isOrdering={isOrdering} />
               {index < localTabs.length - 1 && (
                 <Separator orientation="vertical" className={`mx-1 my-3`} variant={onFocus ? 'tertiary' : 'default'} />
