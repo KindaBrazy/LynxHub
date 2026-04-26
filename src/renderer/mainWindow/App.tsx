@@ -6,7 +6,6 @@ import ExtensionHooks from '@lynx/plugins/extensions/Hooks';
 
 import Modals from './components/modals';
 import Initializer from './components/modals/app/WelcomeModal';
-import UIProviders from './contexts/UIProviders';
 import ToastProviders from './layouts/ToastProviders';
 
 /**
@@ -14,7 +13,7 @@ import ToastProviders from './layouts/ToastProviders';
  */
 export default function App() {
   return (
-    <UIProviders>
+    <>
       <AppHooks />
       <Initializer />
       <ExtensionHooks />
@@ -23,6 +22,6 @@ export default function App() {
       <MainContents />
       <ToastProviders />
       <Modals />
-    </UIProviders>
+    </>
   );
 }
