@@ -10,7 +10,7 @@ import {extractGitUrl} from '@lynx_common/utils';
 import filesIpc from '@lynx_shared/ipc/files';
 import storageIpc from '@lynx_shared/ipc/storage';
 import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
-import {Copy, FolderOpen, HomeAngle2, InfoCircle, SquareTopDown} from '@solar-icons/react-perf/BoldDuotone';
+import {Copy, FolderOpen, HomeAngle2, InfoSquare, SquareTopDown} from '@solar-icons/react-perf/BoldDuotone';
 import {useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -58,7 +58,7 @@ export const AboutMenuItem = () => {
 
   return (
     <DropdownItem key="information" onPress={onPress}>
-      {showOpenFolder ? <FolderOpen className="size-4" /> : <InfoCircle className="size-4" />}
+      {showOpenFolder ? <FolderOpen className="size-4" /> : <InfoSquare className="size-4" />}
       {showOpenFolder ? 'Open Folder' : 'Information'}
     </DropdownItem>
   );

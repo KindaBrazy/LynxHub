@@ -1,4 +1,4 @@
-import {Button, Dropdown, Header} from '@heroui-v3/react';
+import {Button, Dropdown, Separator} from '@heroui-v3/react';
 import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {useUpdatingCard} from '@lynx/utils/hooks';
 import {MenuDots} from '@solar-icons/react-perf/BoldDuotone';
@@ -41,24 +41,25 @@ export const InstalledMenu = memo(() => {
             return <Comp key={index} useCardStore={useCardStore} />;
           })}
           <Dropdown.Section>
-            <Header>Options</Header>
             <LaunchConfigMenuItem />
             <ExtensionsMenuItem />
             <RepoConfigMenuItem />
           </Dropdown.Section>
 
+          <Separator className="bg-surface-secondary/70" />
+
           {second.map((Comp, index) => {
             return <Comp key={index} useCardStore={useCardStore} />;
           })}
           <Dropdown.Section>
-            <Header>Update</Header>
             <UpdateMenuItem />
             <CheckForUpdateMenuItem />
             <AutoUpdateMenuItem />
           </Dropdown.Section>
 
+          <Separator className="bg-surface-secondary/70" />
+
           <Dropdown.Section>
-            <Header>More...</Header>
             <Dropdown.SubmenuTrigger>
               <Dropdown.Item>
                 More
@@ -70,13 +71,13 @@ export const InstalledMenu = memo(() => {
                     return <Comp key={index} useCardStore={useCardStore} />;
                   })}
                   <Dropdown.Section key="info">
-                    <Header>Info</Header>
                     <AboutMenuItem />
                     <HomePageMenuItem />
                   </Dropdown.Section>
 
+                  <Separator className="bg-surface-secondary/70" />
+
                   <Dropdown.Section key="card_modify">
-                    <Header>Danger Zone</Header>
                     <DuplicateMenuItem />
                     <UnAssignMenuItem />
                     <UninstallMenuItem />
