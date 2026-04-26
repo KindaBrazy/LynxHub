@@ -51,8 +51,6 @@ export default function Info({updateInfo, releaseNotes}: Props) {
           },
         ]}
         columns={3}
-        itemClassName="bg-surface"
-        className="w-full bg-surface-secondary"
       />
 
       <Card variant="secondary" className="size-full">
