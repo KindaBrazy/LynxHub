@@ -43,8 +43,8 @@ const BrowserScale = memo(function BrowserScale() {
       {/* Header with title and reset button */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Magnifier aria-hidden="true" className="size-5 text-primary" />
-          <span className="text-sm font-semibold text-foreground-800">Browser Scale</span>
+          <Magnifier aria-hidden="true" className="size-5 text-muted" />
+          <span className="text-sm font-semibold text-muted">Browser Scale</span>
         </div>
         <Button
           size="sm"
@@ -58,8 +58,8 @@ const BrowserScale = memo(function BrowserScale() {
       </div>
 
       {/* Current zoom display */}
-      <div aria-live="polite" className="flex items-center justify-center rounded-lg bg-foreground-100 py-3">
-        <span className="text-2xl font-bold text-foreground-800">{Math.round(factor)}%</span>
+      <div aria-live="polite" className="flex items-center justify-center rounded-2xl bg-surface-secondary py-3">
+        <span className="text-2xl font-bold text-muted">{Math.round(factor)}%</span>
       </div>
 
       {/* Slider */}
@@ -78,13 +78,13 @@ const BrowserScale = memo(function BrowserScale() {
         </Slider>
 
         {/* Scale markers */}
-        <div className="flex justify-between px-1 text-tiny text-foreground-500">
+        <div className="flex justify-between px-1 text-xs text-muted">
           {[10, 50, 100, 150, 200, 300].map(zoom => (
             <button
               key={zoom}
               onClick={() => updateZoom(zoom)}
               aria-label={`Set zoom to ${zoom}%`}
-              className={`transition-colors hover:text-foreground-800 ${zoom === 100 ? 'font-medium' : ''}`}>
+              className={`transition-colors hover:text-muted ${zoom === 100 ? 'font-medium' : ''}`}>
               {zoom}%
             </button>
           ))}

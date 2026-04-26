@@ -40,7 +40,7 @@ export const CardHeaderContent = memo(({modifiedTitle, onTitleChange, updateAvai
         <div className="flex flex-col">
           <Label
             className={
-              'cursor-text outline-none focus:border border-transparent focus:border-foreground-200' +
+              'cursor-text outline-none focus:border border-transparent focus:border-surface-secondary' +
               ' focus:px-1.5 focus:py-0.5 rounded-lg transition duration-200 line-clamp-1 z-20'
             }
             onBlur={e => {

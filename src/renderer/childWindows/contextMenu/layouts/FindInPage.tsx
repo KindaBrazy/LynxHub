@@ -134,8 +134,8 @@ const FindInPage = memo(function FindInPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Circle_Icon aria-hidden="true" className="size-5 text-primary" />
-          <span className="text-sm font-semibold text-foreground-800">Find in Page</span>
+          <Circle_Icon aria-hidden="true" className="size-5 text-muted" />
+          <span className="text-sm font-semibold text-muted">Find in Page</span>
         </div>
         {hasResults && (
           <Chip size="sm" variant="soft">
@@ -219,7 +219,7 @@ const FindInPage = memo(function FindInPage() {
       </Switch>
 
       {/* Keyboard Shortcuts Help */}
-      <div className="flex flex-col gap-1 rounded-lg bg-foreground-50 p-2 text-tiny text-foreground-500">
+      <div className="flex flex-col gap-1 rounded-lg bg-foreground-50 p-2 text-xs text-foreground-500">
         <div className="flex justify-between">
           <span>Next match:</span>
           <span className="font-medium text-foreground-700">Enter or ↓</span>

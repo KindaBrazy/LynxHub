@@ -134,7 +134,7 @@ export default function RenderCustomItem({item, isAdded, setCustomList, addItem,
             <div
               className={
                 `flex items-center gap-x-2 font-semibold ` +
-                `${item.kind === 'envVar' ? 'text-primary-500' : 'text-secondary-500'}`
+                `${item.kind === 'envVar' ? 'text-accent' : 'text-LynxPurple/70'}`
               }>
               {item.kind === 'envVar' ? <HomeAdd /> : <SettingsMinimalistic />}
               <span>{item.kind === 'envVar' ? 'Environment Variable' : 'Command Line'}</span>
@@ -312,13 +312,13 @@ export default function RenderCustomItem({item, isAdded, setCustomList, addItem,
         <motion.div
           animate={{translateY: 0, opacity: 1, scale: 1}}
           initial={{translateY: 5, opacity: 0, scale: 0.9}}
-          className="text-sm bg-background dark:bg-LynxNearBlack flex flex-col px-4 py-3 rounded-xl gap-y-2"
+          className="text-sm bg-surface flex flex-col px-4 py-3 rounded-xl gap-y-2"
           layout>
           <div className="flex justify-between items-center">
             <div
               className={
                 `flex items-center gap-x-2 font-semibold ` +
-                `${item.kind === 'comment' ? 'text-warning-600' : 'text-success-600'}`
+                `${item.kind === 'comment' ? 'text-warning-soft-foreground' : 'text-success-soft-foreground'}`
               }>
               {item.kind === 'comment' ? <Pen2 /> : <Notes />}
               <span>{item.kind === 'comment' ? 'Comment' : 'Custom'}</span>

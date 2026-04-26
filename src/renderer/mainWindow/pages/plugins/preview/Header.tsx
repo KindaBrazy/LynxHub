@@ -102,7 +102,7 @@ export default function PluginPreviewHeader({installedPlugin}: PluginPreviewHead
                 {/* Plugin type indicator (extension vs module) */}
                 <div
                   className={`flex flex-row gap-x-1 items-center ${
-                    pluginType === 'extension' ? 'text-primary-500' : 'text-secondary'
+                    pluginType === 'extension' ? 'text-accent' : 'text-LynxPurple'
                   }`}>
                   <WidgetAdd />
                   <span>{pluginType === 'extension' ? 'Extension' : 'Module'}</span>

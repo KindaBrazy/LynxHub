@@ -24,13 +24,13 @@ export function SourceCard({item, isSelected, onSelect, isScreen}: SourceCardPro
       <Card.Content>
         <img alt={item.name} src={item.thumbnail} className="object-cover aspect-video" />
         {isSelected && (
-          <div className="absolute inset-0 flex items-center justify-center bg-primary/70 animate-appearance-in z-10">
-            <Record className="size-8 text-white animate-appearance-in" />
+          <div className="absolute inset-0 flex items-center justify-center bg-accent/70 animate-appearance-in z-10">
+            <Record className="size-7 text-white animate-appearance-in" />
           </div>
         )}
       </Card.Content>
 
-      <Card.Footer className={'overflow-hidden px-3 pb-3 text-center max-h-12 flex flex-row gap-x-2 items-center'}>
+      <Card.Footer className={'overflow-hidden px-3 pb-3 text-center h-11 flex flex-row gap-x-2 items-center'}>
         {item.icon && <img src={item.icon} alt="Source Icon" className="size-6" />}
         <Tooltip delay={300}>
           <Tooltip.Trigger>

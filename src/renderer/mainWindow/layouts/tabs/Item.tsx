@@ -111,7 +111,7 @@ const TabItem = memo(({tab, isOrdering}: Props) => {
 
       <Button
         className={
-          'text-small pl-2 flex hover:bg-foreground-100 flex-row relative pr-1 ' +
+          'text-sm pl-2 flex hover:bg-surface-secondary flex-row relative pr-1 ' +
           `cursor-default gap-x-0 h-9 overflow-hidden rounded-none rounded-t-xl! `
         }
         ref={btnRef}

@@ -87,7 +87,7 @@ const RenderItem = memo(function RenderItem({item, activePage, isDark, tabID}: I
               initial={false}
               layoutId={`${tabID}_indicator`}
               transition={springTransitionSnappy}
-              className="absolute inset-0 rounded-xl shadow-lg bg-primary"
+              className="absolute inset-0 rounded-xl shadow-lg bg-accent"
             />
           )}
         </AnimatePresence>

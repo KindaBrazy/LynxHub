@@ -26,7 +26,7 @@ const StatusBar = memo(() => {
           <div
             className={
               'flex h-7 w-full flex-row justify-between overflow-hidden border-t border-foreground/10' +
-              ' items-center bg-foreground-100/50 px-3 text-small dark:bg-LynxRaisinBlack/50'
+              ' items-center bg-foreground-100/50 px-3 text-sm dark:bg-LynxRaisinBlack/50'
             }>
             <div className={[classNames, 'justify-start'].join(' ')}>
               {addStart.map((Start, index) => (

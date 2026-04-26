@@ -92,13 +92,13 @@ const Footer = memo(({isRunning, updatingExtensions, updating, updateCount, id}:
           className="text-xs font-bold text-secondary/70"
         />
       ) : isRunning ? (
-        <ShinyText speed={2} text="Running" darkMode={darkMode} className="text-xs font-bold text-primary/70" />
+        <ShinyText speed={2} text="Running" darkMode={darkMode} className="text-xs font-bold text-accent/70" />
       ) : (
         <div
           className={
             'translate-y-2 opacity-0 transition duration-400 group-hover:translate-y-0 group-hover:opacity-100'
           }>
-          {isInstalled ? <Play className="size-4 text-primary" /> : <DownloadMinimalistic className="size-4" />}
+          {isInstalled ? <Play className="size-4 text-accent" /> : <DownloadMinimalistic className="size-4" />}
         </div>
       )}
 
@@ -113,7 +113,7 @@ const Footer = memo(({isRunning, updatingExtensions, updating, updateCount, id}:
             animate={{opacity: 1, scale: 1, translateY: 0}}
             initial={{opacity: 0, scale: 0.8, translateY: 10}}
             className="absolute bottom-2 right-1/2 translate-x-1/2 duration-0 shrink-0">
-            <FolderOpen size={16} className="text-foreground-600" />
+            <FolderOpen size={16} className="text-muted" />
           </MotionButton>
         )}
       </AnimatePresence>

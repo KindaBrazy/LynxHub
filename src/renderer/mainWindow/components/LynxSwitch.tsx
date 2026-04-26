@@ -77,9 +77,9 @@ export default function LynxSwitch({
             <Description>
               {description &&
                 (typeof description === 'string' ? (
-                  <SettingsSearchHighlight text={description} className="text-tiny text-default-400" />
+                  <SettingsSearchHighlight text={description} className="text-xs text-default-400" />
                 ) : (
-                  <div className="text-tiny text-default-400">{description}</div>
+                  <div className="text-xs text-default-400">{description}</div>
                 ))}
             </Description>
           </div>

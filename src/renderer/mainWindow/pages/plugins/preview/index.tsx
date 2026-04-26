@@ -19,7 +19,7 @@ function EmptySelectionPlaceholder() {
         ' justify-center gap-y-4 flex-col px-4 text-center'
       }>
       <WidgetAdd className="size-16" />
-      <span className="text-large">Select a plugin from the list to begin your exploration.</span>
+      <span className="text-lg">Select a plugin from the list to begin your exploration.</span>
     </div>
   );
 }
