@@ -5,7 +5,6 @@ import {
   useIsUninstallingPlugin,
   usePluginsState,
 } from '@lynx/redux/reducers/plugins';
-import {useTabsState} from '@lynx/redux/reducers/tabs';
 import {AppDispatch} from '@lynx/redux/store';
 import {showRestartModal} from '@lynx/utils';
 import {extractGitUrl} from '@lynx_common/utils';
@@ -96,7 +95,6 @@ interface PluginActionButtonsProps {
  */
 export default function PluginActionButtons({isInstalled, currentVersion}: PluginActionButtonsProps) {
   const selectedPlugin = usePluginsState('selectedPlugin');
-  const activeTab = useTabsState('activeTab');
   const configModal = useOverlayState();
 
   const pluginId = selectedPlugin?.metadata.id || '';
@@ -135,7 +133,6 @@ export default function PluginActionButtons({isInstalled, currentVersion}: Plugi
     <div className="flex flex-col gap-y-1 items-end">
       <SecurityWarning
         type="extension"
-        tabId={activeTab}
         owner={pluginOwner}
         isOpen={isSecurityWarningOpen}
         onAgree={handleInstallConfirmed}

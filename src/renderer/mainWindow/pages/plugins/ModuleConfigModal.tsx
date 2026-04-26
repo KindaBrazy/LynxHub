@@ -1,5 +1,4 @@
-import {Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
-import {Button, Checkbox, Label} from '@heroui-v3/react';
+import {Button, Checkbox, Label, Modal} from '@heroui-v3/react';
 import {AppDispatch} from '@lynx/redux/store';
 import {showRestartModal} from '@lynx/utils';
 import {CardModules, RendererModuleImportType} from '@lynx_common/types/plugins/modules';
@@ -11,6 +10,7 @@ import {compact} from 'lodash';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
+import TabModal from '../../components/TabModal';
 import {topToast} from '../../layouts/ToastProviders';
 
 /** Represents a single tool card item. */
@@ -205,14 +205,10 @@ export default function ModuleConfigModal({isOpen, onClose}: ModuleConfigModalPr
   }, [disabledCards, allAvailableCards]);
 
   return (
-    <Modal
-      size="2xl"
-      isOpen={isOpen}
-      onClose={onClose}
-      scrollBehavior="inside"
-      classNames={{backdrop: 'top-10!', wrapper: 'top-10!'}}>
-      <ModalContent>
-        <ModalHeader className="flex flex-col gap-1">
+    <TabModal size="lg" isOpen={isOpen} dialogClassName="max-w-200!">
+      <Modal.CloseTrigger onPress={onClose} />
+      <Modal.Header>
+        <Modal.Heading className="flex flex-col gap-1">
           <div className="flex items-center gap-2">
             <SettingsMinimalistic className="size-5" />
             <span>Module Configuration</span>
@@ -220,59 +216,55 @@ export default function ModuleConfigModal({isOpen, onClose}: ModuleConfigModalPr
           <span className="text-small font-normal text-foreground-500">
             Enable or disable individual AI tools. Disabled tools won't be loaded.
           </span>
-        </ModalHeader>
-        <ModalBody>
-          {loading ? (
-            <div className="flex items-center justify-center py-8">Loading...</div>
-          ) : (
-            <div className="flex flex-col gap-4">
-              <div className="flex items-center justify-between">
-                <span className="text-small text-foreground-500">
-                  {enabledCount} of {allAvailableCards.length} tools enabled
-                </span>
-                <div className="flex gap-2">
-                  <Button size="sm" variant="secondary" onPress={enableAll}>
-                    Enable All
-                  </Button>
-                  <Button size="sm" onPress={disableAll} variant="danger-soft">
-                    Disable All
-                  </Button>
+        </Modal.Heading>
+      </Modal.Header>
+      <Modal.Body>
+        {loading ? (
+          <div className="flex items-center justify-center py-8">Loading...</div>
+        ) : (
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center justify-between">
+              <span className="text-small text-foreground-500">
+                {enabledCount} of {allAvailableCards.length} tools enabled
+              </span>
+              <div className="flex gap-2">
+                <Button size="sm" variant="secondary" onPress={enableAll}>
+                  Enable All
+                </Button>
+                <Button size="sm" onPress={disableAll} variant="danger-soft">
+                  Disable All
+                </Button>
+              </div>
+            </div>
+            {categorizedCards.map(category => (
+              <div key={category.category} className="flex flex-col gap-2 bg-surface-secondary rounded-3xl p-4">
+                <span className="text-medium font-semibold">{category.category}</span>
+                <div className="grid grid-cols-3 gap-2">
+                  {category.cards.map(card => (
+                    <Checkbox id={card.id} key={card.id} isSelected={card.enabled} onChange={() => toggleCard(card.id)}>
+                      <Checkbox.Control>
+                        <Checkbox.Indicator />
+                      </Checkbox.Control>
+                      <Checkbox.Content>
+                        <Label className="cursor-pointer">{card.title}</Label>
+                      </Checkbox.Content>
+                    </Checkbox>
+                  ))}
                 </div>
               </div>
-              {categorizedCards.map(category => (
-                <div key={category.category} className="flex flex-col gap-2">
-                  <span className="text-medium font-semibold">{category.category}</span>
-                  <div className="grid grid-cols-2 gap-2">
-                    {category.cards.map(card => (
-                      <Checkbox
-                        id={card.id}
-                        key={card.id}
-                        isSelected={card.enabled}
-                        onChange={() => toggleCard(card.id)}>
-                        <Checkbox.Control>
-                          <Checkbox.Indicator />
-                        </Checkbox.Control>
-                        <Checkbox.Content>
-                          <Label className="cursor-pointer">{card.title}</Label>
-                        </Checkbox.Content>
-                      </Checkbox>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </ModalBody>
-        <ModalFooter>
-          <Button onPress={onClose} variant="danger-soft">
-            Cancel
-          </Button>
-          <Button isPending={saving} onPress={handleSave}>
-            <Diskette />
-            Save & Restart
-          </Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+            ))}
+          </div>
+        )}
+      </Modal.Body>
+      <Modal.Footer>
+        <Button onPress={onClose} variant="secondary">
+          Cancel
+        </Button>
+        <Button isPending={saving} onPress={handleSave}>
+          <Diskette />
+          Save & Restart
+        </Button>
+      </Modal.Footer>
+    </TabModal>
   );
 }

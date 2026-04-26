@@ -1,31 +1,27 @@
 import {
+  Avatar,
   Badge,
+  Button,
+  buttonVariants,
   Card,
-  CardBody,
-  CardFooter,
-  CardHeader,
   Drawer,
-  DrawerBody,
-  DrawerContent,
-  DrawerFooter,
-  DrawerHeader,
-  Image,
-  Progress,
-  useDisclosure,
-} from '@heroui/react';
-import {Button} from '@heroui-v3/react';
+  Label,
+  Link,
+  ProgressBar,
+  useOverlayState,
+} from '@heroui-v3/react';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import LynxScroll from '@lynx/components/LynxScroll';
 import {tabsActions} from '@lynx/redux/reducers/tabs';
 import {AppDispatch} from '@lynx/redux/store';
 import {AvailablePageIDs, PageID, PageTitles} from '@lynx_common/consts';
 import {NotificationData} from '@lynx_common/types';
-import {isValidURL} from '@lynx_common/utils';
+import {getFallbackString, isValidURL} from '@lynx_common/utils';
 import staticsIpc from '@lynx_shared/ipc/statics';
 import storageIpc, {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
-import {Bell, SquareTopDown} from '@solar-icons/react-perf/BoldDuotone';
-import {CheckRead} from '@solar-icons/react-perf/LineDuotone';
+import {Bell, Notes} from '@solar-icons/react-perf/BoldDuotone';
+import {CheckRead, Unread} from '@solar-icons/react-perf/LineDuotone';
 import {AnimatePresence, motion} from 'framer-motion';
 import {isEmpty} from 'lodash';
 import {useCallback, useEffect, useMemo, useState} from 'react';
@@ -97,37 +93,32 @@ interface NotificationItemProps {
   onNavigatePage: (destination: AvailablePageIDs | string) => void;
   /** Callback to close the notification drawer, usually after navigating. */
   onCloseDrawer: () => void;
+  delay?: number;
 }
 
 /**
  * A sub-component rendering a single notification card.
  */
-function NotificationItem({notif, onRead, onNavigatePage, onCloseDrawer}: NotificationItemProps) {
+function NotificationItem({notif, onRead, onNavigatePage, onCloseDrawer, delay}: NotificationItemProps) {
   const {buttons, icon, titleColor, title, description} = notif;
 
   return (
     <motion.div
+      className="px-1"
       layoutId={notif.id}
-      exit={{x: 300, opacity: 0}}
-      animate={{x: 0, opacity: 1}}
-      initial={{x: 300, opacity: 0}}>
-      <Card
-        className={
-          'bg-foreground-50/70 border-foreground/10 hover:border-primary/40 rounded-xl border transition-colors ' +
-          'dark:border-foreground/5 dark:bg-[#151515]'
-        }
-        shadow="sm">
-        <CardHeader className="flex items-center gap-3">
-          <div
-            className={
-              'bg-foreground-200/80 flex h-8 w-8 items-center justify-center rounded-full text-base dark:bg-[#202020]'
-            }>
-            {icon && isValidURL(icon) ? (
-              <Image src={icon} height={20} radius="none" alt="Notification Icon" />
-            ) : (
-              <span>{icon}</span>
-            )}
-          </div>
+      transition={{delay}}
+      animate={{translateY: 0, opacity: 1}}
+      initial={{translateY: 30, opacity: 0}}>
+      <Card variant="secondary">
+        <Card.Header className="flex flex-row items-center gap-3">
+          {icon && isValidURL(icon) ? (
+            <Avatar>
+              <Avatar.Image src={icon} alt={`${title} avatar`} />
+              <Avatar.Fallback>{getFallbackString(title)}</Avatar.Fallback>
+            </Avatar>
+          ) : (
+            <Notes className="size-5" />
+          )}
           <div className="flex flex-1 items-center justify-between gap-2">
             <span
               className={
@@ -135,30 +126,30 @@ function NotificationItem({notif, onRead, onNavigatePage, onCloseDrawer}: Notifi
               }>
               {title}
             </span>
-            <Button
-              size="sm"
-              variant="tertiary"
-              onPress={() => onRead(notif.id)}
-              className="hover:text-success text-foreground-500 h-7 min-w-0 px-2 text-xs"
-              isIconOnly>
-              <CheckRead className="size-3.5" />
+            <Button size="sm" variant="secondary" onPress={() => onRead(notif.id)} isIconOnly>
+              <Unread className="size-4.5" />
             </Button>
           </div>
-        </CardHeader>
-        <CardBody className="flex flex-col gap-y-1.5 text-xs leading-relaxed">
+        </Card.Header>
+        <Card.Content className="flex flex-col gap-y-1.5 text-xs leading-relaxed">
           {description.map((desc, index) => (
             <span key={`desc_${index}`} className={desc.color ? `text-${desc.color}` : 'text-foreground'}>
               {desc.text}
             </span>
           ))}
-        </CardBody>
+        </Card.Content>
 
         {!isEmpty(buttons) && (
-          <CardFooter className="justify-end gap-2 pt-1">
+          <Card.Footer className="justify-end gap-2 pt-1">
             {buttons!.map(btn => {
               const isUrl = isValidURL(btn.destination);
+
               return (
-                <Button
+                <Link
+                  className={buttonVariants({
+                    variant: btn.color || 'primary',
+                    size: 'sm',
+                  })}
                   onPress={() => {
                     onCloseDrawer();
                     if (isUrl) {
@@ -167,16 +158,13 @@ function NotificationItem({notif, onRead, onNavigatePage, onCloseDrawer}: Notifi
                       onNavigatePage(btn.destination);
                     }
                   }}
-                  size="sm"
-                  key={btn.title}
-                  variant="tertiary"
-                  className="text-xs">
+                  key={btn.title}>
                   {btn.title}
-                  isUrl ? <SquareTopDown className="size-[0.85rem]" /> : undefined
-                </Button>
+                  {isUrl && <Link.Icon className="size-[0.85rem]" />}
+                </Link>
               );
             })}
-          </CardFooter>
+          </Card.Footer>
         )}
       </Card>
     </motion.div>
@@ -186,20 +174,18 @@ function NotificationItem({notif, onRead, onNavigatePage, onCloseDrawer}: Notifi
 /**
  * The Home Notification Drawer and Button component.
  * Displays an icon with a badge, and opens a drawer containing all unread notifications.
- *
- * @returns {JSX.Element} The rendered notification drawer and trigger button.
  */
 export default function HomeNotificationDrawer() {
   const dispatch = useDispatch<AppDispatch>();
-  const {isOpen, onOpen, onClose, onOpenChange} = useDisclosure();
+  const state = useOverlayState();
 
   const {notifications, isRefreshing, markAsRead} = useNotificationsData();
   const {staticNotifs, staticNotifCount, haveWarn} = useStaticNotifications();
 
   const handleOpenDrawer = useCallback(() => {
     AddBreadcrumb_Renderer(`Open Notifications`);
-    onOpen();
-  }, [onOpen]);
+    state.open();
+  }, []);
 
   const handleNavigatePage = useCallback(
     (destination: AvailablePageIDs | string) => {
@@ -217,79 +203,82 @@ export default function HomeNotificationDrawer() {
     return notifications.length + staticNotifCount;
   }, [notifications, staticNotifCount]);
 
+  const readAll = () => notifications.forEach(notif => markAsRead(notif.id));
+
   return (
     <>
-      <Badge
-        size="sm"
-        shape="circle"
-        variant="solid"
-        showOutline={false}
-        placement="top-left"
-        content={totalNotificationCount}
-        color={haveWarn ? 'warning' : 'success'}
-        isInvisible={totalNotificationCount === 0}>
+      <Badge.Anchor>
         <Button variant="tertiary" className="shrink-0" onPress={handleOpenDrawer} isIconOnly>
           <Bell />
         </Button>
-      </Badge>
-      <Drawer
-        motionProps={{
-          variants: {
-            enter: {
-              x: 0,
-              opacity: 1,
-            },
-            exit: {
-              x: 50,
-              opacity: 0,
-            },
-          },
-        }}
-        isOpen={isOpen}
-        className="mb-14!"
-        onOpenChange={onOpenChange}
-        classNames={{backdrop: 'mt-10', wrapper: 'mt-12'}}
-        hideCloseButton>
-        <DrawerContent className="dark:bg-LynxRaisinBlack">
-          {isRefreshing && <Progress size="sm" color="secondary" isIndeterminate />}
-          <DrawerHeader className="flex flex-row items-center gap-x-2">
-            <Bell className="size-5" />
-            <span>Notifications</span>
-          </DrawerHeader>
-
-          <DrawerBody as={LynxScroll}>
-            <AnimatePresence>
-              {totalNotificationCount <= 0 ? (
-                <EmptyStateCard
-                  description="No notifications yet!"
-                  className="dark:bg-foreground-50/30"
-                  icon={<Bell size={40} className="text-foreground-400" />}
-                />
-              ) : (
-                <div className="flex flex-col gap-y-2">
-                  {notifications.map(notif => (
-                    <NotificationItem
-                      notif={notif}
-                      key={notif.id}
-                      onRead={markAsRead}
-                      onCloseDrawer={onClose}
-                      onNavigatePage={handleNavigatePage}
-                    />
-                  ))}
-
-                  {/* Spread static notifications here */}
-                  {...staticNotifs}
-                </div>
+        {totalNotificationCount !== 0 && (
+          <Badge size="sm" placement="top-left" color={haveWarn ? 'warning' : 'success'}>
+            {totalNotificationCount}
+          </Badge>
+        )}
+      </Badge.Anchor>
+      <Drawer isOpen={state.isOpen} onOpenChange={state.setOpen}>
+        <Drawer.Backdrop className="top-10">
+          <Drawer.Content placement="right" className="top-10 pb-10">
+            <Drawer.Dialog className="w-md px-0">
+              {isRefreshing && (
+                <ProgressBar size="sm" className="absolute -top-1 inset-x-0" isIndeterminate>
+                  <ProgressBar.Track className="rounded-none">
+                    <ProgressBar.Fill />
+                  </ProgressBar.Track>
+                </ProgressBar>
               )}
-            </AnimatePresence>
-          </DrawerBody>
+              <Drawer.Header className="px-6">
+                <Drawer.Heading className="flex justify-between">
+                  <div className="flex items-center gap-x-1">
+                    <Bell className="size-4" />
+                    <Label>Notifications</Label>
+                  </div>
+                  <Button onPress={readAll} variant="secondary" isIconOnly>
+                    <CheckRead />
+                  </Button>
+                </Drawer.Heading>
+              </Drawer.Header>
+              <Drawer.Body className="pr-2">
+                <LynxScroll className="size-full pb-2 pr-3 pl-4">
+                  <AnimatePresence>
+                    {totalNotificationCount <= 0 ? (
+                      <motion.div animate={{translateY: 0, opacity: 1}} initial={{translateY: 30, opacity: 0}}>
+                        <EmptyStateCard
+                          className="mt-4"
+                          variant="secondary"
+                          description="No notifications yet!"
+                          icon={<Bell size={30} className="text-surface-secondary-foreground" />}
+                        />
+                      </motion.div>
+                    ) : (
+                      <div className="flex flex-col gap-y-4 mt-3">
+                        {notifications.map((notif, index) => (
+                          <NotificationItem
+                            notif={notif}
+                            key={notif.id}
+                            delay={index * 0.1}
+                            onRead={markAsRead}
+                            onCloseDrawer={state.close}
+                            onNavigatePage={handleNavigatePage}
+                          />
+                        ))}
 
-          <DrawerFooter className="justify-start p-3">
-            <Button variant="ghost" onPress={onClose}>
-              Close
-            </Button>
-          </DrawerFooter>
-        </DrawerContent>
+                        {/* Spread static notifications here */}
+                        {...staticNotifs}
+                      </div>
+                    )}
+                  </AnimatePresence>
+                </LynxScroll>
+              </Drawer.Body>
+              <Drawer.Footer className="px-6">
+                <Button variant="secondary" onPress={state.close}>
+                  Close
+                </Button>
+              </Drawer.Footer>
+            </Drawer.Dialog>
+          </Drawer.Content>
+        </Drawer.Backdrop>
       </Drawer>
     </>
   );

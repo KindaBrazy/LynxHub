@@ -148,8 +148,8 @@ function VersionHistoryCard({versionData, index, isInstalledVersion, totalCount,
       initial={{opacity: 0, x: -30}}
       transition={{duration: 0.5, delay: index * 0.1}}>
       <div
-        className={`border shadow-small hover:shadow-medium bg-foreground-50/50 relative overflow-hidden 
-        rounded-xl px-4 py-4 mb-6 transition-all duration-300 ${
+        className={`border shadow-sm hover:shadow-md bg-surface relative overflow-hidden 
+        rounded-3xl px-4 py-4 mb-6 transition-all duration-300 ${
           isLatest
             ? 'border-secondary-200 hover:border-secondary-300'
             : 'border-foreground-100 hover:border-foreground-200'

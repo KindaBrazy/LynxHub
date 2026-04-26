@@ -1,7 +1,6 @@
-import {addToast, Button} from '@heroui/react';
 import {useCardsState} from '@lynx/redux/reducers/cards';
 import {useSettingsState} from '@lynx/redux/reducers/settings';
-import {ChangelogItem, type ElementResizeData, HeroToastPlacement} from '@lynx_common/types';
+import {ChangelogItem, type ElementResizeData} from '@lynx_common/types';
 import {InstalledCard} from '@lynx_common/types/storage';
 import {isEmpty, isNil} from 'lodash';
 import {Fragment, useEffect, useRef, useState} from 'react';
@@ -83,55 +82,6 @@ export function useDisableTooltip(isEssential: boolean = false): boolean {
   // Show if tooltip set to essential
   return !isEssential;
 }
-
-function topToast(options: {
-  title: string;
-  color?: 'success' | 'default' | 'foreground' | 'primary' | 'secondary' | 'warning' | 'danger' | undefined;
-  timeout?: number;
-  promise?: Promise<any>;
-  placement: HeroToastPlacement;
-}) {
-  const {title, color = 'success', timeout = 2000, promise, placement} = options;
-
-  addToast({
-    title,
-    color,
-    variant: 'flat',
-    size: 'sm',
-    timeout,
-    promise,
-    classNames: {
-      base: placement.includes('top')
-        ? 'top-6'
-        : `right-6 bottom-8 flex flex-col gap-y-2 cursor-default ${color === 'danger' && 'pt-6'}`,
-    },
-    endContent:
-      placement.includes('bottom') && color === 'danger' ? (
-        <div className="w-full flex flex-row justify-end">
-          <Button size={'sm'} color={'warning'} variant={'light'}>
-            Restart App
-          </Button>
-        </div>
-      ) : null,
-  });
-}
-
-/**
- * Creates a toast notification helper with various severity levels.
- * @param dispatch - Redux dispatch function
- * @param placement - Toast placement on screen
- * @returns Object with toast methods (success, error, warning, info, loading)
- */
-export const lynxTopToast = (_d, placement?) => {
-  return {
-    success: (title: string, timeout?: number) => topToast({title, color: 'success', timeout, placement}),
-    error: (title: string, timeout?: number) => topToast({title, color: 'danger', timeout, placement}),
-    warning: (title: string, timeout?: number) => topToast({title, color: 'warning', timeout, placement}),
-    info: (title: string, timeout?: number) => topToast({title, color: 'default', timeout, placement}),
-    loading: (title: string, promise: Promise<any>) =>
-      topToast({title, color: 'default', promise, timeout: 1, placement}),
-  };
-};
 
 /**
  * Recursively renders changelog items as a nested list.
