@@ -8,7 +8,6 @@ import {AppDispatch} from '@lynx/redux/store';
 import {Hotkey_Names} from '@lynx_common/consts/hotkeys';
 import {TabInfo} from '@lynx_common/types';
 import contextMenuIpc from '@lynx_shared/ipc/contextMenu';
-import {motion} from 'framer-motion';
 import {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -23,7 +22,9 @@ type Props = {
   isOrdering: boolean;
 };
 
-// TODO: like installer step progress use scroll detection to auto scroll to active tab
+/**
+ * TODO like installer step progress use scroll detection to auto scroll to active tab
+ */
 
 /**
  * Component representing a single tab in the tab bar.
@@ -111,8 +112,9 @@ const TabItem = memo(({tab, isOrdering}: Props) => {
 
       <Button
         className={
-          'text-sm pl-2 flex hover:bg-surface-secondary flex-row relative pr-1 ' +
-          `cursor-default gap-x-0 h-9 overflow-hidden rounded-none rounded-t-xl! `
+          'text-sm pl-2 flex flex-row relative pr-1 ' +
+          `cursor-default gap-x-0.5 h-9 overflow-hidden rounded-none rounded-t-xl! ` +
+          `${isActiveTab ? 'bg-white dark:bg-[#303033]' : 'hover:bg-surface-secondary'} transition duration-200`
         }
         ref={btnRef}
         variant="ghost"
@@ -130,7 +132,7 @@ const TabItem = memo(({tab, isOrdering}: Props) => {
 
         <CloseButton
           className={
-            `scale-85 bg-transparent hover:bg-surface-secondary ` +
+            `scale-85 bg-transparent hover:bg-danger-soft-hover ` +
             `${isActiveTab || isHovered ? 'opacity-100' : 'opacity-0'}`
           }
           ref={closeBtnRef}
@@ -139,14 +141,6 @@ const TabItem = memo(({tab, isOrdering}: Props) => {
         />
 
         <ProgressBar progress={tab.progress} />
-
-        {isActiveTab && (
-          <motion.div
-            layoutId="active_tab_indicator"
-            transition={{duration: 0.3, type: 'spring'}}
-            className="absolute inset-0 -z-1 bg-white dark:bg-[#303033] rounded-t-xl"
-          />
-        )}
       </Button>
     </Tooltip>
   );
