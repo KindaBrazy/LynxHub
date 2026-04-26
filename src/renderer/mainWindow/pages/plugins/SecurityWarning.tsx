@@ -1,9 +1,9 @@
-import {Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
-import {Button, Checkbox, Label} from '@heroui-v3/react';
-import {useTabVisibility} from '@lynx/layouts/tabs/utils';
+import {Button, Checkbox, Label, Modal} from '@heroui-v3/react';
 import {APP_AUTHOR_NAME} from '@lynx_common/consts';
 import {ShieldWarning} from '@solar-icons/react-perf/BoldDuotone';
 import {Dispatch, SetStateAction, useCallback, useEffect, useMemo, useRef, useState} from 'react';
+
+import TabModal from '../../components/TabModal';
 
 /**
  * Props for the SecurityWarning component.
@@ -21,18 +21,15 @@ interface SecurityWarningProps {
   title?: string;
   /** The owner or author of the extension/module. */
   owner?: string;
-  /** ID of the tab to properly check visibility state. */
-  tabId: string;
 }
 
 /**
  * Modal component that warns users about installing third-party plugins.
  * Users can agree and choose to not show this notice again for specific types.
  */
-export default function SecurityWarning({isOpen, onAgree, setIsOpen, type, title, owner, tabId}: SecurityWarningProps) {
+export default function SecurityWarning({isOpen, onAgree, setIsOpen, type, title, owner}: SecurityWarningProps) {
   const storeKey = useMemo(() => `dont_show-${type}-security_notice`, [type]);
   const [dontShow, setDontShow] = useState<boolean>(false);
-  const show = useTabVisibility(tabId);
 
   // Use a ref to store the latest onAgree callback to prevent unnecessary effect triggers
   const onAgreeRef = useRef(onAgree);
@@ -72,63 +69,57 @@ export default function SecurityWarning({isOpen, onAgree, setIsOpen, type, title
   }, [setIsOpen]);
 
   return (
-    <Modal
-      size="2xl"
-      shadow="none"
-      isOpen={isOpen}
-      placement="center"
-      scrollBehavior="inside"
-      onOpenChange={setIsOpen}
-      classNames={{backdrop: `top-10! ${show}`, wrapper: `top-10! ${show}`}}
-      hideCloseButton>
-      <ModalContent className="overflow-hidden">
-        <ModalHeader className="bg-surface-secondary justify-center text-warning items-center gap-x-2">
+    <TabModal size="lg" isOpen={isOpen} onOpenChange={setIsOpen} dialogClassName="max-w-160!">
+      <Modal.CloseTrigger />
+      <Modal.Header>
+        <Modal.Heading className="justify-center text-warning items-center gap-x-2 flex-row flex">
           <ShieldWarning className="size-7" />
           <span>Security Notice</span>
-        </ModalHeader>
+        </Modal.Heading>
+      </Modal.Header>
 
-        <ModalBody className="py-6 scrollbar-hide leading-relaxed text-sm">
-          <p className="font-semibold text-success text-base">
-            LynxHub grants {type === 'extension' ? 'extensions' : 'modules'} full access, similar to standalone
-            applications, to maximize their potential.
-          </p>
+      <Modal.Body className="pt-4 scrollbar-hide flex flex-col gap-y-2 text-sm">
+        <p className="font-semibold text-success">
+          LynxHub grants plugins full access, similar to standalone applications, to maximize their potential.
+        </p>
+        <p>
           <p className="text-muted">
-            When an {type === 'extension' ? 'extension' : 'module'} is initially submitted, its code is reviewed for
-            security and potential vulnerabilities.
+            When a plugin is initially submitted, its code is reviewed for security and potential vulnerabilities.
             <br />
-            However, after the initial review, {type === 'extension' ? 'extensions' : 'modules'} can update their
-            functionality with commits, and developers can add any code they want.
+            However, after the initial review, plugins can update their functionality with commits, and developers can
+            add any code they want.
           </p>
           <p className="text-muted">
-            Please exercise caution and only install trusted {type === 'extension' ? 'extensions' : 'modules'}. LynxHub
-            is not responsible for vulnerabilities that may arise after the initial review and subsequent updates.
+            Please exercise caution and only install trusted plugins. LynxHub is not responsible for vulnerabilities
+            that may arise after the initial review and subsequent updates.
           </p>
-          <p className="text-warning text-base">
-            By clicking <span className="font-semibold text-accent">Agree</span>, you acknowledge and accept the
-            potential security implications of installing
-            <span className="font-semibold">{` "${title}" by "${owner}"`}</span>.
-          </p>
-        </ModalBody>
+        </p>
+        <p className="text-warning">
+          By clicking <span className="font-semibold text-accent">Agree</span>, you acknowledge and accept the potential
+          security implications of installing
+          <span className="font-semibold">{` "${title}" by "${owner}"`}</span>.
+        </p>
 
-        <ModalFooter className="bg-surface-secondary py-3 justify-between">
-          <Checkbox isSelected={dontShow} onChange={setDontShow}>
-            <Checkbox.Control>
-              <Checkbox.Indicator />
-            </Checkbox.Control>
-            <Checkbox.Content>
-              <Label>Do not show this message again</Label>
-            </Checkbox.Content>
-          </Checkbox>
-          <div className="flex gap-x-2">
-            <Button size="sm" variant="danger-soft" onPress={handleDecline}>
-              Decline
-            </Button>
-            <Button size="sm" variant="primary" onPress={handleAgree}>
-              Agree
-            </Button>
-          </div>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+        <Checkbox className="mt-4" variant="secondary" isSelected={dontShow} onChange={setDontShow}>
+          <Checkbox.Control>
+            <Checkbox.Indicator />
+          </Checkbox.Control>
+          <Checkbox.Content>
+            <Label className="cursor-pointer">Do not show this warning again</Label>
+          </Checkbox.Content>
+        </Checkbox>
+      </Modal.Body>
+
+      <Modal.Footer>
+        <div className="flex gap-x-2">
+          <Button size="sm" variant="danger-soft" onPress={handleDecline}>
+            Decline
+          </Button>
+          <Button size="sm" variant="primary" onPress={handleAgree}>
+            Agree
+          </Button>
+        </div>
+      </Modal.Footer>
+    </TabModal>
   );
 }

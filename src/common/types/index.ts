@@ -197,7 +197,7 @@ export type NotificationData = {
   buttons?: {
     title: string;
     destination: AvailablePageIDs | string;
-    color?: 'primary' | 'success' | 'secondary' | 'warning' | 'danger';
+    color?: ButtonProps['variant'];
   }[];
   icon?: string;
 };
