@@ -26,16 +26,16 @@ export default function DescriptionGrid({title, items, columns = 2, className, i
 
   return (
     <section
-      className={cn('rounded-3xl border border-foreground-100 bg-content1/80 px-4 py-4 shadow-xs sm:px-5', className)}>
+      className={cn(
+        'rounded-3xl border border-surface-secondary bg-surface-secondary/80 px-4 py-4 shadow-xs sm:px-5',
+        className,
+      )}>
       {title ? <h4 className="mb-4 text-base font-semibold text-foreground">{title}</h4> : null}
       <div className={cn('grid gap-3', columnClass[columns])}>
         {items.map(item => (
           <div
-            className={cn(
-              'min-w-0 rounded-3xl bg-foreground-100/70 dark:bg-foreground-100/70 px-3 py-3 space-y-1',
-              itemClassName,
-            )}
-            key={item.key}>
+            key={item.key}
+            className={cn('min-w-0 rounded-3xl bg-surface/70 dark:bg-surface/70 px-3 py-3 space-y-1', itemClassName)}>
             <div className="text-xs font-medium tracking-wide text-foreground-700">{item.label}</div>
             <div className="wrap-break-word text-sm font-medium text-foreground-500">{item.content}</div>
           </div>
