@@ -1,4 +1,3 @@
-import {HeroUIProvider as HeroProvider, ToastProvider} from '@heroui/react';
 import type {ReactNode} from 'react';
 
 import {useDocumentDarkMode} from './hooks';
@@ -16,10 +15,5 @@ interface SharedHeroUIProviderProps {
 export default function HeroUIProvider({children}: SharedHeroUIProviderProps) {
   const isDark = useDocumentDarkMode();
 
-  return (
-    <HeroProvider>
-      <ToastProvider />
-      <div className={`bg-background text-foreground ${isDark ? 'dark' : 'light'}`}>{children}</div>
-    </HeroProvider>
-  );
+  return <div className={`bg-background text-foreground ${isDark ? 'dark' : 'light'}`}>{children}</div>;
 }
