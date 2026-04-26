@@ -84,7 +84,7 @@ const CustomArgComp = memo(({title, description, list, setList, addItem, isAdded
         <div className="size-full flex justify-center mb-4">
           <div className="flex flex-col text-center">
             <span className="font-bold">{title}</span>
-            <span className="font-semibold text-foreground-500 text-xs">{description}</span>
+            <span className="font-semibold text-muted text-xs">{description}</span>
           </div>
           <Dropdown>
             <Button size="sm" variant="ghost" className="absolute right-3 top-3" isIconOnly>

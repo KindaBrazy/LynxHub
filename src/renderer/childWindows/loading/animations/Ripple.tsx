@@ -46,7 +46,7 @@ export const Ripple = React.memo(function Ripple({
                 animationDelay,
                 borderStyle,
                 borderWidth: '1px',
-                borderColor: `var(--foreground)`,
+                borderColor: `var(--muted)`,
                 top: '50%',
                 left: '50%',
                 transform: 'translate(-50%, -50%) scale(1)',

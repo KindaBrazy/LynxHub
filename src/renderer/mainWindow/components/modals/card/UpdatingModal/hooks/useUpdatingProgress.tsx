@@ -56,7 +56,7 @@ export function useUpdatingProgress() {
                   <span>{deletions}</span>
                 </div>
                 <div className="flex flex-col items-center gap-y-1 bg-surface-secondary rounded-2xl p-2 w-20">
-                  <LucideReplace className="size-4 text-primary" />
+                  <LucideReplace className="size-4 text-accent" />
                   <span>{changes}</span>
                 </div>
               </div>

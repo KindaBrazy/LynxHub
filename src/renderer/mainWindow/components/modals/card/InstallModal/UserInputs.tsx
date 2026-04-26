@@ -197,7 +197,7 @@ export default function UserInputs({inputElements, setResult, extensionElements}
               <div key={`${label}_div`} className="flex w-full flex-col gap-y-2">
                 <Label
                   key={`${label}_text`}
-                  className={`text-small ${isRequired ? 'after:content-["*"] after:text-red-500 after:ml-1' : ''}`}>
+                  className={`text-sm ${isRequired ? 'after:content-["*"] after:text-red-500 after:ml-1' : ''}`}>
                   {label}
                 </Label>
                 <Button
@@ -219,7 +219,7 @@ export default function UserInputs({inputElements, setResult, extensionElements}
               <div key={`${label}_div`} className="flex w-full flex-col gap-y-2">
                 <Label
                   key={`${label}_text`}
-                  className={`text-small ${isRequired ? 'after:content-["*"] after:text-red-500 after:ml-1' : ''}`}>
+                  className={`text-sm ${isRequired ? 'after:content-["*"] after:text-red-500 after:ml-1' : ''}`}>
                   {label}
                 </Label>
                 <Button

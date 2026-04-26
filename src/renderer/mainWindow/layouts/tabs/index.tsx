@@ -106,10 +106,7 @@ const TabsList = memo(() => {
               animate={{scale: 1, y: 0, x: 0, opacity: 1, transition: {duration: 0.25, ease: 'backOut'}}}>
               <TabItem tab={tab} isOrdering={isOrdering} />
               {index < localTabs.length - 1 && (
-                <Separator
-                  orientation="vertical"
-                  className={`mx-1 my-3 ${onFocus ? 'bg-foreground-400/30' : 'bg-foreground-400/10'}`}
-                />
+                <Separator orientation="vertical" className={`mx-1 my-3`} variant={onFocus ? 'tertiary' : 'default'} />
               )}
             </Reorder.Item>
           ))}

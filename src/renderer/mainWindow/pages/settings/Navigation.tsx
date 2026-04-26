@@ -139,7 +139,7 @@ export const GroupSection = ({title, items, danger = false}: GroupProps) => {
                 <motion.div
                   layoutId="setting_nav_indicator"
                   transition={{duration: 0.4, type: 'spring'}}
-                  className="absolute inset-0 z-0 bg-primary/50 rounded-full"
+                  className="absolute inset-0 z-0 bg-accent/50 rounded-full"
                 />
               )}
             </Button>

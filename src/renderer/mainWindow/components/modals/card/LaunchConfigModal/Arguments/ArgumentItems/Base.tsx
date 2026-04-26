@@ -47,8 +47,8 @@ export default function ArgumentItemBase({
       className="flex flex-row items-stretch size-full">
       <div
         className={
-          'w-5 active:cursor-grabbing cursor-grab text-foreground-500 hover:text-foreground-600 transition-all' +
-          ' duration-300 flex items-center justify-center dark:bg-foreground-50 bg-white rounded-l-3xl relative'
+          'w-5 active:cursor-grabbing cursor-grab text-muted/70 hover:text-muted transition-all' +
+          ' duration-300 flex items-center justify-center bg-surface rounded-l-3xl relative'
         }
         onPointerDown={e => controls.start(e)}>
         <GripVertical className="size-4" />
@@ -57,7 +57,7 @@ export default function ArgumentItemBase({
           className="absolute right-0 h-full bg-LynxWhiteSecond dark:bg-LynxRaisinBlack"
         />
       </div>
-      <LynxTooltip delay={1000} content={tooltipText} triggerClassName="w-full" isDisabled={!tooltipText}>
+      <LynxTooltip delay={700} content={tooltipText} triggerClassName="w-full" isDisabled={!tooltipText}>
         <Surface
           key={name}
           onClick={defaultCursor ? undefined : onClick}

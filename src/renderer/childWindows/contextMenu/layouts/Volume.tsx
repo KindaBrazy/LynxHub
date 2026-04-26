@@ -18,8 +18,8 @@ const VolumeMenu = memo(() => {
       {/* Header with title and mute button */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <VolumeLoud className="size-5 text-primary" />
-          <span className="text-sm font-semibold text-foreground-800">Volume Control</span>
+          <VolumeLoud className="size-5 text-muted" />
+          <span className="text-sm font-semibold text-muted">Volume Control</span>
         </div>
         <Button
           size="sm"
@@ -70,7 +70,7 @@ const VolumeMenu = memo(() => {
         </Slider>
 
         {/* Volume markers */}
-        <div className="flex justify-between px-1 text-tiny text-foreground-500">
+        <div className="flex justify-between px-1 text-xs text-foreground-500">
           {[0, 25, 50, 75, 100].map(val => (
             <button
               key={val}

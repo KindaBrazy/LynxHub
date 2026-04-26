@@ -116,9 +116,7 @@ export default function PathArgItem({type, icon, placeholder, argument, changeVa
           defaultValue={selectedValue !== placeholder ? selectedValue : undefined}
         />
       ) : (
-        <span className="text-xs dark:bg-LynxRaisinBlack bg-LynxWhiteThird p-2 rounded-medium block truncate">
-          {selectedValue}
-        </span>
+        <span className="text-xs bg-surface-secondary py-2 px-3 rounded-2xl block truncate">{selectedValue}</span>
       )}
     </ArgumentItemBase>
   );

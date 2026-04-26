@@ -22,7 +22,7 @@ function getStatus(index: number, current: number): 'complete' | 'current' | 'up
 function StepIndicator({status}: {status: 'complete' | 'current' | 'upcoming'}) {
   if (status === 'current') {
     return (
-      <div className="flex size-5 items-center justify-center rounded-full border border-primary/40 bg-primary/10">
+      <div className="flex size-5 items-center justify-center rounded-full border border-accent/40 bg-accent/10">
         <Spinner color="accent" className="flex" />
       </div>
     );

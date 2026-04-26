@@ -35,14 +35,13 @@ function ChangelogEntry({item, depth = 0, id}: ChangelogEntryProps) {
         <div className="flex items-start gap-x-2 group">
           <motion.div
             className={`size-2 rounded-full mt-1.5 shrink-0 transition-colors duration-200 group-hover:scale-110 ${
-              depth > 0 ? 'bg-foreground-400 group-hover:bg-foreground-500' : 'bg-primary group-hover:bg-primary-500'
+              depth > 0 ? 'bg-muted group-hover:bg-muted/70' : 'bg-accent group-hover:bg-accent-hover'
             }`}
             whileHover={{scale: 1.3}}
           />
           <span
             className={
-              'text-sm leading-relaxed text-foreground-700' +
-              ' group-hover:text-foreground-900 transition-colors duration-200'
+              'text-sm leading-relaxed transition-colors duration-200 text-foreground group-hover:text-foreground/80'
             }>
             {item}
           </span>
@@ -63,11 +62,11 @@ function ChangelogEntry({item, depth = 0, id}: ChangelogEntryProps) {
           <div className="flex items-start gap-x-2 group">
             <motion.div
               className={`size-2 rounded-full mt-1.5 shrink-0 transition-colors duration-200 group-hover:scale-110 ${
-                depth > 0 ? 'bg-foreground-400 group-hover:bg-foreground-500' : 'bg-primary group-hover:bg-primary-500'
+                depth > 0 ? 'bg-muted group-hover:bg-muted/70' : 'bg-accent group-hover:bg-accent-hover'
               }`}
               whileHover={{scale: 1.3}}
             />
-            <div className="text-sm font-semibold text-foreground-800 mb-1.5">{label}</div>
+            <div className="text-sm font-semibold text-foreground mb-1.5">{label}</div>
           </div>
           <div className="space-y-1">
             {subItems.map((subItem, index) => (
@@ -87,9 +86,9 @@ function CategoryGroup({category, entries}: {category: string; entries: Changelo
   return (
     <div>
       <div className="flex items-center gap-3 my-4">
-        <div className="h-px flex-1 bg-linear-to-r from-transparent via-foreground-200 to-transparent" />
+        <div className="h-px flex-1 bg-linear-to-r from-transparent via-muted/30 to-transparent" />
         <Chip>{category}</Chip>
-        <div className="h-px flex-1 bg-linear-to-r from-transparent via-foreground-200 to-transparent" />
+        <div className="h-px flex-1 bg-linear-to-r from-transparent via-muted/30 to-transparent" />
       </div>
       <div className="space-y-2">
         {entries.map((entry, index) => (
@@ -150,9 +149,7 @@ function VersionHistoryCard({versionData, index, isInstalledVersion, totalCount,
       <div
         className={`border shadow-sm hover:shadow-md bg-surface relative overflow-hidden 
         rounded-3xl px-4 py-4 mb-6 transition-all duration-300 ${
-          isLatest
-            ? 'border-secondary-200 hover:border-secondary-300'
-            : 'border-foreground-100 hover:border-foreground-200'
+          isLatest ? 'border-LynxPurple/50 hover:border-LynxPurple/70' : 'border-surface hover:border-surface-secondary'
         }`}>
         {/* Version markers (Latest, Current, Version Number) */}
         <div className="flex items-center gap-x-2 relative w-full justify-between">
@@ -192,12 +189,10 @@ function VersionHistoryCard({versionData, index, isInstalledVersion, totalCount,
       {/* Connecting line between version cards to represent a timeline */}
       {index < totalCount - 1 && (
         <motion.div
-          className={
-            'absolute left-6 top-full w-0.5 h-6 bg-linear-to-b ' + 'from-foreground-300 to-transparent origin-top'
-          }
           initial={{scaleY: 0}}
           animate={{scaleY: 1}}
           transition={{duration: 0.5, delay: index * 0.1 + 0.3}}
+          className={'absolute left-6 top-full w-0.5 h-6 bg-linear-to-b from-muted/60 to-transparent origin-top'}
         />
       )}
     </motion.div>

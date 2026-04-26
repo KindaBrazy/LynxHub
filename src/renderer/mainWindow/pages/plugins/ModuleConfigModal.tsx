@@ -213,7 +213,7 @@ export default function ModuleConfigModal({isOpen, onClose}: ModuleConfigModalPr
             <SettingsMinimalistic className="size-5" />
             <span>Module Configuration</span>
           </div>
-          <span className="text-small font-normal text-foreground-500">
+          <span className="text-sm font-normal text-foreground-500">
             Enable or disable individual AI tools. Disabled tools won't be loaded.
           </span>
         </Modal.Heading>
@@ -224,7 +224,7 @@ export default function ModuleConfigModal({isOpen, onClose}: ModuleConfigModalPr
         ) : (
           <div className="flex flex-col gap-4">
             <div className="flex items-center justify-between">
-              <span className="text-small text-foreground-500">
+              <span className="text-sm text-foreground-500">
                 {enabledCount} of {allAvailableCards.length} tools enabled
               </span>
               <div className="flex gap-2">

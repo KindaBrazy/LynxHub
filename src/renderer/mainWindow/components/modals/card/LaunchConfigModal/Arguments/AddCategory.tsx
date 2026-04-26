@@ -109,8 +109,8 @@ export default function ArgumentSelectionList({
               <Highlighter
                 searchWords={searchWords}
                 textToHighlight={item.description || ''}
+                className="text-wrap text-xs text-muted mt-0.5"
                 highlightClassName="bg-warning/40 rounded-sm px-0.5"
-                className="text-wrap text-xs text-foreground/50 mt-0.5"
                 autoEscape
               />
             </Description>

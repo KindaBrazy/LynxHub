@@ -179,7 +179,7 @@ export default function Clone({updateTable, visible, installedExtensions, dir}: 
                       <span className="mx-1 scale-85 opacity-75">by</span>
                       <span>{startCase(downloadBox.owner)}</span>
                     </div>
-                    <div className="text-small text-default-500">{downloadBox.url}</div>
+                    <div className="text-sm text-default-500">{downloadBox.url}</div>
                   </div>
                 )}
               </Card.Content>
