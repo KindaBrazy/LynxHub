@@ -1,4 +1,4 @@
-import {Button} from '@heroui/react';
+import {Button} from '@heroui-v3/react';
 import {motion} from 'framer-motion';
 import {Dispatch, SetStateAction, useMemo, useState} from 'react';
 
@@ -70,7 +70,7 @@ export default function StepSystemCheck({onNext, setInstalledPlugins, setRequire
       </div>
 
       <motion.div variants={itemVariants} className="flex justify-end items-center pt-6">
-        <Button color="primary" onPress={onNext} isDisabled={!canContinue}>
+        <Button onPress={onNext} isDisabled={!canContinue}>
           {continueButtonText}
         </Button>
       </motion.div>

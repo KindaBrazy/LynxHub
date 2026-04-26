@@ -1,4 +1,4 @@
-import {Button} from '@heroui/react';
+import {Button} from '@heroui-v3/react';
 import {APP_NAME} from '@lynx_common/consts';
 import {motion, Variants} from 'framer-motion';
 
@@ -26,7 +26,7 @@ export default function StepWelcome({onNext}: Props) {
         Thanks for installing {APP_NAME}! I'll walk you through a quick setup to check for necessary tools and
         extensions.
       </motion.p>
-      <Button size="lg" color="primary" onPress={onNext} className="font-semibold">
+      <Button size="lg" onPress={onNext} className="font-semibold w-34 h-12">
         Get Started
       </Button>
     </motion.div>

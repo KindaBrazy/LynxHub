@@ -74,7 +74,6 @@ const buildPreloadedState = (): PreloadState | undefined => {
       onFocus: true,
       navBar: true,
       appTitle: undefined,
-      toastPlacement: 'top-center' as const,
       initializer,
     },
     cards: {

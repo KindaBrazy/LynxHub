@@ -1,4 +1,4 @@
-import {Chip, Spinner} from '@heroui/react';
+import {Chip, Spinner} from '@heroui-v3/react';
 import {motion} from 'framer-motion';
 import {useMemo} from 'react';
 
@@ -30,23 +30,14 @@ export default function CheckRow({label, description, status}: Props) {
 
   return (
     <motion.div
-      className={
-        'flex items-center justify-between p-3 bg-white dark:bg-gray-900/50' +
-        ' rounded-lg border border-foreground-100'
-      }>
+      className={'flex items-center justify-between p-3 bg-surface rounded-3xl border border-surface-secondary'}>
       <div>
         <div className="font-medium text-gray-800 dark:text-gray-100">{label}</div>
         {description && <div className="text-xs text-gray-500 dark:text-gray-400">{description}</div>}
       </div>
 
-      <Chip
-        classNames={{
-          base: 'text-xs font-semibold',
-          content: 'flex items-center gap-1.5',
-        }}
-        color={color}
-        variant="flat"
-        startContent={isBusy && <Spinner size="sm" color="current" />}>
+      <Chip color={color} variant="soft" className="gap-x-1">
+        {isBusy && <Spinner size="sm" />}
         {labelText}
       </Chip>
     </motion.div>
