@@ -6,7 +6,6 @@ import {isEmpty} from 'lodash';
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {useTabVisibility} from '../../../../layouts/tabs/utils';
 import {topToast} from '../../../../layouts/ToastProviders';
 import {useCardsState} from '../../../../redux/reducers/cards';
 import {modalActions, useModalsState} from '../../../../redux/reducers/modals';
@@ -36,8 +35,6 @@ export const useUpdateApp = () => {
 
   const dispatch = useDispatch<AppDispatch>();
   const removeListener = useRef<(() => void) | null>(null);
-
-  const show = useTabVisibility(activeTab);
 
   const listenProgress = useCallback(() => {
     if (removeListener.current) removeListener.current();
@@ -188,6 +185,5 @@ export const useUpdateApp = () => {
     cancel,
     openDownloadPage,
     autoDownload,
-    show,
   };
 };

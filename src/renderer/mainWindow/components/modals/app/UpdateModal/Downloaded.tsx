@@ -1,4 +1,4 @@
-import {Button} from '@heroui/react';
+import {Button} from '@heroui-v3/react';
 import applicationIpc from '@lynx_shared/ipc/application';
 import {CheckCircle, ShieldCross} from '@solar-icons/react-perf/BoldDuotone';
 import {useCallback} from 'react';
@@ -7,6 +7,7 @@ import {useDispatch} from 'react-redux';
 import {topToast} from '../../../../layouts/ToastProviders';
 import {settingsActions} from '../../../../redux/reducers/settings';
 import {AppDispatch} from '../../../../redux/store';
+import EmptyStateCard from '../../../EmptyStateCard';
 
 type Props = {errMsg?: string; success: boolean; tryAgain: () => void; cancel: () => void; onClose: () => void};
 
@@ -26,39 +27,39 @@ export default function Downloaded({errMsg, success, tryAgain, cancel, onClose}:
   }, [onClose]);
 
   return (
-    <div className="flex w-full flex-col items-center justify-center gap-6 py-4 text-center">
+    <div className="flex w-full flex-col items-center justify-center gap-4 py-4 mt-2 text-center">
       {success ? (
-        <>
-          <CheckCircle className="size-20 text-success" />
-          <div className="flex flex-col gap-2">
-            <h2 className="text-xl font-bold">Update Successfully Downloaded</h2>
-            <p className="text-default-500">The update will be installed when you restart the application.</p>
-          </div>
-          <div className="flex gap-4">
-            <Button variant="flat" color="success" onPress={install}>
-              Restart Now
-            </Button>
-            <Button variant="flat" color="warning" onPress={installLater}>
-              Restart Later
-            </Button>
-          </div>
-        </>
+        <EmptyStateCard
+          action={
+            <div className="flex gap-4 mt-2">
+              <Button variant="secondary" onPress={installLater}>
+                Restart Later
+              </Button>
+              <Button onPress={install}>Restart Now</Button>
+            </div>
+          }
+          className="w-90"
+          variant="secondary"
+          title="Update Successfully Downloaded"
+          icon={<CheckCircle className="size-18 text-success" />}
+          description="The update will be installed when you restart the application."
+        />
       ) : (
-        <>
-          <ShieldCross className="size-20 text-danger" />
-          <div className="flex flex-col gap-2">
-            <h2 className="text-xl font-bold">Download Unsuccessful</h2>
-            <p className="text-default-500">{errMsg || 'An unknown error occurred.'}</p>
-          </div>
-          <div className="flex gap-4">
-            <Button variant="flat" color="success" onPress={tryAgain}>
-              Try Again
-            </Button>
-            <Button variant="flat" color="warning" onPress={cancel}>
-              Cancel
-            </Button>
-          </div>
-        </>
+        <EmptyStateCard
+          action={
+            <div className="flex gap-4 mt-2">
+              <Button onPress={cancel} variant="danger-soft">
+                Cancel
+              </Button>
+              <Button onPress={tryAgain}>Try Again</Button>
+            </div>
+          }
+          className="w-90"
+          variant="secondary"
+          title="Download Failed"
+          description={errMsg || 'An unknown error occurred.'}
+          icon={<ShieldCross className="size-18 text-danger" />}
+        />
       )}
     </div>
   );

@@ -1,6 +1,8 @@
-import {Progress} from '@heroui/react';
+import {ProgressBar} from '@heroui-v3/react';
 import {UpdateDownloadProgress} from '@lynx_common/types';
 import {formatSize} from '@lynx_common/utils';
+
+import DescriptionGrid from '../../../DescriptionGrid';
 
 type Props = {progress: UpdateDownloadProgress | undefined};
 
@@ -8,32 +10,27 @@ type Props = {progress: UpdateDownloadProgress | undefined};
 export default function Downloading({progress}: Props) {
   return (
     <div className="flex flex-col gap-6 py-4">
-      <Progress
-        size="lg"
-        color="secondary"
-        value={progress?.percent || 0}
-        aria-label="Download Progress"
-        showValueLabel
+      <ProgressBar size="lg" value={progress?.percent || 0} aria-label="Downloading update">
+        <ProgressBar.Output />
+        <ProgressBar.Track>
+          <ProgressBar.Fill />
+        </ProgressBar.Track>
+      </ProgressBar>
+
+      <DescriptionGrid
+        items={[
+          {key: 'percentage', content: `${Math.floor(progress?.percent || 0)}%`, label: 'Percentage'},
+          {
+            key: 'size',
+            content: `${formatSize(progress?.transferred)} / ${formatSize(progress?.total)}`,
+            label: 'Size',
+          },
+          {key: 'speed', content: `${formatSize(progress?.bytesPerSecond)}/s`, label: 'Speed'},
+        ]}
+        columns={3}
+        itemClassName="bg-surface"
+        className="bg-surface-secondary"
       />
-
-      <div className="grid grid-cols-3 gap-4 text-center">
-        <div className="flex flex-col gap-1">
-          <span className="text-small text-default-500">Percentage</span>
-          <span className="font-mono text-medium">{Math.floor(progress?.percent || 0)}%</span>
-        </div>
-
-        <div className="flex flex-col gap-1">
-          <span className="text-small text-default-500">Size</span>
-          <span className="font-mono text-medium">
-            {`${formatSize(progress?.transferred)} / ${formatSize(progress?.total)}`}
-          </span>
-        </div>
-
-        <div className="flex flex-col gap-1">
-          <span className="text-small text-default-500">Speed</span>
-          <span className="font-mono text-medium">{formatSize(progress?.bytesPerSecond)}/s</span>
-        </div>
-      </div>
     </div>
   );
 }
