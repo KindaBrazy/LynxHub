@@ -1,10 +1,14 @@
-import {Accordion, AccordionItem, Button, Card, CardBody, CardHeader} from '@heroui/react';
+import {Accordion, buttonVariants, Card, Chip, Link, Separator} from '@heroui-v3/react';
 import {APP_BUILD_NUMBER, APP_VERSION, RELEASES_PAGE} from '@lynx_common/consts';
 import {AppUpdateInfo} from '@lynx_common/types';
-import {SquareTopDown} from '@solar-icons/react-perf/BoldDuotone';
+import {ShieldCross} from '@solar-icons/react-perf/BoldDuotone';
+import {AltArrowDown, ArrowRight} from '@solar-icons/react-perf/Linear';
 import {isEmpty} from 'lodash';
 
 import {RenderSubItems} from '../../../../utils/hooks';
+import DescriptionGrid from '../../../DescriptionGrid';
+import EmptyStateCard from '../../../EmptyStateCard';
+import LynxScroll from '../../../LynxScroll';
 import {ReleaseNote} from './useUpdateApp';
 
 type Props = {
@@ -15,77 +19,102 @@ type Props = {
 /** Information and release notes about update */
 export default function Info({updateInfo, releaseNotes}: Props) {
   return (
-    <div className="flex w-full flex-col items-center gap-4">
-      <div className="grid w-full grid-cols-3 gap-4 border-b border-default-200 pb-4 text-center">
-        <div className="flex flex-col gap-1">
-          <span className="text-small text-default-500">Version</span>
-          <div className="flex justify-center gap-2 font-mono text-small">
-            <span>{APP_VERSION}</span>
-            <span className="text-default-300">{'->'}</span>
-            <span className="text-success">{updateInfo?.currentVersion}</span>
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-1">
-          <span className="text-small text-default-500">Build Number</span>
-          <div className="flex justify-center gap-2 font-mono text-small">
-            <span>{APP_BUILD_NUMBER}</span>
-            <span className="text-default-300">{'->'}</span>
-            <span className="text-success">{updateInfo?.currentBuild}</span>
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-1">
-          <span className="text-small text-default-500">Release Date</span>
-          <div className="font-mono text-small text-success">{updateInfo?.releaseDate}</div>
-        </div>
-      </div>
-
-      <Card shadow="sm" className="w-full bg-content1/50">
-        <CardHeader className="justify-center pb-0 pt-4">
-          <h4 className="font-bold text-large">Release Notes</h4>
-        </CardHeader>
-        <CardBody className="px-3 pb-3">
-          {isEmpty(releaseNotes) ? (
-            <div className="flex flex-col items-center gap-4 py-8">
-              <div className="flex flex-col items-center gap-2 text-default-500">
-                <span className="text-large">No notes found 😔</span>
+    <div className="flex w-full flex-col items-center gap-4 size-full">
+      <DescriptionGrid
+        items={[
+          {
+            key: 'version',
+            label: 'Version',
+            content: (
+              <div className="flex justify-center items-center gap-x-2">
+                <span>{APP_VERSION}</span>
+                <ArrowRight />
+                <span className="text-success font-semibold">{updateInfo?.currentVersion}</span>
               </div>
-              <Button
-                variant="flat"
-                color="primary"
-                endContent={<SquareTopDown />}
-                onPress={() => window.open(RELEASES_PAGE)}>
-                Releases Page
-              </Button>
-            </div>
-          ) : (
-            <Accordion variant="light" selectionMode="multiple">
-              {releaseNotes.map((note, index) => (
-                <AccordionItem
-                  classNames={{
-                    title: 'font-mono text-small',
-                  }}
-                  key={index}
-                  title={`Version ${note.version}`}
-                  aria-label={`Version ${note.version}`}>
-                  <div className="flex flex-col gap-4">
-                    {note.changes.map((change, changeIndex) => (
-                      <div key={changeIndex} className="flex flex-col gap-2">
-                        <div className="w-full border-b border-default-100 pb-1 text-small font-bold text-default-600">
-                          {change.title}
+            ),
+          },
+          {
+            key: 'buildNumber',
+            label: 'Build Number',
+            content: (
+              <div className="flex justify-center items-center gap-x-2">
+                <span>{APP_BUILD_NUMBER}</span>
+                <ArrowRight />
+                <span className="text-success font-semibold">{updateInfo?.currentBuild}</span>
+              </div>
+            ),
+          },
+          {
+            key: 'releaseDate',
+            label: 'Release Date',
+            content: <span className="text-success font-semibold">{updateInfo?.releaseDate}</span>,
+          },
+        ]}
+        columns={3}
+        itemClassName="bg-surface"
+        className="w-full bg-surface-secondary"
+      />
+
+      <Card variant="secondary" className="size-full">
+        <Card.Header className="flex-row items-center gap-x-2">
+          Release Notes
+          <Chip size="sm">{releaseNotes.length}</Chip>
+        </Card.Header>
+        <Card.Content className="size-full pb-8 pt-2">
+          <LynxScroll className="size-full pr-4 pl-2">
+            {isEmpty(releaseNotes) ? (
+              <EmptyStateCard
+                action={
+                  <Link onPress={() => window.open(RELEASES_PAGE)} className={buttonVariants({variant: 'secondary'})}>
+                    Releases Page
+                    <Link.Icon />
+                  </Link>
+                }
+                className="size-full"
+                title="Failed to fetch release notes"
+                icon={<ShieldCross className="size-14 text-warning-soft-foreground" />}
+              />
+            ) : (
+              <Accordion
+                variant="surface"
+                className="w-full"
+                onExpandedChange={console.log}
+                defaultExpandedKeys={[releaseNotes[0].version]}>
+                {releaseNotes.map((note, index) => (
+                  <Accordion.Item id={note.version} key={note.version}>
+                    <Accordion.Heading>
+                      <Accordion.Trigger>
+                        <span className="shrink-0 text-muted">Version {note.version}</span>
+                        <Accordion.Indicator>
+                          <AltArrowDown />
+                        </Accordion.Indicator>
+                      </Accordion.Trigger>
+                    </Accordion.Heading>
+                    <Accordion.Panel>
+                      <Accordion.Body>
+                        <div className="flex flex-col gap-4">
+                          {note.changes.map((change, changeIndex) => (
+                            <div
+                              key={changeIndex}
+                              className="flex flex-col gap-2 bg-surface-secondary/50 p-3 rounded-3xl">
+                              <div className={'w-full pb-1 text-small font-bold text-default-600'}>
+                                {change.title}
+                                <Separator className="mt-1" variant="default" />
+                              </div>
+                              <ul className="list-disc pl-4 text-small text-default-500">
+                                {RenderSubItems(change.items, `section_${index}_${changeIndex}`)}
+                              </ul>
+                            </div>
+                          ))}
                         </div>
-                        <ul className="list-disc pl-4 text-small text-default-500">
-                          {RenderSubItems(change.items, `section_${index}_${changeIndex}`)}
-                        </ul>
-                      </div>
-                    ))}
-                  </div>
-                </AccordionItem>
-              ))}
-            </Accordion>
-          )}
-        </CardBody>
+                      </Accordion.Body>
+                    </Accordion.Panel>
+                  </Accordion.Item>
+                ))}
+              </Accordion>
+            )}
+          </LynxScroll>
+        </Card.Content>
       </Card>
     </div>
   );
