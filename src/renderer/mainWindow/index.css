@@ -61,6 +61,10 @@
   --color-LynxPurple: oklch(0.581 0.299 307.027);
 }
 
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
 * {
   -webkit-user-select: none;
   -webkit-user-drag: none;
