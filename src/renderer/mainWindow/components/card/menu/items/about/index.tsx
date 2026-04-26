@@ -1,11 +1,4 @@
-import {DropdownItem} from '@heroui-v3/react';
-import {duplicateCard, removeDuplicatedCard} from '@lynx/plugins/modules';
-import {cardsActions, useCardsState} from '@lynx/redux/reducers/cards';
-import {useHotkeysState} from '@lynx/redux/reducers/hotkeys';
-import {modalActions} from '@lynx/redux/reducers/modals';
-import {useTabsState} from '@lynx/redux/reducers/tabs';
-import {AppDispatch} from '@lynx/redux/store';
-import {useInstalledCard} from '@lynx/utils/hooks';
+import {DropdownItem, UseOverlayStateReturn} from '@heroui-v3/react';
 import {extractGitUrl} from '@lynx_common/utils';
 import filesIpc from '@lynx_shared/ipc/files';
 import storageIpc from '@lynx_shared/ipc/storage';
@@ -14,8 +7,14 @@ import {Copy, FolderOpen, HomeAngle2, InfoSquare, SquareTopDown} from '@solar-ic
 import {useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {useTabModalManager} from '../../../modals/useTabModalManager';
-import {useCardStore} from '../../store';
+import {duplicateCard, removeDuplicatedCard} from '../../../../../plugins/modules';
+import {cardsActions, useCardsState} from '../../../../../redux/reducers/cards';
+import {useHotkeysState} from '../../../../../redux/reducers/hotkeys';
+import {modalActions} from '../../../../../redux/reducers/modals';
+import {useTabsState} from '../../../../../redux/reducers/tabs';
+import {AppDispatch} from '../../../../../redux/store';
+import {useInstalledCard} from '../../../../../utils/hooks';
+import {useCardStore} from '../../../store';
 
 /**
  * Menu item to show card information or open its folder.
@@ -68,13 +67,12 @@ export const AboutMenuItem = () => {
  * Menu item to open the card's homepage (repo URL) or readme.
  * Opens in browser if Ctrl is pressed.
  */
-export const HomePageMenuItem = () => {
+export function HomePageMenuItem({modal}: {modal: UseOverlayStateReturn}) {
   const repoUrl = useCardStore(state => state.repoUrl);
   const title = useCardStore(state => state.title);
   const setMenuIsOpen = useCardStore(state => state.setMenuIsOpen);
 
   const isCtrlPressed = useHotkeysState('isCtrlPressed');
-  const {openModal} = useTabModalManager();
 
   const onPress = useCallback(() => {
     AddBreadcrumb_Renderer(`Open AI HomePage: repoUrl:${repoUrl}, isCtrlPressed:${isCtrlPressed}`);
@@ -82,10 +80,10 @@ export const HomePageMenuItem = () => {
       window.open(repoUrl);
       setMenuIsOpen(false);
     } else {
-      openModal('readme', {url: repoUrl, title}, 'active');
+      modal.open();
       setMenuIsOpen(false);
     }
-  }, [setMenuIsOpen, repoUrl, title, isCtrlPressed, openModal]);
+  }, [setMenuIsOpen, repoUrl, title, isCtrlPressed]);
 
   return (
     <DropdownItem key="homepage" onPress={onPress}>
@@ -94,7 +92,7 @@ export const HomePageMenuItem = () => {
       {isCtrlPressed && <SquareTopDown className="size-3.5" />}
     </DropdownItem>
   );
-};
+}
 
 /**
  * Menu item to duplicate or remove a duplicate of the card.
