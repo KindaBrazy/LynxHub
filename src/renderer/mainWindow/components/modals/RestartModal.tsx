@@ -4,10 +4,10 @@ import applicationIpc from '@lynx_shared/ipc/application';
 import {Forward2, Restart, ShieldWarning} from '@solar-icons/react-perf/BoldDuotone';
 import {useDispatch} from 'react-redux';
 
-import {modalActions, useModalsState} from '../../../redux/reducers/modals';
-import {AppDispatch} from '../../../redux/store';
-import {isLinuxPortable} from '../../../utils/hooks';
-import TabModal from '../../TabModal';
+import {modalActions, useModalsState} from '../../redux/reducers/modals';
+import {AppDispatch} from '../../redux/store';
+import {isLinuxPortable} from '../../utils/hooks';
+import TabModal from '../TabModal';
 
 /**
  * Modal that prompts the user to restart the application or exit.

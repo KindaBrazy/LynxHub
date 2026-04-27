@@ -276,17 +276,6 @@ const modalSlice = createSlice({
       state.updateApp.isOpen = false;
     },
 
-    openWarning: state => {
-      state.warningModal.isOpen = true;
-    },
-    closeWarning: state => {
-      state.warningModal.isOpen = false;
-    },
-
-    setWarningContentId: (state, action: PayloadAction<ModalsState['warningModal']['contentId']>) => {
-      state.warningModal.contentId = action.payload;
-    },
-
     openRestartModal: (state, action: PayloadAction<{message: string}>) => {
       state.restartModal.isOpen = true;
       state.restartModal.message = action.payload.message;

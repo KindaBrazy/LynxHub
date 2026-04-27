@@ -12,7 +12,6 @@ import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {useTabModalManager} from '../modals/useTabModalManager';
 import {useCardStore} from './store';
 
 /**
@@ -20,7 +19,6 @@ import {useCardStore} from './store';
  */
 export const useCardActions = (state: UseOverlayStateReturn, setType: (type: 'install' | 'update') => void) => {
   const dispatch = useDispatch<AppDispatch>();
-  const {openModal} = useTabModalManager();
   const allMethods = useAllCardMethods();
 
   const id = useCardStore(state => state.id);
@@ -72,7 +70,7 @@ export const useCardActions = (state: UseOverlayStateReturn, setType: (type: 'in
       setType('install');
       state.open();
     }
-  }, [id, allMethods, openModal]);
+  }, [id, allMethods]);
 
   return {
     startAi,

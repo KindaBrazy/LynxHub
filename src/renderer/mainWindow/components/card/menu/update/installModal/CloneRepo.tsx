@@ -1,4 +1,4 @@
-import {Card, Link, ProgressBar} from '@heroui-v3/react';
+import {Card, Link, ProgressBar, useOverlayState} from '@heroui-v3/react';
 import {GitHub_Icon} from '@lynx_assets/icons';
 import {GitProgressCallback} from '@lynx_common/types/ipc';
 import {InitialStep} from '@lynx_common/types/plugins/modules';
@@ -8,17 +8,15 @@ import gitIpc from '@lynx_shared/ipc/git';
 import {Folder2} from '@solar-icons/react-perf/BoldDuotone';
 import {capitalize} from 'lodash';
 import {useEffect, useState} from 'react';
-import {useDispatch} from 'react-redux';
 import {SimpleGitProgressEvent} from 'simple-git';
 
-import {modalActions} from '../../../../../redux/reducers/modals';
-import {AppDispatch} from '../../../../../redux/store';
 import {initGitProgress} from '../../../../../utils/constants';
 import DescriptionGrid, {DescriptionGridItem} from '../../../../DescriptionGrid';
 import OpenDialog from '../../../../OpenDialog';
 import CloneOptions from './CloneOptions';
 import {renderAlerts} from './CustomAlert';
 import {InstallState} from './types';
+import WarningModal from './WarningModal';
 
 export type CloneOptionsResult = {
   branch: string;
@@ -48,7 +46,7 @@ export interface CloneRepoProps {
  * @param {CloneRepoProps} props - The component props.
  */
 export default function CloneRepo({url, start, done, isOpen, updateState, currentStep}: CloneRepoProps) {
-  const dispatch = useDispatch<AppDispatch>();
+  const warningModal = useOverlayState();
 
   const [cloneOptionsResult, setCloneOptionsResult] = useState<CloneOptionsResult>({
     depth: 1,
@@ -87,8 +85,7 @@ export default function CloneRepo({url, start, done, isOpen, updateState, curren
             setDownloadProgress(result as SimpleGitProgressEvent);
             break;
           case 'Failed':
-            dispatch(modalActions.setWarningContentId('CLONE_REPO'));
-            dispatch(modalActions.openWarning());
+            warningModal.open();
             setDownloading(false);
             updateState({startClone: false});
             break;
@@ -106,7 +103,7 @@ export default function CloneRepo({url, start, done, isOpen, updateState, curren
     } else {
       return () => {};
     }
-  }, [start, cloneOptionsResult, url, directory, isOpen, dispatch, done]);
+  }, [start, cloneOptionsResult, url, directory, isOpen, done]);
 
   return (
     <>
@@ -161,6 +158,7 @@ export default function CloneRepo({url, start, done, isOpen, updateState, curren
           {renderAlerts(currentStep)}
         </div>
       )}
+      <WarningModal state={warningModal} />
     </>
   );
 }
