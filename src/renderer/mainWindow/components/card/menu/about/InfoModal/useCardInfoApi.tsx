@@ -6,7 +6,7 @@ import storageIpc from '@lynx_shared/ipc/storage';
 import {isEmpty} from 'lodash';
 import {useEffect} from 'react';
 
-import {getCardMethod, useAllCardMethods} from '../../../../plugins/modules';
+import {getCardMethod, useAllCardMethods} from '../../../../../plugins/modules';
 
 export default function useCardInfoApi(
   cardId: string,

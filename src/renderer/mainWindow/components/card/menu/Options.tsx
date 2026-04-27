@@ -1,13 +1,13 @@
 import {DropdownItem} from '@heroui-v3/react';
-import {useGetInstallType} from '@lynx/plugins/modules';
-import {useInstalledCard} from '@lynx/utils/hooks';
 import {Extensions2_Icon, GitHub_Icon} from '@lynx_assets/icons';
 import {extractGitUrl} from '@lynx_common/utils';
 import {SettingsMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
 import {useCallback, useMemo} from 'react';
 
-import {useTabModalManager} from '../../../modals/useTabModalManager';
-import {useCardStore} from '../../store';
+import {useGetInstallType} from '../../../plugins/modules';
+import {useInstalledCard} from '../../../utils/hooks';
+import {useTabModalManager} from '../../modals/useTabModalManager';
+import {useCardStore} from '../store';
 
 /**
  * Menu item to open the launch configuration modal.

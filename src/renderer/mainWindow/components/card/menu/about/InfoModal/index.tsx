@@ -1,51 +1,46 @@
 import {Avatar, Description, Label, Link, Modal} from '@heroui-v3/react';
-import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import {CardInfoDescriptions} from '@lynx_common/types/plugins/modules';
 import {extractGitUrl, getCacheUrl, validateGitRepoUrl} from '@lynx_common/utils';
 import {useDebounceBreadcrumb} from '@lynx_shared/sentry/Breadcrumbs';
 import {Inbox} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty, startCase} from 'lodash';
-import {Fragment, useEffect, useMemo, useState} from 'react';
+import {useEffect, useMemo, useState} from 'react';
 
-import {extensionsData} from '../../../../plugins/extensions/loader';
-import {useModalsState} from '../../../../redux/reducers/modals';
-import {useInstalledCard} from '../../../../utils/hooks';
-import TabModal from '../../../TabModal';
-import {useTabModalLifecycle} from '../../useTabModalManager';
+import {extensionsData} from '../../../../../plugins/extensions/loader';
+import {useInstalledCard} from '../../../../../utils/hooks';
+import EmptyStateCard from '../../../../EmptyStateCard';
+import TabModal from '../../../../TabModal';
+import {useCardStore} from '../../../store';
+import {CommonProps} from '../types';
 import CardInfoDescription from './Description';
 import useCardInfoApi from './useCardInfoApi';
 
-interface CardInfoModalContentProps {
-  cardId: string;
-  isOpen: boolean;
-  devName: string;
-  url: string;
-  tabID: string;
-}
+const CardInfoModalContent = ({state}: CommonProps) => {
+  const cardId = useCardStore(st => st.id);
+  const url = useCardStore(st => st.repoUrl);
 
-const CardInfoModalContent = ({cardId, isOpen, devName, url, tabID}: CardInfoModalContentProps) => {
   const webUI = useInstalledCard(cardId);
 
   const [openFolders, setOpenFolders] = useState<string[] | undefined>(undefined);
   const [cardInfoDescriptions, setCardInfoDescriptions] = useState<CardInfoDescriptions>(undefined);
 
   useEffect(() => {
-    if (!isOpen) {
+    if (!state.isOpen) {
       setOpenFolders(undefined);
       setCardInfoDescriptions(undefined);
     }
-  }, [isOpen]);
+  }, [state.isOpen]);
 
-  const avatarUrl = useMemo(() => getCacheUrl(extractGitUrl(url).avatarUrl), [url]);
+  const {avatarUrl, devName} = useMemo(() => {
+    return {avatarUrl: getCacheUrl(extractGitUrl(url).avatarUrl), devName: extractGitUrl(url).owner};
+  }, [url]);
 
-  useDebounceBreadcrumb('Card Info Modal: ', [isOpen, cardId]);
+  useDebounceBreadcrumb('Card Info Modal: ', [state.isOpen, cardId]);
 
   useCardInfoApi(cardId, setOpenFolders, setCardInfoDescriptions, webUI?.dir);
 
-  const {onOpenChange} = useTabModalLifecycle('cardInfo', tabID);
-
   return (
-    <TabModal size="lg" isOpen={isOpen} onOpenChange={onOpenChange} dialogClassName="w-3xl! max-w-3xl!">
+    <TabModal size="lg" isOpen={state.isOpen} onOpenChange={state.setOpen} dialogClassName="w-3xl! max-w-3xl!">
       <Modal.CloseTrigger />
       <Modal.Header>
         <Modal.Heading>
@@ -88,20 +83,10 @@ const CardInfoModalContent = ({cardId, isOpen, devName, url, tabID}: CardInfoMod
   );
 };
 
-const CardInfoModal = () => {
+const CardInfoModal = (props: CommonProps) => {
   const CardInfo = useMemo(() => extensionsData.replaceModals.cardInfo, []);
 
-  const cardInfoModal = useModalsState('cardInfoModal');
-
-  return (
-    <>
-      {cardInfoModal.map(modal => (
-        <Fragment key={`${modal.tabID}_modal`}>
-          {CardInfo ? <CardInfo /> : <CardInfoModalContent {...modal} />}
-        </Fragment>
-      ))}
-    </>
-  );
+  return CardInfo ? <CardInfo /> : <CardInfoModalContent {...props} />;
 };
 
 export default CardInfoModal;

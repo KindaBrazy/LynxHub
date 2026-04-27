@@ -5,7 +5,6 @@ import {RestartModal} from './app/RestartModal';
 import UpdateApp from './app/UpdateModal';
 import CardExtensionsModal from './card/ExtensionsModal';
 import GitManagerModal from './card/GitModal';
-import CardInfoModal from './card/InfoModal';
 import InstallCardModal from './card/InstallModal';
 import LaunchConfigModal from './card/LaunchConfigModal';
 import UnassignCardComp from './card/UnassignModal';
@@ -29,7 +28,6 @@ const Modals = memo(() => {
       <UninstallCardComp />
       <UnassignCardComp />
       <InstallCardModal />
-      <CardInfoModal />
       <CardExtensionsModal />
       <LaunchConfigModal />
       <GitManagerModal />

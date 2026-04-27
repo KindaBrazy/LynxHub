@@ -1,22 +1,19 @@
-import {Avatar, Description, Label, Link, Modal, UseOverlayStateReturn} from '@heroui-v3/react';
+import {Avatar, Description, Label, Link, Modal} from '@heroui-v3/react';
 import {extractGitUrl, getCacheUrl} from '@lynx_common/utils';
 import {isEmpty, isNil} from 'lodash';
 import {memo, useMemo} from 'react';
 
-import {extensionsData} from '../../../../../plugins/extensions/loader';
-import MarkdownViewer from '../../../../MarkdownViewer';
-import TabModal from '../../../../TabModal';
-import {useCardStore} from '../../../store';
+import {extensionsData} from '../../../../plugins/extensions/loader';
+import MarkdownViewer from '../../../MarkdownViewer';
+import TabModal from '../../../TabModal';
+import {useCardStore} from '../../store';
+import {CommonProps} from './types';
 
-type Props = {
-  state: UseOverlayStateReturn;
-};
-
-const CardReadmeDialog = memo(({state}: Props) => {
+const CardReadmeDialog = memo(({state}: CommonProps) => {
   const ReplaceMd = useMemo(() => extensionsData.replaceMarkdownViewer, []);
 
-  const repoUrl = useCardStore(state => state.repoUrl);
-  const title = useCardStore(state => state.title);
+  const repoUrl = useCardStore(st => st.repoUrl);
+  const title = useCardStore(st => st.title);
 
   return (
     <TabModal isOpen={state.isOpen}>
@@ -52,7 +49,7 @@ const CardReadmeDialog = memo(({state}: Props) => {
   );
 });
 
-const ReadmeModal = (props: Props) => {
+const ReadmeModal = (props: CommonProps) => {
   const CardReadme = useMemo(() => extensionsData.replaceModals.cardReadme, []);
 
   return CardReadme ? <CardReadme /> : <CardReadmeDialog {...props} />;
