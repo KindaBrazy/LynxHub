@@ -71,7 +71,7 @@ export default function PluginList() {
   return (
     <Card
       className={
-        `absolute inset-y-4 sm:w-76 lg:w-[24rem] 2xl:w-120` +
+        `absolute inset-y-4 sm:w-76 lg:w-[24rem] 2xl:w-120 px-0 ` +
         ` flex shrink-0 flex-col overflow-hidden transition-[width] duration-500`
       }
       variant="secondary">
@@ -83,7 +83,7 @@ export default function PluginList() {
         </ProgressBar>
       )}
 
-      <Card.Header>
+      <Card.Header className="px-4">
         <div className="flex w-full flex-col gap-y-4">
           <div className="flex w-full flex-row items-center justify-between">
             <div className="flex gap-x-2 items-center">
@@ -105,7 +105,7 @@ export default function PluginList() {
         </div>
       </Card.Header>
 
-      <Card.Content>
+      <Card.Content className="size-full overflow-hidden px-1">
         <LynxScroll className="size-full space-y-2 px-3 pt-2">
           {loading ? (
             <div className="flex flex-col">
