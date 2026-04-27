@@ -1,10 +1,9 @@
 import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {memo, useMemo} from 'react';
 
-import {RestartModal} from './app/RestartModal';
-import UpdateApp from './app/UpdateModal';
-import UpdatingNotification from './card/UpdatingModal';
-import WarningModal from './notification/WarningModal';
+import {RestartModal} from './RestartModal';
+import UpdateApp from './updateApp';
+import UpdatingNotification from './updateCard';
 
 /**
  * Main Modals container component.
@@ -13,18 +12,16 @@ import WarningModal from './notification/WarningModal';
  */
 const Modals = memo(() => {
   // Use extension-provided components if available, otherwise fall back to default implementations
-  const {warning: Warning, updateApp: UApp} = useMemo(() => extensionsData.replaceModals, []);
+  const ReplaceUpdateApp = useMemo(() => extensionsData.replaceModals.updateApp, []);
 
   const addModal = useMemo(() => extensionsData.addModal, []);
 
   return (
     <>
       <RestartModal />
-
       <UpdatingNotification />
 
-      {Warning ? <Warning /> : <WarningModal />}
-      {UApp ? <UApp /> : <UpdateApp />}
+      {ReplaceUpdateApp ? <ReplaceUpdateApp /> : <UpdateApp />}
 
       {addModal.map((Modal, index) => (
         <Modal key={index} />

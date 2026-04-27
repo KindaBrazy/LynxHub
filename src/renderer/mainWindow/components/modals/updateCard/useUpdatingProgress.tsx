@@ -1,3 +1,4 @@
+import {UseOverlayStateReturn} from '@heroui-v3/react';
 import gitIpc from '@lynx_shared/ipc/git';
 import {Documents} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty} from 'lodash';
@@ -6,19 +7,20 @@ import {useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 import {PullResult} from 'simple-git';
 
-import {bottomToast} from '../../../../../layouts/ToastProviders';
-import {cardsActions, useCardsState} from '../../../../../redux/reducers/cards';
-import {modalActions} from '../../../../../redux/reducers/modals';
-import {useTabsState} from '../../../../../redux/reducers/tabs';
-import {AppDispatch} from '../../../../../redux/store';
+import {bottomToast} from '../../../layouts/ToastProviders';
+import {cardsActions, useCardsState} from '../../../redux/reducers/cards';
+import {AppDispatch} from '../../../redux/store';
 
 /**
  * Hook to listen for git update progress and show notifications.
  */
-export function useUpdatingProgress() {
+export function useUpdatingProgress(
+  modalState: UseOverlayStateReturn,
+  setTitle: (title: string) => void,
+  setDetails: (details: PullResult) => void,
+) {
   const updatingCards = useCardsState('updatingCards');
   const dispatch = useDispatch<AppDispatch>();
-  const activeTab = useTabsState('activeTab');
 
   useEffect(() => {
     if (isEmpty(updatingCards)) return;
@@ -70,13 +72,9 @@ export function useUpdatingProgress() {
               ),
               onPress: () => {
                 if ('summary' in progress) {
-                  dispatch(
-                    modalActions.openUpdateDetails({
-                      details: progress,
-                      title: `${card.title} (${card.devName}) Update Details.`,
-                      tabID: activeTab,
-                    }),
-                  );
+                  setDetails(progress);
+                  setTitle(`${card.title} (${card.devName}) Update Details.`);
+                  modalState.open();
                   if (toastID) bottomToast.close(toastID);
                 }
               },
@@ -89,5 +87,5 @@ export function useUpdatingProgress() {
     });
 
     return () => removeListener();
-  }, [updatingCards, dispatch, activeTab]);
+  }, [updatingCards, dispatch]);
 }

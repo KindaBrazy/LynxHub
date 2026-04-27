@@ -1,15 +1,13 @@
-import {Accordion, Chip, Modal, Table} from '@heroui-v3/react';
+import {Accordion, Chip, Modal, Table, UseOverlayStateReturn} from '@heroui-v3/react';
 import {AltArrowDown} from '@solar-icons/react-perf/Linear';
 import {isEmpty} from 'lodash';
 import {LucideReplace, Minus, Plus} from 'lucide-react';
 import {ReactNode, useCallback, useMemo} from 'react';
-import {useDispatch} from 'react-redux';
+import {PullResult} from 'simple-git';
 
-import {modalActions, useModalsState} from '../../../../redux/reducers/modals';
-import {AppDispatch} from '../../../../redux/store';
-import DescriptionGrid from '../../../DescriptionGrid';
-import LynxTooltip from '../../../LynxTooltip';
-import TabModal from '../../../TabModal';
+import DescriptionGrid from '../../DescriptionGrid';
+import LynxTooltip from '../../LynxTooltip';
+import TabModal from '../../TabModal';
 
 type DetailsRow = {
   key: number;
@@ -18,17 +16,12 @@ type DetailsRow = {
   deletions: number;
 }[];
 
+type Props = {details: PullResult; title: string; state: UseOverlayStateReturn};
+
 /**
  * Modal showing details and changes about updated card.
  */
-export default function UpdateDetails() {
-  const {details, isOpen, title} = useModalsState('updateDetails');
-  const dispatch = useDispatch<AppDispatch>();
-
-  const handleClose = useCallback(() => {
-    dispatch(modalActions.closeUpdateDetails());
-  }, [dispatch]);
-
+export default function UpdateDetails({state, details, title}: Props) {
   const rows = useMemo<DetailsRow>(() => {
     return details.files.map((file, index) => ({
       deletions: details.deletions[file] || 0,
@@ -55,8 +48,8 @@ export default function UpdateDetails() {
   }, []);
 
   return (
-    <TabModal isOpen={isOpen}>
-      <Modal.CloseTrigger onPress={handleClose} />
+    <TabModal isOpen={state.isOpen} onOpenChange={state.setOpen}>
+      <Modal.CloseTrigger />
 
       <Modal.Header>
         <Modal.Heading>{title || 'Update Details.'}</Modal.Heading>
