@@ -8,10 +8,13 @@ import {useCardStore} from '../store';
 import {AboutMenuItem, DuplicateMenuItem, HomePageMenuItem} from './about';
 import CardInfoModal from './about/infoModal';
 import ReadmeModal from './about/ReadmeModal';
-import {UnAssignMenuItem, UninstallMenuItem} from './dangerZone/DangerZone';
+import {UnAssignMenuItem, UninstallMenuItem} from './dangerZone';
 import UnassignModal from './dangerZone/UnassignModal';
 import UninstallModal from './dangerZone/UninstallModal';
-import {ExtensionsMenuItem, LaunchConfigMenuItem, RepoConfigMenuItem} from './Options';
+import {ExtensionsMenuItem, LaunchConfigMenuItem, RepoConfigMenuItem} from './options';
+import ExtensionsModal from './options/ExtensionsModal';
+import GitManagerModal from './options/GitModal';
+import LaunchConfigModal from './options/LaunchConfigModal';
 import {AutoUpdateMenuItem, CheckForUpdateMenuItem, UpdateMenuItem} from './Update';
 
 export const InstalledMenu = memo(() => {
@@ -36,6 +39,9 @@ export const InstalledMenu = memo(() => {
   const infoModal = useOverlayState();
   const unassignModal = useOverlayState();
   const uninstallModal = useOverlayState();
+  const launchConfigModal = useOverlayState();
+  const extensionsModal = useOverlayState();
+  const gitModal = useOverlayState();
 
   return (
     <>
@@ -53,9 +59,9 @@ export const InstalledMenu = memo(() => {
               return <Comp key={index} useCardStore={useCardStore} />;
             })}
             <Dropdown.Section>
-              <LaunchConfigMenuItem />
-              <ExtensionsMenuItem />
-              <RepoConfigMenuItem />
+              <LaunchConfigMenuItem state={launchConfigModal} />
+              <ExtensionsMenuItem state={extensionsModal} />
+              <RepoConfigMenuItem state={gitModal} />
             </Dropdown.Section>
 
             <Separator className="bg-surface-secondary/70" />
@@ -109,6 +115,9 @@ export const InstalledMenu = memo(() => {
       <CardInfoModal state={infoModal} />
       <UnassignModal state={unassignModal} />
       <UninstallModal state={uninstallModal} />
+      <LaunchConfigModal state={launchConfigModal} />
+      <ExtensionsModal state={extensionsModal} />
+      <GitManagerModal state={gitModal} />
     </>
   );
 });
