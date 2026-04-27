@@ -131,7 +131,17 @@ export default function AddArgumentModal({addArgumentsModal, chosenArguments, se
   const supportCustomArg = useSupportCustomArg(id);
 
   return (
-    <TabModal backdropVariant="transparent" isOpen={addArgumentsModal.isOpen} onOpenChange={addArgumentsModal.setOpen}>
+    <TabModal
+      onOpenChange={value => {
+        if (value) {
+          addArgumentsModal.open();
+        } else {
+          onClose();
+        }
+      }}
+      backdropVariant="transparent"
+      isOpen={addArgumentsModal.isOpen}>
+      <Modal.CloseTrigger />
       <Modal.Header className="flex flex-col gap-y-2">
         <div className="flex w-full flex-row space-x-2 items-center">
           <span className="font-bold">Add Argument</span>
@@ -261,9 +271,6 @@ export default function AddArgumentModal({addArgumentsModal, chosenArguments, se
         </LynxScroll>
       </Modal.Body>
       <Modal.Footer>
-        <Button onPress={onClose} variant="secondary">
-          Close
-        </Button>
         <Button onPress={onAdd} isDisabled={isEmpty(selectedArguments)}>
           <Plus className="size-4" />
           Add

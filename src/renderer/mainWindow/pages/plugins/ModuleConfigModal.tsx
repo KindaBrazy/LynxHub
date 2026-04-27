@@ -257,9 +257,6 @@ export default function ModuleConfigModal({isOpen, onClose}: ModuleConfigModalPr
         )}
       </Modal.Body>
       <Modal.Footer>
-        <Button onPress={onClose} variant="secondary">
-          Cancel
-        </Button>
         <Button isPending={saving} onPress={handleSave}>
           <Diskette />
           Save & Restart
