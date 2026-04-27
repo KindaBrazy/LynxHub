@@ -1,46 +1,36 @@
 import {Button, ButtonGroup, Modal} from '@heroui-v3/react';
-import {topToast} from '@lynx/layouts/ToastProviders';
 import filesIpc from '@lynx_shared/ipc/files';
 import moduleIpc from '@lynx_shared/ipc/plugins/module';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {ShieldCross} from '@solar-icons/react-perf/BoldDuotone';
-import {Fragment, memo, useCallback, useMemo} from 'react';
+import {memo, useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {extensionsData} from '../../../plugins/extensions/loader';
-import {useGetUninstallType} from '../../../plugins/modules';
-import {useModalsState} from '../../../redux/reducers/modals';
-import {AppDispatch} from '../../../redux/store';
-import {useInstalledCard} from '../../../utils/hooks';
-import TabModal from '../../TabModal';
-import {useTabModalLifecycle} from '../useTabModalManager';
+import {topToast} from '../../../../layouts/ToastProviders';
+import {extensionsData} from '../../../../plugins/extensions/loader';
+import {useGetUninstallType} from '../../../../plugins/modules';
+import {AppDispatch} from '../../../../redux/store';
+import {useInstalledCard} from '../../../../utils/hooks';
+import TabModal from '../../../TabModal';
+import {useCardStore} from '../../store';
+import {CommonProps} from '../about/types';
 
-type Props = {
-  cardId: string;
-  isOpen: boolean;
-  tabID: string;
-};
+const UninstallDialog = memo(({state}: CommonProps) => {
+  const id = useCardStore(st => st.id);
 
-const UninstallDialog = memo(({cardId, isOpen, tabID}: Props) => {
-  const card = useInstalledCard(cardId);
+  const card = useInstalledCard(id);
   const dispatch = useDispatch<AppDispatch>();
-  const uninstallType = useGetUninstallType(cardId);
-
-  const {onOpenChange} = useTabModalLifecycle('cardUninstall', tabID);
-
-  const closeHandle = useCallback(() => {
-    onOpenChange(false);
-  }, [onOpenChange]);
+  const uninstallType = useGetUninstallType(id);
 
   const uninstallHandle = useCallback(
     (type: 'removeDir' | 'trashDir') => {
       if (card) {
-        closeHandle();
+        state.close();
 
         const promise = new Promise<void>((resolve, reject) => {
           filesIpc[type](card.dir!)
             .then(() => {
-              storageUtilsIpc.send.removeInstalledCard(cardId);
+              storageUtilsIpc.send.removeInstalledCard(id);
               resolve();
             })
             .catch(reject);
@@ -54,20 +44,20 @@ const UninstallDialog = memo(({cardId, isOpen, tabID}: Props) => {
         });
       }
     },
-    [card, cardId, closeHandle, dispatch],
+    [card, id, state, dispatch],
   );
 
   const remove = useCallback(() => uninstallHandle('removeDir'), [uninstallHandle]);
   const trash = useCallback(() => uninstallHandle('trashDir'), [uninstallHandle]);
 
   const uninstall = useCallback(() => {
-    closeHandle();
+    state.close();
 
     const promise = new Promise<void>((resolve, reject) => {
       moduleIpc
-        .uninstallCardByID(cardId)
+        .uninstallCardByID(id)
         .then(() => {
-          storageUtilsIpc.send.removeInstalledCard(cardId);
+          storageUtilsIpc.send.removeInstalledCard(id);
           resolve();
         })
         .catch(reject);
@@ -78,10 +68,10 @@ const UninstallDialog = memo(({cardId, isOpen, tabID}: Props) => {
       success: 'Uninstalled successfully.',
       error: 'An error occurred while uninstalling.',
     });
-  }, [cardId, closeHandle, dispatch]);
+  }, [id, state, dispatch]);
 
   return (
-    <TabModal size="lg" isOpen={isOpen}>
+    <TabModal size="lg" isOpen={state.isOpen}>
       <Modal.Header>
         <Modal.Heading className="items-center gap-x-2 flex">
           <ShieldCross className="text-danger size-7" />
@@ -94,7 +84,7 @@ const UninstallDialog = memo(({cardId, isOpen, tabID}: Props) => {
       </Modal.Body>
       <Modal.Footer>
         <ButtonGroup size="sm" fullWidth>
-          <Button className="flex-1" onPress={closeHandle}>
+          <Button className="flex-1" onPress={state.close}>
             Cancel
           </Button>
           {uninstallType === 'removeFolder' ? (
@@ -117,17 +107,10 @@ const UninstallDialog = memo(({cardId, isOpen, tabID}: Props) => {
   );
 });
 
-const UninstallModal = () => {
+const UninstallModal = (props: CommonProps) => {
   const Uninstall = useMemo(() => extensionsData.replaceModals.uninstallCard, []);
-  const cardUninstallModal = useModalsState('cardUninstallModal');
 
-  return (
-    <>
-      {cardUninstallModal.map(modal => (
-        <Fragment key={`${modal.tabID}_modal`}>{Uninstall ? <Uninstall /> : <UninstallDialog {...modal} />}</Fragment>
-      ))}
-    </>
-  );
+  return Uninstall ? <Uninstall /> : <UninstallDialog {...props} />;
 };
 
 export default UninstallModal;
