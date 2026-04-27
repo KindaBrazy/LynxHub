@@ -8,6 +8,7 @@ import {useCardStore} from '../store';
 import {AboutMenuItem, DuplicateMenuItem, HomePageMenuItem} from './about';
 import CardInfoModal from './about/infoModal';
 import ReadmeModal from './about/ReadmeModal';
+import {CommonProps} from './about/types';
 import {UnAssignMenuItem, UninstallMenuItem} from './dangerZone';
 import UnassignModal from './dangerZone/UnassignModal';
 import UninstallModal from './dangerZone/UninstallModal';
@@ -15,9 +16,9 @@ import {ExtensionsMenuItem, LaunchConfigMenuItem, RepoConfigMenuItem} from './op
 import ExtensionsModal from './options/ExtensionsModal';
 import GitManagerModal from './options/GitModal';
 import LaunchConfigModal from './options/LaunchConfigModal';
-import {AutoUpdateMenuItem, CheckForUpdateMenuItem, UpdateMenuItem} from './Update';
+import {AutoUpdateMenuItem, CheckForUpdateMenuItem, UpdateMenuItem} from './update';
 
-export const InstalledMenu = memo(() => {
+export const InstalledMenu = memo(({setType, state}: {setType: (type: 'install' | 'update') => void} & CommonProps) => {
   const id = useCardStore(state => state.id);
   const setMenuIsOpen = useCardStore(state => state.setMenuIsOpen);
   const menuIsOpen = useCardStore(state => state.menuIsOpen);
@@ -70,7 +71,7 @@ export const InstalledMenu = memo(() => {
               return <Comp key={index} useCardStore={useCardStore} />;
             })}
             <Dropdown.Section>
-              <UpdateMenuItem />
+              <UpdateMenuItem state={state} setType={setType} />
               <CheckForUpdateMenuItem />
               <AutoUpdateMenuItem />
             </Dropdown.Section>

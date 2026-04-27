@@ -9,7 +9,7 @@ import {CheckRead} from '@solar-icons/react-perf/LineDuotone';
 import {X} from 'lucide-react';
 import {memo, RefObject, useCallback, useState} from 'react';
 
-import {XTermAPI} from '../../../useXTerm';
+import {XTermAPI} from '../../../../useXTerm';
 import LocateWarning from './LocateWarning';
 import FooterTerminal from './TerminalStepFooter';
 import {InstallState} from './types';

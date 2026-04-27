@@ -3,7 +3,6 @@ import {memo, useMemo} from 'react';
 
 import {RestartModal} from './app/RestartModal';
 import UpdateApp from './app/UpdateModal';
-import InstallCardModal from './card/InstallModal';
 import UpdatingNotification from './card/UpdatingModal';
 import WarningModal from './notification/WarningModal';
 
@@ -20,7 +19,6 @@ const Modals = memo(() => {
 
   return (
     <>
-      <InstallCardModal />
       <RestartModal />
 
       <UpdatingNotification />

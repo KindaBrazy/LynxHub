@@ -4,7 +4,7 @@ import {ArrowRight, Restart} from '@solar-icons/react-perf/BoldDuotone';
 import {CheckRead} from '@solar-icons/react-perf/LineDuotone';
 import {RefObject, useEffect, useState} from 'react';
 
-import {XTermAPI} from '../../../useXTerm';
+import {XTermAPI} from '../../../../useXTerm';
 
 export interface FooterTerminalProps {
   /** A ref containing a function to trigger a terminal restart. */

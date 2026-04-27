@@ -10,18 +10,18 @@ import {
 import ptyIpc from '@lynx_shared/ipc/pty';
 import utilsIpc from '@lynx_shared/ipc/utils';
 import {isEmpty, isNil} from 'lodash';
-import {Fragment, memo, useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {extensionsData} from '../../../../plugins/extensions/loader';
-import {getCardMethod, useAllCardMethods} from '../../../../plugins/modules';
-import {cardsActions} from '../../../../redux/reducers/cards';
-import {useModalsState} from '../../../../redux/reducers/modals';
-import {AppDispatch} from '../../../../redux/store';
-import {useInstalledCard} from '../../../../utils/hooks';
-import TabModal from '../../../TabModal';
-import {XTermAPI} from '../../../useXTerm';
-import {useTabModalLifecycle} from '../../useTabModalManager';
+import {extensionsData} from '../../../../../plugins/extensions/loader';
+import {getCardMethod, useAllCardMethods} from '../../../../../plugins/modules';
+import {cardsActions} from '../../../../../redux/reducers/cards';
+import {AppDispatch} from '../../../../../redux/store';
+import {useInstalledCard} from '../../../../../utils/hooks';
+import TabModal from '../../../../TabModal';
+import {XTermAPI} from '../../../../useXTerm';
+import {useCardStore} from '../../../store';
+import {CommonProps} from '../../about/types';
 import InstallBody from './Body';
 import InstallFooter from './Footer';
 import InstallHeader from './Header';
@@ -56,6 +56,8 @@ export interface InstallModalProps {
   tabID: string;
 }
 
+type Props = {type: 'install' | 'update'} & CommonProps;
+
 /**
  * The main container mapping internal states, Redux, and IPC callbacks to construct the
  * installation wizard for LynxHub extensions and cards.
@@ -63,7 +65,10 @@ export interface InstallModalProps {
  *
  * @param {InstallModalProps} props - The component props.
  */
-const InstallModal = memo(({isOpen, cardId, title, type, tabID}: InstallModalProps) => {
+const InstallModal = memo(({state: modalState, type}: Props) => {
+  const cardId = useCardStore(st => st.id);
+  const title = useCardStore(st => st.title);
+
   const installedCard = useInstalledCard(cardId);
   const allMethods = useAllCardMethods();
 
@@ -187,18 +192,16 @@ const InstallModal = memo(({isOpen, cardId, title, type, tabID}: InstallModalPro
   });
 
   useEffect(() => {
-    if (isOpen && methods && stepper) {
+    if (modalState.isOpen && methods && stepper) {
       if (type === 'install') {
         methods.startInstall(stepper);
       } else {
         methods.updater.startUpdate?.(stepper, installedCard!.dir);
       }
     }
-  }, [isOpen, methods, stepper, type]);
+  }, [modalState.isOpen, methods, stepper, type]);
 
   // -----------------------------------------------> Handle UI
-  const {onOpenChange} = useTabModalLifecycle('installUI', tabID);
-
   useEffect(() => {
     return () => {
       removeProgressListener.current?.();
@@ -214,8 +217,8 @@ const InstallModal = memo(({isOpen, cardId, title, type, tabID}: InstallModalPro
     updateState(initialState);
     setCurrentStep(0);
     setSteps([]);
-    onOpenChange(false);
-  }, [updateState, state, cardId, onOpenChange]);
+    modalState.close();
+  }, [updateState, state, cardId, modalState]);
 
   const nextStep = useCallback(() => stepper.nextStep(), [stepper]);
 
@@ -224,19 +227,19 @@ const InstallModal = memo(({isOpen, cardId, title, type, tabID}: InstallModalPro
 
   return (
     <TabModal
-      isOpen={isOpen}
       backdropVariant="blur"
-      onOpenChange={onOpenChange}
+      isOpen={modalState.isOpen}
+      onOpenChange={modalState.setOpen}
       dialogClassName="h-fit! max-h-full! w-fit! min-w-3xl!"
       containerClassName={`${state.body === 'terminal' && 'max-w-full!'} w-fit! h-fit! max-w-4xl!`}>
       <InstallHeader steps={steps} currentStep={currentStep} />
       <InstallBody
         title={title}
         state={state}
-        isOpen={isOpen}
         cardId={cardId}
         xtermRef={xtermRef}
         updateState={updateState}
+        isOpen={modalState.isOpen}
         progressInfo={progressInfo}
         cloneResolver={cloneResolver}
         currentStep={steps[currentStep]}
@@ -267,18 +270,12 @@ const InstallModal = memo(({isOpen, cardId, title, type, tabID}: InstallModalPro
   );
 });
 
-const InstallCardModal = () => {
+const InstallCardModal = ({state, type}: Props) => {
   const InstallUI = useMemo(() => extensionsData.replaceModals.installUi, []);
 
-  const installUIModal = useModalsState('installUIModal');
+  if (!state.isOpen) return null;
 
-  return (
-    <>
-      {installUIModal.map(modal => (
-        <Fragment key={`${modal.tabID}_modal`}>{InstallUI ? <InstallUI /> : <InstallModal {...modal} />}</Fragment>
-      ))}
-    </>
-  );
+  return InstallUI ? <InstallUI /> : <InstallModal type={type} state={state} />;
 };
 
 export default InstallCardModal;

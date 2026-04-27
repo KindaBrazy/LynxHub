@@ -7,7 +7,7 @@ import storageIpc, {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import utilsIpc from '@lynx_shared/ipc/utils';
 import {Dispatch, FC, SetStateAction} from 'react';
 
-import {extensionRendererApi} from '../../../../plugins/extensions/loader';
+import {extensionRendererApi} from '../../../../../plugins/extensions/loader';
 import {InstallState} from './types';
 
 export interface InstallStepperData {

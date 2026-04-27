@@ -1,5 +1,4 @@
 import {Card, Link, ProgressBar} from '@heroui-v3/react';
-import DescriptionGrid, {DescriptionGridItem} from '@lynx/components/DescriptionGrid';
 import {GitHub_Icon} from '@lynx_assets/icons';
 import {GitProgressCallback} from '@lynx_common/types/ipc';
 import {InitialStep} from '@lynx_common/types/plugins/modules';
@@ -12,10 +11,11 @@ import {useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 import {SimpleGitProgressEvent} from 'simple-git';
 
-import {modalActions} from '../../../../redux/reducers/modals';
-import {AppDispatch} from '../../../../redux/store';
-import {initGitProgress} from '../../../../utils/constants';
-import OpenDialog from '../../../OpenDialog';
+import {modalActions} from '../../../../../redux/reducers/modals';
+import {AppDispatch} from '../../../../../redux/store';
+import {initGitProgress} from '../../../../../utils/constants';
+import DescriptionGrid, {DescriptionGridItem} from '../../../../DescriptionGrid';
+import OpenDialog from '../../../../OpenDialog';
 import CloneOptions from './CloneOptions';
 import {renderAlerts} from './CustomAlert';
 import {InstallState} from './types';

@@ -1,6 +1,6 @@
 import {RefObject} from 'react';
 
-import XTermCore, {XTermAPI} from '../../../XTermCore';
+import XTermCore, {XTermAPI} from '../../../../XTermCore';
 
 export interface TerminalStepProps {
   /** The unique identifier of the card/process for attaching the terminal. */

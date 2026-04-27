@@ -1,4 +1,4 @@
-import {Button, CardFooter} from '@heroui-v3/react';
+import {Button, CardFooter, UseOverlayStateReturn} from '@heroui-v3/react';
 import ShinyText from '@lynx/components/ShinyText';
 import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {useAppState} from '@lynx/redux/reducers/app';
@@ -25,13 +25,15 @@ type Props = {
   updating: boolean;
   updateCount: string;
   id: string;
+  setType: (type: 'install' | 'update') => void;
+  state: UseOverlayStateReturn;
 };
 
 /**
  * Footer component for the Card.
  * Displays actions like Pin, Play, Download, and status text.
  */
-const Footer = memo(({isRunning, updatingExtensions, updating, updateCount, id}: Props) => {
+const Footer = memo(({isRunning, updatingExtensions, updating, updateCount, id, setType, state}: Props) => {
   const darkMode = useAppState('darkMode');
 
   const isInstalled = useCardStore(state => state.installed);
@@ -63,7 +65,7 @@ const Footer = memo(({isRunning, updatingExtensions, updating, updateCount, id}:
             ReplaceMenu ? (
               <ReplaceMenu useCardStore={useCardStore} />
             ) : (
-              <InstalledMenu />
+              <InstalledMenu state={state} setType={setType} />
             )
           ) : (
             <UninstalledMenu />

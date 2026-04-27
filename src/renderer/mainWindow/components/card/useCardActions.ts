@@ -1,3 +1,4 @@
+import {UseOverlayStateReturn} from '@heroui-v3/react';
 import {extensionRendererApi} from '@lynx/plugins/extensions/loader';
 import {getCardMethod, useAllCardMethods} from '@lynx/plugins/modules';
 import {cardsActions, useCardsState} from '@lynx/redux/reducers/cards';
@@ -17,13 +18,12 @@ import {useCardStore} from './store';
 /**
  * Custom hook to handle card actions like starting, installing, and updating.
  */
-export const useCardActions = () => {
+export const useCardActions = (state: UseOverlayStateReturn, setType: (type: 'install' | 'update') => void) => {
   const dispatch = useDispatch<AppDispatch>();
   const {openModal} = useTabModalManager();
   const allMethods = useAllCardMethods();
 
   const id = useCardStore(state => state.id);
-  const title = useCardStore(state => state.title);
   const extensionsDir = useCardStore(state => state.extensionsDir);
 
   const activeTab = useTabsState('activeTab');
@@ -69,9 +69,10 @@ export const useCardActions = () => {
     AddBreadcrumb_Renderer(`Start Installing AI: id:${id}`);
     if (getCardMethod(allMethods, id, 'manager')) {
       extensionRendererApi.events.emit('before_card_install', {id});
-      openModal('installUI', {cardId: id, type: 'install', title}, 'active');
+      setType('install');
+      state.open();
     }
-  }, [title, id, allMethods, openModal]);
+  }, [id, allMethods, openModal]);
 
   return {
     startAi,
