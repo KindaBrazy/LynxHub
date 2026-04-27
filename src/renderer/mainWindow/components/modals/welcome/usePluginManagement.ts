@@ -1,3 +1,4 @@
+import {topToast} from '@lynx/layouts/ToastProviders';
 import {MAIN_MODULE_URL} from '@lynx_common/consts';
 import {extractGitUrl} from '@lynx_common/utils';
 import {getPluginIconUrl} from '@lynx_common/utils/plugins';
@@ -5,7 +6,6 @@ import pluginsIpc from '@lynx_shared/ipc/plugins';
 import {compact, isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 
-import {topToast} from '../../../../layouts/ToastProviders';
 import {ExtensionItem} from './types';
 
 export function useAvailablePlugins() {

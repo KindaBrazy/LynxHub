@@ -1,3 +1,4 @@
+import {UseOverlayStateReturn} from '@heroui-v3/react';
 import {APP_BUILD_NUMBER, EARLY_RELEASES_PAGE, INSIDER_RELEASES_PAGE, RELEASES_PAGE} from '@lynx_common/consts';
 import {AppUpdateInfo, Changelog, UpdateDownloadProgress} from '@lynx_common/types';
 import applicationIpc from '@lynx_shared/ipc/application';
@@ -8,7 +9,6 @@ import {useDispatch} from 'react-redux';
 
 import {topToast} from '../../../layouts/ToastProviders';
 import {useCardsState} from '../../../redux/reducers/cards';
-import {modalActions, useModalsState} from '../../../redux/reducers/modals';
 import {settingsActions, useSettingsState} from '../../../redux/reducers/settings';
 import {useTabsState} from '../../../redux/reducers/tabs';
 import {useUserState} from '../../../redux/reducers/user';
@@ -19,8 +19,7 @@ export type ReleaseNote = {
   changes: Changelog[];
 };
 
-export const useUpdateApp = () => {
-  const {isOpen} = useModalsState('updateApp');
+export const useUpdateApp = (state: UseOverlayStateReturn) => {
   const activeTab = useTabsState('activeTab');
   const runningCard = useCardsState('runningCard');
   const checkCustomUpdate = useSettingsState('checkCustomUpdate');
@@ -45,9 +44,7 @@ export const useUpdateApp = () => {
           dispatch(settingsActions.setSettingsState({key: 'updateAvailable', value: true}));
           topToast.info('New Update Available!');
           const isRunningAI = runningCard.some(card => card.tabId === activeTab);
-          if (!isRunningAI) {
-            dispatch(modalActions.openUpdateApp());
-          }
+          if (!isRunningAI) state.open();
           break;
         }
         case 'download-progress': {
@@ -72,10 +69,6 @@ export const useUpdateApp = () => {
     return () => removeListener.current?.();
   }, [dispatch, runningCard, activeTab]);
 
-  const onClose = useCallback(() => {
-    dispatch(modalActions.closeUpdateApp());
-  }, [dispatch]);
-
   const cancel = useCallback(() => {
     setDownloadState(undefined);
   }, []);
@@ -97,8 +90,8 @@ export const useUpdateApp = () => {
     const isEA = updateChannel === 'early_access';
     const isInsider = updateChannel === 'insider';
     window.open(isInsider ? INSIDER_RELEASES_PAGE : isEA ? EARLY_RELEASES_PAGE : RELEASES_PAGE);
-    dispatch(modalActions.closeUpdateApp());
-  }, [dispatch, updateChannel]);
+    state.close();
+  }, [state]);
 
   useEffect(() => {
     return () => {
@@ -150,10 +143,10 @@ export const useUpdateApp = () => {
       }
     }
 
-    if (isOpen) {
+    if (state.isOpen) {
       fetchData();
     }
-  }, [isOpen, updateChannel, listenProgress]);
+  }, [state.isOpen, updateChannel, listenProgress]);
 
   const title = useMemo(() => {
     switch (downloadState) {
@@ -171,8 +164,6 @@ export const useUpdateApp = () => {
   const autoDownload = checkCustomUpdate || !!window.isPortable;
 
   return {
-    isOpen,
-    onClose,
     title,
     downloadState,
     downloadProgress,
