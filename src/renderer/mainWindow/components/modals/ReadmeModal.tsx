@@ -3,17 +3,15 @@ import {extractGitUrl, getCacheUrl} from '@lynx_common/utils';
 import {isEmpty, isNil} from 'lodash';
 import {memo, useMemo} from 'react';
 
-import {extensionsData} from '../../../../plugins/extensions/loader';
-import MarkdownViewer from '../../../MarkdownViewer';
-import TabModal from '../../../TabModal';
-import {useCardStore} from '../../store';
-import {CommonProps} from './types';
+import {extensionsData} from '../../plugins/extensions/loader';
+import {CommonProps} from '../card/menu/about/types';
+import MarkdownViewer from '../MarkdownViewer';
+import TabModal from '../TabModal';
 
-const CardReadmeDialog = memo(({state}: CommonProps) => {
+type Props = {url: string; title: string} & CommonProps;
+
+const CardReadmeDialog = memo(({state, url, title}: Props) => {
   const ReplaceMd = useMemo(() => extensionsData.replaceMarkdownViewer, []);
-
-  const repoUrl = useCardStore(st => st.repoUrl);
-  const title = useCardStore(st => st.title);
 
   return (
     <TabModal isOpen={state.isOpen}>
@@ -22,14 +20,14 @@ const CardReadmeDialog = memo(({state}: CommonProps) => {
         <Modal.Heading className={'justify-center overflow-hidden'}>
           <div className="inline-flex items-center gap-2">
             <Avatar>
-              <Avatar.Image alt={title} src={getCacheUrl(extractGitUrl(repoUrl).avatarUrl)} />
+              <Avatar.Image alt={title} src={getCacheUrl(extractGitUrl(url).avatarUrl)} />
               <Avatar.Fallback>{...title.split(' ').map(item => item.slice(0, 1).toUpperCase())}</Avatar.Fallback>
             </Avatar>
             <div className="flex flex-col">
               <Label>{title}</Label>
               <Description>
-                <Link href={repoUrl} className="group no-underline hover:underline">
-                  {repoUrl}
+                <Link href={url} className="group no-underline hover:underline">
+                  {url}
                   <Link.Icon />
                 </Link>
               </Description>
@@ -38,23 +36,23 @@ const CardReadmeDialog = memo(({state}: CommonProps) => {
         </Modal.Heading>
       </Modal.Header>
       <Modal.Body className="p-0">
-        {!isEmpty(repoUrl) &&
+        {!isEmpty(url) &&
           (isNil(ReplaceMd) ? (
-            <MarkdownViewer url={repoUrl} rounded={false} />
+            <MarkdownViewer url={url} rounded={false} />
           ) : (
-            <ReplaceMd rounded={false} repoPath={repoUrl} />
+            <ReplaceMd repoPath={url} rounded={false} />
           ))}
       </Modal.Body>
     </TabModal>
   );
 });
 
-const ReadmeModal = ({state}: CommonProps) => {
+const ReadmeModal = (props: Props) => {
   const CardReadme = useMemo(() => extensionsData.replaceModals.cardReadme, []);
 
-  if (!state.isOpen) return null;
+  if (!props.state.isOpen) return null;
 
-  return CardReadme ? <CardReadme /> : <CardReadmeDialog state={state} />;
+  return CardReadme ? <CardReadme /> : <CardReadmeDialog {...props} />;
 };
 
 export default ReadmeModal;

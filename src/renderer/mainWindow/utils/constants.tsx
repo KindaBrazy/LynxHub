@@ -33,8 +33,6 @@ export const PageComponents = {
   [PageID.settings]: SettingsPage,
 };
 
-export const REMOVE_MODAL_DELAY: number = 500;
-
 /**
  * Base palette used by terminal/theme-related helpers.
  */

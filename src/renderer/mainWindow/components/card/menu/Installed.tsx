@@ -4,10 +4,10 @@ import {useUpdatingCard} from '@lynx/utils/hooks';
 import {MenuDots} from '@solar-icons/react-perf/BoldDuotone';
 import {memo, useMemo} from 'react';
 
+import ReadmeModal from '../../modals/ReadmeModal';
 import {useCardStore} from '../store';
 import {AboutMenuItem, DuplicateMenuItem, HomePageMenuItem} from './about';
 import CardInfoModal from './about/infoModal';
-import ReadmeModal from './about/ReadmeModal';
 import {CommonProps} from './about/types';
 import {UnAssignMenuItem, UninstallMenuItem} from './dangerZone';
 import UnassignModal from './dangerZone/UnassignModal';
@@ -20,6 +20,8 @@ import {AutoUpdateMenuItem, CheckForUpdateMenuItem, UpdateMenuItem} from './upda
 
 export const InstalledMenu = memo(({setType, state}: {setType: (type: 'install' | 'update') => void} & CommonProps) => {
   const id = useCardStore(state => state.id);
+  const title = useCardStore(state => state.title);
+  const url = useCardStore(state => state.repoUrl);
   const setMenuIsOpen = useCardStore(state => state.setMenuIsOpen);
   const menuIsOpen = useCardStore(state => state.menuIsOpen);
 
@@ -112,7 +114,7 @@ export const InstalledMenu = memo(({setType, state}: {setType: (type: 'install' 
         </Dropdown.Popover>
       </Dropdown>
 
-      <ReadmeModal state={readmeModal} />
+      <ReadmeModal url={url} title={title} state={readmeModal} />
       <CardInfoModal state={infoModal} />
       <UnassignModal state={unassignModal} />
       <UninstallModal state={uninstallModal} />
