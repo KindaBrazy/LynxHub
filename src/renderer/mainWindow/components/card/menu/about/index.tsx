@@ -1,5 +1,4 @@
-import {DropdownItem, UseOverlayStateReturn} from '@heroui-v3/react';
-import {extractGitUrl} from '@lynx_common/utils';
+import {DropdownItem} from '@heroui-v3/react';
 import filesIpc from '@lynx_shared/ipc/files';
 import storageIpc from '@lynx_shared/ipc/storage';
 import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
@@ -7,30 +6,24 @@ import {Copy, FolderOpen, HomeAngle2, InfoSquare, SquareTopDown} from '@solar-ic
 import {useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {duplicateCard, removeDuplicatedCard} from '../../../../../plugins/modules';
-import {cardsActions, useCardsState} from '../../../../../redux/reducers/cards';
-import {useHotkeysState} from '../../../../../redux/reducers/hotkeys';
-import {modalActions} from '../../../../../redux/reducers/modals';
-import {useTabsState} from '../../../../../redux/reducers/tabs';
-import {AppDispatch} from '../../../../../redux/store';
-import {useInstalledCard} from '../../../../../utils/hooks';
-import {useCardStore} from '../../../store';
+import {duplicateCard, removeDuplicatedCard} from '../../../../plugins/modules';
+import {cardsActions, useCardsState} from '../../../../redux/reducers/cards';
+import {useHotkeysState} from '../../../../redux/reducers/hotkeys';
+import {AppDispatch} from '../../../../redux/store';
+import {useInstalledCard} from '../../../../utils/hooks';
+import {useCardStore} from '../../store';
+import {CommonProps} from './types';
 
 /**
  * Menu item to show card information or open its folder.
  * Displays 'Open Folder' if Ctrl is pressed and directory exists.
  */
-export const AboutMenuItem = () => {
-  const id = useCardStore(state => state.id);
-  const extensionsDir = useCardStore(state => state.extensionsDir);
-  const repoUrl = useCardStore(state => state.repoUrl);
-  const setMenuIsOpen = useCardStore(state => state.setMenuIsOpen);
-  const title = useCardStore(state => state.title);
+export const AboutMenuItem = ({state}: CommonProps) => {
+  const id = useCardStore(st => st.id);
+  const setMenuIsOpen = useCardStore(st => st.setMenuIsOpen);
 
   const isCtrlPressed = useHotkeysState('isCtrlPressed');
   const webUI = useInstalledCard(id);
-  const activeTab = useTabsState('activeTab');
-  const dispatch = useDispatch<AppDispatch>();
 
   const showOpenFolder = useMemo(() => {
     return !!webUI?.dir && isCtrlPressed;
@@ -41,19 +34,10 @@ export const AboutMenuItem = () => {
       filesIpc.openPath(webUI.dir);
       setMenuIsOpen(false);
     } else {
-      dispatch(
-        modalActions.openCardInfo({
-          cardId: id,
-          devName: extractGitUrl(repoUrl).owner,
-          extensionsDir,
-          title,
-          url: repoUrl,
-          tabID: activeTab,
-        }),
-      );
+      state.open();
       setMenuIsOpen(false);
     }
-  }, [showOpenFolder, webUI?.dir, setMenuIsOpen, dispatch, id, repoUrl, extensionsDir, title, activeTab]);
+  }, [showOpenFolder, webUI?.dir, setMenuIsOpen]);
 
   return (
     <DropdownItem key="information" onPress={onPress}>
@@ -67,10 +51,10 @@ export const AboutMenuItem = () => {
  * Menu item to open the card's homepage (repo URL) or readme.
  * Opens in browser if Ctrl is pressed.
  */
-export function HomePageMenuItem({modal}: {modal: UseOverlayStateReturn}) {
-  const repoUrl = useCardStore(state => state.repoUrl);
-  const title = useCardStore(state => state.title);
-  const setMenuIsOpen = useCardStore(state => state.setMenuIsOpen);
+export function HomePageMenuItem({state}: CommonProps) {
+  const repoUrl = useCardStore(st => st.repoUrl);
+  const title = useCardStore(st => st.title);
+  const setMenuIsOpen = useCardStore(st => st.setMenuIsOpen);
 
   const isCtrlPressed = useHotkeysState('isCtrlPressed');
 
@@ -80,7 +64,7 @@ export function HomePageMenuItem({modal}: {modal: UseOverlayStateReturn}) {
       window.open(repoUrl);
       setMenuIsOpen(false);
     } else {
-      modal.open();
+      state.open();
       setMenuIsOpen(false);
     }
   }, [setMenuIsOpen, repoUrl, title, isCtrlPressed]);

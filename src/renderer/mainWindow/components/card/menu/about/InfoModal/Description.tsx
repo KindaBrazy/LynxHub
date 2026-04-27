@@ -1,11 +1,12 @@
 import {Button, Link, Spinner} from '@heroui-v3/react';
-import DescriptionGrid, {DescriptionGridItem} from '@lynx/components/DescriptionGrid';
 import {CardInfoDescriptions, CardInfoDescriptions_Items} from '@lynx_common/types/plugins/modules';
 import {isValidURL} from '@lynx_common/utils';
 import filesIpc from '@lynx_shared/ipc/files';
 import {FolderOpen} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty, isNil} from 'lodash';
 import {memo, useCallback} from 'react';
+
+import DescriptionGrid, {DescriptionGridItem} from '../../../../DescriptionGrid';
 
 interface CardInfoDescriptionProps {
   folders: string[] | undefined;
@@ -31,8 +32,8 @@ function CardInfoDescription({folders, descriptions}: CardInfoDescriptionProps) 
                 onPress={() => {
                   if (item.result) window.open(item.result);
                 }}
-                className="no-underline hover:underline">
-                {item.result}
+                className="no-underline hover:underline w-full">
+                <span className="text-wrap w-full overflow-hidden">{item.result}</span>
                 <Link.Icon />
               </Link>
             ),

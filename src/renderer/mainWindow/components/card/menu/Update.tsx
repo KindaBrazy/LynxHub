@@ -1,8 +1,4 @@
 import {Checkbox, DropdownItem, Label, Spinner} from '@heroui-v3/react';
-import {getCardMethod, useAllCardMethods} from '@lynx/plugins/modules';
-import {cardsActions} from '@lynx/redux/reducers/cards';
-import {AppDispatch} from '@lynx/redux/store';
-import {useInstalledCard, useIsAutoUpdateCard, useUpdateAvailable, useUpdatingCard} from '@lynx/utils/hooks';
 import {extractGitUrl} from '@lynx_common/utils';
 import gitIpc from '@lynx_shared/ipc/git';
 import moduleIpc from '@lynx_shared/ipc/plugins/module';
@@ -12,8 +8,12 @@ import {DownloadMinimalistic, Refresh} from '@solar-icons/react-perf/BoldDuotone
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {useTabModalManager} from '../../../modals/useTabModalManager';
-import {useCardStore} from '../../store';
+import {getCardMethod, useAllCardMethods} from '../../../plugins/modules';
+import {cardsActions} from '../../../redux/reducers/cards';
+import {AppDispatch} from '../../../redux/store';
+import {useInstalledCard, useIsAutoUpdateCard, useUpdateAvailable, useUpdatingCard} from '../../../utils/hooks';
+import {useTabModalManager} from '../../modals/useTabModalManager';
+import {useCardStore} from '../store';
 
 /**
  * Menu item to trigger an update for the card.

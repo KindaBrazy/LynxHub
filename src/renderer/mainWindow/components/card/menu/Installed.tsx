@@ -2,14 +2,15 @@ import {Button, Dropdown, Separator, useOverlayState} from '@heroui-v3/react';
 import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {useUpdatingCard} from '@lynx/utils/hooks';
 import {MenuDots} from '@solar-icons/react-perf/BoldDuotone';
-import {memo, useMemo} from 'react';
+import {memo, useEffect, useMemo} from 'react';
 
 import {useCardStore} from '../store';
-import {AboutMenuItem, DuplicateMenuItem, HomePageMenuItem} from './items/about';
-import ReadmeModal from './items/about/ReadmeModal';
-import {UnAssignMenuItem, UninstallMenuItem} from './items/DangerZone';
-import {ExtensionsMenuItem, LaunchConfigMenuItem, RepoConfigMenuItem} from './items/Options';
-import {AutoUpdateMenuItem, CheckForUpdateMenuItem, UpdateMenuItem} from './items/Update';
+import {AboutMenuItem, DuplicateMenuItem, HomePageMenuItem} from './about';
+import CardInfoModal from './about/InfoModal';
+import ReadmeModal from './about/ReadmeModal';
+import {UnAssignMenuItem, UninstallMenuItem} from './DangerZone';
+import {ExtensionsMenuItem, LaunchConfigMenuItem, RepoConfigMenuItem} from './Options';
+import {AutoUpdateMenuItem, CheckForUpdateMenuItem, UpdateMenuItem} from './Update';
 
 export const InstalledMenu = memo(() => {
   const id = useCardStore(state => state.id);
@@ -30,6 +31,11 @@ export const InstalledMenu = memo(() => {
   }, []);
 
   const readmeModal = useOverlayState();
+  const infoModal = useOverlayState();
+
+  useEffect(() => {
+    console.log(infoModal);
+  }, [infoModal]);
 
   return (
     <>
@@ -77,8 +83,8 @@ export const InstalledMenu = memo(() => {
                       return <Comp key={index} useCardStore={useCardStore} />;
                     })}
                     <Dropdown.Section key="info">
-                      <AboutMenuItem />
-                      <HomePageMenuItem modal={readmeModal} />
+                      <AboutMenuItem state={infoModal} />
+                      <HomePageMenuItem state={readmeModal} />
                     </Dropdown.Section>
 
                     <Separator className="bg-surface-secondary/70" />
@@ -100,6 +106,7 @@ export const InstalledMenu = memo(() => {
       </Dropdown>
 
       <ReadmeModal state={readmeModal} />
+      <CardInfoModal state={infoModal} />
     </>
   );
 });

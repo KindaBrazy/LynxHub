@@ -3,7 +3,7 @@ import {MenuDots} from '@solar-icons/react-perf/BoldDuotone';
 import {memo} from 'react';
 
 import {useCardStore} from '../store';
-import {DuplicateMenuItem, HomePageMenuItem} from './items/about';
+import {DuplicateMenuItem, HomePageMenuItem} from './about';
 
 const UninstalledMenu = memo(() => {
   const menuIsOpen = useCardStore(state => state.menuIsOpen);

@@ -3,8 +3,8 @@ import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
 import {MinusSquare, TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
 import {useCallback} from 'react';
 
-import {useTabModalManager} from '../../../modals/useTabModalManager';
-import {useCardStore} from '../../store';
+import {useTabModalManager} from '../../modals/useTabModalManager';
+import {useCardStore} from '../store';
 
 /**
  * Menu item to unassign the card.
