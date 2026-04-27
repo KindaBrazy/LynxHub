@@ -60,7 +60,8 @@ const LaunchConfig = memo(({state}: CommonProps) => {
   }, [id, chosenArguments]);
 
   return (
-    <TabModal isOpen={state.isOpen}>
+    <TabModal isOpen={state.isOpen} onOpenChange={state.setOpen}>
+      <Modal.CloseTrigger />
       <Modal.Header>
         <Modal.Heading className="flex-col gap-y-2 pb-0 text-center">
           {title || 'Launch Config'}
@@ -94,17 +95,15 @@ const LaunchConfig = memo(({state}: CommonProps) => {
         {currentTab === tabs.customRun && <CustomRun id={id} />}
         {currentTab === tabs.preLaunch && <CardPreLaunch id={id} />}
       </Modal.Body>
-      <Modal.Footer>
-        <Button variant="secondary" onPress={state.close}>
-          Close
-        </Button>
-        {currentTab === tabs.arguments && (
+
+      {currentTab === tabs.arguments && (
+        <Modal.Footer>
           <Button onPress={saveArguments} isPending={isSavingArgs}>
             <Diskette className="size-4" />
             {!isSavingArgs && 'Save Arguments'}
           </Button>
-        )}
-      </Modal.Footer>
+        </Modal.Footer>
+      )}
     </TabModal>
   );
 });
