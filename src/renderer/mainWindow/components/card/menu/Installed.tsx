@@ -2,13 +2,15 @@ import {Button, Dropdown, Separator, useOverlayState} from '@heroui-v3/react';
 import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {useUpdatingCard} from '@lynx/utils/hooks';
 import {MenuDots} from '@solar-icons/react-perf/BoldDuotone';
-import {memo, useEffect, useMemo} from 'react';
+import {memo, useMemo} from 'react';
 
 import {useCardStore} from '../store';
 import {AboutMenuItem, DuplicateMenuItem, HomePageMenuItem} from './about';
-import CardInfoModal from './about/InfoModal';
+import CardInfoModal from './about/infoModal';
 import ReadmeModal from './about/ReadmeModal';
-import {UnAssignMenuItem, UninstallMenuItem} from './DangerZone';
+import {UnAssignMenuItem, UninstallMenuItem} from './dangerZone/DangerZone';
+import UnassignModal from './dangerZone/UnassignModal';
+import UninstallModal from './dangerZone/UninstallModal';
 import {ExtensionsMenuItem, LaunchConfigMenuItem, RepoConfigMenuItem} from './Options';
 import {AutoUpdateMenuItem, CheckForUpdateMenuItem, UpdateMenuItem} from './Update';
 
@@ -32,10 +34,8 @@ export const InstalledMenu = memo(() => {
 
   const readmeModal = useOverlayState();
   const infoModal = useOverlayState();
-
-  useEffect(() => {
-    console.log(infoModal);
-  }, [infoModal]);
+  const unassignModal = useOverlayState();
+  const uninstallModal = useOverlayState();
 
   return (
     <>
@@ -91,8 +91,8 @@ export const InstalledMenu = memo(() => {
 
                     <Dropdown.Section key="card_modify">
                       <DuplicateMenuItem />
-                      <UnAssignMenuItem />
-                      <UninstallMenuItem />
+                      <UnAssignMenuItem state={unassignModal} />
+                      <UninstallMenuItem state={uninstallModal} />
                     </Dropdown.Section>
                     {fourth.map((Comp, index) => {
                       return <Comp key={index} useCardStore={useCardStore} />;
@@ -107,6 +107,8 @@ export const InstalledMenu = memo(() => {
 
       <ReadmeModal state={readmeModal} />
       <CardInfoModal state={infoModal} />
+      <UnassignModal state={unassignModal} />
+      <UninstallModal state={uninstallModal} />
     </>
   );
 });

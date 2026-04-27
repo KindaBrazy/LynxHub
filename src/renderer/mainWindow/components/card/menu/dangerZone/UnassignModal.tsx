@@ -1,33 +1,23 @@
 import {Button, ButtonGroup, Modal} from '@heroui-v3/react';
-import {topToast} from '@lynx/layouts/ToastProviders';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {ShieldCross} from '@solar-icons/react-perf/BoldDuotone';
-import {Fragment, memo, useCallback, useMemo} from 'react';
+import {memo, useCallback, useMemo} from 'react';
 
-import {extensionsData} from '../../../plugins/extensions/loader';
-import {useModalsState} from '../../../redux/reducers/modals';
-import TabModal from '../../TabModal';
-import {useTabModalLifecycle} from '../useTabModalManager';
+import {topToast} from '../../../../layouts/ToastProviders';
+import {extensionsData} from '../../../../plugins/extensions/loader';
+import TabModal from '../../../TabModal';
+import {useCardStore} from '../../store';
+import {CommonProps} from '../about/types';
 
-type Props = {
-  cardId: string;
-  isOpen: boolean;
-  tabID: string;
-};
-
-const UnassignDialog = memo(({cardId, isOpen, tabID}: Props) => {
-  const {onOpenChange} = useTabModalLifecycle('cardUnassign', tabID);
-
-  const closeHandle = useCallback(() => {
-    onOpenChange(false);
-  }, [onOpenChange]);
+const UnassignDialog = memo(({state}: CommonProps) => {
+  const id = useCardStore(st => st.id);
 
   const unassign = useCallback(
     (clearConfig: boolean) => {
-      closeHandle();
+      state.close();
 
       storageUtilsIpc.invoke
-        .unassignCard(cardId, clearConfig)
+        .unassignCard(id, clearConfig)
         .then(() => {
           topToast.success('Unassigned successfully.');
         })
@@ -35,11 +25,11 @@ const UnassignDialog = memo(({cardId, isOpen, tabID}: Props) => {
           topToast.danger('An error occurred while unassigning.');
         });
     },
-    [cardId, closeHandle],
+    [state, id],
   );
 
   return (
-    <TabModal size="lg" isOpen={isOpen}>
+    <TabModal size="lg" isOpen={state.isOpen}>
       <Modal.Header>
         <Modal.Heading className="flex items-center gap-x-2">
           <ShieldCross className="text-warning size-7" />
@@ -52,7 +42,7 @@ const UnassignDialog = memo(({cardId, isOpen, tabID}: Props) => {
       </Modal.Body>
       <Modal.Footer>
         <ButtonGroup size="sm" fullWidth>
-          <Button variant="primary" onPress={closeHandle}>
+          <Button variant="primary" onPress={state.close}>
             Cancel
           </Button>
           <Button variant="danger-soft" onPress={() => unassign(false)}>
@@ -67,17 +57,10 @@ const UnassignDialog = memo(({cardId, isOpen, tabID}: Props) => {
   );
 });
 
-const UnassignModal = () => {
+const UnassignModal = (props: CommonProps) => {
   const Unassign = useMemo(() => extensionsData.replaceModals.unassignCard, []);
-  const cardUnassignModal = useModalsState('cardUnassignModal');
 
-  return (
-    <>
-      {cardUnassignModal.map(modal => (
-        <Fragment key={`${modal.tabID}_modal`}>{Unassign ? <Unassign /> : <UnassignDialog {...modal} />}</Fragment>
-      ))}
-    </>
-  );
+  return Unassign ? <Unassign /> : <UnassignDialog {...props} />;
 };
 
 export default UnassignModal;
