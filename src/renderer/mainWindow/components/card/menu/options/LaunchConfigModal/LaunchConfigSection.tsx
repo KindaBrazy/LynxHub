@@ -33,7 +33,7 @@ export default function LaunchConfigSection({
   return (
     <Card variant="secondary">
       <Card.Header className="px-4 flex-col items-start">
-        <div className="flex w-full flex-row items-center justify-between">
+        <div className="flex w-full flex-row items-center justify-between text-foreground font-semibold">
           {isString(title) ? <span>{title}</span> : title}
           {customButton || (
             <Tooltip delay={300}>
@@ -49,7 +49,7 @@ export default function LaunchConfigSection({
             </Tooltip>
           )}
         </div>
-        {!isEmpty(description) && <span className="text-sm font-normal text-foreground-500">{description}</span>}
+        {!isEmpty(description) && <span className="text-xs text-muted">{description}</span>}
       </Card.Header>
       <Card.Content>{children}</Card.Content>
     </Card>

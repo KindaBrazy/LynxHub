@@ -34,14 +34,14 @@ const getIcon = (type: ToastHeaderProps['type']) => {
  */
 export function ToastHeader({type, title}: ToastHeaderProps) {
   return (
-    <div className="flex items-center justify-between border-b border-foreground-100 px-6 py-4">
+    <div className="flex items-center justify-between border-b border-surface-secondary px-6 py-4">
       <div className="flex items-center gap-3">
         <div className="shrink-0">{getIcon(type)}</div>
-        <h2 className="text-lg font-semibold text-foreground-800">{title}</h2>
+        <h2 className="text-lg font-semibold text-surface-foreground">{title}</h2>
       </div>
 
       <div className="flex items-center gap-2">
-        <div className="text-xs text-foreground-500">{new Date().toLocaleTimeString()}</div>
+        <div className="text-xs text-muted">{new Date().toLocaleTimeString()}</div>
       </div>
     </div>
   );

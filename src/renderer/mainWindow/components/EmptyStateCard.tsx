@@ -29,8 +29,8 @@ export default function EmptyStateCard({
     <Card variant={variant} className={cn('border border-surface-secondary/70 p-0', className)}>
       <Card.Content className={cn('flex items-center justify-center gap-y-2 px-6 py-10 text-center', bodyClassName)}>
         {icon}
-        {typeof title === 'string' ? <h3 className="text-base font-medium text-foreground-600">{title}</h3> : title}
-        {typeof description === 'string' ? <p className="text-sm text-foreground-500">{description}</p> : description}
+        {typeof title === 'string' ? <h3 className="text-base font-medium text-semi-muted">{title}</h3> : title}
+        {typeof description === 'string' ? <p className="text-sm text-muted">{description}</p> : description}
         {action}
         {children}
       </Card.Content>

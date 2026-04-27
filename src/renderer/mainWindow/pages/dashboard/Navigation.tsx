@@ -79,7 +79,11 @@ const DashboardGroupSection = memo(
               key={`${item.title}_settings_section`}
               onPress={() => onPress(item.elementId)}
               fullWidth>
-              <div className="z-10 flex justify-start w-full items-center gap-x-1.5 text-[0.82rem] font-medium">
+              <div
+                className={
+                  'z-10 flex justify-start w-full items-center gap-x-1.5 text-[0.82rem] font-medium ' +
+                  `${activeSection === item.elementId && 'text-accent-foreground'} transition duration-200`
+                }>
                 {item.icon}
                 <SettingsSearchHighlight text={item.title} />
               </div>
@@ -87,7 +91,7 @@ const DashboardGroupSection = memo(
                 <motion.div
                   layoutId="setting_nav_indicator"
                   transition={{duration: 0.4, type: 'spring'}}
-                  className="absolute inset-0 z-0 bg-accent/50 rounded-full"
+                  className="absolute inset-0 z-0 bg-accent rounded-full"
                 />
               )}
             </Button>

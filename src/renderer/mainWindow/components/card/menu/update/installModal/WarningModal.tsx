@@ -22,10 +22,8 @@ const WarnModal = ({state}: CommonProps) => {
       </Modal.Header>
       <Modal.Body>
         <p className="mt-4 font-semibold">Please ensure you have a stable internet connection and try again.</p>
-        <p className="text-sm text-foreground-600">
-          If the issue persists, it could be due to one of the following reasons:
-        </p>
-        <ul className="list-disc space-y-1 pl-5 text-sm text-foreground-600">
+        <p className="text-sm text-muted">If the issue persists, it could be due to one of the following reasons:</p>
+        <ul className="list-disc space-y-1 pl-5 text-sm text-muted">
           <li>The directory is empty and you have the necessary permissions to access it..</li>
           <li>The repository is too large, and your network is unable to handle the file transfer.</li>
           <li>Firewalls or proxy settings are blocking the connection.</li>

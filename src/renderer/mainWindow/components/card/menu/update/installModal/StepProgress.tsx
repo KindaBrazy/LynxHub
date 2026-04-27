@@ -36,7 +36,7 @@ function StepIndicator({status}: {status: 'complete' | 'current' | 'upcoming'}) 
     );
   }
 
-  return <div className="size-5 rounded-full border border-foreground-300 bg-foreground-200/30" />;
+  return <div className="size-5 rounded-full border border-surface-tertiary bg-surface-secondary/30" />;
 }
 
 function StepProgress({steps, current, orientation = 'horizontal', className, titleClassName}: StepProgressProps) {
@@ -83,9 +83,9 @@ function StepProgress({steps, current, orientation = 'horizontal', className, ti
                 <span
                   className={cn(
                     'truncate text-sm',
-                    status === 'complete' && 'text-foreground-500',
-                    status === 'current' && 'font-semibold text-foreground-700 dark:text-foreground-200',
-                    status === 'upcoming' && 'text-foreground-600',
+                    status === 'complete' && 'text-muted',
+                    status === 'current' && 'font-semibold text-surface-foreground',
+                    status === 'upcoming' && 'text-semi-muted',
                     titleClassName,
                   )}>
                   {title}
@@ -121,9 +121,9 @@ function StepProgress({steps, current, orientation = 'horizontal', className, ti
                 <span
                   className={cn(
                     'truncate text-center text-xs',
-                    status === 'complete' && 'text-foreground/40',
-                    status === 'current' && 'font-bold text-foreground/85',
-                    status === 'upcoming' && 'text-foreground/70',
+                    status === 'complete' && 'text-muted',
+                    status === 'current' && 'font-semibold text-surface-foreground',
+                    status === 'upcoming' && 'text-semi-muted',
                     titleClassName,
                   )}
                   title={title}>
@@ -134,7 +134,7 @@ function StepProgress({steps, current, orientation = 'horizontal', className, ti
                 <div
                   className={cn(
                     'mx-2 mt-2.5 h-px w-12 sm:w-20',
-                    index < current ? 'bg-success/50' : 'bg-foreground-300/60',
+                    index < current ? 'bg-success/40' : 'bg-surface-secondary',
                   )}
                 />
               )}

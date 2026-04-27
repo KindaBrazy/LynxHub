@@ -98,7 +98,7 @@ export const SettingsSections = ({sectionTexts}: SettingsSectionsProps) => {
   return (
     <>
       {!hasVisibleSection && searchValue && (
-        <div className="py-10 text-center text-sm text-foreground-500">No settings match “{searchValue}”.</div>
+        <div className="py-10 text-center text-sm text-muted">No settings match “{searchValue}”.</div>
       )}
       {sectionsWithVisibility.map(({Component, elementId, title, visible}, index) => (
         <div key={elementId || `${title}_${index}`} className={visible ? 'contents' : 'hidden'}>

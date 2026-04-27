@@ -81,10 +81,13 @@ const BrowserScale = memo(function BrowserScale() {
         <div className="flex justify-between px-1 text-xs text-muted">
           {[10, 50, 100, 150, 200, 300].map(zoom => (
             <button
+              className={
+                `transition-colors duration-200 text-muted hover:text-foreground` +
+                ` ${zoom === 100 ? 'font-medium' : ''}`
+              }
               key={zoom}
               onClick={() => updateZoom(zoom)}
-              aria-label={`Set zoom to ${zoom}%`}
-              className={`transition-colors hover:text-muted ${zoom === 100 ? 'font-medium' : ''}`}>
+              aria-label={`Set zoom to ${zoom}%`}>
               {zoom}%
             </button>
           ))}

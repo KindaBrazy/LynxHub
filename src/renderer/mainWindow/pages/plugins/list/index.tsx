@@ -46,7 +46,7 @@ export default function PluginList() {
     return (
       <EmptyStateCard
         icon={
-          <div className="rounded-full bg-foreground-100/80 p-3 text-foreground-500">
+          <div className="rounded-full bg-surface-secondary/80 p-3 text-muted">
             <Circle_Icon className="size-5" />
           </div>
         }
@@ -57,11 +57,11 @@ export default function PluginList() {
         }
         description={
           isEmpty(searchValue) ? (
-            <p className="text-sm text-foreground-500">
+            <p className="text-sm text-muted">
               This could be temporary. Please try again later or check your internet connection.
             </p>
           ) : (
-            <p className="text-sm text-foreground-500">Try refining your search terms or checking for typos.</p>
+            <p className="text-sm text-muted">Try refining your search terms or checking for typos.</p>
           )
         }
       />

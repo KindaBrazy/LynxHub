@@ -37,7 +37,7 @@ export const ActionButton = memo(function ActionButton({icon, title, onPress, cl
         }
       }}
       className={
-        `w-full hover:bg-foreground-200 transition-colors duration-200 py-2 px-4 gap-x-2` +
+        `w-full hover:bg-surface-tertiary transition-colors duration-200 py-2 px-4 gap-x-2` +
         ` flex items-center text-sm ${className || ''} cursor-pointer shrink-0`
       }
       tabIndex={0}

@@ -132,7 +132,7 @@ const TabItem = memo(({tab, isOrdering}: Props) => {
 
         <CloseButton
           className={
-            `scale-85 bg-transparent hover:bg-danger-soft-hover ` +
+            `scale-85 bg-transparent hover:bg-surface-tertiary ` +
             `${isActiveTab || isHovered ? 'opacity-100' : 'opacity-0'}`
           }
           ref={closeBtnRef}

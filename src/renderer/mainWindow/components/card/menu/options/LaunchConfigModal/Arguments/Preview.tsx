@@ -47,7 +47,7 @@ export default function ArgumentsPreview({text}: Props) {
             }}
             language={isWin ? 'batch' : 'bash'}
             style={isDark ? materialDark : materialLight}
-            codeTagProps={{className: 'text-foreground-800 font-JetBrainsMono'}}
+            codeTagProps={{className: 'text-semi-muted font-JetBrainsMono'}}
             wrapLongLines>
             {text}
           </SyntaxHighlighter>

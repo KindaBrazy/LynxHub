@@ -112,7 +112,7 @@ const TerminalSearchText = memo(({searchAddon, tabId}: Props) => {
                 <span>Search for text</span>
                 <span
                   className={
-                    'h-4 font-semibold text-xs rounded-sm bg-foreground-100 p-1 flex items-center justify-center'
+                    'h-4 font-semibold text-xs rounded-sm bg-surface-secondary p-1 flex items-center justify-center'
                   }>
                   {hotkeyLabel}
                 </span>
@@ -155,7 +155,7 @@ const TerminalSearchText = memo(({searchAddon, tabId}: Props) => {
                 exit={{translateY: 5, opacity: 0}}
                 initial={{translateY: 5, opacity: 0}}
                 animate={{translateY: 0, opacity: 1}}
-                className="flex items-center justify-center rounded-lg bg-foreground-100 py-2 w-full">
+                className="flex items-center justify-center rounded-lg bg-surface-secondary py-2 w-full">
                 <span role="alert" className="text-sm text-danger">
                   No matches found
                 </span>

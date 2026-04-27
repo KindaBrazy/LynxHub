@@ -1,3 +1,4 @@
+import {Kbd} from '@heroui-v3/react';
 import SettingsSection from '@lynx/components/SettingsSection';
 import {SettingPage_Icon} from '@lynx_assets/icons/pages';
 import {Shield} from '@solar-icons/react-perf/BoldDuotone';
@@ -28,7 +29,11 @@ export default function SettingsGeneral() {
       <SettingsSection
         description={
           <span>
-            Hold <span className="bg-foreground-100 px-1 rounded-sm">CTRL</span> to bypass any of these confirmations.
+            Hold{' '}
+            <Kbd className="text-xs">
+              <Kbd.Content>CTRL</Kbd.Content>
+            </Kbd>{' '}
+            to bypass any of these confirmations.
           </span>
         }
         title="Confirmations"

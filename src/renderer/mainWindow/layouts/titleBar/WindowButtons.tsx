@@ -46,11 +46,11 @@ const WindowButtons = () => {
   return (
     <div className="right-0 flex h-full flex-row space-x-0.5 bg-blue-800/0">
       <div className="h-full w-10" />
-      {renderButton('minimize', <Minimize_Icon className="size-3" />, 'px-4 hover:bg-foreground-100')}
+      {renderButton('minimize', <Minimize_Icon className="size-3" />, 'px-4 hover:bg-surface-secondary')}
       {renderButton(
         'maximize',
         maximized ? <UnMaximize_Icon className="size-3" /> : <Maximize_Icon className="size-3" />,
-        'px-4 hover:bg-foreground-100',
+        'px-4 hover:bg-surface-secondary',
       )}
       <WindowButtons_Close buttonProps={buttonProps} commonStyles={BUTTONS_COMMON_STYLE} />
     </div>

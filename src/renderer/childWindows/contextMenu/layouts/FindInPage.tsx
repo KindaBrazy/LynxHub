@@ -161,17 +161,17 @@ const FindInPage = memo(function FindInPage() {
 
       {/* Status Message */}
       {searchValue && (
-        <div aria-live="polite" className="flex items-center justify-center rounded-lg bg-foreground-100 py-2">
+        <div aria-live="polite" className="flex items-center justify-center rounded-xl bg-surface-secondary py-2">
           {noResults ? (
             <span role="alert" className="text-sm text-danger">
               No matches found
             </span>
           ) : hasResults ? (
-            <span className="text-sm text-foreground-700">
+            <span className="text-sm text-semi-muted">
               Match {result.activeMatchOrdinal} of {result.matches}
             </span>
           ) : (
-            <span className="text-sm text-foreground-500">Searching...</span>
+            <span className="text-sm text-muted">Searching...</span>
           )}
         </div>
       )}
@@ -219,18 +219,18 @@ const FindInPage = memo(function FindInPage() {
       </Switch>
 
       {/* Keyboard Shortcuts Help */}
-      <div className="flex flex-col gap-1 rounded-lg bg-foreground-50 p-2 text-xs text-foreground-500">
+      <div className="flex flex-col gap-1 rounded-2xl bg-surface-secondary p-3 text-xs text-muted">
         <div className="flex justify-between">
           <span>Next match:</span>
-          <span className="font-medium text-foreground-700">Enter or ↓</span>
+          <span className="font-medium text-semi-muted">Enter or ↓</span>
         </div>
         <div className="flex justify-between">
           <span>Previous match:</span>
-          <span className="font-medium text-foreground-700">Shift+Enter or ↑</span>
+          <span className="font-medium text-semi-muted">Shift+Enter or ↑</span>
         </div>
         <div className="flex justify-between">
           <span>Close:</span>
-          <span className="font-medium text-foreground-700">Esc</span>
+          <span className="font-medium text-semi-muted">Esc</span>
         </div>
       </div>
     </div>

@@ -42,10 +42,10 @@ const HistorySection = memo(
       return (
         <motion.section variants={fadeIn} className="w-full">
           <div className="mb-5 flex items-center gap-3">
-            <div className="rounded-xl bg-foreground-100/80 p-2.5 dark:bg-foreground-50/50">{icon}</div>
+            <div className="rounded-2xl bg-surface-secondary p-2.5">{icon}</div>
             <div>
               <h2 className="text-lg font-semibold text-foreground">{title}</h2>
-              <p className="text-xs text-foreground-500">{subtitle}</p>
+              <p className="text-xs text-muted">{subtitle}</p>
             </div>
           </div>
 
@@ -71,14 +71,11 @@ const HistorySection = memo(
     return (
       <motion.div variants={fadeIn}>
         <EmptyStateCard
-          className={
-            'rounded-2xl border-foreground-200/50 bg-foreground-50/50' +
-            ' dark:border-foreground-100/20 dark:bg-foreground-50/30'
-          }
+          variant="secondary"
           bodyClassName="gap-y-0 px-6 py-12"
+          description={<p className="text-sm text-muted">{emptyDescription}</p>}
           icon={<div className="mb-4 flex justify-center opacity-60">{icon}</div>}
-          description={<p className="text-sm text-foreground-400">{emptyDescription}</p>}
-          title={<h3 className="text-base font-medium text-foreground-600">{emptyTitle}</h3>}
+          title={<h3 className="text-base font-medium text-semi-muted">{emptyTitle}</h3>}
         />
       </motion.div>
     );
