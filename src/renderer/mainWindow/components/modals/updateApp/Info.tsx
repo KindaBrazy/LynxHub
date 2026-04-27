@@ -5,10 +5,10 @@ import {ShieldCross} from '@solar-icons/react-perf/BoldDuotone';
 import {AltArrowDown, ArrowRight} from '@solar-icons/react-perf/Linear';
 import {isEmpty} from 'lodash';
 
-import {RenderSubItems} from '../../../../utils/hooks';
-import DescriptionGrid from '../../../DescriptionGrid';
-import EmptyStateCard from '../../../EmptyStateCard';
-import LynxScroll from '../../../LynxScroll';
+import {RenderSubItems} from '../../../utils/hooks';
+import DescriptionGrid from '../../DescriptionGrid';
+import EmptyStateCard from '../../EmptyStateCard';
+import LynxScroll from '../../LynxScroll';
 import {ReleaseNote} from './useUpdateApp';
 
 type Props = {

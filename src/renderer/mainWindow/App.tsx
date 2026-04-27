@@ -5,7 +5,7 @@ import TitleBar from '@lynx/layouts/titleBar';
 import ExtensionHooks from '@lynx/plugins/extensions/Hooks';
 
 import Modals from './components/modals';
-import Initializer from './components/modals/app/WelcomeModal';
+import Initializer from './components/modals/welcome';
 import ToastProviders from './layouts/ToastProviders';
 
 /**

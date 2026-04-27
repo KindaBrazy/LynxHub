@@ -1,6 +1,6 @@
+import {useAppState} from '@lynx/redux/reducers/app';
 import {AnimatePresence, motion} from 'framer-motion';
 
-import {useAppState} from '../../../../redux/reducers/app';
 import Background from './Background';
 import OnboardingWizard from './OnboardingWizard';
 

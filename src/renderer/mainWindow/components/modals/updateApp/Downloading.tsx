@@ -2,7 +2,7 @@ import {ProgressBar} from '@heroui-v3/react';
 import {UpdateDownloadProgress} from '@lynx_common/types';
 import {formatSize} from '@lynx_common/utils';
 
-import DescriptionGrid from '../../../DescriptionGrid';
+import DescriptionGrid from '../../DescriptionGrid';
 
 type Props = {progress: UpdateDownloadProgress | undefined};
 
