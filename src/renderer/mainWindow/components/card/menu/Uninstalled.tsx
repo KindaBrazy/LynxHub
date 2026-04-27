@@ -2,12 +2,14 @@ import {Button, Dropdown, useOverlayState} from '@heroui-v3/react';
 import {MenuDots} from '@solar-icons/react-perf/BoldDuotone';
 import {memo} from 'react';
 
+import ReadmeModal from '../../modals/ReadmeModal';
 import {useCardStore} from '../store';
 import {DuplicateMenuItem, HomePageMenuItem} from './about';
-import ReadmeModal from './about/ReadmeModal';
 
 const UninstalledMenu = memo(() => {
   const menuIsOpen = useCardStore(state => state.menuIsOpen);
+  const title = useCardStore(state => state.title);
+  const url = useCardStore(state => state.repoUrl);
   const setMenuIsOpen = useCardStore(state => state.setMenuIsOpen);
 
   const readmeModal = useOverlayState();
@@ -28,7 +30,7 @@ const UninstalledMenu = memo(() => {
         </Dropdown.Popover>
       </Dropdown>
 
-      <ReadmeModal state={readmeModal} />
+      <ReadmeModal url={url} title={title} state={readmeModal} />
     </>
   );
 });

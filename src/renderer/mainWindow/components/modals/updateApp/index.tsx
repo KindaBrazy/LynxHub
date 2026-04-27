@@ -1,4 +1,4 @@
-import {Button, Description, Modal, Spinner, useOverlayState} from '@heroui-v3/react';
+import {Button, Description, Modal, Spinner} from '@heroui-v3/react';
 
 import TabModal from '../../TabModal';
 import Downloaded from './Downloaded';
@@ -8,9 +8,9 @@ import {useUpdateApp} from './useUpdateApp';
 
 /** Manage updating application */
 const UpdateApp = () => {
-  const state = useOverlayState();
-
   const {
+    isOpen,
+    onClose,
     title,
     downloadState,
     downloadProgress,
@@ -23,28 +23,19 @@ const UpdateApp = () => {
     cancel,
     openDownloadPage,
     autoDownload,
-  } = useUpdateApp(state);
+  } = useUpdateApp();
 
   return (
-    <TabModal
-      isOpen={state.isOpen}
-      onOpenChange={state.setOpen}
-      size={downloadState === undefined && fetched ? 'cover' : 'lg'}>
-      <Modal.CloseTrigger />
+    <TabModal isOpen={isOpen} size={downloadState === undefined && fetched ? 'cover' : 'lg'}>
+      <Modal.CloseTrigger onPress={onClose} />
       <Modal.Header>
         <Modal.Heading>{title}</Modal.Heading>
       </Modal.Header>
       <Modal.Body className="scrollbar-hide">
         {downloadState === 'failed' ? (
-          <Downloaded
-            success={false}
-            cancel={cancel}
-            errMsg={errorMsg}
-            onClose={state.close}
-            tryAgain={startDownload}
-          />
+          <Downloaded success={false} cancel={cancel} errMsg={errorMsg} onClose={onClose} tryAgain={startDownload} />
         ) : downloadState === 'completed' ? (
-          <Downloaded cancel={cancel} onClose={state.close} tryAgain={startDownload} success />
+          <Downloaded cancel={cancel} onClose={onClose} tryAgain={startDownload} success />
         ) : downloadState === 'progress' ? (
           <Downloading progress={downloadProgress} />
         ) : fetched ? (

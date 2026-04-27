@@ -1,12 +1,9 @@
 import {cardsActions, useCardsState} from '@lynx/redux/reducers/cards';
-import {modalActions} from '@lynx/redux/reducers/modals';
 import {tabsActions, useTabsState} from '@lynx/redux/reducers/tabs';
 import {volumeActions} from '@lynx/redux/reducers/volume';
 import {AppDispatch} from '@lynx/redux/store';
-import {defaultTabItem, REMOVE_MODAL_DELAY} from '@lynx/utils/constants';
 import applicationIpc from '@lynx_shared/ipc/application';
 import ptyIpc from '@lynx_shared/ipc/pty';
-import type {ActionCreatorWithPayload} from '@reduxjs/toolkit';
 import {useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -39,7 +36,6 @@ export function useRemoveTab() {
         }
 
         dispatch(tabsActions.removeTab(tId));
-        dispatch(modalActions.removeAllModalsForTabId({tabId: tId}));
         dispatch(cardsActions.stopRunningCard({tabId: tId}));
         dispatch(volumeActions.removeTab(tId));
       }
@@ -57,96 +53,4 @@ export function useIsActiveTab(tabID: string) {
   const activeTab = useTabsState('activeTab');
 
   return useMemo(() => activeTab === tabID, [activeTab, tabID]);
-}
-
-/**
- * Hook to determine the visibility style (display: flex/hidden) for a tab's content.
- * @param tabID - The ID of the tab.
- * @returns 'flex' if the tab is active, 'hidden' otherwise.
- */
-export function useTabVisibility(tabID: string) {
-  const isActiveTab = useIsActiveTab(tabID);
-
-  return useMemo(() => (isActiveTab ? 'flex' : 'hidden'), [isActiveTab]);
-}
-
-type TabIdPayload = {tabID: string};
-
-/**
- * Hook to generate handlers for opening modals in the active tab or a new tab.
- * @param openAction - The Redux action creator to open the modal.
- * @returns Object containing `openInActiveTab` and `openInNewTab` functions.
- */
-export function useTabModalOpen<P extends TabIdPayload>(openAction: ActionCreatorWithPayload<P>) {
-  const dispatch = useDispatch<AppDispatch>();
-  const activeTab = useTabsState('activeTab');
-  const tabs = useTabsState('tabs');
-
-  const getNewTabId = useCallback(() => {
-    let newID = defaultTabItem.id;
-    let idNumber = 1;
-
-    const exists = (id: string) => tabs.some(tab => tab.id === id);
-
-    while (exists(newID)) {
-      newID = `${defaultTabItem.id}_${idNumber}`;
-      idNumber++;
-    }
-
-    return newID;
-  }, [tabs]);
-
-  const openInActiveTab = useCallback(
-    (payload: Omit<P, 'tabID'>) => {
-      dispatch(openAction({...payload, tabID: activeTab} as P));
-    },
-    [dispatch, openAction, activeTab],
-  );
-
-  const openInNewTab = useCallback(
-    (payload: Omit<P, 'tabID'>) => {
-      const newID = getNewTabId();
-      dispatch(tabsActions.addTab({...defaultTabItem, id: newID}));
-      dispatch(openAction({...payload, tabID: newID} as P));
-    },
-    [dispatch, openAction, getNewTabId],
-  );
-
-  return {openInActiveTab, openInNewTab};
-}
-
-/**
- * Hook to handle closing of tab-based modals.
- * Optionally dispatches a removal action after a delay.
- * @param closeAction - The Redux action creator to close the modal.
- * @param removeAction - Optional Redux action creator to remove the modal state.
- * @param removeDelay - Delay in milliseconds before removing the modal state.
- * @returns Object containing `onOpenChange` handler and `close` function.
- */
-export function useTabModalClose(
-  closeAction: ActionCreatorWithPayload<{tabID: string}>,
-  removeAction?: ActionCreatorWithPayload<{tabID: string}>,
-  removeDelay: number = REMOVE_MODAL_DELAY,
-) {
-  const dispatch = useDispatch<AppDispatch>();
-  const activeTab = useTabsState('activeTab');
-
-  const close = useCallback(() => {
-    dispatch(closeAction({tabID: activeTab}));
-
-    if (removeAction) {
-      setTimeout(() => {
-        dispatch(removeAction({tabID: activeTab}));
-      }, removeDelay);
-    }
-  }, [dispatch, closeAction, removeAction, removeDelay, activeTab]);
-
-  const onOpenChange = useCallback(
-    (isOpen: boolean) => {
-      if (!isOpen) close();
-    },
-    [close],
-  );
-
-  return {onOpenChange, close};
 }
