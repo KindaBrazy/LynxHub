@@ -87,9 +87,7 @@ export default function ImageCache() {
                 key: 'last_cleanup',
                 label: <SettingsSearchHighlight text="Last Cleanup:" />,
                 content: (
-                  <span className="text-xs text-foreground-400">
-                    {new Date(cacheStats.lastCleanup).toLocaleDateString()}
-                  </span>
+                  <span className="text-xs text-muted">{new Date(cacheStats.lastCleanup).toLocaleDateString()}</span>
                 ),
               },
             ]}
@@ -133,7 +131,7 @@ export default function ImageCache() {
           )}
         </>
       ) : (
-        <span className="text-sm text-foreground-500">
+        <span className="text-sm text-muted">
           <SettingsSearchHighlight text="Failed to load cache information" />
         </span>
       )}

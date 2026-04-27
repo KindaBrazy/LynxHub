@@ -130,8 +130,8 @@ export function PluginListItem({item, installed}: PluginListItemProps) {
   return (
     <Card
       className={
-        `relative border border-surface transition-all! duration-300!` +
-        ` hover:bg-foreground-100 ${isCompatible ? 'cursor-pointer' : ''}` +
+        `relative border border-surface/50 transition-all! duration-300!` +
+        ` hover:bg-surface-secondary ${isCompatible ? 'cursor-pointer' : ''}` +
         ` ${isSelected && (isExtension ? 'border-accent!' : 'border-LynxPurple!')}`
       }
       key={`${item.metadata.id}_plugin_list_item`}

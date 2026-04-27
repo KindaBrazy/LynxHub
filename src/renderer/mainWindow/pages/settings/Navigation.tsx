@@ -131,7 +131,11 @@ export const GroupSection = ({title, items, danger = false}: GroupProps) => {
               key={`${item.title}_settings_section`}
               onPress={() => setSelectedSection(item.elementId)}
               fullWidth>
-              <div className="z-10 flex justify-start w-full items-center gap-x-1.5 text-[0.82rem] font-medium">
+              <div
+                className={
+                  'z-10 flex justify-start w-full items-center gap-x-1.5 text-[0.82rem] font-medium ' +
+                  `${targetSection === item.elementId && 'text-accent-foreground'} transition duration-200`
+                }>
                 {item.icon}
                 <SettingsSearchHighlight text={item.title} />
               </div>
@@ -139,7 +143,7 @@ export const GroupSection = ({title, items, danger = false}: GroupProps) => {
                 <motion.div
                   layoutId="setting_nav_indicator"
                   transition={{duration: 0.4, type: 'spring'}}
-                  className="absolute inset-0 z-0 bg-accent/50 rounded-full"
+                  className="absolute inset-0 z-0 bg-accent rounded-full"
                 />
               )}
             </Button>
@@ -203,7 +207,7 @@ const SettingsPageNav = ({sectionTexts}: SettingsPageNavProps) => {
 
         <ScrollShadow className="h-full flex flex-col gap-y-3" hideScrollBar>
           {groupsToRender.length === 0 && searchValue && (
-            <div className="px-3 text-xs text-foreground-500">No sections match "{searchValue}".</div>
+            <div className="px-3 text-xs text-muted">No sections match "{searchValue}".</div>
           )}
 
           {groupsToRender.map(section => (

@@ -89,13 +89,13 @@ const TerminalCDTo = memo(({id}: Props) => {
           <Popover.Heading className="flex items-center justify-between mb-2">
             <Header>Change Directory</Header>
             {!isEmpty(history) && (
-              <Button size="sm" variant="ghost" onPress={clearHistory} className="text-danger" isIconOnly>
+              <Button size="sm" variant="ghost" onPress={clearHistory} className="text-danger shrink-0" isIconOnly>
                 <Broom className="size-3" />
               </Button>
             )}
           </Popover.Heading>
           {/* Choose folder button */}
-          <Button variant="tertiary" onPress={selectDir} className="justify-start" fullWidth>
+          <Button variant="ghost" onPress={selectDir} className="justify-start" fullWidth>
             <FolderOpen className="size-3.5" />
             Choose folder…
           </Button>
@@ -105,22 +105,19 @@ const TerminalCDTo = memo(({id}: Props) => {
           {/* History list */}
           {isEmpty(history) ? (
             <div className="flex flex-col items-center gap-1.5 py-6 text-center">
-              <MoveToFolder className="size-6 text-foreground-400" />
-              <p className="text-xs text-foreground-500">No recent directories</p>
+              <MoveToFolder className="size-6 text-muted" />
+              <p className="text-xs text-muted">No recent directories</p>
             </div>
           ) : (
             <ScrollShadow className="max-h-50 flex flex-col">
               {history.map(item => (
                 <Button key={item} variant="ghost" className="group" onPress={() => cdTo(item)} fullWidth>
-                  <MoveToFolder className="size-3.5 shrink-0 text-foreground-500" />
+                  <MoveToFolder className="size-3.5 shrink-0 text-muted" />
                   <div
-                    className={
-                      'min-w-0 flex-1 truncate text-left text-xs text-foreground-700 hover:text-foreground-900'
-                    }>
+                    className={'min-w-0 flex-1 truncate text-left text-xs text-semi-muted hover:text-foreground-900'}>
                     {item}
                   </div>
                   <CloseButton
-                    variant="default"
                     onPress={() => removeFromHistory(item)}
                     className="opacity-0 transition-opacity group-hover:opacity-100 duration-200"
                   />

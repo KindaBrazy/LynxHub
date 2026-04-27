@@ -97,7 +97,7 @@ export default function CloneOptions({url, setCloneOptionsResult}: CloneOptionsP
           <div className="flex flex-col items-center justify-center p-2 gap-y-1">
             <ShieldWarning className="size-14 text-warning" />
             <span className="text-lg font-medium">Unable to retrieve repository branches</span>
-            <p className="text-sm text-foreground-500">The default repository branch will be used for cloning.</p>
+            <p className="text-sm text-muted">The default repository branch will be used for cloning.</p>
           </div>
         ) : (
           <div className="flex flex-col gap-y-4">

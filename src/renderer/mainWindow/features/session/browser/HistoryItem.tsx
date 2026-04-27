@@ -51,11 +51,12 @@ const HistoryItem = memo(({recent, type, favIconMap, onDataChange}: Props) => {
   return (
     <Tooltip delay={300}>
       <Tooltip.Trigger>
-        <Card variant="secondary" onClick={openRecent} onMouseUp={openNewTab} className="h-32 w-36 cursor-pointer">
-          <Card.Content
-            className={
-              'group flex-col items-center justify-center gap-2 shrink-0 text-center transition-colors duration-200'
-            }>
+        <Card
+          variant="secondary"
+          onClick={openRecent}
+          onMouseUp={openNewTab}
+          className="h-32 w-40 rounded-4xl cursor-pointer shadow-none">
+          <Card.Content className="group flex-col items-center justify-center gap-y-3 shrink-0 text-center">
             {favIcon && !imgError ? (
               <img
                 src={favIcon}
@@ -66,7 +67,8 @@ const HistoryItem = memo(({recent, type, favIconMap, onDataChange}: Props) => {
             ) : (
               <Earth className="size-8" />
             )}
-            <span className="w-full truncate text-wrap line-clamp-2 text-sm">{displayName}</span>
+            <span className="w-full truncate text-wrap line-clamp-1 text-sm">{displayName}</span>
+
             <CloseButton
               onPress={handleRemove}
               className="absolute top-1.5 right-1.5 opacity-0 group-hover:opacity-100 transition duration-200"

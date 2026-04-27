@@ -11,7 +11,7 @@ function NavButton({icon, onPress, className, isDisabled}: NavBtnProps) {
     <div
       className={
         `size-full flex items-center rounded-lg justify-center transition-colors duration-150` +
-        ` ${isDisabled ? 'opacity-50' : 'hover:bg-foreground-200 cursor-pointer'} ${className}`
+        ` ${isDisabled ? 'opacity-50' : 'hover:bg-surface-secondary cursor-pointer'} ${className}`
       }
       role="button"
       aria-disabled={isDisabled}

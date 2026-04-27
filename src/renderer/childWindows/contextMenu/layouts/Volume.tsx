@@ -32,18 +32,18 @@ const VolumeMenu = memo(() => {
       </div>
 
       {/* Current volume display */}
-      <div className="flex items-center justify-center rounded-lg bg-foreground-100 py-3">
+      <div className="flex items-center justify-center rounded-2xl bg-surface-secondary py-3">
         <div className="flex items-center gap-2">
           {effectiveMuted ? (
             <VolumeCross className="size-6 text-danger" />
           ) : volume === 0 ? (
-            <Volume className="size-6 text-foreground-500" />
+            <Volume className="size-6 text-muted" />
           ) : volume < 50 ? (
-            <Volume className="size-6 text-foreground-700" />
+            <Volume className="size-6 text-semi-muted" />
           ) : (
-            <VolumeLoud className="size-6 text-foreground-700" />
+            <VolumeLoud className="size-6 text-semi-muted" />
           )}
-          <span className="text-2xl font-bold text-foreground-800">{effectiveMuted ? 'Muted' : `${volume}%`}</span>
+          <span className="text-2xl font-bold text-muted">{effectiveMuted ? 'Muted' : `${volume}%`}</span>
         </div>
       </div>
 
@@ -70,13 +70,13 @@ const VolumeMenu = memo(() => {
         </Slider>
 
         {/* Volume markers */}
-        <div className="flex justify-between px-1 text-xs text-foreground-500">
+        <div className="flex justify-between px-1 text-xs">
           {[0, 25, 50, 75, 100].map(val => (
             <button
               key={val}
               aria-label={`Set volume to ${val}%`}
               onClick={() => handleVolumeChange(val)}
-              className="transition-colors hover:text-foreground-800">
+              className="transition-colors duration-200 text-muted hover:text-foreground">
               {val}%
             </button>
           ))}

@@ -36,8 +36,8 @@ export default function DescriptionGrid({title, items, columns = 2, className, i
           <div
             key={item.key}
             className={cn('min-w-0 rounded-3xl bg-surface/70 dark:bg-surface/70 px-3 py-3 space-y-1', itemClassName)}>
-            <div className="text-xs font-medium tracking-wide text-foreground-700">{item.label}</div>
-            <div className="wrap-break-word text-sm font-medium text-foreground-500">{item.content}</div>
+            <div className="text-xs font-medium tracking-wide text-foreground">{item.label}</div>
+            <div className="wrap-break-word text-sm font-medium text-muted">{item.content}</div>
           </div>
         ))}
       </div>

@@ -22,7 +22,7 @@ type ToastFooterProps = {
  */
 export function ToastFooter({buttons, customButtons, onClose, onExit, onRestart, onCustomClick}: ToastFooterProps) {
   return (
-    <div className="flex h-14 items-center justify-between border-t border-foreground-100 px-7">
+    <div className="flex h-14 items-center justify-between border-t border-surface-secondary px-7">
       {/* Left side: Close button */}
       <div>
         {buttons?.includes('close') && (

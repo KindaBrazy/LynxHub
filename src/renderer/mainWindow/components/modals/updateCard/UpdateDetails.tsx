@@ -37,9 +37,9 @@ export default function UpdateDetails({state, details, title}: Props) {
 
   const renderFileList = useCallback((files: string[]) => {
     return isEmpty(files) ? (
-      <p className="text-sm text-foreground-500">No files found in this category.</p>
+      <p className="text-sm text-muted">No files found in this category.</p>
     ) : (
-      <ul className="list-disc pl-5 text-sm text-foreground-600">
+      <ul className="list-disc pl-5 text-sm text-semi-muted">
         {files.map((file, index) => (
           <li key={index}>{file}</li>
         ))}
@@ -169,7 +169,7 @@ export default function UpdateDetails({state, details, title}: Props) {
                       </Table.ScrollContainer>
                     </Table>
                   ) : (
-                    <p className="text-sm text-foreground-500">No files have been modified.</p>
+                    <p className="text-sm text-muted">No files have been modified.</p>
                   )}
                 </Accordion.Body>
               </Accordion.Panel>

@@ -56,7 +56,7 @@ const DownloadItem = memo(({item}: DownloadItemProps) => {
   const onCancel = useCallback(() => handleAction(item.name, 'cancel'), [item.name, handleAction]);
 
   return (
-    <Card variant="secondary" className="cursor-default bg-foreground-100 shadow-md shrink-0">
+    <Card variant="secondary" className="shrink-0">
       <Card.Header>
         {/* Item Header */}
         <div className="flex items-start justify-between w-full">

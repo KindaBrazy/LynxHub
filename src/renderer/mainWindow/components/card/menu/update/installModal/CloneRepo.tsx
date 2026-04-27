@@ -127,7 +127,7 @@ export default function CloneRepo({url, start, done, isOpen, updateState, curren
           />
         </>
       ) : (
-        <div className="flex flex-col gap-y-4">
+        <div className="flex flex-col gap-y-4 mt-4">
           <Card variant="secondary">
             <Card.Header className="gap-x-2 flex flex-row items-center text-surface-secondary-foreground">
               <GitHub_Icon />
@@ -158,6 +158,7 @@ export default function CloneRepo({url, start, done, isOpen, updateState, curren
           {renderAlerts(currentStep)}
         </div>
       )}
+
       <WarningModal state={warningModal} />
     </>
   );

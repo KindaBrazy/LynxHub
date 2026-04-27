@@ -59,7 +59,7 @@ export default function ScreenShare() {
     <main>
       <div className={'h-120 w-155 flex flex-col overflow-hidden scrollbar-hide dark:bg-LynxRaisinBlack'}>
         {/* Header */}
-        <div className="border-b border-foreground-200 px-4 py-2">
+        <div className="border-b border-surface-tertiary px-4 py-2">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold">Select window or screen to share</h2>
           </div>
@@ -116,7 +116,7 @@ export default function ScreenShare() {
         </div>
 
         {/* Footer */}
-        <div className="border-t border-foreground-200 bg-foreground-100 px-4 py-2">
+        <div className="border-t border-surface-tertiary bg-surface-secondary px-4 py-2">
           <div className="flex justify-between gap-x-3">
             <Switch isSelected={shareAudio} onChange={setShareAudio}>
               <Switch.Control>

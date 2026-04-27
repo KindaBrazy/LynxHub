@@ -214,14 +214,14 @@ const MarkdownViewer = ({url, rounded = true, showBackground, urlType}: Markdown
 
         if (inline) {
           return (
-            <code className="rounded bg-gray-100 px-1 py-0.5 text-foreground-100 text-sm dark:bg-gray-800" {...props}>
+            <code className="rounded bg-gray-100 dark:bg-gray-800 px-1 py-0.5 text-semi-muted text-sm" {...props}>
               {children}
             </code>
           );
         }
 
         return (
-          <code className={`${language ? className : ''} text-foreground-800`} {...props}>
+          <code className={`${language ? className : ''} text-semi-muted`} {...props}>
             {children}
           </code>
         );
