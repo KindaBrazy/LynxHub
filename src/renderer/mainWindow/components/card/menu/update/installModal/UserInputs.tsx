@@ -5,7 +5,7 @@ import {File, FolderOpen} from '@solar-icons/react-perf/BoldDuotone';
 import {isNil} from 'lodash';
 import {Dispatch, FC, SetStateAction, useCallback, useEffect, useState} from 'react';
 
-import LynxSwitch from '../../../LynxSwitch';
+import LynxSwitch from '../../../../LynxSwitch';
 
 export interface UserInputsProps {
   /** Contains the custom field configuration elements injected by the card module. */

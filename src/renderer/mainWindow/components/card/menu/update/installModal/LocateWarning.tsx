@@ -2,7 +2,7 @@ import {Modal} from '@heroui-v3/react';
 import {ShieldWarning} from '@solar-icons/react-perf/BoldDuotone';
 import {Dispatch, SetStateAction} from 'react';
 
-import TabModal from '../../../TabModal';
+import TabModal from '../../../../TabModal';
 
 export interface LocateWarningProps {
   /** Enables or disables the visibility of the modal. */

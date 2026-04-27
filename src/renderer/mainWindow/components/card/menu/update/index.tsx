@@ -8,17 +8,17 @@ import {DownloadMinimalistic, Refresh} from '@solar-icons/react-perf/BoldDuotone
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {getCardMethod, useAllCardMethods} from '../../../plugins/modules';
-import {cardsActions} from '../../../redux/reducers/cards';
-import {AppDispatch} from '../../../redux/store';
-import {useInstalledCard, useIsAutoUpdateCard, useUpdateAvailable, useUpdatingCard} from '../../../utils/hooks';
-import {useTabModalManager} from '../../modals/useTabModalManager';
-import {useCardStore} from '../store';
+import {getCardMethod, useAllCardMethods} from '../../../../plugins/modules';
+import {cardsActions} from '../../../../redux/reducers/cards';
+import {AppDispatch} from '../../../../redux/store';
+import {useInstalledCard, useIsAutoUpdateCard, useUpdateAvailable, useUpdatingCard} from '../../../../utils/hooks';
+import {useCardStore} from '../../store';
+import {CommonProps} from '../about/types';
 
 /**
  * Menu item to trigger an update for the card.
  */
-export const UpdateMenuItem = () => {
+export const UpdateMenuItem = ({setType, state}: {setType: (type: 'install' | 'update') => void} & CommonProps) => {
   const id = useCardStore(state => state.id);
   const setMenuIsOpen = useCardStore(state => state.setMenuIsOpen);
   const repoUrl = useCardStore(state => state.repoUrl);
@@ -33,19 +33,18 @@ export const UpdateMenuItem = () => {
 
   const dispatch = useDispatch<AppDispatch>();
 
-  const {openModal} = useTabModalManager();
-
   const onPress = useCallback(() => {
     AddBreadcrumb_Renderer(`Start Update AI: id:${id}`);
     if (getCardMethod(allMethods, id, 'manager')?.updater.startUpdate) {
-      openModal('installUI', {cardId: id, type: 'update', title}, 'active');
+      setType('update');
+      state.open();
       setMenuIsOpen(false);
     } else if (webUi && webUi.dir) {
       dispatch(cardsActions.addUpdatingCard({devName, id, title}));
       setMenuIsOpen(false);
       gitIpc.pull(webUi.dir, id);
     }
-  }, [dispatch, setMenuIsOpen, webUi, devName, id, title, openModal, allMethods]);
+  }, [dispatch, setMenuIsOpen, webUi, devName, id, title, allMethods]);
 
   if (!updateAvailable || autoUpdate) return null;
 

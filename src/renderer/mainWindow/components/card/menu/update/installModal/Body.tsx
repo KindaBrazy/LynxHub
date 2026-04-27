@@ -1,6 +1,4 @@
 import {Label, ModalBody, ProgressBar} from '@heroui-v3/react';
-import DescriptionGrid, {DescriptionGridItem} from '@lynx/components/DescriptionGrid';
-import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import {DownloadProgress} from '@lynx_common/types/ipc';
 import {InitialStep, UserInputField, UserInputResult} from '@lynx_common/types/plugins/modules';
 import {formatSize} from '@lynx_common/utils';
@@ -8,7 +6,9 @@ import {CheckCircle, SadCircle, ShieldCross} from '@solar-icons/react-perf/BoldD
 import {capitalize} from 'lodash';
 import {Dispatch, Fragment, memo, RefObject, SetStateAction, useCallback} from 'react';
 
-import {XTermAPI} from '../../../useXTerm';
+import DescriptionGrid, {DescriptionGridItem} from '../../../../DescriptionGrid';
+import EmptyStateCard from '../../../../EmptyStateCard';
+import {XTermAPI} from '../../../../useXTerm';
 import CloneRepo from './CloneRepo';
 import {renderAlerts} from './CustomAlert';
 import InstallExtensions from './Extensions';
