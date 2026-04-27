@@ -113,8 +113,7 @@ const TerminalCDTo = memo(({id}: Props) => {
               {history.map(item => (
                 <Button key={item} variant="ghost" className="group" onPress={() => cdTo(item)} fullWidth>
                   <MoveToFolder className="size-3.5 shrink-0 text-muted" />
-                  <div
-                    className={'min-w-0 flex-1 truncate text-left text-xs text-semi-muted hover:text-foreground-900'}>
+                  <div className={'min-w-0 flex-1 truncate text-left text-xs text-semi-muted hover:text-foreground'}>
                     {item}
                   </div>
                   <CloseButton
