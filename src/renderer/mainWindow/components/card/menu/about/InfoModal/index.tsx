@@ -83,10 +83,12 @@ const CardInfoModalContent = ({state}: CommonProps) => {
   );
 };
 
-const CardInfoModal = (props: CommonProps) => {
+const CardInfoModal = ({state}: CommonProps) => {
   const CardInfo = useMemo(() => extensionsData.replaceModals.cardInfo, []);
 
-  return CardInfo ? <CardInfo /> : <CardInfoModalContent {...props} />;
+  if (!state.isOpen) return null;
+
+  return CardInfo ? <CardInfo /> : <CardInfoModalContent state={state} />;
 };
 
 export default CardInfoModal;

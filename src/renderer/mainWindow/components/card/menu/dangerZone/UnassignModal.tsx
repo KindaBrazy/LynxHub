@@ -57,10 +57,12 @@ const UnassignDialog = memo(({state}: CommonProps) => {
   );
 });
 
-const UnassignModal = (props: CommonProps) => {
+const UnassignModal = ({state}: CommonProps) => {
   const Unassign = useMemo(() => extensionsData.replaceModals.unassignCard, []);
 
-  return Unassign ? <Unassign /> : <UnassignDialog {...props} />;
+  if (!state.isOpen) return null;
+
+  return Unassign ? <Unassign /> : <UnassignDialog state={state} />;
 };
 
 export default UnassignModal;
