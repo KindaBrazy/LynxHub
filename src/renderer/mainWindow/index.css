@@ -17,6 +17,8 @@
   --color-LynxBlue: var(--color-LynxBlue);
   --color-LynxPurple: var(--color-LynxPurple);
 
+  --color-semi-muted: var(--semi-muted);
+
   --color-LynxWhiteSecond: #f6f6f6;
   --color-LynxWhiteThird: #ececec;
   --color-LynxWhiteFourth: #e1e1e1;
@@ -52,6 +54,8 @@
   --accent: oklch(0.705 0.169 242.482);
   --color-LynxBlue: oklch(0.705 0.169 242.482);
   --color-LynxPurple: oklch(0.636 0.305 319.947);
+  --muted: oklch(0.5517 0.0138 285.94);
+  --semi-muted: oklch(0.392 0.008 286.009);
 }
 
 .dark,
@@ -59,6 +63,8 @@
   --accent: oklch(0.509 0.246 262.557);
   --color-LynxBlue: oklch(0.509 0.246 262.557);
   --color-LynxPurple: oklch(0.581 0.299 307.027);
+  --muted: oklch(70.5% 0.015 286.067);
+  --semi-muted: oklch(0.789 0.017 286.008);
 }
 
 .scrollbar-hide::-webkit-scrollbar {
