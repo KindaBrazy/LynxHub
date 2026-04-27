@@ -49,10 +49,12 @@ const CardReadmeDialog = memo(({state}: CommonProps) => {
   );
 });
 
-const ReadmeModal = (props: CommonProps) => {
+const ReadmeModal = ({state}: CommonProps) => {
   const CardReadme = useMemo(() => extensionsData.replaceModals.cardReadme, []);
 
-  return CardReadme ? <CardReadme /> : <CardReadmeDialog {...props} />;
+  if (!state.isOpen) return null;
+
+  return CardReadme ? <CardReadme /> : <CardReadmeDialog state={state} />;
 };
 
 export default ReadmeModal;

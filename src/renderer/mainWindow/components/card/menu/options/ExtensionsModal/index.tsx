@@ -170,10 +170,12 @@ const ExtensionsModalContent = ({state}: CommonProps) => {
   );
 };
 
-const ExtensionsModal = (props: CommonProps) => {
+const ExtensionsModal = ({state}: CommonProps) => {
   const CardExt = useMemo(() => extensionsData.replaceModals.cardExtensions, []);
 
-  return CardExt ? <CardExt /> : <ExtensionsModalContent {...props} />;
+  if (!state.isOpen) return null;
+
+  return CardExt ? <CardExt /> : <ExtensionsModalContent state={state} />;
 };
 
 export default ExtensionsModal;

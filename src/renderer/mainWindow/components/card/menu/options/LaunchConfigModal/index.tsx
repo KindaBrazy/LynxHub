@@ -4,10 +4,12 @@ import {extensionsData} from '../../../../../plugins/extensions/loader';
 import {CommonProps} from '../../about/types';
 import LaunchConfig from './LaunchConfig';
 
-const LaunchConfigModal = (props: CommonProps) => {
+const LaunchConfigModal = ({state}: CommonProps) => {
   const LaunchConfigExt = useMemo(() => extensionsData.replaceModals.launchConfig, []);
 
-  return LaunchConfigExt ? <LaunchConfigExt /> : <LaunchConfig {...props} />;
+  if (!state.isOpen) return null;
+
+  return LaunchConfigExt ? <LaunchConfigExt /> : <LaunchConfig state={state} />;
 };
 
 export default LaunchConfigModal;

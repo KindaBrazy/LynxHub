@@ -108,10 +108,12 @@ function GitManagerModalContent({state}: CommonProps) {
   );
 }
 
-const GitManagerModal = (props: CommonProps) => {
+const GitManagerModal = ({state}: CommonProps) => {
   const GitManagerExt = useMemo(() => extensionsData.replaceModals.gitManager, []);
 
-  return GitManagerExt ? <GitManagerExt /> : <GitManagerModalContent {...props} />;
+  if (!state.isOpen) return null;
+
+  return GitManagerExt ? <GitManagerExt /> : <GitManagerModalContent state={state} />;
 };
 
 export default GitManagerModal;

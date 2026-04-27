@@ -107,10 +107,12 @@ const UninstallDialog = memo(({state}: CommonProps) => {
   );
 });
 
-const UninstallModal = (props: CommonProps) => {
+const UninstallModal = ({state}: CommonProps) => {
   const Uninstall = useMemo(() => extensionsData.replaceModals.uninstallCard, []);
 
-  return Uninstall ? <Uninstall /> : <UninstallDialog {...props} />;
+  if (!state.isOpen) return null;
+
+  return Uninstall ? <Uninstall /> : <UninstallDialog state={state} />;
 };
 
 export default UninstallModal;
