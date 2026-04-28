@@ -23,10 +23,6 @@ type Props = {
 };
 
 /**
- * TODO like installer step progress use scroll detection to auto scroll to active tab
- */
-
-/**
  * Component representing a single tab in the tab bar.
  * Handles selection, closing, and drag interactions.
  */

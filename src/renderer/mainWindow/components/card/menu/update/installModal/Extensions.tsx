@@ -13,8 +13,6 @@ export interface InstallExtensionsProps {
   extensionsResolver: RefObject<(() => void) | null>;
 }
 
-// TODO: test functionality and ui
-
 /**
  * Handles the background cloning/installation of any required sub-extensions for a module.
  *
