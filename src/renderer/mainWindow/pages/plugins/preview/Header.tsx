@@ -2,7 +2,7 @@ import {Avatar, Button, Chip, Description, Label} from '@heroui-v3/react';
 import {usePluginsState} from '@lynx/redux/reducers/plugins';
 import {useUserState} from '@lynx/redux/reducers/user';
 import {PluginInstalledItem} from '@lynx_common/types/plugins';
-import {extractGitUrl, getCacheUrl} from '@lynx_common/utils';
+import {extractGitUrl, getCacheUrl, getFallbackString} from '@lynx_common/utils';
 import {getPluginIconUrl} from '@lynx_common/utils/plugins';
 import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
 import {
@@ -71,11 +71,7 @@ export default function PluginPreviewHeader({installedPlugin}: PluginPreviewHead
         <div className="inline-flex items-center gap-2">
           <Avatar>
             <Avatar.Image src={getCacheUrl(pluginIconUrl)} alt={selectedPlugin?.metadata.title} />
-            {selectedPlugin && (
-              <Avatar.Fallback>
-                {...selectedPlugin.metadata.title.split(' ').map(item => item.slice(0, 1))}
-              </Avatar.Fallback>
-            )}
+            {selectedPlugin && <Avatar.Fallback>{getFallbackString(selectedPlugin)}</Avatar.Fallback>}
           </Avatar>
           <div className="flex flex-col">
             <Label className="text-lg">{selectedPlugin?.metadata.title}</Label>

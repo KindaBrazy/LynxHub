@@ -20,7 +20,7 @@ import {AppDispatch} from '@lynx/redux/store';
 import {showRestartModal} from '@lynx/utils';
 import {Linux_Icon, MacOS_Icon, Windows_Icon} from '@lynx_assets/icons';
 import {PluginInstalledItem, PluginItem} from '@lynx_common/types/plugins';
-import {extractGitUrl, getCacheUrl} from '@lynx_common/utils';
+import {extractGitUrl, getCacheUrl, getFallbackString} from '@lynx_common/utils';
 import {getPluginIconUrl} from '@lynx_common/utils/plugins';
 import gitIpc from '@lynx_shared/ipc/git';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
@@ -170,7 +170,7 @@ export function PluginListItem({item, installed}: PluginListItemProps) {
         <div className="inline-flex items-center gap-2">
           <Avatar>
             <Avatar.Image alt={item.metadata.title} src={getCacheUrl(getPluginIconUrl(item.url))} />
-            <Avatar.Fallback>{...item.metadata.title.split(' ').map(item => item.slice(0, 1))}</Avatar.Fallback>
+            <Avatar.Fallback>{getFallbackString(item.metadata.title)}</Avatar.Fallback>
           </Avatar>
           <div className="flex flex-col">
             <Link

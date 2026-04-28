@@ -1,4 +1,5 @@
 import {Avatar, Card, Description, Label} from '@heroui-v3/react';
+import {getFallbackString} from '@lynx_common/utils';
 import {ReactNode} from 'react';
 
 type Props = {title: string; description: string; icon: string; onPress: () => void; footer?: ReactNode};
@@ -18,7 +19,7 @@ export function ToolsCard({title, description, icon, onPress, footer}: Props) {
         <div className="inline-flex items-center gap-2">
           <Avatar className={`size-12 shrink-0 ring-LynxPurple ring-2`}>
             <Avatar.Image src={icon} alt={title} />
-            <Avatar.Fallback>{...title.split(' ').map(item => item.slice(0, 1).toUpperCase())}</Avatar.Fallback>
+            <Avatar.Fallback>{getFallbackString(title)}</Avatar.Fallback>
           </Avatar>
           <div className="flex flex-col">
             <Label>{title}</Label>

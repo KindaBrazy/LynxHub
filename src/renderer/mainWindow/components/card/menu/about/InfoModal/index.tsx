@@ -1,6 +1,6 @@
 import {Avatar, Description, Label, Link, Modal} from '@heroui-v3/react';
 import {CardInfoDescriptions} from '@lynx_common/types/plugins/modules';
-import {extractGitUrl, getCacheUrl, validateGitRepoUrl} from '@lynx_common/utils';
+import {extractGitUrl, getCacheUrl, getFallbackString, validateGitRepoUrl} from '@lynx_common/utils';
 import {useDebounceBreadcrumb} from '@lynx_shared/sentry/Breadcrumbs';
 import {Inbox} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty, startCase} from 'lodash';
@@ -48,11 +48,7 @@ const CardInfoModalContent = ({state}: CommonProps) => {
             <div className="inline-flex items-center gap-2">
               <Avatar>
                 <Avatar.Image alt={startCase(devName)} src={getCacheUrl(extractGitUrl(url).avatarUrl)} />
-                <Avatar.Fallback>
-                  {...startCase(devName)
-                    .split(' ')
-                    .map(item => item.slice(0, 1).toUpperCase())}
-                </Avatar.Fallback>
+                <Avatar.Fallback>{getFallbackString(devName)}</Avatar.Fallback>
               </Avatar>
               <div className="flex flex-col">
                 <Label>{startCase(devName)}</Label>
