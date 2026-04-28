@@ -89,10 +89,11 @@ export const CardHeaderContent = memo(({modifiedTitle, onTitleChange, updateAvai
       <AnimatePresence>
         {isInstalled && updateChecking === id && (
           <motion.div
-            exit={{opacity: 0, translateY: 2}}
-            animate={{opacity: 1, translateY: 0}}
-            initial={{opacity: 0, translateY: 2}}>
-            <Spinner size="sm" color="success" className="absolute top-1.5 right-1.5" />
+            exit={{opacity: 0, scale: 0.2}}
+            animate={{opacity: 1, scale: 1}}
+            initial={{opacity: 0, scale: 0.2}}
+            className="absolute top-1.5 right-1.5 flex">
+            <Spinner size="sm" color="success" />
           </motion.div>
         )}
       </AnimatePresence>
