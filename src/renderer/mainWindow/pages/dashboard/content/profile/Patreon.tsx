@@ -2,7 +2,7 @@ import {Alert, Avatar, Button, Card, Description, Label} from '@heroui-v3/react'
 import {userActions, useUserState} from '@lynx/redux/reducers/user';
 import {AppDispatch} from '@lynx/redux/store';
 import {Patreon_Icon} from '@lynx_assets/icons';
-import {getCacheUrl} from '@lynx_common/utils';
+import {getCacheUrl, getFallbackString} from '@lynx_common/utils';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
 import userIpc from '@lynx_shared/ipc/user';
 import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
@@ -80,7 +80,7 @@ const Profile_Patreon = memo(() => {
         <div className="inline-flex items-center gap-2">
           <Avatar className={`shrink-0`}>
             <Avatar.Image src={getCacheUrl(patreonUserData.imageUrl)} />
-            <Avatar.Fallback>{...patreonUserData.name.split(' ').map(item => item.slice(0, 1))}</Avatar.Fallback>
+            <Avatar.Fallback>{getFallbackString(patreonUserData.name)}</Avatar.Fallback>
           </Avatar>
           <div className="flex flex-col">
             <Label

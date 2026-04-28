@@ -1,5 +1,5 @@
 import {Avatar, CardHeader, Chip, Description, Label, Spinner} from '@heroui-v3/react';
-import {extractGitUrl, getCacheUrl} from '@lynx_common/utils';
+import {extractGitUrl, getCacheUrl, getFallbackString} from '@lynx_common/utils';
 import {DownloadMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
 import {AnimatePresence, motion} from 'framer-motion';
 import {memo, useMemo} from 'react';
@@ -35,7 +35,7 @@ export const CardHeaderContent = memo(({modifiedTitle, onTitleChange, updateAvai
       <div className="inline-flex items-center gap-2">
         <Avatar className={`size-12 shrink-0 ${isInstalled && 'ring-LynxBlue ring-2'}`}>
           <Avatar.Image src={avatarSrc} alt={modifiedTitle} />
-          <Avatar.Fallback>{...modifiedTitle.split(' ').map(item => item.slice(0, 1).toUpperCase())}</Avatar.Fallback>
+          <Avatar.Fallback>{getFallbackString(modifiedTitle)}</Avatar.Fallback>
         </Avatar>
         <div className="flex flex-col">
           <Label
