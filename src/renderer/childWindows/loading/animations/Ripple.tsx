@@ -45,15 +45,13 @@ export const Ripple = React.memo(function Ripple({
                 opacity,
                 animationDelay,
                 borderStyle,
-                borderWidth: '1px',
-                borderColor: `var(--muted)`,
                 top: '50%',
                 left: '50%',
                 transform: 'translate(-50%, -50%) scale(1)',
               } as CSSProperties
             }
             key={i}
-            className={`absolute animate-ripple rounded-full border bg-foreground/25 shadow-xl`}
+            className={`absolute animate-ripple rounded-full border border-black bg-foreground/25 shadow-xl`}
           />
         );
       })}
