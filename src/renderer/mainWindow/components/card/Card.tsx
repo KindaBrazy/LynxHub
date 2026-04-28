@@ -59,13 +59,18 @@ const LynxCard = memo(() => {
   return (
     <>
       <MotionCard
+        onClick={() => {
+          if (!isPressable) return;
+
+          if (isInstalled) startAi();
+          else install();
+        }}
         className={
           'relative h-46 w-75 border border-surface transition-all duration-200 ' +
           `group hover:scale-[1.02] hover:shadow-lg ${isPressable && 'cursor-pointer'}`
         }
         whileHover="hover"
-        onContextMenu={() => setMenuIsOpen(true)}
-        onClick={isPressable ? (isInstalled ? startAi : install) : undefined}>
+        onContextMenu={() => setMenuIsOpen(true)}>
         <div
           style={accentStyle}
           className={`absolute inset-0 z-0 scale-150 opacity-50 ${isInstalled ? 'bg-installed' : 'bg-uninstalled'}`}
