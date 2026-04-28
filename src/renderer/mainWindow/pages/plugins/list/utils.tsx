@@ -6,7 +6,7 @@ import {PluginFilter, PluginItem} from '@lynx_common/types/plugins';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
 import staticsIpc from '@lynx_shared/ipc/statics';
 import {Filter} from '@solar-icons/react-perf/BoldDuotone';
-import {isEmpty} from 'lodash';
+import {isEmpty} from 'lodash-es';
 import {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 

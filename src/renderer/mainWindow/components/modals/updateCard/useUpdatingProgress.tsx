@@ -1,7 +1,7 @@
 import {UseOverlayStateReturn} from '@heroui-v3/react';
 import gitIpc from '@lynx_shared/ipc/git';
 import {Documents} from '@solar-icons/react-perf/BoldDuotone';
-import {isEmpty} from 'lodash';
+import {isEmpty} from 'lodash-es';
 import {LucideReplace, Minus, Plus} from 'lucide-react';
 import {useEffect} from 'react';
 import {useDispatch} from 'react-redux';

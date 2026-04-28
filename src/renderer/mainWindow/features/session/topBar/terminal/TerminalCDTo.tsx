@@ -4,7 +4,7 @@ import filesIpc from '@lynx_shared/ipc/files';
 import ptyIpc from '@lynx_shared/ipc/pty';
 import storageIpc from '@lynx_shared/ipc/storage';
 import {Broom, FolderOpen, MoveToFolder} from '@solar-icons/react-perf/BoldDuotone';
-import {isEmpty} from 'lodash';
+import {isEmpty} from 'lodash-es';
 import {memo, useCallback, useEffect, useState} from 'react';
 
 import LynxTooltip from '../../../../components/LynxTooltip';

@@ -9,7 +9,7 @@ import {
 } from '@lynx_common/types/plugins/modules';
 import ptyIpc from '@lynx_shared/ipc/pty';
 import utilsIpc from '@lynx_shared/ipc/utils';
-import {isEmpty, isNil} from 'lodash';
+import {isEmpty, isNil} from 'lodash-es';
 import {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 

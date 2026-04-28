@@ -3,7 +3,7 @@ import {APP_BUILD_NUMBER, APP_VERSION, RELEASES_PAGE} from '@lynx_common/consts'
 import {AppUpdateInfo} from '@lynx_common/types';
 import {ShieldCross} from '@solar-icons/react-perf/BoldDuotone';
 import {AltArrowDown, ArrowRight} from '@solar-icons/react-perf/Linear';
-import {isEmpty} from 'lodash';
+import {isEmpty} from 'lodash-es';
 
 import {RenderSubItems} from '../../../utils/hooks';
 import DescriptionGrid from '../../DescriptionGrid';

@@ -3,7 +3,7 @@ import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {useGetCardsByPath} from '@lynx/plugins/modules';
 import {AvailablePageIDs} from '@lynx_common/consts';
 import {LayoutGroup, motion, Variants} from 'framer-motion';
-import {isEmpty, isNil} from 'lodash';
+import {isEmpty, isNil} from 'lodash-es';
 import {FC, memo, useMemo} from 'react';
 
 import EmptyStateCard from '../EmptyStateCard';

@@ -14,7 +14,7 @@ import {extractGitUrl, isDev} from '@lynx_common/utils';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
 import storageIpc from '@lynx_shared/ipc/storage';
 import {captureException} from '@sentry/electron/renderer';
-import {compact} from 'lodash';
+import {compact} from 'lodash-es';
 import {useSyncExternalStore} from 'react';
 
 // ─── Types ────────────────────────────────────────────────────────────────────

@@ -1,5 +1,5 @@
 import {addBreadcrumb} from '@sentry/electron/renderer';
-import {isEmpty} from 'lodash';
+import {isEmpty} from 'lodash-es';
 import {DependencyList, useEffect} from 'react';
 
 let isEnabled: boolean = true;

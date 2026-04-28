@@ -5,7 +5,7 @@ import {ShallowCloneOptions} from '@lynx_common/types/git';
 import {extractGitUrl, validateGitRepoUrl} from '@lynx_common/utils';
 import classHolder from '@lynx_main/managers/classHolder';
 import {checkPathExists, openDialog} from '@lynx_main/utils';
-import {isEmpty} from 'lodash';
+import {isEmpty} from 'lodash-es';
 import {
   CheckRepoActions,
   GitResponseError,

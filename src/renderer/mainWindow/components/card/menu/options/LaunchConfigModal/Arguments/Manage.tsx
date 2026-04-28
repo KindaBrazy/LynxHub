@@ -3,7 +3,7 @@ import {ArgumentsPresets, ChosenArgumentsData} from '@lynx_common/types';
 import {ChosenArgument} from '@lynx_common/types/plugins/modules';
 import {Inbox} from '@solar-icons/react-perf/BoldDuotone';
 import {AnimatePresence, Reorder} from 'framer-motion';
-import {isEmpty} from 'lodash';
+import {isEmpty} from 'lodash-es';
 import {Plus} from 'lucide-react';
 import {Dispatch, SetStateAction, useCallback} from 'react';
 

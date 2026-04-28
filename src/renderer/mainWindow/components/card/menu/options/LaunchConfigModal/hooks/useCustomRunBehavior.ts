@@ -1,6 +1,6 @@
 import {CustomRunBehaviorData} from '@lynx_common/types/ipc';
 import storageIpc, {storageUtilsIpc} from '@lynx_shared/ipc/storage';
-import {isEmpty} from 'lodash';
+import {isEmpty} from 'lodash-es';
 import {useCallback, useEffect, useState} from 'react';
 
 /**

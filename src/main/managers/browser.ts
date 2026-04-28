@@ -7,7 +7,7 @@ import {applicationIpc} from '@lynx_main/ipc/application';
 import {browserIpc} from '@lynx_main/ipc/browser';
 import {getUserAgent, getWindowColor} from '@lynx_main/utils';
 import {BrowserWindow, FindInPageOptions, session, shell, WebContents, WebContentsView} from 'electron';
-import {isNil} from 'lodash';
+import {isNil} from 'lodash-es';
 
 import icon from '../../../resources/icon.png?asset';
 import classHolder from './classHolder';

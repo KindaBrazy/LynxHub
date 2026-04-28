@@ -1,6 +1,6 @@
 import {Accordion, Chip, Modal, Table, UseOverlayStateReturn} from '@heroui-v3/react';
 import {AltArrowDown} from '@solar-icons/react-perf/Linear';
-import {isEmpty} from 'lodash';
+import {isEmpty} from 'lodash-es';
 import {LucideReplace, Minus, Plus} from 'lucide-react';
 import {ReactNode, useCallback, useMemo} from 'react';
 import {PullResult} from 'simple-git';

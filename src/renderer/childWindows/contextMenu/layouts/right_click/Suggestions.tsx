@@ -1,6 +1,6 @@
 import {Separator} from '@heroui-v3/react';
 import contextMenuIpc from '@lynx_shared/ipc/contextMenu';
-import {isEmpty} from 'lodash';
+import {isEmpty} from 'lodash-es';
 import {memo} from 'react';
 
 import {ActionButton, createActionHandler} from './Utils';

@@ -1,7 +1,7 @@
 import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {useSettingsState} from '@lynx/redux/reducers/settings';
 import {searchInStrings} from '@lynx/utils';
-import {compact} from 'lodash';
+import {compact} from 'lodash-es';
 import {type ComponentType, useMemo} from 'react';
 
 import SettingsBrowser, {SettingsBrowserId} from './items/browser';

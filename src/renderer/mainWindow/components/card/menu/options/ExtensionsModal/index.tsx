@@ -3,7 +3,7 @@ import {extractGitUrl} from '@lynx_common/utils';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {useDebounceBreadcrumb} from '@lynx_shared/sentry/Breadcrumbs';
 import {Download} from '@solar-icons/react-perf/BoldDuotone';
-import {isEmpty} from 'lodash';
+import {isEmpty} from 'lodash-es';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {extensionsData} from '../../../../../plugins/extensions/loader';

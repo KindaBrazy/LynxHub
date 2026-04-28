@@ -1,5 +1,5 @@
 import {extensionsData} from '@lynx/plugins/extensions/loader';
-import {isEmpty, isNil} from 'lodash';
+import {isEmpty, isNil} from 'lodash-es';
 import {memo, useMemo} from 'react';
 
 const classNames = 'flex size-full items-center overflow-x-scroll scrollbar-hide';

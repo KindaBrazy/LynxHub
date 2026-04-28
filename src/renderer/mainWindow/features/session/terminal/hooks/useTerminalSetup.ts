@@ -1,6 +1,6 @@
 import {XTermAPI} from '@lynx/components/XTermCore';
 import ptyIpc from '@lynx_shared/ipc/pty';
-import {isEmpty} from 'lodash';
+import {isEmpty} from 'lodash-es';
 import {Dispatch, RefObject, SetStateAction, useCallback, useEffect, useRef} from 'react';
 
 type UseTerminalSetupProps = {

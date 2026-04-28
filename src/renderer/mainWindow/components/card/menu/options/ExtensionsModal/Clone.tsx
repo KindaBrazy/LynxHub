@@ -5,7 +5,7 @@ import {extractGitUrl, validateGitRepoUrl} from '@lynx_common/utils';
 import gitIpc from '@lynx_shared/ipc/git';
 import {Download} from '@solar-icons/react-perf/BoldDuotone';
 import {motion} from 'framer-motion';
-import {capitalize, startCase} from 'lodash';
+import {capitalize, startCase} from 'lodash-es';
 import {useCallback, useEffect, useState} from 'react';
 import {SimpleGitProgressEvent} from 'simple-git';
 

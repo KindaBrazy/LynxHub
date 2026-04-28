@@ -3,7 +3,7 @@ import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {useCardsState} from '@lynx/redux/reducers/cards';
 import {useDebounceBreadcrumb} from '@lynx_shared/sentry/Breadcrumbs';
 import {AnimatePresence, LayoutGroup} from 'framer-motion';
-import {isEmpty} from 'lodash';
+import {isEmpty} from 'lodash-es';
 import {memo, useMemo, useState} from 'react';
 
 import {AllCardsSection, CardsBySearch, PinnedCars, RecentlyCards} from '../CardsCategory';

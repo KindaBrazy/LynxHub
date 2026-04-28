@@ -2,7 +2,7 @@ import {Separator} from '@heroui-v3/react';
 import contextMenuIpc from '@lynx_shared/ipc/contextMenu';
 import {ClipboardText, Copy, Scissors, TextSelection, UndoLeftRound} from '@solar-icons/react-perf/BoldDuotone';
 import type {EditFlags} from 'electron';
-import {isEmpty} from 'lodash';
+import {isEmpty} from 'lodash-es';
 import {memo, useCallback} from 'react';
 
 import {ActionButton, createActionHandler} from './Utils';

@@ -1,7 +1,7 @@
 import {Button, Input} from '@heroui-v3/react';
 import {TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
 import {Reorder} from 'framer-motion';
-import {isEmpty} from 'lodash';
+import {isEmpty} from 'lodash-es';
 import {GripVertical} from 'lucide-react';
 import {KeyboardEvent, memo, useCallback, useState} from 'react';
 

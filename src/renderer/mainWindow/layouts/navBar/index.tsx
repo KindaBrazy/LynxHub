@@ -1,6 +1,6 @@
 import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {useAppState} from '@lynx/redux/reducers/app';
-import {isEmpty} from 'lodash';
+import {isEmpty} from 'lodash-es';
 import {memo, useMemo} from 'react';
 
 import {ContentsNav, SettingsNav} from './Buttons';

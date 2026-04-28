@@ -9,7 +9,7 @@ import {PluginPage_Icon} from '@lynx_assets/icons/pages';
 import {PluginFilter} from '@lynx_common/types/plugins';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
 import {Refresh} from '@solar-icons/react-perf/BoldDuotone';
-import {isEmpty} from 'lodash';
+import {isEmpty} from 'lodash-es';
 import {useCallback, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 

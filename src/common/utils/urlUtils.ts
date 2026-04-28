@@ -1,4 +1,4 @@
-import {isEqual} from 'lodash';
+import {isEqual} from 'lodash-es';
 import normalizeUrl, {Options} from 'normalize-url';
 
 import {SearchQuerySites} from '../types';

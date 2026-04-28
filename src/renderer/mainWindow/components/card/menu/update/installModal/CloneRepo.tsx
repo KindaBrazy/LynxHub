@@ -6,7 +6,7 @@ import {extractGitUrl, isWin} from '@lynx_common/utils';
 import filesIpc from '@lynx_shared/ipc/files';
 import gitIpc from '@lynx_shared/ipc/git';
 import {Folder2} from '@solar-icons/react-perf/BoldDuotone';
-import {capitalize} from 'lodash';
+import {capitalize} from 'lodash-es';
 import {useEffect, useState} from 'react';
 import {SimpleGitProgressEvent} from 'simple-git';
 

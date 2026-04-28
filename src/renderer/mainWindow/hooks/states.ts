@@ -1,6 +1,6 @@
 import {useCardsState} from '@lynx/redux/reducers/cards';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
-import {isEmpty, isEqual} from 'lodash';
+import {isEmpty, isEqual} from 'lodash-es';
 import {useEffect} from 'react';
 
 /**

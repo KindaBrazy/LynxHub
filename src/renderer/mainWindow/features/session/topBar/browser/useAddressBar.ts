@@ -1,6 +1,6 @@
 import {formatWebAddress} from '@lynx_common/utils';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
-import {isEmpty} from 'lodash';
+import {isEmpty} from 'lodash-es';
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 

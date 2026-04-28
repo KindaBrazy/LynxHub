@@ -8,7 +8,7 @@ import {
 } from '@lynx_common/types/plugins/modules';
 import moduleIpc from '@lynx_shared/ipc/plugins/module';
 import ptyIpc from '@lynx_shared/ipc/pty';
-import {isNil} from 'lodash';
+import {isNil} from 'lodash-es';
 import {Dispatch, RefObject, SetStateAction, useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 

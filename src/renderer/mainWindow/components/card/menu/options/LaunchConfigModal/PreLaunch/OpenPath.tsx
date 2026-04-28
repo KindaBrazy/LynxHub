@@ -1,7 +1,7 @@
 import {Button, Dropdown, Label} from '@heroui-v3/react';
 import filesIpc from '@lynx_shared/ipc/files';
 import {File, Folder, Inbox} from '@solar-icons/react-perf/BoldDuotone';
-import {isEmpty} from 'lodash';
+import {isEmpty} from 'lodash-es';
 import {Plus} from 'lucide-react';
 import {useCallback} from 'react';
 

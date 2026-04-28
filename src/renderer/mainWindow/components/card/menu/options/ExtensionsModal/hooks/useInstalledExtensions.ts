@@ -2,7 +2,7 @@ import {validateGitRepoUrl} from '@lynx_common/utils';
 import filesIpc from '@lynx_shared/ipc/files';
 import gitIpc from '@lynx_shared/ipc/git';
 import utilsIpc from '@lynx_shared/ipc/utils';
-import {isEmpty} from 'lodash';
+import {isEmpty} from 'lodash-es';
 import {useCallback, useState} from 'react';
 
 import {topToast} from '../../../../../../layouts/ToastProviders';

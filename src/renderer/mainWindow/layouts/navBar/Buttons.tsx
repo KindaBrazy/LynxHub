@@ -16,7 +16,7 @@ import {
   ToolsPage_Icon,
 } from '@lynx_assets/icons/pages';
 import {PageID, PageTitles} from '@lynx_common/consts';
-import {isEmpty} from 'lodash';
+import {isEmpty} from 'lodash-es';
 import {useMemo} from 'react';
 
 import NavigationDock, {NavItem} from './Dock';

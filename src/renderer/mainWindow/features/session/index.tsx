@@ -10,7 +10,7 @@ import ptyIpc from '@lynx_shared/ipc/pty';
 import storageIpc, {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {SearchAddon} from '@xterm/addon-search';
 import {SerializeAddon} from '@xterm/addon-serialize';
-import {isNil} from 'lodash';
+import {isNil} from 'lodash-es';
 import {useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 

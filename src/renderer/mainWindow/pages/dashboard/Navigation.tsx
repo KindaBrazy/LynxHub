@@ -4,7 +4,7 @@ import {DashboardPage_Icon} from '@lynx_assets/icons/pages';
 import staticsIpc from '@lynx_shared/ipc/statics';
 import {Download, HeartPulse2, InfoSquare, SmileCircle} from '@solar-icons/react-perf/BoldDuotone';
 import {motion} from 'framer-motion';
-import {isEmpty} from 'lodash';
+import {isEmpty} from 'lodash-es';
 import {memo, ReactNode, useCallback, useEffect, useMemo, useState} from 'react';
 
 import SettingsSearchHighlight from '../settings/SettingsSearchHighlight';

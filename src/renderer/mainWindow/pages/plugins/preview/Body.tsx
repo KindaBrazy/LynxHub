@@ -7,7 +7,7 @@ import {useDebounceBreadcrumb} from '@lynx_shared/sentry/Breadcrumbs';
 import {HomeAngle2} from '@solar-icons/react-perf/BoldDuotone';
 import {Checklist} from '@solar-icons/react-perf/LineDuotone';
 import {AnimatePresence, motion} from 'framer-motion';
-import {isNil} from 'lodash';
+import {isNil} from 'lodash-es';
 import {useEffect, useMemo, useState} from 'react';
 
 import ChangelogList from './ChangelogList';

@@ -6,7 +6,7 @@ import {CustomRunBehaviorData, FavIcons, LegacyCustomRunBehaviorData} from '@lyn
 import AppStorageData from '@lynx_common/types/storage';
 import {encryptString, encryptStrings, getUserAgent} from '@lynx_main/utils';
 import {app} from 'electron';
-import {isEmpty} from 'lodash';
+import {isEmpty} from 'lodash-es';
 import {LowSync} from 'lowdb';
 
 /**

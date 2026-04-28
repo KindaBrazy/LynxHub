@@ -2,7 +2,7 @@ import {DownloadItemInfo} from '@lynx_common/types/downloadManager';
 import contextMenuIpc from '@lynx_shared/ipc/contextMenu';
 import windowDialogsIpc from '@lynx_shared/ipc/dialogsWindow';
 import downloadManagerIpc from '@lynx_shared/ipc/downloadManager';
-import {isEmpty} from 'lodash';
+import {isEmpty} from 'lodash-es';
 import {useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 

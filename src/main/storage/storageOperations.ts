@@ -25,7 +25,7 @@ import {
   getRelativePath,
   isPortable,
 } from '@lynx_main/utils';
-import {uniqBy} from 'lodash';
+import {uniqBy} from 'lodash-es';
 
 import BaseStorage from './index';
 

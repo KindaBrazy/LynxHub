@@ -16,7 +16,7 @@ import {WebLinksAddon} from '@xterm/addon-web-links';
 import {WebglAddon} from '@xterm/addon-webgl';
 import {Terminal as XTerminal} from '@xterm/xterm';
 import FontFaceObserver from 'fontfaceobserver';
-import {isEmpty, isEqual} from 'lodash';
+import {isEmpty, isEqual} from 'lodash-es';
 import {RefObject, useCallback, useEffect, useRef} from 'react';
 
 import {topToast} from '../layouts/ToastProviders';

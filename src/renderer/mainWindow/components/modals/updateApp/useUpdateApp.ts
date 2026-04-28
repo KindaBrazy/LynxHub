@@ -2,7 +2,7 @@ import {APP_BUILD_NUMBER, EARLY_RELEASES_PAGE, INSIDER_RELEASES_PAGE, RELEASES_P
 import {AppUpdateInfo, Changelog, UpdateDownloadProgress} from '@lynx_common/types';
 import applicationIpc from '@lynx_shared/ipc/application';
 import staticsIpc from '@lynx_shared/ipc/statics';
-import {isEmpty} from 'lodash';
+import {isEmpty} from 'lodash-es';
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 

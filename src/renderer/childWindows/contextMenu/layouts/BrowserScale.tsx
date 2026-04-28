@@ -2,7 +2,7 @@ import {Button, Label, Slider} from '@heroui-v3/react';
 import browserIpc from '@lynx_shared/ipc/browser';
 import storageIpc from '@lynx_shared/ipc/storage';
 import {Magnifier, Refresh} from '@solar-icons/react-perf/BoldDuotone';
-import {isArray} from 'lodash';
+import {isArray} from 'lodash-es';
 import {memo, useCallback} from 'react';
 import {useDispatch} from 'react-redux';
 
