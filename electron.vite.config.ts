@@ -71,7 +71,7 @@ export default defineConfig(({mode}) => {
         federation({
           name: 'host-app',
           remotes: {nothing: 'nothing.js'},
-          shared: ['react', 'lodash', 'react-dom', 'react-redux', '@heroui/react'],
+          shared: ['react', 'react-dom', 'react-redux', '@heroui/react'],
         }),
       ],
       resolve: {
