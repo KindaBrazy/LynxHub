@@ -126,6 +126,8 @@ export function useElementResizing(onResize: (data: ElementResizeData) => void) 
       const width = Math.max(Math.ceil(element.scrollWidth), Math.ceil(rect.width));
       const height = Math.max(Math.ceil(element.scrollHeight), Math.ceil(rect.height));
 
+      if (width < 1 || height < 1) return;
+
       const dpr = window.devicePixelRatio || 1;
       onResize({width, height, dpr, x: rect.x, y: rect.y});
     };
