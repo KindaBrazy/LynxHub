@@ -122,7 +122,7 @@ export default class MainWindowManager {
       // Small delay to ensure smooth transition
       setTimeout(() => {
         this.onReadyToShowListeners.forEach(listener => listener());
-      }, 2000); // TODO: Investigate if this 2s delay is still necessary
+      }, 2000);
     });
 
     // Handle external links and new tabs

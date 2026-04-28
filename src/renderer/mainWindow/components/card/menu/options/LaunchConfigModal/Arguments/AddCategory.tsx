@@ -6,8 +6,6 @@ import Highlighter from 'react-highlight-words';
 
 import {searchInStrings} from '../../../../../../utils';
 
-// TODO: improve long list performance
-
 type Props = {
   listData: ArgumentSection[] | ArgumentItem[];
   title: string;

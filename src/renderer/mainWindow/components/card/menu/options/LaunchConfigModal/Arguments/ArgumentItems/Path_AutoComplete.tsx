@@ -18,11 +18,6 @@ type Props = {
   defaultValue?: string;
 };
 
-/* TODO
- * 1. Fix escape press to not clear input
- * 2. First time open can not use arrows until first text change
- */
-
 /**
  * Autocomplete component for file system paths.
  * Lists files and directories relative to a base directory.

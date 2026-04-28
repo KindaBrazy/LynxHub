@@ -11,8 +11,6 @@ import TitleName from './TitleName';
 
 export const SettingsGeneralId = 'settings_app_elem';
 
-// TODO: removed tooltip settings: also remove all usage and storage save
-
 /**
  * General Settings section component.
  * Aggregates various general application settings like Theme, Taskbar, and Tooltips.
