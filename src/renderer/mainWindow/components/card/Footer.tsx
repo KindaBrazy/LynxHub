@@ -59,7 +59,7 @@ const Footer = memo(({isRunning, updatingExtensions, updating, updateCount, id, 
 
   return (
     <CardFooter className="justify-between">
-      <div className="flex flex-row items-center gap-x-2">
+      <div onClick={e => e.stopPropagation()} className="flex flex-row items-center gap-x-2">
         {!isRunning &&
           (isInstalled ? (
             ReplaceMenu ? (
