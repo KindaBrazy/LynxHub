@@ -4,7 +4,7 @@ import {AppDispatch} from '@lynx/redux/store';
 import {TabInfo} from '@lynx_common/types';
 import contextMenuIpc from '@lynx_shared/ipc/contextMenu';
 import {AnimatePresence, Reorder} from 'framer-motion';
-import {isEqual} from 'lodash';
+import {isEqual} from 'lodash-es';
 import {memo, useCallback, useEffect, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 

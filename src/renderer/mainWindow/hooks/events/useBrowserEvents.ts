@@ -5,7 +5,7 @@ import {AppDispatch} from '@lynx/redux/store';
 import {defaultTabItem} from '@lynx/utils/constants';
 import applicationIpc from '@lynx_shared/ipc/application';
 import browserIpc from '@lynx_shared/ipc/browser';
-import {capitalize} from 'lodash';
+import {capitalize} from 'lodash-es';
 import {useEffect, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 

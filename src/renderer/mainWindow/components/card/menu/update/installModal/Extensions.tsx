@@ -1,7 +1,7 @@
 import {Spinner} from '@heroui-v3/react';
 import {extractGitUrl, validateGitRepoUrl} from '@lynx_common/utils';
 import gitIpc from '@lynx_shared/ipc/git';
-import {startCase} from 'lodash';
+import {startCase} from 'lodash-es';
 import {RefObject, useEffect, useMemo, useState} from 'react';
 
 import StepProgress from './StepProgress';

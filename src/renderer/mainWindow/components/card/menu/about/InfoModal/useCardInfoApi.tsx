@@ -3,7 +3,7 @@ import filesIpc from '@lynx_shared/ipc/files';
 import lynxIpc from '@lynx_shared/ipc/lynxIpc';
 import {moduleApiIpc} from '@lynx_shared/ipc/plugins/module';
 import storageIpc from '@lynx_shared/ipc/storage';
-import {isEmpty} from 'lodash';
+import {isEmpty} from 'lodash-es';
 import {useEffect} from 'react';
 
 import {getCardMethod, useAllCardMethods} from '../../../../../plugins/modules';

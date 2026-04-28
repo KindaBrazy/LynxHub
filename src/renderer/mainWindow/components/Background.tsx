@@ -1,5 +1,5 @@
 import {extensionsData} from '@lynx/plugins/extensions/loader';
-import {isNil} from 'lodash';
+import {isNil} from 'lodash-es';
 import {memo} from 'react';
 
 /**

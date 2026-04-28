@@ -10,7 +10,7 @@ import classHolder from '@lynx_main/managers/classHolder';
 import {getAbsolutePath, getExePath, getUserAgent, isPortable} from '@lynx_main/utils';
 import {app} from 'electron';
 import fs from 'graceful-fs';
-import lodash from 'lodash';
+import {cloneDeep} from 'lodash-es';
 import {LowSync} from 'lowdb';
 import {JSONFileSyncPreset} from 'lowdb/node';
 
@@ -197,7 +197,7 @@ class BaseStorage {
    */
   public getAll(): AppStorageData {
     const data = this.storage.data;
-    const result = lodash.cloneDeep(data);
+    const result = cloneDeep(data);
 
     // Convert relative paths to absolute paths in portable mode
     if (isPortable()) {

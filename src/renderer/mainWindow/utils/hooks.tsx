@@ -2,7 +2,7 @@ import {useCardsState} from '@lynx/redux/reducers/cards';
 import {useSettingsState} from '@lynx/redux/reducers/settings';
 import {ChangelogItem, type ElementResizeData} from '@lynx_common/types';
 import {InstalledCard} from '@lynx_common/types/storage';
-import {isEmpty, isNil} from 'lodash';
+import {isEmpty, isNil} from 'lodash-es';
 import {Fragment, useEffect, useRef, useState} from 'react';
 
 /**

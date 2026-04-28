@@ -13,7 +13,7 @@ import pluginsIpc from '@lynx_shared/ipc/plugins';
 import moduleIpc from '@lynx_shared/ipc/plugins/module';
 import staticsIpc from '@lynx_shared/ipc/statics';
 import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
-import {compact, isNil} from 'lodash';
+import {compact, isNil} from 'lodash-es';
 import {useEffect, useRef} from 'react';
 import {useDispatch} from 'react-redux';
 

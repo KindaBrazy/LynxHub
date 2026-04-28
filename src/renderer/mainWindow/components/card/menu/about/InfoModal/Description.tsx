@@ -3,7 +3,7 @@ import {CardInfoDescriptions, CardInfoDescriptions_Items} from '@lynx_common/typ
 import {isValidURL} from '@lynx_common/utils';
 import filesIpc from '@lynx_shared/ipc/files';
 import {FolderOpen} from '@solar-icons/react-perf/BoldDuotone';
-import {isEmpty, isNil} from 'lodash';
+import {isEmpty, isNil} from 'lodash-es';
 import {memo, useCallback} from 'react';
 
 import DescriptionGrid, {DescriptionGridItem} from '../../../../DescriptionGrid';

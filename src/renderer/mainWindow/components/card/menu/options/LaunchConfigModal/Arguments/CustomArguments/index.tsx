@@ -3,7 +3,7 @@ import {CustomArg, CustomArgKinds} from '@lynx_common/types';
 import storageIpc from '@lynx_shared/ipc/storage';
 import {HomeAdd, Inbox, Notes, Pen2, SettingsMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
 import {AnimatePresence, motion} from 'framer-motion';
-import {some} from 'lodash';
+import {some} from 'lodash-es';
 import {Plus} from 'lucide-react';
 import {Dispatch, memo, SetStateAction, useEffect, useState} from 'react';
 

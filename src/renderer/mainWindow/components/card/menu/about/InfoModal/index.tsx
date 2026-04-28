@@ -3,7 +3,7 @@ import {CardInfoDescriptions} from '@lynx_common/types/plugins/modules';
 import {extractGitUrl, getCacheUrl, getFallbackString, validateGitRepoUrl} from '@lynx_common/utils';
 import {useDebounceBreadcrumb} from '@lynx_shared/sentry/Breadcrumbs';
 import {Inbox} from '@solar-icons/react-perf/BoldDuotone';
-import {isEmpty, startCase} from 'lodash';
+import {isEmpty, startCase} from 'lodash-es';
 import {useEffect, useMemo, useState} from 'react';
 
 import {extensionsData} from '../../../../../plugins/extensions/loader';

@@ -4,7 +4,7 @@ import {useVolumeState} from '@lynx/redux/reducers/volume';
 import {AppDispatch} from '@lynx/redux/store';
 import {RunningCard} from '@lynx/types';
 import browserIpc from '@lynx_shared/ipc/browser';
-import {isEmpty} from 'lodash';
+import {isEmpty} from 'lodash-es';
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 

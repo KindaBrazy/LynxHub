@@ -3,7 +3,7 @@ import {MAIN_MODULE_URL} from '@lynx_common/consts';
 import {extractGitUrl} from '@lynx_common/utils';
 import {getPluginIconUrl} from '@lynx_common/utils/plugins';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
-import {compact, isEmpty} from 'lodash';
+import {compact, isEmpty} from 'lodash-es';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 
 import {ExtensionItem} from './types';

@@ -15,7 +15,7 @@ import {
 import {LynxHotkey} from '@lynx_common/types/ipc';
 import storageIpc from '@lynx_shared/ipc/storage';
 import {Keyboard, Refresh} from '@solar-icons/react-perf/BoldDuotone';
-import {compact} from 'lodash';
+import {compact} from 'lodash-es';
 import {KeyboardEvent, useCallback, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 

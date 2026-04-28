@@ -6,7 +6,7 @@ import {isDev} from '@lynx_common/utils';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
 import storageIpc from '@lynx_shared/ipc/storage';
 import {Diskette, SettingsMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
-import {compact} from 'lodash';
+import {compact} from 'lodash-es';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 

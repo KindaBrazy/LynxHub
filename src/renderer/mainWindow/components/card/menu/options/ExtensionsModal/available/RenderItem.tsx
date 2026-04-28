@@ -3,7 +3,7 @@ import {extractGitUrl, getFallbackString} from '@lynx_common/utils';
 import gitIpc from '@lynx_shared/ipc/git';
 import {Star} from '@solar-icons/react-perf/Bold';
 import {Home2} from '@solar-icons/react-perf/BoldDuotone';
-import {capitalize} from 'lodash';
+import {capitalize} from 'lodash-es';
 import {memo, useCallback, useState} from 'react';
 import Highlighter from 'react-highlight-words';
 

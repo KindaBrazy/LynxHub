@@ -1,7 +1,7 @@
 import {Card, Checkbox, Key, Label, ListBox, NumberField, Select, Spinner} from '@heroui-v3/react';
 import {extractGitUrl} from '@lynx_common/utils';
 import {SettingsMinimalistic, ShieldWarning} from '@solar-icons/react-perf/BoldDuotone';
-import {isEmpty} from 'lodash';
+import {isEmpty} from 'lodash-es';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 
 import {topToast} from '../../../../../layouts/ToastProviders';

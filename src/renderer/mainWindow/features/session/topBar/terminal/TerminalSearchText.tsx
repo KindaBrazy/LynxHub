@@ -7,7 +7,7 @@ import {Hotkey_Names} from '@lynx_common/consts/hotkeys';
 import {AltArrowDown, AltArrowUp, Magnifier} from '@solar-icons/react-perf/BoldDuotone';
 import {ISearchOptions, SearchAddon} from '@xterm/addon-search';
 import {AnimatePresence, motion} from 'framer-motion';
-import {isEmpty} from 'lodash';
+import {isEmpty} from 'lodash-es';
 import {X} from 'lucide-react';
 import {KeyboardEvent, memo, useCallback, useEffect, useMemo, useState} from 'react';
 

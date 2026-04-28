@@ -3,7 +3,7 @@ import {DownloadProgress} from '@lynx_common/types/ipc';
 import {InitialStep, UserInputField, UserInputResult} from '@lynx_common/types/plugins/modules';
 import {formatSize} from '@lynx_common/utils';
 import {CheckCircle, SadCircle, ShieldCross} from '@solar-icons/react-perf/BoldDuotone';
-import {capitalize} from 'lodash';
+import {capitalize} from 'lodash-es';
 import {Dispatch, Fragment, memo, RefObject, SetStateAction, useCallback} from 'react';
 
 import DescriptionGrid, {DescriptionGridItem} from '../../../../DescriptionGrid';

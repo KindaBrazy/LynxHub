@@ -3,7 +3,7 @@ import classHolder from '@lynx_main/managers/classHolder';
 import LynxTerminal from '@lynx_main/managers/lynxTerminal';
 import {getAbsolutePath, getExePath, isPortable} from '@lynx_main/utils';
 import {app, shell} from 'electron';
-import {isArray, isEmpty, isNil} from 'lodash';
+import {isArray, isEmpty, isNil} from 'lodash-es';
 
 import {applicationIpc} from '../application';
 

@@ -4,7 +4,7 @@ import {Terminal_Icon} from '@lynx_assets/icons';
 import filesIpc from '@lynx_shared/ipc/files';
 import {Inbox, MoveToFolder} from '@solar-icons/react-perf/BoldDuotone';
 import {AnimatePresence, Reorder} from 'framer-motion';
-import {isEmpty} from 'lodash';
+import {isEmpty} from 'lodash-es';
 import {Plus} from 'lucide-react';
 import {useCallback} from 'react';
 

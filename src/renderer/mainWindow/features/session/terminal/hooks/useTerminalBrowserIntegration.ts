@@ -6,7 +6,7 @@ import {toMs} from '@lynx_common/utils';
 import applicationIpc from '@lynx_shared/ipc/application';
 import ptyIpc from '@lynx_shared/ipc/pty';
 import storageIpc, {storageUtilsIpc} from '@lynx_shared/ipc/storage';
-import {isEmpty} from 'lodash';
+import {isEmpty} from 'lodash-es';
 import {useEffect, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 

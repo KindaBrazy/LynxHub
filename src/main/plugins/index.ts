@@ -17,7 +17,7 @@ import classHolder from '@lynx_main/managers/classHolder';
 import {getAppDirectory} from '@lynx_main/managers/dataFolder';
 import {captureException} from '@sentry/electron/main';
 import {constants, promises, readdirSync} from 'graceful-fs';
-import {includes, isString} from 'lodash';
+import {includes, isString} from 'lodash-es';
 
 import {pluginFolders} from './constants';
 import ExtensionManager from './extensions';

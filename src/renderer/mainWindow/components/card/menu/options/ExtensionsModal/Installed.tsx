@@ -2,7 +2,7 @@ import {Description, Link, Spinner, Table} from '@heroui-v3/react';
 import filesIpc from '@lynx_shared/ipc/files';
 import {Inbox} from '@solar-icons/react-perf/BoldDuotone';
 import {motion} from 'framer-motion';
-import {startCase} from 'lodash';
+import {startCase} from 'lodash-es';
 import {memo, useCallback, useEffect, useMemo, useState} from 'react';
 
 import EmptyStateCard from '../../../../EmptyStateCard';

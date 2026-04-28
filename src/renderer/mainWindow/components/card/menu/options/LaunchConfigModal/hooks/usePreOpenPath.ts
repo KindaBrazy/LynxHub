@@ -1,6 +1,6 @@
 import {PreOpenData} from '@lynx_common/types/ipc';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
-import {filter} from 'lodash';
+import {filter} from 'lodash-es';
 import {useCallback, useEffect, useState} from 'react';
 
 /**

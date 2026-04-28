@@ -6,7 +6,7 @@ import GitManager from '@lynx_main/git';
 import {utilsIpc} from '@lynx_main/ipc/utils';
 import {calculateFolderSize} from '@lynx_main/utils';
 import fs from 'graceful-fs';
-import {compact} from 'lodash';
+import {compact} from 'lodash-es';
 
 // Global flag to control extension loading cancellation
 let isLoadingExtensions = false;

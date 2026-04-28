@@ -1,6 +1,6 @@
 import {DownloadItemInfo} from '@lynx_common/types/downloadManager';
 import {createSlice, current, PayloadAction} from '@reduxjs/toolkit';
-import {cloneDeep} from 'lodash';
+import {cloneDeep} from 'lodash-es';
 import {useSelector} from 'react-redux';
 
 import {MenuTypes} from '../consts';

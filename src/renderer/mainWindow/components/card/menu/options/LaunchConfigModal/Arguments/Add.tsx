@@ -2,7 +2,7 @@ import {Button, Chip, Dropdown, Label, Modal, SearchField, Tabs, useOverlayState
 import {ChosenArgumentsData, CustomArg} from '@lynx_common/types';
 import {ChosenArgument} from '@lynx_common/types/plugins/modules';
 import {Filter, Monitor, WindowFrame} from '@solar-icons/react-perf/BoldDuotone';
-import {isEmpty, some} from 'lodash';
+import {isEmpty, some} from 'lodash-es';
 import {Plus} from 'lucide-react';
 import {Dispatch, Key, SetStateAction, useCallback, useEffect, useMemo, useState} from 'react';
 

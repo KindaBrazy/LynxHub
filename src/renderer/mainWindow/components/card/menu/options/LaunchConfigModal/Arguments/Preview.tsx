@@ -1,6 +1,6 @@
 import {isWin} from '@lynx_common/utils';
 import {InboxLine} from '@solar-icons/react-perf/BoldDuotone';
-import {isEmpty} from 'lodash';
+import {isEmpty} from 'lodash-es';
 import {PrismLight as SyntaxHighlighter} from 'react-syntax-highlighter';
 import bash from 'react-syntax-highlighter/dist/esm/languages/prism/bash';
 import batch from 'react-syntax-highlighter/dist/esm/languages/prism/batch';

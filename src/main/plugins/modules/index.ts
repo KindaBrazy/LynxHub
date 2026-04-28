@@ -11,7 +11,7 @@ import {getAppDataPath} from '@lynx_main/managers/dataFolder';
 import {getAbsolutePath, getExePath, isPortable} from '@lynx_main/utils';
 import {captureException} from '@sentry/electron/main';
 import {ipcMain} from 'electron';
-import {isEmpty} from 'lodash';
+import {isEmpty} from 'lodash-es';
 import pty from 'node-pty';
 
 /**

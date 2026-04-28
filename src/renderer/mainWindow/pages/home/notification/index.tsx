@@ -23,7 +23,7 @@ import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
 import {Bell, Notes} from '@solar-icons/react-perf/BoldDuotone';
 import {CheckRead, Unread} from '@solar-icons/react-perf/LineDuotone';
 import {AnimatePresence, motion} from 'framer-motion';
-import {isEmpty} from 'lodash';
+import {isEmpty} from 'lodash-es';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 

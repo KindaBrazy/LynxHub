@@ -8,7 +8,7 @@ import {Apps_Color_Icon, History_Color_Icon, Pin_Color_Icon} from '@lynx_assets/
 import {LoadedCardData} from '@lynx_common/types/plugins/modules';
 import {Inbox, PinCircle} from '@solar-icons/react-perf/BoldDuotone';
 import {AnimatePresence, LayoutGroup} from 'framer-motion';
-import {isEmpty, isNil} from 'lodash';
+import {isEmpty, isNil} from 'lodash-es';
 import {memo, useId, useMemo} from 'react';
 
 import {CardContainerClasses} from './CardsContainer';

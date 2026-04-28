@@ -6,7 +6,7 @@ import {getAbsolutePath, getExePath, isPortable} from '@lynx_main/utils';
 import AddBreadcrumb_Main from '@lynx_main/utils/breadcrumbs';
 import {ChokidarOptions, FSWatcher, watch} from 'chokidar';
 import {promises} from 'graceful-fs';
-import {compact, isEqual, uniqBy} from 'lodash';
+import {compact, isEqual, uniqBy} from 'lodash-es';
 
 /**
  * Handle the validation and watching of installed cards.

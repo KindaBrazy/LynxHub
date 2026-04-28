@@ -13,7 +13,7 @@ import {
 } from '@heroui-v3/react';
 import {ChosenArgumentsData} from '@lynx_common/types';
 import {motion} from 'framer-motion';
-import {isEmpty} from 'lodash';
+import {isEmpty} from 'lodash-es';
 import {Dispatch, SetStateAction, useCallback, useMemo, useState} from 'react';
 
 import {convertArrToObject} from '../../../../../../utils';

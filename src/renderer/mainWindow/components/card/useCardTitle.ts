@@ -1,5 +1,5 @@
 import storageIpc from '@lynx_shared/ipc/storage';
-import {isEmpty} from 'lodash';
+import {isEmpty} from 'lodash-es';
 import {useCallback, useEffect, useState} from 'react';
 
 import {useCardStore} from './store';
