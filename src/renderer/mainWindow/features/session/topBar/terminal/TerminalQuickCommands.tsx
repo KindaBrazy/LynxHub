@@ -54,7 +54,7 @@ const TerminalQuickCommands = memo(({id}: Props) => {
             key={`terminal_quick_btn_${index}`}
             onPress={() => ptyIpc.write(id, command)}>
             <span className="flex flex-row items-center gap-x-1">
-              <span>{label}</span>
+              <span className="font-semibold tracking-tight">{label}</span>
               {hasHotkey && (
                 <Kbd className="h-5">
                   <Kbd.Content className="text-[8pt]">{displayHotkey}</Kbd.Content>
