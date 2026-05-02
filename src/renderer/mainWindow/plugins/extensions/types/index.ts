@@ -3,6 +3,7 @@ import type {LoadedCardData} from '@lynx_common/types/plugins/modules';
 import type {Reducer} from '@reduxjs/toolkit';
 import type {ComponentProps, FC} from 'react';
 
+import {useCardOverlayState} from '../../../components/card/useCardOverlayState';
 import {ExtensionRendererApi} from './api';
 import {RendererIpcApi} from './ipcWrapper';
 
@@ -37,7 +38,10 @@ export type SearchResultProps = ComponentProps<'div'> & {searchValue: string};
 /**
  * Props for a component that needs access to the card store.
  */
-export type CardDataProps = ComponentProps<'div'> & {useCardStore: UseCardStoreType};
+export type CardDataProps = ComponentProps<'div'> & {
+  useCardStore: UseCardStoreType;
+  useCardOverlayState: typeof useCardOverlayState;
+};
 
 /**
  * Props for the Markdown replacement component.
@@ -82,6 +86,11 @@ export type AddMenuType = {
   index: number;
   /** The components to add to the menu. */
   components: FcPropCardData[];
+};
+export type AddModalType = {
+  key: string;
+  /** The components to add to the menu. */
+  component: FcPropCardData;
 };
 
 /**
@@ -242,7 +251,7 @@ export type ExtensionData_Renderer = {
       header: FcPropCardData | undefined;
       body: FcPropCardData | undefined;
       footer: FcPropCardData | undefined;
-      menu: {replace: FcPropCardData | undefined; addSection: AddMenuType[]};
+      menu: {replace: FcPropCardData | undefined; addSection: AddMenuType[]; addModal: AddModalType[]};
     };
   };
 };

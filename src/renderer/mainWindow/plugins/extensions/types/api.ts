@@ -12,8 +12,9 @@ import type {Scope} from '@sentry/browser';
 import type {FC} from 'react';
 
 import type {ExtensionEvents} from './events';
-import type {
+import {
   AddMenuType,
+  AddModalType,
   FcProp,
   FcPropCard,
   FcPropCardData,
@@ -72,6 +73,7 @@ type CompFcPropCard = (component: FcPropCard) => void;
 type CompFcPropCardData = (component: FcPropCardData) => void;
 type CompFcPropSearchResult = (component: FcPropSearchResult) => void;
 type CompFcPropAddCardMenu = (component: AddMenuType[]) => void;
+type CompFcPropAddCardModal = (component: AddModalType[]) => void;
 type CompFcPropReplaceMd = (component: FcPropReplaceMd) => void;
 
 type ExtensionEventsApi = {
@@ -423,6 +425,7 @@ export type ExtensionRendererApi = {
         /**
          * Add sections and items to the card menu.    */
         addSection: CompFcPropAddCardMenu;
+        addModal: CompFcPropAddCardModal;
       };
     };
   };
