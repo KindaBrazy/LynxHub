@@ -16,6 +16,7 @@ import {useHotkeysState} from '../../redux/reducers/hotkeys';
 import InstalledMenu from './menu/Installed';
 import UninstalledMenu from './menu/Uninstalled';
 import {useCardStore} from './store';
+import {useCardOverlayState} from './useCardOverlayState';
 
 const MotionButton = motion.create(Button);
 
@@ -59,11 +60,14 @@ const Footer = memo(({isRunning, updatingExtensions, updating, updateCount, id, 
 
   return (
     <CardFooter className="justify-between">
-      <div onClick={e => e.stopPropagation()} className="flex flex-row items-center gap-x-2">
+      <div
+        onClick={e => e.stopPropagation()}
+        onContextMenu={e => e.stopPropagation()}
+        className="flex flex-row items-center gap-x-2">
         {!isRunning &&
           (isInstalled ? (
             ReplaceMenu ? (
-              <ReplaceMenu useCardStore={useCardStore} />
+              <ReplaceMenu useCardStore={useCardStore} useCardOverlayState={useCardOverlayState} />
             ) : (
               <InstalledMenu state={state} setType={setType} />
             )
