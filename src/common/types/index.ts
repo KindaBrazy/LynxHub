@@ -242,6 +242,18 @@ export type CustomNotificationInfo = {
   closeBtn?: boolean;
 };
 
+type CardOverlayState = {
+  overlayStates: Record<string, boolean>;
+
+  addOverlayState: (key: string, initialOpen?: boolean) => void;
+  removeOverlayState: (key: string) => void;
+  setOverlay: (key: string, isOpen: boolean) => void;
+  openOverlay: (key: string) => void;
+  closeOverlay: (key: string) => void;
+  toggleOverlay: (key: string) => void;
+  isOverlayOpen: (key: string) => boolean;
+};
+
 export type CardState = {
   title: string;
   id: string;
@@ -258,7 +270,7 @@ export type CardState = {
 
   setMenuIsOpen: (isOpen: boolean) => void;
   setCheckingForUpdate: (isChecking: boolean) => void;
-};
+} & CardOverlayState;
 
 export type SubscribeStages = 'insider' | 'early_access' | 'public';
 export type SearchQuerySites = 'Google' | 'DuckDuckGo' | 'Reddit' | 'ChatGPT' | 'Perplexity' | 'Claude';

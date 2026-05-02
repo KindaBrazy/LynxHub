@@ -6,6 +6,7 @@ import {memo, useMemo} from 'react';
 
 import ReadmeModal from '../../modals/ReadmeModal';
 import {useCardStore} from '../store';
+import {useCardOverlayState} from '../useCardOverlayState';
 import {AboutMenuItem, DuplicateMenuItem, HomePageMenuItem} from './about';
 import CardInfoModal from './about/infoModal';
 import {CommonProps} from './about/types';
@@ -24,18 +25,25 @@ export const InstalledMenu = memo(({setType, state}: {setType: (type: 'install' 
   const url = useCardStore(state => state.repoUrl);
   const setMenuIsOpen = useCardStore(state => state.setMenuIsOpen);
   const menuIsOpen = useCardStore(state => state.menuIsOpen);
+  const addOverlayState = useCardStore(state => state.addOverlayState);
 
   const updating = useUpdatingCard(id);
 
-  const {first, second, third, fourth} = useMemo(() => {
+  const {first, second, third, fourth, addModal} = useMemo(() => {
     const sections = extensionsData.cards.customize.menu.addSection;
+    const addModal = extensionsData.cards.customize.menu.addModal;
 
     const first = sections.find(item => item.index === 0)?.components || [];
     const second = sections.find(item => item.index === 1)?.components || [];
     const third = sections.find(item => item.index === 2)?.components || [];
     const fourth = sections.find(item => item.index === 3)?.components || [];
 
-    return {first, second, third, fourth};
+    const modals = addModal.map(modal => {
+      addOverlayState(modal.key);
+      return modal.component;
+    });
+
+    return {first, second, third, fourth, addModal: modals};
   }, []);
 
   const readmeModal = useOverlayState();
@@ -59,7 +67,7 @@ export const InstalledMenu = memo(({setType, state}: {setType: (type: 'install' 
         <Dropdown.Popover>
           <Dropdown.Menu aria-label="Card Menu" shouldCloseOnSelect={false}>
             {first.map((Comp, index) => {
-              return <Comp key={index} useCardStore={useCardStore} />;
+              return <Comp key={index} useCardStore={useCardStore} useCardOverlayState={useCardOverlayState} />;
             })}
             <Dropdown.Section>
               <LaunchConfigMenuItem state={launchConfigModal} />
@@ -70,7 +78,7 @@ export const InstalledMenu = memo(({setType, state}: {setType: (type: 'install' 
             <Separator className="bg-surface-secondary/70" />
 
             {second.map((Comp, index) => {
-              return <Comp key={index} useCardStore={useCardStore} />;
+              return <Comp key={index} useCardStore={useCardStore} useCardOverlayState={useCardOverlayState} />;
             })}
             <Dropdown.Section>
               <UpdateMenuItem state={state} setType={setType} />
@@ -89,7 +97,7 @@ export const InstalledMenu = memo(({setType, state}: {setType: (type: 'install' 
                 <Dropdown.Popover className="min-h-fit">
                   <Dropdown.Menu>
                     {third.map((Comp, index) => {
-                      return <Comp key={index} useCardStore={useCardStore} />;
+                      return <Comp key={index} useCardStore={useCardStore} useCardOverlayState={useCardOverlayState} />;
                     })}
                     <Dropdown.Section key="info">
                       <AboutMenuItem state={infoModal} />
@@ -104,7 +112,7 @@ export const InstalledMenu = memo(({setType, state}: {setType: (type: 'install' 
                       <UninstallMenuItem state={uninstallModal} />
                     </Dropdown.Section>
                     {fourth.map((Comp, index) => {
-                      return <Comp key={index} useCardStore={useCardStore} />;
+                      return <Comp key={index} useCardStore={useCardStore} useCardOverlayState={useCardOverlayState} />;
                     })}
                   </Dropdown.Menu>
                 </Dropdown.Popover>
@@ -121,6 +129,12 @@ export const InstalledMenu = memo(({setType, state}: {setType: (type: 'install' 
       <LaunchConfigModal state={launchConfigModal} />
       <ExtensionsModal state={extensionsModal} />
       <GitManagerModal state={gitModal} />
+
+      {addModal.map((Comp, index) => {
+        return (
+          <Comp key={`ext_modal_${index}`} useCardStore={useCardStore} useCardOverlayState={useCardOverlayState} />
+        );
+      })}
     </>
   );
 });

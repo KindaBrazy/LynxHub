@@ -135,6 +135,7 @@ export const extensionsData: ExtensionData_Renderer = {
       menu: {
         replace: undefined,
         addSection: [],
+        addModal: [],
       },
     },
   },
@@ -479,6 +480,7 @@ export const extensionRendererApi: ExtensionRendererApi = {
           extensionsData.cards.customize.menu.replace = comp;
         },
         addSection: comp => extensionsData.cards.customize.menu.addSection.push(...comp),
+        addModal: comp => extensionsData.cards.customize.menu.addModal.push(...comp),
       },
     },
   },

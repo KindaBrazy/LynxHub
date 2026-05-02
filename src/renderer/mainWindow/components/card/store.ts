@@ -17,7 +17,7 @@ export type CardStore = UseBoundStore<StoreApi<CardState>>;
 export const createCardStore = (
   initialData: LoadedCardData & {isInstalled: boolean; hasArguments: boolean},
 ): CardStore => {
-  return create<CardState>(set => ({
+  return create<CardState>((set, get) => ({
     // Static Info from props
     title: initialData.title,
     id: initialData.id,
@@ -35,6 +35,38 @@ export const createCardStore = (
     // Actions that modify the state
     setMenuIsOpen: isOpen => set({menuIsOpen: isOpen}),
     setCheckingForUpdate: isChecking => set({checkingForUpdate: isChecking}),
+
+    overlayStates: {},
+
+    addOverlayState: (key, initialOpen = false) =>
+      set(state => ({
+        overlayStates: {...state.overlayStates, [key]: initialOpen},
+      })),
+    removeOverlayState: key =>
+      set(state => {
+        const {[key]: _, ...rest} = state.overlayStates;
+        return {overlayStates: rest};
+      }),
+    setOverlay: (key, isOpen) =>
+      set(state => ({
+        overlayStates: {...state.overlayStates, [key]: isOpen},
+      })),
+    openOverlay: key =>
+      set(state => ({
+        overlayStates: {...state.overlayStates, [key]: true},
+      })),
+    closeOverlay: key =>
+      set(state => ({
+        overlayStates: {...state.overlayStates, [key]: false},
+      })),
+    toggleOverlay: key =>
+      set(state => ({
+        overlayStates: {
+          ...state.overlayStates,
+          [key]: !state.overlayStates[key],
+        },
+      })),
+    isOverlayOpen: key => get().overlayStates[key] ?? false,
   }));
 };
 
