@@ -19,8 +19,7 @@ const StatusBar = memo(() => {
   return (
     <>
       {!isNil(ReplaceContainer) ? (
-        // @ts-ignore: Extension component typing is loose
-        <ReplaceContainer ref={setRef} />
+        <ReplaceContainer />
       ) : (
         !isEmptyAdd && (
           <div
