@@ -58,7 +58,7 @@ export default function LynxSwitch({
     <Surface
       className={
         `px-3 py-2 rounded-2xl transition-colors duration-300 cursor-pointer border-2` +
-        ` ${isSelected ? 'border-accent/40' : 'border-surface'} w-full`
+        ` ${isSelected ? 'border-accent/40' : 'border-surface'} w-full shadow-surface`
       }
       onClick={toggle}
       variant={variant}>
