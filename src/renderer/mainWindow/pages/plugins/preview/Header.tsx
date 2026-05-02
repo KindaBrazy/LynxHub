@@ -71,7 +71,9 @@ export default function PluginPreviewHeader({installedPlugin}: PluginPreviewHead
         <div className="inline-flex items-center gap-2">
           <Avatar>
             <Avatar.Image src={getCacheUrl(pluginIconUrl)} alt={selectedPlugin?.metadata.title} />
-            {selectedPlugin && <Avatar.Fallback>{getFallbackString(selectedPlugin)}</Avatar.Fallback>}
+            {selectedPlugin && (
+              <Avatar.Fallback>{getFallbackString(selectedPlugin?.metadata.title || '')}</Avatar.Fallback>
+            )}
           </Avatar>
           <div className="flex flex-col">
             <Label className="text-lg">{selectedPlugin?.metadata.title}</Label>
