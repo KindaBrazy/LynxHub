@@ -130,7 +130,7 @@ export type ExtensionData_Renderer = {
     addStart: FcProp[];
     addCenter: FcProp[];
     addEnd: FcProp[];
-    replaceContainer: FcPropRef | undefined;
+    replaceContainer: FcProp | undefined;
   };
 
   /** Running AI view modifications. */
