@@ -21,11 +21,6 @@ export type UseCardStoreType = <T>(selector: (state: CardState) => T) => T;
 export type ElementProps = ComponentProps<'div'>;
 
 /**
- * Props for a div element with a ref.
- */
-export type RefElementProps = ComponentProps<'div'> & {ref: (node: HTMLDivElement) => void};
-
-/**
  * Props for a component that receives a list of cards.
  */
 export type CardElementProps = ComponentProps<'div'> & {cards: LoadedCardData[]};
@@ -52,11 +47,6 @@ export type ReplaceMdProps = ComponentProps<'div'> & {repoPath: string; rounded?
  * Functional Component with standard div props.
  */
 export type FcProp = FC<ElementProps>;
-
-/**
- * Functional Component with ref props.
- */
-export type FcPropRef = FC<RefElementProps>;
 
 /**
  * Functional Component with card data store access.
