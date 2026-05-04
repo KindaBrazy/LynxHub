@@ -87,7 +87,7 @@ const RenderItem = memo(function RenderItem({item, activePage, isDark, tabID}: I
               initial={false}
               layoutId={`${tabID}_indicator`}
               transition={springTransitionSnappy}
-              className="absolute inset-0 rounded-xl shadow-lg bg-accent"
+              className="absolute inset-0 rounded-2xl shadow-lg bg-accent"
             />
           )}
         </AnimatePresence>
@@ -115,7 +115,7 @@ const RenderItem = memo(function RenderItem({item, activePage, isDark, tabID}: I
                 exit={{opacity: 0, scale: 0.8}}
                 animate={{opacity: 1, scale: 0.9}}
                 initial={{opacity: 0, scale: 0.8}}
-                className="absolute inset-0 rounded-xl"
+                className="absolute inset-0 rounded-2xl"
               />
             )}
           </AnimatePresence>
