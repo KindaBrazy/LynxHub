@@ -1,4 +1,4 @@
-import {Avatar, Card, Description, Label} from '@heroui-v3/react';
+import {Avatar, Card, Description, Label} from '@heroui/react';
 import {getFallbackString} from '@lynx_common/utils';
 import {ReactNode} from 'react';
 

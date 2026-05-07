@@ -1,4 +1,4 @@
-import {Avatar, Button, Dropdown, Header, Label} from '@heroui-v3/react';
+import {Avatar, Button, Dropdown, Header, Label} from '@heroui/react';
 import {SearchQuerySites} from '@lynx_common/types';
 import {getCacheUrl, getSearchUrl} from '@lynx_common/utils';
 import {Earth, SquareTopDown} from '@solar-icons/react-perf/BoldDuotone';

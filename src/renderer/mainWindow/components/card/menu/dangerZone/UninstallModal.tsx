@@ -1,4 +1,4 @@
-import {Button, ButtonGroup, Modal} from '@heroui-v3/react';
+import {Button, ButtonGroup, Modal} from '@heroui/react';
 import filesIpc from '@lynx_shared/ipc/files';
 import moduleIpc from '@lynx_shared/ipc/plugins/module';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';

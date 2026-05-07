@@ -1,4 +1,4 @@
-import {Button, Kbd, Separator} from '@heroui-v3/react';
+import {Button, Kbd, Separator} from '@heroui/react';
 import {useHotkeysState} from '@lynx/redux/reducers/hotkeys';
 import {useTerminalState} from '@lynx/redux/reducers/terminal';
 import {formatHotkey} from '@lynx/utils';

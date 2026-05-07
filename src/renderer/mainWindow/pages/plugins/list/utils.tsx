@@ -1,4 +1,4 @@
-import {Button, Dropdown, Header, Label} from '@heroui-v3/react';
+import {Button, Dropdown, Header, Label} from '@heroui/react';
 import {pluginsActions} from '@lynx/redux/reducers/plugins';
 import {useUserState} from '@lynx/redux/reducers/user';
 import {AppDispatch} from '@lynx/redux/store';

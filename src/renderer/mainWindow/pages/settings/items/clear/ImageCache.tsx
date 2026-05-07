@@ -1,4 +1,4 @@
-import {Button, ButtonGroup, Chip, Popover, Spinner} from '@heroui-v3/react';
+import {Button, ButtonGroup, Chip, Popover, Spinner} from '@heroui/react';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import utilsIpc from '@lynx_shared/ipc/utils';
 import {Broom} from '@solar-icons/react-perf/BoldDuotone';

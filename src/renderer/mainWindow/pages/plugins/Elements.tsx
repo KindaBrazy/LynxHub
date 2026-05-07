@@ -1,4 +1,4 @@
-import {Button, ButtonProps} from '@heroui-v3/react';
+import {Button, ButtonProps} from '@heroui/react';
 import {pluginsActions, useIsUpdatingPlugin, usePluginsState} from '@lynx/redux/reducers/plugins';
 import {AppDispatch} from '@lynx/redux/store';
 import {showRestartModal} from '@lynx/utils';

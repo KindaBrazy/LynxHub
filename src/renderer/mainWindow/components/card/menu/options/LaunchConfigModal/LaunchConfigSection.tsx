@@ -1,4 +1,4 @@
-import {Button, Card, Tooltip} from '@heroui-v3/react';
+import {Button, Card, Tooltip} from '@heroui/react';
 import {isEmpty, isString} from 'lodash-es';
 import {Plus} from 'lucide-react';
 import {ReactNode} from 'react';

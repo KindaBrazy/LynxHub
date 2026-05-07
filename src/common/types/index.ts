@@ -1,6 +1,6 @@
 // Card Repository information type
 
-import type {ButtonProps} from '@heroui-v3/react';
+import type {ButtonProps} from '@heroui/react';
 
 import type {
   AvailablePageIDs,

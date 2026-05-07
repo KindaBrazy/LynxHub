@@ -1,4 +1,4 @@
-import {Button, Description, Modal, Spinner} from '@heroui-v3/react';
+import {Button, Description, Modal, Spinner} from '@heroui/react';
 
 import TabModal from '../../TabModal';
 import Downloaded from './Downloaded';

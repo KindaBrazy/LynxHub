@@ -1,4 +1,4 @@
-import {ChipProps} from '@heroui-v3/react';
+import {ChipProps} from '@heroui/react';
 import {SubscribeStages} from '@lynx_common/types';
 
 /**

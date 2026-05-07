@@ -9,7 +9,7 @@ import {
   Spinner,
   Tooltip,
   useOverlayState,
-} from '@heroui-v3/react';
+} from '@heroui/react';
 import {
   pluginsActions,
   useIsInstallingPlugin,

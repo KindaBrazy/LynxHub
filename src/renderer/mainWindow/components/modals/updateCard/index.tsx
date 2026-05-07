@@ -1,4 +1,4 @@
-import {useOverlayState} from '@heroui-v3/react';
+import {useOverlayState} from '@heroui/react';
 import {useState} from 'react';
 import {PullResult} from 'simple-git';
 

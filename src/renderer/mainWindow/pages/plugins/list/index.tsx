@@ -1,4 +1,4 @@
-import {Button, Card, ProgressBar, SearchField, Skeleton} from '@heroui-v3/react';
+import {Button, Card, ProgressBar, SearchField, Skeleton} from '@heroui/react';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import LynxScroll from '@lynx/components/LynxScroll';
 import {pluginsActions, usePluginsState} from '@lynx/redux/reducers/plugins';

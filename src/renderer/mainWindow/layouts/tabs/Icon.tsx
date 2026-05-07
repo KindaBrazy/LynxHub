@@ -1,4 +1,4 @@
-import {Avatar, Spinner} from '@heroui-v3/react';
+import {Avatar, Spinner} from '@heroui/react';
 import {Terminal_Icon} from '@lynx_assets/icons';
 import {
   AgentPage_Icon,

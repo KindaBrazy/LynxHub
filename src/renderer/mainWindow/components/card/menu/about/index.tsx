@@ -1,4 +1,4 @@
-import {DropdownItem} from '@heroui-v3/react';
+import {DropdownItem} from '@heroui/react';
 import filesIpc from '@lynx_shared/ipc/files';
 import storageIpc from '@lynx_shared/ipc/storage';
 import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';

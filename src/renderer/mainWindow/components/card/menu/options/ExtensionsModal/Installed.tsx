@@ -1,4 +1,4 @@
-import {Description, Link, Spinner, Table} from '@heroui-v3/react';
+import {Description, Link, Spinner, Table} from '@heroui/react';
 import filesIpc from '@lynx_shared/ipc/files';
 import {Inbox} from '@solar-icons/react-perf/BoldDuotone';
 import {motion} from 'framer-motion';

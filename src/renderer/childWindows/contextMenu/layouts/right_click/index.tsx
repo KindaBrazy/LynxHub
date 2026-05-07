@@ -1,4 +1,4 @@
-import {Separator} from '@heroui-v3/react';
+import {Separator} from '@heroui/react';
 import {memo} from 'react';
 
 import {useContextState} from '../../redux/reducer';

@@ -1,4 +1,4 @@
-import {Button, Input} from '@heroui-v3/react';
+import {Button, Input} from '@heroui/react';
 import windowDialogsIpc from '@lynx_shared/ipc/dialogsWindow';
 import {Check, TextCursorInput, X} from 'lucide-react';
 import {memo, useCallback, useEffect, useState} from 'react';

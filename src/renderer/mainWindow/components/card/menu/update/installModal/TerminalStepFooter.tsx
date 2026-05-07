@@ -1,4 +1,4 @@
-import {Button, Description, Popover} from '@heroui-v3/react';
+import {Button, Description, Popover} from '@heroui/react';
 import ptyIpc from '@lynx_shared/ipc/pty';
 import {ArrowRight, Restart} from '@solar-icons/react-perf/BoldDuotone';
 import {CheckRead} from '@solar-icons/react-perf/LineDuotone';

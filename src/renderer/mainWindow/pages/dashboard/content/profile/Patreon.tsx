@@ -1,4 +1,4 @@
-import {Alert, Avatar, Button, Card, Description, Label} from '@heroui-v3/react';
+import {Alert, Avatar, Button, Card, Description, Label} from '@heroui/react';
 import {userActions, useUserState} from '@lynx/redux/reducers/user';
 import {AppDispatch} from '@lynx/redux/store';
 import {Patreon_Icon} from '@lynx_assets/icons';

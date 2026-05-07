@@ -1,4 +1,4 @@
-import {Button} from '@heroui-v3/react';
+import {Button} from '@heroui/react';
 import {motion} from 'framer-motion';
 import {Dispatch, SetStateAction, useMemo, useState} from 'react';
 

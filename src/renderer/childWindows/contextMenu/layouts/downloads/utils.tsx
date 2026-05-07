@@ -1,4 +1,4 @@
-import {ProgressBarProps} from '@heroui-v3/react';
+import {ProgressBarProps} from '@heroui/react';
 
 /**
  * Determines the color status for the progress bar based on the download state.

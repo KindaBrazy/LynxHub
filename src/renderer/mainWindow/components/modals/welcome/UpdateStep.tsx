@@ -1,4 +1,4 @@
-import {Alert, Button, buttonVariants, Link} from '@heroui-v3/react';
+import {Alert, Button, buttonVariants, Link} from '@heroui/react';
 import {APP_NAME} from '@lynx_common/consts';
 import applicationIpc from '@lynx_shared/ipc/application';
 import {CheckRead} from '@solar-icons/react-perf/LineDuotone';

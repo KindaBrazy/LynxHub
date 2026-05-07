@@ -1,4 +1,4 @@
-import {Chip} from '@heroui-v3/react';
+import {Chip} from '@heroui/react';
 import LynxScroll from '@lynx/components/LynxScroll';
 import {usePluginsState} from '@lynx/redux/reducers/plugins';
 import {SubscribeStages} from '@lynx_common/types';

@@ -1,4 +1,4 @@
-import {Button, Chip} from '@heroui-v3/react';
+import {Button, Chip} from '@heroui/react';
 import {terminalLineEnding} from '@lynx_common/utils';
 import ptyIpc from '@lynx_shared/ipc/pty';
 import {Exit, Forward2} from '@solar-icons/react-perf/BoldDuotone';

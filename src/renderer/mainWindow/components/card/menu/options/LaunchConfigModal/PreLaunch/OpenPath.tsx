@@ -1,4 +1,4 @@
-import {Button, Dropdown, Label} from '@heroui-v3/react';
+import {Button, Dropdown, Label} from '@heroui/react';
 import filesIpc from '@lynx_shared/ipc/files';
 import {File, Folder, Inbox} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty} from 'lodash-es';

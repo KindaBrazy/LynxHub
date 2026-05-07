@@ -1,4 +1,4 @@
-import {Button} from '@heroui-v3/react';
+import {Button} from '@heroui/react';
 import {Power_Icon} from '@lynx_assets/icons';
 import {ToastWindowMessageType} from '@lynx_common/types';
 import {Refresh} from '@solar-icons/react-perf/BoldDuotone';

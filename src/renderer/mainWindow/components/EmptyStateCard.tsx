@@ -1,4 +1,4 @@
-import {Card, CardProps, cn} from '@heroui-v3/react';
+import {Card, CardProps, cn} from '@heroui/react';
 import {ReactNode} from 'react';
 
 type Props = {

@@ -11,7 +11,7 @@ import {
   Select,
   Separator,
   TextArea,
-} from '@heroui-v3/react';
+} from '@heroui/react';
 import {CustomArg} from '@lynx_common/types';
 import {ArgumentType} from '@lynx_common/types/plugins/modules';
 import filesIpc from '@lynx_shared/ipc/files';

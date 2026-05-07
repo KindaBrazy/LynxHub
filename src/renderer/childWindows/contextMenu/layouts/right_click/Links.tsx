@@ -1,4 +1,4 @@
-import {Separator} from '@heroui-v3/react';
+import {Separator} from '@heroui/react';
 import applicationIpc from '@lynx_shared/ipc/application';
 import contextMenuIpc from '@lynx_shared/ipc/contextMenu';
 import {Export, Link, SquareTopDown} from '@solar-icons/react-perf/BoldDuotone';

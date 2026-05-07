@@ -1,4 +1,4 @@
-import {Button, Description, Input, Key, Label, ListBox, Select} from '@heroui-v3/react';
+import {Button, Description, Input, Key, Label, ListBox, Select} from '@heroui/react';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import {AgentTypes} from '@lynx_common/types/ipc';
 import browserIpc from '@lynx_shared/ipc/browser';

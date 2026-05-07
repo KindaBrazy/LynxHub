@@ -1,4 +1,4 @@
-import {Card, Description} from '@heroui-v3/react';
+import {Card, Description} from '@heroui/react';
 import SettingsSearchHighlight from '@lynx/pages/settings/SettingsSearchHighlight';
 import {useRegisterSectionSearch} from '@lynx/pages/settings/SettingsSearchRegistry';
 import {motion} from 'framer-motion';

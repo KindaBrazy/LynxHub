@@ -1,4 +1,4 @@
-import {Button, Modal} from '@heroui-v3/react';
+import {Button, Modal} from '@heroui/react';
 import {Power_Icon} from '@lynx_assets/icons';
 import applicationIpc from '@lynx_shared/ipc/application';
 import {Forward2, Restart, ShieldWarning} from '@solar-icons/react-perf/BoldDuotone';

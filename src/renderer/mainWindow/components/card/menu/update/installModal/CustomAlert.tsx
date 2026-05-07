@@ -1,4 +1,4 @@
-import {Alert, AlertProps, Link} from '@heroui-v3/react';
+import {Alert, AlertProps, Link} from '@heroui/react';
 import {AlertTypes, CustomAlertParams, InitialStep} from '@lynx_common/types/plugins/modules';
 
 function getAlertColor(type?: AlertTypes): AlertProps['status'] {

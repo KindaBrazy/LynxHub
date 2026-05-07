@@ -1,4 +1,4 @@
-import {Separator} from '@heroui-v3/react';
+import {Separator} from '@heroui/react';
 import {tabsActions, useTabsState} from '@lynx/redux/reducers/tabs';
 import {AppDispatch} from '@lynx/redux/store';
 import {TabInfo} from '@lynx_common/types';

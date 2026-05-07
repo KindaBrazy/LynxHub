@@ -1,4 +1,4 @@
-import {Card, Label, Switch} from '@heroui-v3/react';
+import {Card, Label, Switch} from '@heroui/react';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import {useCardsState} from '@lynx/redux/reducers/cards';
 import {useVolumeState, volumeActions} from '@lynx/redux/reducers/volume';

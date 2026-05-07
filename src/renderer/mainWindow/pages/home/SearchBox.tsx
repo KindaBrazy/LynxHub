@@ -1,4 +1,4 @@
-import {SearchField} from '@heroui-v3/react';
+import {SearchField} from '@heroui/react';
 import {Dispatch, memo, SetStateAction} from 'react';
 
 /**

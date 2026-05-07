@@ -1,4 +1,4 @@
-import {Button} from '@heroui-v3/react';
+import {Button} from '@heroui/react';
 import {Check, ShieldAlert} from 'lucide-react';
 import {memo} from 'react';
 

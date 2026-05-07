@@ -1,4 +1,4 @@
-import {Avatar, Button, Card, Chip} from '@heroui-v3/react';
+import {Avatar, Button, Card, Chip} from '@heroui/react';
 import SettingsSection from '@lynx/components/SettingsSection';
 import {DiscordColor_Icon, GitHub_Icon, Gmail_Icon, Reddit_Icon, Scales_Icon, XSite_Icon} from '@lynx_assets/icons';
 import {Youtube_Color_Icon} from '@lynx_assets/icons/Icons_Colorful';

@@ -1,4 +1,4 @@
-import {Description, Key, Label, ListBox, Select} from '@heroui-v3/react';
+import {Description, Key, Label, ListBox, Select} from '@heroui/react';
 import {TaskbarStatus} from '@lynx_common/types/ipc';
 import {isLinux, isMac} from '@lynx_common/utils';
 import applicationIpc from '@lynx_shared/ipc/application';

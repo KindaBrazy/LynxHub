@@ -1,4 +1,4 @@
-import {Key, Tabs} from '@heroui-v3/react';
+import {Key, Tabs} from '@heroui/react';
 import MarkdownViewer from '@lynx/components/MarkdownViewer';
 import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {usePluginsState} from '@lynx/redux/reducers/plugins';

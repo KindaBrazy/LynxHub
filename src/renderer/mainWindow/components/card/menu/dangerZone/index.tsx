@@ -1,4 +1,4 @@
-import {DropdownItem} from '@heroui-v3/react';
+import {DropdownItem} from '@heroui/react';
 import {MinusSquare, TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
 import {useCallback} from 'react';
 

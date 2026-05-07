@@ -1,4 +1,4 @@
-import {Avatar, Button, Description, Label} from '@heroui-v3/react';
+import {Avatar, Button, Description, Label} from '@heroui/react';
 import SettingsSection from '@lynx/components/SettingsSection';
 import {Patreon_Icon} from '@lynx_assets/icons';
 import {PATREON_URL} from '@lynx_common/consts';

@@ -1,4 +1,4 @@
-import {Card, Tooltip} from '@heroui-v3/react';
+import {Card, Tooltip} from '@heroui/react';
 import {ScreenShareSources} from '@lynx_common/types/shareScreen';
 import {Record} from '@solar-icons/react-perf/BoldDuotone';
 

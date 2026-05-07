@@ -1,4 +1,4 @@
-import {Button, Key, Label, ListBox, Select} from '@heroui-v3/react';
+import {Button, Key, Label, ListBox, Select} from '@heroui/react';
 import gitIpc from '@lynx_shared/ipc/git';
 import {useCallback, useEffect, useState} from 'react';
 

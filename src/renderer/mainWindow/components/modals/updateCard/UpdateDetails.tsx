@@ -1,4 +1,4 @@
-import {Accordion, Chip, Modal, Table, UseOverlayStateReturn} from '@heroui-v3/react';
+import {Accordion, Chip, Modal, Table, UseOverlayStateReturn} from '@heroui/react';
 import {AltArrowDown} from '@solar-icons/react-perf/Linear';
 import {isEmpty} from 'lodash-es';
 import {LucideReplace, Minus, Plus} from 'lucide-react';

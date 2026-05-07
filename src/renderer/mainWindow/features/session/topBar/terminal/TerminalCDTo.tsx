@@ -1,4 +1,4 @@
-import {Button, CloseButton, Header, Popover, ScrollShadow, Separator} from '@heroui-v3/react';
+import {Button, CloseButton, Header, Popover, ScrollShadow, Separator} from '@heroui/react';
 import {terminalLineEnding} from '@lynx_common/utils';
 import filesIpc from '@lynx_shared/ipc/files';
 import ptyIpc from '@lynx_shared/ipc/pty';

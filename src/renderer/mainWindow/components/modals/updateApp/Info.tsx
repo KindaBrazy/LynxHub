@@ -1,4 +1,4 @@
-import {Accordion, buttonVariants, Card, Chip, Link, Separator} from '@heroui-v3/react';
+import {Accordion, buttonVariants, Card, Chip, Link, Separator} from '@heroui/react';
 import {APP_BUILD_NUMBER, APP_VERSION, RELEASES_PAGE} from '@lynx_common/consts';
 import {AppUpdateInfo} from '@lynx_common/types';
 import {ShieldCross} from '@solar-icons/react-perf/BoldDuotone';

@@ -1,4 +1,4 @@
-import {Button, ButtonGroup, Popover} from '@heroui-v3/react';
+import {Button, ButtonGroup, Popover} from '@heroui/react';
 import storageIpc from '@lynx_shared/ipc/storage';
 import {Refresh} from '@solar-icons/react-perf/BoldDuotone';
 import {useState} from 'react';

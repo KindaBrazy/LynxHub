@@ -1,4 +1,4 @@
-import {Card} from '@heroui-v3/react';
+import {Card} from '@heroui/react';
 import {usePluginsState} from '@lynx/redux/reducers/plugins';
 import {WidgetAdd} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty} from 'lodash-es';

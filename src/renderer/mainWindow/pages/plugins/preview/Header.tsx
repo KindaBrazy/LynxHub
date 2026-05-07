@@ -1,4 +1,4 @@
-import {Avatar, Button, Chip, Description, Label} from '@heroui-v3/react';
+import {Avatar, Button, Chip, Description, Label} from '@heroui/react';
 import {usePluginsState} from '@lynx/redux/reducers/plugins';
 import {useUserState} from '@lynx/redux/reducers/user';
 import {PluginInstalledItem} from '@lynx_common/types/plugins';

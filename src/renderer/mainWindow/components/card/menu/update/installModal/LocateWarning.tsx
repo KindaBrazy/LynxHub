@@ -1,4 +1,4 @@
-import {Modal} from '@heroui-v3/react';
+import {Modal} from '@heroui/react';
 import {ShieldWarning} from '@solar-icons/react-perf/BoldDuotone';
 import {Dispatch, SetStateAction} from 'react';
 

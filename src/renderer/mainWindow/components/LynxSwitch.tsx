@@ -1,4 +1,4 @@
-import {Description, Label, Surface, SurfaceProps, Switch, SwitchProps} from '@heroui-v3/react';
+import {Description, Label, Surface, SurfaceProps, Switch, SwitchProps} from '@heroui/react';
 import SettingsSearchHighlight from '@lynx/pages/settings/SettingsSearchHighlight';
 import {ReactNode, useCallback, useEffect, useState} from 'react';
 

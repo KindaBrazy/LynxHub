@@ -1,4 +1,4 @@
-import {Button, Chip, Dropdown, Label, Modal, SearchField, Tabs, useOverlayState} from '@heroui-v3/react';
+import {Button, Chip, Dropdown, Label, Modal, SearchField, Tabs, useOverlayState} from '@heroui/react';
 import {ChosenArgumentsData, CustomArg} from '@lynx_common/types';
 import {ChosenArgument} from '@lynx_common/types/plugins/modules';
 import {Filter, Monitor, WindowFrame} from '@solar-icons/react-perf/BoldDuotone';

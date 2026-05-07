@@ -1,4 +1,4 @@
-import {Button, Chip, Description, Dropdown, Label, Selection} from '@heroui-v3/react';
+import {Button, Chip, Description, Dropdown, Label, Selection} from '@heroui/react';
 import {usePluginsState} from '@lynx/redux/reducers/plugins';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
 import {BoxMinimalistic} from '@solar-icons/react-perf/BoldDuotone';

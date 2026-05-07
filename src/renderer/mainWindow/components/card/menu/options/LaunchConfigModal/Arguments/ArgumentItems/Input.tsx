@@ -1,4 +1,4 @@
-import {Button, Input, TextArea} from '@heroui-v3/react';
+import {Button, Input, TextArea} from '@heroui/react';
 import {ChosenArgument} from '@lynx_common/types/plugins/modules';
 import {Restart, Text} from '@solar-icons/react-perf/BoldDuotone';
 import {useCallback, useEffect, useMemo, useState} from 'react';

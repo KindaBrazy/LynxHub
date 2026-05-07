@@ -1,4 +1,4 @@
-import {Button, Chip, Label, SearchField, Switch} from '@heroui-v3/react';
+import {Button, Chip, Label, SearchField, Switch} from '@heroui/react';
 import {Circle_Icon} from '@lynx_assets/icons';
 import browserIpc from '@lynx_shared/ipc/browser';
 import {AltArrowDown, AltArrowUp} from '@solar-icons/react-perf/Bold';

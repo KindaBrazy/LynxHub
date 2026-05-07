@@ -1,4 +1,4 @@
-import {Button, ButtonGroup} from '@heroui-v3/react';
+import {Button, ButtonGroup} from '@heroui/react';
 import {isLinuxPortable} from '@lynx/utils/hooks';
 import {GitHub_Icon} from '@lynx_assets/icons';
 import {ISSUE_PAGE} from '@lynx_common/consts';

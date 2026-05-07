@@ -1,4 +1,4 @@
-import {Button, Checkbox, Label, Modal} from '@heroui-v3/react';
+import {Button, Checkbox, Label, Modal} from '@heroui/react';
 import {APP_AUTHOR_NAME} from '@lynx_common/consts';
 import {ShieldWarning} from '@solar-icons/react-perf/BoldDuotone';
 import {Dispatch, SetStateAction, useCallback, useEffect, useMemo, useRef, useState} from 'react';

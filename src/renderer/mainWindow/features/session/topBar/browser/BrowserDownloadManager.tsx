@@ -1,4 +1,4 @@
-import {Badge, Button} from '@heroui-v3/react';
+import {Badge, Button} from '@heroui/react';
 import downloadManagerIpc from '@lynx_shared/ipc/downloadManager';
 import {DownloadMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
 import {memo, useEffect, useState} from 'react';

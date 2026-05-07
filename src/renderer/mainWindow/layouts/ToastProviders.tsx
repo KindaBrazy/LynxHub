@@ -1,4 +1,4 @@
-import {Toast, ToastQueue} from '@heroui-v3/react';
+import {Toast, ToastQueue} from '@heroui/react';
 import createToastFunction, {ToastFunction} from '@lynx_common/utils/toast';
 import {memo} from 'react';
 

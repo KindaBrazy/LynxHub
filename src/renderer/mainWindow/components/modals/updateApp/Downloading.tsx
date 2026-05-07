@@ -1,4 +1,4 @@
-import {ProgressBar} from '@heroui-v3/react';
+import {ProgressBar} from '@heroui/react';
 import {UpdateDownloadProgress} from '@lynx_common/types';
 import {formatSize} from '@lynx_common/utils';
 

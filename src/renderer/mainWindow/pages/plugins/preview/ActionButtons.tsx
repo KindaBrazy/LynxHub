@@ -1,4 +1,4 @@
-import {Button, useOverlayState} from '@heroui-v3/react';
+import {Button, useOverlayState} from '@heroui/react';
 import {
   pluginsActions,
   useIsInstallingPlugin,

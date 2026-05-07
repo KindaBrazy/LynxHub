@@ -1,4 +1,4 @@
-import {ScrollShadow} from '@heroui-v3/react';
+import {ScrollShadow} from '@heroui/react';
 import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {useCardsState} from '@lynx/redux/reducers/cards';
 import {useDebounceBreadcrumb} from '@lynx_shared/sentry/Breadcrumbs';

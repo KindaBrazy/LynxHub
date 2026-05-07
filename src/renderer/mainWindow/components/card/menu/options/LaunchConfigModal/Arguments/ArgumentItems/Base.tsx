@@ -1,4 +1,4 @@
-import {Button, Separator, Surface} from '@heroui-v3/react';
+import {Button, Separator, Surface} from '@heroui/react';
 import {TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
 import {Reorder, useDragControls} from 'framer-motion';
 import {GripVertical} from 'lucide-react';

@@ -1,5 +1,5 @@
-import {Dropdown, Label, Selection} from '@heroui-v3/react';
-import {Button} from '@heroui-v3/react';
+import {Dropdown, Label, Selection} from '@heroui/react';
+import {Button} from '@heroui/react';
 import {Apps_Color_Icon, History_Color_Icon, Pin_Color_Icon} from '@lynx_assets/icons/Icons_Colorful';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';

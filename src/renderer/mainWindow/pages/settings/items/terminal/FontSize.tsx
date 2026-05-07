@@ -1,4 +1,4 @@
-import {Label, NumberField} from '@heroui-v3/react';
+import {Label, NumberField} from '@heroui/react';
 import {terminalActions, useTerminalState} from '@lynx/redux/reducers/terminal';
 import {AppDispatch} from '@lynx/redux/store';
 import {useDispatch} from 'react-redux';

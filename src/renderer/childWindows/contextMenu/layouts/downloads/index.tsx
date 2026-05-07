@@ -1,4 +1,4 @@
-import {Button, Chip} from '@heroui-v3/react';
+import {Button, Chip} from '@heroui/react';
 import downloadManagerIpc from '@lynx_shared/ipc/downloadManager';
 import {Broom, DownloadMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
 import {memo, useCallback} from 'react';

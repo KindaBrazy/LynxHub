@@ -1,4 +1,4 @@
-import {Separator} from '@heroui-v3/react';
+import {Separator} from '@heroui/react';
 import contextMenuIpc from '@lynx_shared/ipc/contextMenu';
 import {ClipboardText, Copy, Scissors, TextSelection, UndoLeftRound} from '@solar-icons/react-perf/BoldDuotone';
 import type {EditFlags} from 'electron';

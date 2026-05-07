@@ -1,4 +1,4 @@
-import {UseOverlayStateReturn} from '@heroui-v3/react';
+import {UseOverlayStateReturn} from '@heroui/react';
 import {extensionRendererApi} from '@lynx/plugins/extensions/loader';
 import {getCardMethod, useAllCardMethods} from '@lynx/plugins/modules';
 import {cardsActions, useCardsState} from '@lynx/redux/reducers/cards';

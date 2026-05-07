@@ -1,4 +1,4 @@
-import {Label, NumberField} from '@heroui-v3/react';
+import {Label, NumberField} from '@heroui/react';
 import {cardsActions, useCardsState} from '@lynx/redux/reducers/cards';
 import {AppDispatch} from '@lynx/redux/store';
 import storageIpc from '@lynx_shared/ipc/storage';

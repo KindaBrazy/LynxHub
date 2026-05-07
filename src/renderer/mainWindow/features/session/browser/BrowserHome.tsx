@@ -1,4 +1,4 @@
-import {Button, Spinner, Surface} from '@heroui-v3/react';
+import {Button, Spinner, Surface} from '@heroui/react';
 import LynxScroll from '@lynx/components/LynxScroll';
 import {cardsActions} from '@lynx/redux/reducers/cards';
 import {useTabsState} from '@lynx/redux/reducers/tabs';
