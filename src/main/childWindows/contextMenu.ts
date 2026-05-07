@@ -235,8 +235,6 @@ export default class ContextMenuManager {
     } catch (error) {
       console.error('Failed to resize context menu:', error);
     }
-
-    this.positionContextMenuAtCursor();
   }
 
   /**
