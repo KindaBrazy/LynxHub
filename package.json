@@ -111,7 +111,7 @@
     "@xterm/xterm": "^6.0.0",
     "chokidar": "^5.0.0",
     "decompress": "^4.2.1",
-    "electron": "^40.6.0",
+    "electron": "^42.0.0",
     "electron-builder": "^26.8.1",
     "electron-dl": "^4.0.0",
     "electron-log": "^5.4.3",
