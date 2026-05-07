@@ -1,4 +1,4 @@
-import {Button, Modal, Tabs} from '@heroui-v3/react';
+import {Button, Modal, Tabs} from '@heroui/react';
 import {ChosenArgumentsData} from '@lynx_common/types';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {useDebounceBreadcrumb} from '@lynx_shared/sentry/Breadcrumbs';

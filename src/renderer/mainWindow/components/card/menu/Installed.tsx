@@ -1,4 +1,4 @@
-import {Button, Dropdown, Separator, useOverlayState} from '@heroui-v3/react';
+import {Button, Dropdown, Separator, useOverlayState} from '@heroui/react';
 import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {useUpdatingCard} from '@lynx/utils/hooks';
 import {MenuDots} from '@solar-icons/react-perf/BoldDuotone';

@@ -1,4 +1,4 @@
-import {Avatar, Description, Label, Link, Modal} from '@heroui-v3/react';
+import {Avatar, Description, Label, Link, Modal} from '@heroui/react';
 import {CardInfoDescriptions} from '@lynx_common/types/plugins/modules';
 import {extractGitUrl, getCacheUrl, getFallbackString, validateGitRepoUrl} from '@lynx_common/utils';
 import {useDebounceBreadcrumb} from '@lynx_shared/sentry/Breadcrumbs';

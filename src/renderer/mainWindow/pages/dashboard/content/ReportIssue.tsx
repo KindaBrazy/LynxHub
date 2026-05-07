@@ -1,4 +1,4 @@
-import {Button} from '@heroui-v3/react';
+import {Button} from '@heroui/react';
 import SettingsSection from '@lynx/components/SettingsSection';
 import {GitHub_Icon} from '@lynx_assets/icons';
 import {ISSUE_PAGE} from '@lynx_common/consts';

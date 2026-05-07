@@ -1,4 +1,4 @@
-import {Button, Modal} from '@heroui-v3/react';
+import {Button, Modal} from '@heroui/react';
 import {ISSUE_PAGE} from '@lynx_common/consts';
 import {SquareTopDown} from '@solar-icons/react-perf/BoldDuotone';
 import {useMemo} from 'react';

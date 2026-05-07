@@ -1,4 +1,4 @@
-import {Button, InputGroup, Label, ListBox, Select, TextField} from '@heroui-v3/react';
+import {Button, InputGroup, Label, ListBox, Select, TextField} from '@heroui/react';
 import {UserInputField, UserInputResult} from '@lynx_common/types/plugins/modules';
 import filesIpc from '@lynx_shared/ipc/files';
 import {File, FolderOpen} from '@solar-icons/react-perf/BoldDuotone';

@@ -1,4 +1,4 @@
-import {Avatar, Description, Label, Link, Modal} from '@heroui-v3/react';
+import {Avatar, Description, Label, Link, Modal} from '@heroui/react';
 import {extractGitUrl, getCacheUrl, getFallbackString} from '@lynx_common/utils';
 import {isEmpty, isNil} from 'lodash-es';
 import {memo, useMemo} from 'react';

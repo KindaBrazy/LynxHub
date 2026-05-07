@@ -1,4 +1,4 @@
-import {Button} from '@heroui-v3/react';
+import {Button} from '@heroui/react';
 import {Broom} from '@solar-icons/react-perf/BoldDuotone';
 import {memo, RefObject, useCallback} from 'react';
 

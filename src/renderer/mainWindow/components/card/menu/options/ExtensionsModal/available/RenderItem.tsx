@@ -1,4 +1,4 @@
-import {Avatar, Button, Chip, Description, Link, Spinner, useOverlayState} from '@heroui-v3/react';
+import {Avatar, Button, Chip, Description, Link, Spinner, useOverlayState} from '@heroui/react';
 import {extractGitUrl, getFallbackString} from '@lynx_common/utils';
 import gitIpc from '@lynx_shared/ipc/git';
 import {Star} from '@solar-icons/react-perf/Bold';

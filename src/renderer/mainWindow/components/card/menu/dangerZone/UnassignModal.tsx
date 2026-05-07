@@ -1,4 +1,4 @@
-import {Button, ButtonGroup, Modal} from '@heroui-v3/react';
+import {Button, ButtonGroup, Modal} from '@heroui/react';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {ShieldCross} from '@solar-icons/react-perf/BoldDuotone';
 import {memo, useCallback, useMemo} from 'react';

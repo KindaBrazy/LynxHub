@@ -1,4 +1,4 @@
-import {Button, Label, Spinner, Switch, Tabs} from '@heroui-v3/react';
+import {Button, Label, Spinner, Switch, Tabs} from '@heroui/react';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import {ScreenShareSources, ScreenShareStart} from '@lynx_common/types/shareScreen';
 import shareScreenIpc from '@lynx_shared/ipc/shareScreen';

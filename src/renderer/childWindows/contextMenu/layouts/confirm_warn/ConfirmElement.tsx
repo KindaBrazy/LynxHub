@@ -1,4 +1,4 @@
-import {Checkbox, Label} from '@heroui-v3/react';
+import {Checkbox, Label} from '@heroui/react';
 import {ConfirmMenuTypes} from '@lynx_common/types';
 import storageIpc, {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {ShieldWarning} from '@solar-icons/react-perf/BoldDuotone';

@@ -1,4 +1,4 @@
-import {Chip, Spinner} from '@heroui-v3/react';
+import {Chip, Spinner} from '@heroui/react';
 import {motion} from 'framer-motion';
 import {useMemo} from 'react';
 

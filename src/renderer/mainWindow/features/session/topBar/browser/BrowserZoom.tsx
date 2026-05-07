@@ -1,4 +1,4 @@
-import {Button} from '@heroui-v3/react';
+import {Button} from '@heroui/react';
 import browserIpc from '@lynx_shared/ipc/browser';
 import {MagnifierZoomIn} from '@solar-icons/react-perf/BoldDuotone';
 import {memo, useEffect, useRef} from 'react';

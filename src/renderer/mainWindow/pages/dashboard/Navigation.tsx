@@ -1,4 +1,4 @@
-import {Button, Card, Header, ScrollShadow} from '@heroui-v3/react';
+import {Button, Card, Header, ScrollShadow} from '@heroui/react';
 import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {DashboardPage_Icon} from '@lynx_assets/icons/pages';
 import staticsIpc from '@lynx_shared/ipc/statics';

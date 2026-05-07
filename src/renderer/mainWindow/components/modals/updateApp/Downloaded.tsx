@@ -1,4 +1,4 @@
-import {Button} from '@heroui-v3/react';
+import {Button} from '@heroui/react';
 import applicationIpc from '@lynx_shared/ipc/application';
 import {CheckCircle, ShieldCross} from '@solar-icons/react-perf/BoldDuotone';
 import {useCallback} from 'react';

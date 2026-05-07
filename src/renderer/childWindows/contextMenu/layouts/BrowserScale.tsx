@@ -1,4 +1,4 @@
-import {Button, Label, Slider} from '@heroui-v3/react';
+import {Button, Label, Slider} from '@heroui/react';
 import browserIpc from '@lynx_shared/ipc/browser';
 import storageIpc from '@lynx_shared/ipc/storage';
 import {Magnifier, Refresh} from '@solar-icons/react-perf/BoldDuotone';

@@ -1,4 +1,4 @@
-import {Spinner} from '@heroui-v3/react';
+import {Spinner} from '@heroui/react';
 import {extractGitUrl, validateGitRepoUrl} from '@lynx_common/utils';
 import gitIpc from '@lynx_shared/ipc/git';
 import {startCase} from 'lodash-es';

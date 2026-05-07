@@ -9,7 +9,7 @@ import {
   Link,
   ProgressBar,
   useOverlayState,
-} from '@heroui-v3/react';
+} from '@heroui/react';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import LynxScroll from '@lynx/components/LynxScroll';
 import {tabsActions} from '@lynx/redux/reducers/tabs';

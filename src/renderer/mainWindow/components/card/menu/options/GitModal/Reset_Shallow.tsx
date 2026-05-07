@@ -1,4 +1,4 @@
-import {Button, ButtonGroup, Description, Popover, useOverlayState} from '@heroui-v3/react';
+import {Button, ButtonGroup, Description, Popover, useOverlayState} from '@heroui/react';
 import gitIpc from '@lynx_shared/ipc/git';
 import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
 import {useCallback, useState} from 'react';

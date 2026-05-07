@@ -1,4 +1,4 @@
-import {Button, Disclosure} from '@heroui-v3/react';
+import {Button, Disclosure} from '@heroui/react';
 import CopyClipboard from '@lynx/components/CopyClipboard';
 import browserIpc from '@lynx_shared/ipc/browser';
 import {LinkBroken, Restart} from '@solar-icons/react-perf/BoldDuotone';

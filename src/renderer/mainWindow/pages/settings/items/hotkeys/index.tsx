@@ -1,4 +1,4 @@
-import {Button, Description, Header, Input, Label, ListBox, Surface} from '@heroui-v3/react';
+import {Button, Description, Header, Input, Label, ListBox, Surface} from '@heroui/react';
 import SettingsSection from '@lynx/components/SettingsSection';
 import {hotkeysActions, useHotkeysState} from '@lynx/redux/reducers/hotkeys';
 import {useSettingsState} from '@lynx/redux/reducers/settings';

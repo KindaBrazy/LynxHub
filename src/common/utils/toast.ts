@@ -1,5 +1,5 @@
-import type {ButtonProps, ToastContentValue, ToastQueue} from '@heroui-v3/react';
-import {DEFAULT_TOAST_TIMEOUT} from '@heroui-v3/react';
+import type {ButtonProps, ToastContentValue, ToastQueue} from '@heroui/react';
+import {DEFAULT_TOAST_TIMEOUT} from '@heroui/react';
 import type {ReactNode} from 'react';
 
 interface HeroUIToastOptions {

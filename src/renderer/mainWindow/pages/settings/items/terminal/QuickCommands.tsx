@@ -1,4 +1,4 @@
-import {Button, Input} from '@heroui-v3/react';
+import {Button, Input} from '@heroui/react';
 import {terminalActions, useTerminalState} from '@lynx/redux/reducers/terminal';
 import {AppDispatch} from '@lynx/redux/store';
 import {Broom} from '@solar-icons/react-perf/BoldDuotone';

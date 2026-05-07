@@ -10,7 +10,7 @@ import {
   Popover,
   Select,
   TextField,
-} from '@heroui-v3/react';
+} from '@heroui/react';
 import {ChosenArgumentsData} from '@lynx_common/types';
 import {motion} from 'framer-motion';
 import {isEmpty} from 'lodash-es';

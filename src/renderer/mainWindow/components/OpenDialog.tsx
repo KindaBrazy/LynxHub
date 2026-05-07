@@ -1,4 +1,4 @@
-import {Button, ButtonGroup, FieldError, InputGroup, TextField} from '@heroui-v3/react';
+import {Button, ButtonGroup, FieldError, InputGroup, TextField} from '@heroui/react';
 import {isWin} from '@lynx_common/utils';
 import applicationIpc from '@lynx_shared/ipc/application';
 import filesIpc from '@lynx_shared/ipc/files';

@@ -1,4 +1,4 @@
-import {Button, Label, Popover, SearchField, Switch} from '@heroui-v3/react';
+import {Button, Label, Popover, SearchField, Switch} from '@heroui/react';
 import useHotkeyPress from '@lynx/hooks/hotkeys';
 import {useIsActiveTab} from '@lynx/layouts/tabs/utils';
 import {useHotkeysState} from '@lynx/redux/reducers/hotkeys';

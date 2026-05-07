@@ -1,4 +1,4 @@
-import {cn} from '@heroui-v3/react';
+import {cn} from '@heroui/react';
 import {RunningCard} from '@lynx/types';
 import {Star} from '@solar-icons/react-perf/Bold';
 import {motion} from 'framer-motion';

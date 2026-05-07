@@ -1,4 +1,4 @@
-import {cn} from '@heroui-v3/react';
+import {cn} from '@heroui/react';
 import {ReactNode} from 'react';
 
 export type DescriptionGridItem = {

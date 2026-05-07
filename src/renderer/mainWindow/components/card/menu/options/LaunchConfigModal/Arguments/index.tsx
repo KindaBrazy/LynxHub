@@ -1,4 +1,4 @@
-import {useOverlayState} from '@heroui-v3/react';
+import {useOverlayState} from '@heroui/react';
 import {ChosenArgumentsData} from '@lynx_common/types';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {motion} from 'framer-motion';

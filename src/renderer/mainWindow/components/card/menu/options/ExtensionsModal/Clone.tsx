@@ -1,4 +1,4 @@
-import {Card, FieldError, InputGroup, Label, ProgressBar, Separator, TextField} from '@heroui-v3/react';
+import {Card, FieldError, InputGroup, Label, ProgressBar, Separator, TextField} from '@heroui/react';
 import {GitHub_Icon} from '@lynx_assets/icons';
 import {GitProgressCallback} from '@lynx_common/types/ipc';
 import {extractGitUrl, validateGitRepoUrl} from '@lynx_common/utils';

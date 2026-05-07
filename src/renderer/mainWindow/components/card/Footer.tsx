@@ -1,4 +1,4 @@
-import {Button, CardFooter, UseOverlayStateReturn} from '@heroui-v3/react';
+import {Button, CardFooter, UseOverlayStateReturn} from '@heroui/react';
 import ShinyText from '@lynx/components/ShinyText';
 import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {useAppState} from '@lynx/redux/reducers/app';

@@ -1,4 +1,4 @@
-import {cn, Spinner} from '@heroui-v3/react';
+import {cn, Spinner} from '@heroui/react';
 import {InitialSteps} from '@lynx_common/types/plugins/modules';
 import {Unread} from '@solar-icons/react-perf/Linear';
 import {memo, useEffect, useRef} from 'react';

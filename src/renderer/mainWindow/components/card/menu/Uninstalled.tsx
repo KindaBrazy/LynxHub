@@ -1,4 +1,4 @@
-import {Button, Dropdown, useOverlayState} from '@heroui-v3/react';
+import {Button, Dropdown, useOverlayState} from '@heroui/react';
 import {MenuDots} from '@solar-icons/react-perf/BoldDuotone';
 import {memo} from 'react';
 

@@ -1,4 +1,4 @@
-import {Button} from '@heroui-v3/react';
+import {Button} from '@heroui/react';
 import windowDialogsIpc from '@lynx_shared/ipc/dialogsWindow';
 import {Check, ShieldCheck, X} from 'lucide-react';
 import {memo} from 'react';

@@ -1,4 +1,4 @@
-import {Avatar, Button, Checkbox, CheckboxGroup, cn, Description, Label} from '@heroui-v3/react';
+import {Avatar, Button, Checkbox, CheckboxGroup, cn, Description, Label} from '@heroui/react';
 import {getFallbackString} from '@lynx_common/utils';
 import {ArrowRight} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty} from 'lodash-es';

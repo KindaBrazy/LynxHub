@@ -1,4 +1,4 @@
-import {Button, CloseButton, Tooltip} from '@heroui-v3/react';
+import {Button, CloseButton, Tooltip} from '@heroui/react';
 import useHotkeyPress from '@lynx/hooks/hotkeys';
 import {useCardsState} from '@lynx/redux/reducers/cards';
 import {useHotkeysState} from '@lynx/redux/reducers/hotkeys';

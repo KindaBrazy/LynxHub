@@ -1,4 +1,4 @@
-import {ProgressBar as Progress, ProgressBarProps} from '@heroui-v3/react';
+import {ProgressBar as Progress, ProgressBarProps} from '@heroui/react';
 import {memo} from 'react';
 
 type ProgressState = 0 | 1 | 2 | 3 | 4;

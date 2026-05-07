@@ -1,4 +1,4 @@
-import {Button} from '@heroui-v3/react';
+import {Button} from '@heroui/react';
 import SettingsSection from '@lynx/components/SettingsSection';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import applicationIpc from '@lynx_shared/ipc/application';

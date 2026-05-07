@@ -1,4 +1,4 @@
-import {Button, Card, Checkbox, CheckboxGroup, Label} from '@heroui-v3/react';
+import {Button, Card, Checkbox, CheckboxGroup, Label} from '@heroui/react';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import {AppDispatch} from '@lynx/redux/store';
 import browserIpc from '@lynx_shared/ipc/browser';

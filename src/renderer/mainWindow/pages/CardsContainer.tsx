@@ -1,4 +1,4 @@
-import {Card, Description, Label} from '@heroui-v3/react';
+import {Card, Description, Label} from '@heroui/react';
 import {ReactNode} from 'react';
 
 /** Props for the CardsContainer component. */

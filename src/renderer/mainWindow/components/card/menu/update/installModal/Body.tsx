@@ -1,4 +1,4 @@
-import {Label, ModalBody, ProgressBar} from '@heroui-v3/react';
+import {Label, ModalBody, ProgressBar} from '@heroui/react';
 import {DownloadProgress} from '@lynx_common/types/ipc';
 import {InitialStep, UserInputField, UserInputResult} from '@lynx_common/types/plugins/modules';
 import {formatSize} from '@lynx_common/utils';

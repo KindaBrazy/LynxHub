@@ -1,4 +1,4 @@
-import {Button, ButtonProps} from '@heroui-v3/react';
+import {Button, ButtonProps} from '@heroui/react';
 import {tabsActions} from '@lynx/redux/reducers/tabs';
 import {AppDispatch} from '@lynx/redux/store';
 import {PluginPage_Icon} from '@lynx_assets/icons/pages';

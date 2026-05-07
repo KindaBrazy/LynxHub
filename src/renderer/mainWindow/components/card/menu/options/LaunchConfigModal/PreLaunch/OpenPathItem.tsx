@@ -1,4 +1,4 @@
-import {Button, Card} from '@heroui-v3/react';
+import {Button, Card} from '@heroui/react';
 import {TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
 import {memo, ReactNode, useCallback} from 'react';
 

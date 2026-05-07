@@ -1,4 +1,4 @@
-import {Description, Key, Label, ListBox, Select} from '@heroui-v3/react';
+import {Description, Key, Label, ListBox, Select} from '@heroui/react';
 import {terminalActions, useTerminalState} from '@lynx/redux/reducers/terminal';
 import {AppDispatch} from '@lynx/redux/store';
 import {TerminalCursorStyle} from '@lynx_common/types/ipc';

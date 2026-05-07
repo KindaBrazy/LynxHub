@@ -1,4 +1,4 @@
-import {Button, Card, Header, ScrollShadow, SearchField} from '@heroui-v3/react';
+import {Button, Card, Header, ScrollShadow, SearchField} from '@heroui/react';
 import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {settingsActions, useSettingsState} from '@lynx/redux/reducers/settings';
 import {searchInStrings} from '@lynx/utils';

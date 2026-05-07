@@ -1,4 +1,4 @@
-import {Button, Dropdown, Label} from '@heroui-v3/react';
+import {Button, Dropdown, Label} from '@heroui/react';
 import {CustomArg, CustomArgKinds} from '@lynx_common/types';
 import storageIpc from '@lynx_shared/ipc/storage';
 import {HomeAdd, Inbox, Notes, Pen2, SettingsMinimalistic} from '@solar-icons/react-perf/BoldDuotone';

@@ -1,4 +1,4 @@
-import {Button} from '@heroui-v3/react';
+import {Button} from '@heroui/react';
 import useHotkeyPress from '@lynx/hooks/hotkeys';
 import {useIsActiveTab} from '@lynx/layouts/tabs/utils';
 import {useTabsState} from '@lynx/redux/reducers/tabs';

@@ -1,4 +1,4 @@
-import {Button, Card, FieldError, Input, Label, Radio, RadioGroup, TextField} from '@heroui-v3/react';
+import {Button, Card, FieldError, Input, Label, Radio, RadioGroup, TextField} from '@heroui/react';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import downloadManagerIpc from '@lynx_shared/ipc/downloadManager';
 import {MoveToFolder} from '@solar-icons/react-perf/BoldDuotone';

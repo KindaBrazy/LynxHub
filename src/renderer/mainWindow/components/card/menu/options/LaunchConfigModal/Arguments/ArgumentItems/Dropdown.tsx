@@ -1,4 +1,4 @@
-import {Description, Key, Label, ListBox, Select} from '@heroui-v3/react';
+import {Description, Key, Label, ListBox, Select} from '@heroui/react';
 import {ArgumentDropdownValues, ChosenArgument} from '@lynx_common/types/plugins/modules';
 import {isStringArray} from '@lynx_common/utils';
 import {ListDownMinimalistic} from '@solar-icons/react-perf/BoldDuotone';

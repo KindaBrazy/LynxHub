@@ -1,4 +1,4 @@
-import {Button, Dropdown, Label} from '@heroui-v3/react';
+import {Button, Dropdown, Label} from '@heroui/react';
 import {Terminal_Icon} from '@lynx_assets/icons';
 import filesIpc from '@lynx_shared/ipc/files';
 import {Inbox, MoveToFolder} from '@solar-icons/react-perf/BoldDuotone';

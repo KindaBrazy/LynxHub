@@ -1,4 +1,4 @@
-import {Card, Skeleton} from '@heroui-v3/react';
+import {Card, Skeleton} from '@heroui/react';
 import {memo} from 'react';
 
 /**

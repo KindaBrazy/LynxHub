@@ -1,4 +1,4 @@
-import {Avatar, CardHeader, Chip, Description, Label, Spinner} from '@heroui-v3/react';
+import {Avatar, CardHeader, Chip, Description, Label, Spinner} from '@heroui/react';
 import {extractGitUrl, getCacheUrl, getFallbackString} from '@lynx_common/utils';
 import {DownloadMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
 import {AnimatePresence, motion} from 'framer-motion';

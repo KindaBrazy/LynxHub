@@ -1,4 +1,4 @@
-import type {ToastProps} from '@heroui-v3/react';
+import type {ToastProps} from '@heroui/react';
 import {appChannels} from '@lynx_common/consts/ipcChannels/application';
 import type {HeroToastPlacement} from '@lynx_common/types';
 import type {

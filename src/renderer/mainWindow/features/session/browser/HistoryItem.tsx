@@ -1,4 +1,4 @@
-import {Card, CloseButton, Tooltip} from '@heroui-v3/react';
+import {Card, CloseButton, Tooltip} from '@heroui/react';
 import {cardsActions} from '@lynx/redux/reducers/cards';
 import {useTabsState} from '@lynx/redux/reducers/tabs';
 import {AppDispatch} from '@lynx/redux/store';

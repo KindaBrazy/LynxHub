@@ -1,4 +1,4 @@
-import {Description, Key, Label, ListBox, Select} from '@heroui-v3/react';
+import {Description, Key, Label, ListBox, Select} from '@heroui/react';
 import {appActions, useAppState} from '@lynx/redux/reducers/app';
 import {AppDispatch} from '@lynx/redux/store';
 import {DarkModeTypes} from '@lynx_common/types/ipc';

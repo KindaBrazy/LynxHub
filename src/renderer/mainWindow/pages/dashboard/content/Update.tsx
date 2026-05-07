@@ -1,4 +1,4 @@
-import {Button, Card, Chip, Description, Key, Label, ListBox, Select} from '@heroui-v3/react';
+import {Button, Card, Chip, Description, Key, Label, ListBox, Select} from '@heroui/react';
 import SettingsSection from '@lynx/components/SettingsSection';
 import {modalActions} from '@lynx/redux/reducers/modals';
 import {useSettingsState} from '@lynx/redux/reducers/settings';

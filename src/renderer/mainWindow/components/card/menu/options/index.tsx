@@ -1,4 +1,4 @@
-import {DropdownItem} from '@heroui-v3/react';
+import {DropdownItem} from '@heroui/react';
 import {Extensions2_Icon, GitHub_Icon} from '@lynx_assets/icons';
 import {SettingsMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
 import {useCallback} from 'react';

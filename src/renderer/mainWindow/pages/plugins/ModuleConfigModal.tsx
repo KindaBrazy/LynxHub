@@ -1,4 +1,4 @@
-import {Button, Checkbox, Label, Modal} from '@heroui-v3/react';
+import {Button, Checkbox, Label, Modal} from '@heroui/react';
 import {AppDispatch} from '@lynx/redux/store';
 import {showRestartModal} from '@lynx/utils';
 import {CardModules, RendererModuleImportType} from '@lynx_common/types/plugins/modules';

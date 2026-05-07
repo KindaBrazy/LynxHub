@@ -1,4 +1,4 @@
-import {Description, Key, Label, ListBox, Select} from '@heroui-v3/react';
+import {Description, Key, Label, ListBox, Select} from '@heroui/react';
 import {AppDispatch} from '@lynx/redux/store';
 import {showRestartModal} from '@lynx/utils';
 import storageIpc from '@lynx_shared/ipc/storage';

@@ -1,4 +1,4 @@
-import {Spinner} from '@heroui-v3/react';
+import {Spinner} from '@heroui/react';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import {extractGitUrl} from '@lynx_common/utils';
 import {Link} from '@solar-icons/react-perf/BoldDuotone';

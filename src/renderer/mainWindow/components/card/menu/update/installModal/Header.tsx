@@ -1,4 +1,4 @@
-import {ModalHeader, ModalHeading} from '@heroui-v3/react';
+import {ModalHeader, ModalHeading} from '@heroui/react';
 import {InitialSteps} from '@lynx_common/types/plugins/modules';
 import {memo, useMemo} from 'react';
 

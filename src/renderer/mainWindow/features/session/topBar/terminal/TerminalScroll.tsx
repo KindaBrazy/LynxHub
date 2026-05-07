@@ -1,4 +1,4 @@
-import {Button} from '@heroui-v3/react';
+import {Button} from '@heroui/react';
 import {AltArrowDown, AltArrowUp} from '@solar-icons/react-perf/Linear';
 import {IDisposable} from '@xterm/xterm';
 import {AnimatePresence, motion} from 'framer-motion';

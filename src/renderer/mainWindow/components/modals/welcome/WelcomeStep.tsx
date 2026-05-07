@@ -1,4 +1,4 @@
-import {Button} from '@heroui-v3/react';
+import {Button} from '@heroui/react';
 import {APP_NAME} from '@lynx_common/consts';
 import {motion, Variants} from 'framer-motion';
 

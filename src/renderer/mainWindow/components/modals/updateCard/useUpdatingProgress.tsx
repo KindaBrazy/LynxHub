@@ -1,4 +1,4 @@
-import {UseOverlayStateReturn} from '@heroui-v3/react';
+import {UseOverlayStateReturn} from '@heroui/react';
 import gitIpc from '@lynx_shared/ipc/git';
 import {Documents} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty} from 'lodash-es';

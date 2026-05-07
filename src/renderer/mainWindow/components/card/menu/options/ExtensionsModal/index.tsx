@@ -1,4 +1,4 @@
-import {Button, Checkbox, Label, Modal, Tabs} from '@heroui-v3/react';
+import {Button, Checkbox, Label, Modal, Tabs} from '@heroui/react';
 import {extractGitUrl} from '@lynx_common/utils';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {useDebounceBreadcrumb} from '@lynx_shared/sentry/Breadcrumbs';

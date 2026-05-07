@@ -1,4 +1,4 @@
-import {Card, Description, Header, Label, ListBox, Selection} from '@heroui-v3/react';
+import {Card, Description, Header, Label, ListBox, Selection} from '@heroui/react';
 import {ArgumentItem, ArgumentSection} from '@lynx_common/types/plugins/modules';
 import {isEmpty} from 'lodash-es';
 import {Dispatch, SetStateAction, useCallback, useMemo} from 'react';

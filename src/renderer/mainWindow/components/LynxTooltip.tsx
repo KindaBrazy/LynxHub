@@ -1,4 +1,4 @@
-import {Tooltip} from '@heroui-v3/react';
+import {Tooltip} from '@heroui/react';
 import {ReactNode} from 'react';
 import {UNSAFE_PortalProvider} from 'react-aria';
 

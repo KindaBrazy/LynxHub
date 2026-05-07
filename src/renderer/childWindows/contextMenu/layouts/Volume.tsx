@@ -1,4 +1,4 @@
-import {Button, Label, Slider} from '@heroui-v3/react';
+import {Button, Label, Slider} from '@heroui/react';
 import {Volume, VolumeCross, VolumeLoud} from '@solar-icons/react-perf/BoldDuotone';
 import {memo, useMemo} from 'react';
 

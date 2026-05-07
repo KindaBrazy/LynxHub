@@ -1,4 +1,4 @@
-import {Button, ButtonGroup, ModalFooter} from '@heroui-v3/react';
+import {Button, ButtonGroup, ModalFooter} from '@heroui/react';
 import {DownloadProgress} from '@lynx_common/types/ipc';
 import {InstallationMethod, UserInputResult} from '@lynx_common/types/plugins/modules';
 import applicationIpc from '@lynx_shared/ipc/application';

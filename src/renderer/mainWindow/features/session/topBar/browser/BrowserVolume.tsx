@@ -1,4 +1,4 @@
-import {Button} from '@heroui-v3/react';
+import {Button} from '@heroui/react';
 import {useVolumeState} from '@lynx/redux/reducers/volume';
 import browserIpc from '@lynx_shared/ipc/browser';
 import {Volume, VolumeCross, VolumeLoud} from '@solar-icons/react-perf/BoldDuotone';

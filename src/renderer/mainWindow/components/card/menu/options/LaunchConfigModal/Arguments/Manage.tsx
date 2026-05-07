@@ -1,4 +1,4 @@
-import {Button, Chip, useOverlayState} from '@heroui-v3/react';
+import {Button, Chip, useOverlayState} from '@heroui/react';
 import {ArgumentsPresets, ChosenArgumentsData} from '@lynx_common/types';
 import {ChosenArgument} from '@lynx_common/types/plugins/modules';
 import {Inbox} from '@solar-icons/react-perf/BoldDuotone';

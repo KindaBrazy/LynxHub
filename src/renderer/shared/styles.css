@@ -1,6 +1,6 @@
 @import './assets/fonts/fonts.css';
 @import 'tailwindcss';
-@import '@heroui-v3/styles';
+@import '@heroui/styles';
 
 @plugin '@tailwindcss/typography';
 

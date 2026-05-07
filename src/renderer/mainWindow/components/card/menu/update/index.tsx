@@ -1,4 +1,4 @@
-import {Checkbox, DropdownItem, Label, Spinner} from '@heroui-v3/react';
+import {Checkbox, DropdownItem, Label, Spinner} from '@heroui/react';
 import {extractGitUrl} from '@lynx_common/utils';
 import gitIpc from '@lynx_shared/ipc/git';
 import moduleIpc from '@lynx_shared/ipc/plugins/module';

@@ -1,4 +1,4 @@
-import {Card, Link, ProgressBar, useOverlayState} from '@heroui-v3/react';
+import {Card, Link, ProgressBar, useOverlayState} from '@heroui/react';
 import {GitHub_Icon} from '@lynx_assets/icons';
 import {GitProgressCallback} from '@lynx_common/types/ipc';
 import {InitialStep} from '@lynx_common/types/plugins/modules';

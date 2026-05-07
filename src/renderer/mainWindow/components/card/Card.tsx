@@ -1,4 +1,4 @@
-import {Card, Description, useOverlayState} from '@heroui-v3/react';
+import {Card, Description, useOverlayState} from '@heroui/react';
 import {useAppState} from '@lynx/redux/reducers/app';
 import {getAccentColorAsHex} from '@lynx/utils/accentColorGenerator';
 import {extractGitUrl} from '@lynx_common/utils';

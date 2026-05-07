@@ -1,4 +1,4 @@
-import {Alert, Button, buttonVariants, Link} from '@heroui-v3/react';
+import {Alert, Button, buttonVariants, Link} from '@heroui/react';
 import applicationIpc from '@lynx_shared/ipc/application';
 
 import {FailureType} from './types';

@@ -1,4 +1,4 @@
-import {Kbd} from '@heroui-v3/react';
+import {Kbd} from '@heroui/react';
 import SettingsSection from '@lynx/components/SettingsSection';
 import {SettingPage_Icon} from '@lynx_assets/icons/pages';
 import {Shield} from '@solar-icons/react-perf/BoldDuotone';

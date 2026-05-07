@@ -1,4 +1,4 @@
-import {Description, Link, Modal, Separator, Spinner} from '@heroui-v3/react';
+import {Description, Link, Modal, Separator, Spinner} from '@heroui/react';
 import {RepositoryInfo} from '@lynx_common/types';
 import gitIpc from '@lynx_shared/ipc/git';
 import {useDebounceBreadcrumb} from '@lynx_shared/sentry/Breadcrumbs';

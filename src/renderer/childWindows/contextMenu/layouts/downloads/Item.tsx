@@ -1,4 +1,4 @@
-import {Button, ButtonGroup, Card, Label, ProgressBar, Separator, Tooltip} from '@heroui-v3/react';
+import {Button, ButtonGroup, Card, Label, ProgressBar, Separator, Tooltip} from '@heroui/react';
 import {DownloadItemInfo} from '@lynx_common/types/downloadManager';
 import downloadManagerIpc from '@lynx_shared/ipc/downloadManager';
 import {Pause, Play, Restart} from '@solar-icons/react-perf/Bold';

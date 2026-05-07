@@ -1,4 +1,4 @@
-import {Modal, ModalBackdropProps, ModalContainerProps} from '@heroui-v3/react';
+import {Modal, ModalBackdropProps, ModalContainerProps} from '@heroui/react';
 import {ReactNode, useEffect, useState} from 'react';
 import {UNSAFE_PortalProvider} from 'react-aria';
 

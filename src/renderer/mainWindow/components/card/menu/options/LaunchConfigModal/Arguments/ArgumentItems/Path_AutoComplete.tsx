@@ -1,4 +1,4 @@
-import {Autocomplete, Description, EmptyState, Key, Label, ListBox, SearchField} from '@heroui-v3/react';
+import {Autocomplete, Description, EmptyState, Key, Label, ListBox, SearchField} from '@heroui/react';
 import {FolderListData} from '@lynx_common/types';
 import {replaceSlashes} from '@lynx_common/utils';
 import filesIpc from '@lynx_shared/ipc/files';

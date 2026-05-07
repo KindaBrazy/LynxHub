@@ -1,4 +1,4 @@
-import {Description, Pagination, SearchField, Spinner} from '@heroui-v3/react';
+import {Description, Pagination, SearchField, Spinner} from '@heroui/react';
 import {validateGitRepoUrl} from '@lynx_common/utils';
 import {Inbox} from '@solar-icons/react-perf/BoldDuotone';
 import {useEffect, useMemo, useState} from 'react';

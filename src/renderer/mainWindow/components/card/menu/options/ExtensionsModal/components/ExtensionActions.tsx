@@ -1,4 +1,4 @@
-import {Button, Popover, Spinner} from '@heroui-v3/react';
+import {Button, Popover, Spinner} from '@heroui/react';
 import {DownloadMinimalistic, InfoCircle, Lock, LockUnlocked, TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
 import {X} from 'lucide-react';
 import {memo} from 'react';
