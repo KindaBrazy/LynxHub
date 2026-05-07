@@ -71,6 +71,7 @@ export async function configureAppBeforeReady(): Promise<void> {
       privileges: {
         standard: true,
         secure: true,
+        corsEnabled: true,
         supportFetchAPI: true,
       },
     },
