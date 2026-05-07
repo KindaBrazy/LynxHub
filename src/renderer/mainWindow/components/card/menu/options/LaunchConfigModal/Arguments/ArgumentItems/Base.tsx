@@ -63,7 +63,7 @@ export default function ArgumentItemBase({
           onClick={defaultCursor ? undefined : onClick}
           className={`${!!onClick && !defaultCursor ? 'cursor-pointer' : ''} rounded-l-none px-2 py-0 rounded-r-3xl`}>
           <div className={`justify-between ${children ? 'pb-0' : 'pb-1'} pt-1 text-xs flex flex-row items-center`}>
-            <div className="flex gap-x-1 text-success-700 dark:text-success-300">
+            <div className="flex gap-x-1 text-success-hover">
               <div className="flex items-center justify-center">{icon}</div>
               <span className="font-JetBrainsMono font-semibold">{name}</span>
             </div>
