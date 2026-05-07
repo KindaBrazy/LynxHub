@@ -12,7 +12,7 @@ export default function TabWrapper({children, tabID, isActive}: Props) {
       ref={onRef}
       id={`${tabID}_wrapper`}
       style={{transform: 'translate(0)'}}
-      className={`${isActive ? 'flex' : 'hidden'} size-full flex flex-row overflow-hidden`}>
+      className={`${isActive ? 'flex flex-row' : 'hidden'} size-full overflow-hidden`}>
       {children}
     </div>
   );
