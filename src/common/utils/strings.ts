@@ -37,3 +37,21 @@ export function getFallbackString(value: string) {
     .map(item => item.slice(0, 1).toUpperCase())
     .join('');
 }
+
+export function getLastPathItem(path: string) {
+  if (!path) return '';
+
+  // Remove query strings and hash fragments (web URLs)
+  path = path.split(/[?#]/)[0];
+
+  // Normalize all separators to forward slash
+  // Handles: /, \, //, \\, \/, mixed combinations
+  const normalized = path.replace(/[\\/]+/g, '/');
+
+  // Remove trailing slash
+  const trimmed = normalized.replace(/\/$/, '');
+
+  // Get last segment
+  const segments = trimmed.split('/');
+  return segments[segments.length - 1];
+}
