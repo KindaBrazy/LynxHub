@@ -6,6 +6,7 @@ import {Diskette} from '@solar-icons/react-perf/BoldDuotone';
 import {Key, memo, useCallback, useEffect, useMemo, useState} from 'react';
 
 import {topToast} from '../../../../../layouts/ToastProviders';
+import LynxScroll from '../../../../LynxScroll';
 import TabModal from '../../../../TabModal';
 import {useCardStore} from '../../../store';
 import {CommonProps} from '../../about/types';
@@ -60,9 +61,9 @@ const LaunchConfig = memo(({state}: CommonProps) => {
   }, [id, chosenArguments]);
 
   return (
-    <TabModal isOpen={state.isOpen} onOpenChange={state.setOpen}>
+    <TabModal dialogClassName="p-0" isOpen={state.isOpen} onOpenChange={state.setOpen}>
       <Modal.CloseTrigger />
-      <Modal.Header>
+      <Modal.Header className="px-6 pt-6">
         <Modal.Heading className="flex-col gap-y-2 pb-0 text-center">
           {title || 'Launch Config'}
 
@@ -88,16 +89,18 @@ const LaunchConfig = memo(({state}: CommonProps) => {
           </Tabs>
         </Modal.Heading>
       </Modal.Header>
-      <Modal.Body>
-        {haveArguments && currentTab === tabs.arguments && (
-          <CardArguments id={id} chosenArguments={chosenArguments} setChosenArguments={setChosenArguments} />
-        )}
-        {currentTab === tabs.customRun && <CustomRun id={id} />}
-        {currentTab === tabs.preLaunch && <CardPreLaunch id={id} />}
+      <Modal.Body className="overflow-hidden">
+        <LynxScroll className="size-full px-6 pt-2 pb-6">
+          {haveArguments && currentTab === tabs.arguments && (
+            <CardArguments id={id} chosenArguments={chosenArguments} setChosenArguments={setChosenArguments} />
+          )}
+          {currentTab === tabs.customRun && <CustomRun id={id} />}
+          {currentTab === tabs.preLaunch && <CardPreLaunch id={id} />}
+        </LynxScroll>
       </Modal.Body>
 
       {currentTab === tabs.arguments && (
-        <Modal.Footer>
+        <Modal.Footer className="px-6 pb-4">
           <Button onPress={saveArguments} isPending={isSavingArgs}>
             <Diskette className="size-4" />
             {!isSavingArgs && 'Save Arguments'}
