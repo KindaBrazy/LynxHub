@@ -2,7 +2,7 @@ import {Avatar, Card, Description, Label} from '@heroui/react';
 import {getFallbackString} from '@lynx_common/utils';
 import {ReactNode} from 'react';
 
-type Props = {title: string; description: string; icon: string; onPress: () => void; footer?: ReactNode};
+type Props = {title: string; description: string; icon: string | ReactNode; onPress: () => void; footer?: ReactNode};
 
 /**
  * A card component for the Tools page, featuring a spotlight effect and hover animations.
@@ -17,11 +17,15 @@ export function ToolsCard({title, description, icon, onPress, footer}: Props) {
       onClick={onPress}>
       <Card.Header>
         <div className="inline-flex items-center gap-2">
-          <Avatar className={`size-12 shrink-0 ring-LynxPurple ring-2`}>
-            <Avatar.Image src={icon} alt={title} />
-            <Avatar.Fallback>{getFallbackString(title)}</Avatar.Fallback>
-          </Avatar>
-          <div className="flex flex-col">
+          {typeof icon === 'string' ? (
+            <Avatar className={`size-12 shrink-0 ring-LynxPurple ring-2`}>
+              <Avatar.Image src={icon} alt={title} />
+              <Avatar.Fallback>{getFallbackString(title)}</Avatar.Fallback>
+            </Avatar>
+          ) : (
+            <div className="size-12 rounded-full ring-2 ring-LynxPurple flex items-center justify-center">{icon}</div>
+          )}
+          <div className="flex flex-col pointer-events-none">
             <Label>{title}</Label>
           </div>
         </div>
