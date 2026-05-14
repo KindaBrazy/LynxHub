@@ -33,8 +33,12 @@ export const CardHeaderContent = memo(({modifiedTitle, onTitleChange, updateAvai
   return (
     <CardHeader className="justify-between flex-row">
       <div className="inline-flex items-center gap-2">
-        <Avatar className={`size-12 shrink-0 ${isInstalled && 'ring-LynxBlue ring-2'}`}>
-          <Avatar.Image src={avatarSrc} alt={modifiedTitle} />
+        <Avatar className={`size-12 shrink-0 ${isInstalled && 'ring-accent ring-2'}`}>
+          <Avatar.Image
+            src={avatarSrc}
+            alt={modifiedTitle}
+            className={isInstalled ? 'p-0.5 rounded-full overflow-hidden' : ''}
+          />
           <Avatar.Fallback>{getFallbackString(modifiedTitle)}</Avatar.Fallback>
         </Avatar>
         <div className="flex flex-col">
