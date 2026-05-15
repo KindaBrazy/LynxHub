@@ -29,7 +29,7 @@ export default function ContextMenu() {
   useShowEvents();
 
   return (
-    <div ref={containerRef} className={`flex size-fit flex-col overflow-hidden bg-white dark:bg-LynxRaisinBlack`}>
+    <div ref={containerRef} className={`flex size-fit flex-col overflow-hidden bg-surface`}>
       {activeLayout === MenuTypes.BrowserScale && <BrowserScale />}
       {activeLayout === MenuTypes.FindInPage && <FindInPage />}
       {activeLayout === MenuTypes.RightClick && <RightClick />}

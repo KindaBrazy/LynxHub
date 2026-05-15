@@ -1,3 +1,4 @@
+import {Label} from '@heroui/react';
 import contextMenuIpc from '@lynx_shared/ipc/contextMenu';
 import {memo, ReactNode} from 'react';
 
@@ -37,14 +38,14 @@ export const ActionButton = memo(function ActionButton({icon, title, onPress, cl
         }
       }}
       className={
-        `w-full hover:bg-surface-tertiary transition-colors duration-200 py-2 px-4 gap-x-2` +
-        ` flex items-center text-sm ${className || ''} cursor-pointer shrink-0`
+        `w-full hover:bg-surface-tertiary transition-colors duration-100 py-2.5 px-3 gap-x-2` +
+        ` flex items-center text-sm ${className || ''} cursor-pointer shrink-0 rounded-xl`
       }
       tabIndex={0}
       role="button"
       onClick={onPress}>
       <div className="shrink-0">{icon}</div>
-      <span className="text-nowrap mr-2">{title}</span>
+      <Label className="pointer-events-none text-nowrap">{title}</Label>
     </div>
   );
 });

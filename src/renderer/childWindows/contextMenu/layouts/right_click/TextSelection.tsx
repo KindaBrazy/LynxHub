@@ -1,8 +1,8 @@
-import {Separator} from '@heroui/react';
 import contextMenuIpc from '@lynx_shared/ipc/contextMenu';
 import {Magnifier} from '@solar-icons/react-perf/BoldDuotone';
 import {memo} from 'react';
 
+import Separator from './Separator';
 import {ActionButton, createActionHandler} from './Utils';
 
 type TextSelectionProps = {
@@ -26,7 +26,7 @@ const TextSelection = memo(function TextSelection({selection}: TextSelectionProp
         title={`Search with Google`}
         icon={<Magnifier className="size-4" />}
       />
-      <Separator className="my-2" />
+      <Separator />
     </>
   );
 });

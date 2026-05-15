@@ -1,8 +1,8 @@
-import {Separator} from '@heroui/react';
 import contextMenuIpc from '@lynx_shared/ipc/contextMenu';
 import {isEmpty} from 'lodash-es';
 import {memo} from 'react';
 
+import Separator from './Separator';
 import {ActionButton, createActionHandler} from './Utils';
 
 type SuggestionsProps = {
@@ -18,7 +18,6 @@ export const Suggestions = memo(function Suggestions({suggestions, id}: Suggesti
 
   return (
     <>
-      <span className="ml-2 text-sm mb-1 font-semibold text-gray-600 dark:text-gray-400 px-2">Suggestions</span>
       {suggestions.map((text, index) => (
         <ActionButton
           onPress={createActionHandler(() => {
@@ -29,7 +28,7 @@ export const Suggestions = memo(function Suggestions({suggestions, id}: Suggesti
           key={`suggestion_${text}_${index}`}
         />
       ))}
-      <Separator className="my-2" />
+      <Separator />
     </>
   );
 });

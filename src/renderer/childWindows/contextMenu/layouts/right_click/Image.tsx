@@ -1,8 +1,8 @@
-import {Separator} from '@heroui/react';
 import contextMenuIpc from '@lynx_shared/ipc/contextMenu';
 import {Copy, GalleryCircle, GalleryDownload, GalleryWide, Link} from '@solar-icons/react-perf/BoldDuotone';
 import {memo, useCallback} from 'react';
 
+import Separator from './Separator';
 import {ActionButton, createActionHandler} from './Utils';
 
 type ImageProps = {
@@ -84,7 +84,7 @@ export const Image = memo(({id, url}: ImageProps) => {
         title="Search Web for Image"
         icon={<GalleryCircle className="size-4" />}
       />
-      <Separator className="my-2" key="sep_image_text" />
+      <Separator />
     </>
   );
 });

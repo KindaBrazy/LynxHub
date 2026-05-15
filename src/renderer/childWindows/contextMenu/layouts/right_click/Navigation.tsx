@@ -10,8 +10,8 @@ function NavButton({icon, onPress, className, isDisabled}: NavBtnProps) {
   return (
     <div
       className={
-        `size-full flex items-center rounded-lg justify-center transition-colors duration-150` +
-        ` ${isDisabled ? 'opacity-50' : 'hover:bg-surface-secondary cursor-pointer'} ${className}`
+        `size-full flex items-center rounded-xl justify-center transition-colors duration-100` +
+        ` ${isDisabled ? 'opacity-50' : 'hover:bg-surface-tertiary cursor-pointer'} ${className}`
       }
       role="button"
       aria-disabled={isDisabled}
@@ -33,7 +33,7 @@ type NavigationProps = {
  */
 const Navigation = memo(function Navigation({id, navHistory}: NavigationProps) {
   return (
-    <div className="w-full flex flex-row items-center justify-center h-8 px-2 overflow-hidden gap-x-1">
+    <div className="w-full flex flex-row items-center justify-center h-8 overflow-hidden gap-x-1">
       <NavButton
         onPress={createActionHandler(() => {
           contextMenuIpc.send.rightClickItems.navigate(id, 'back');

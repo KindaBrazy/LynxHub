@@ -1,9 +1,9 @@
-import {Separator} from '@heroui/react';
 import applicationIpc from '@lynx_shared/ipc/application';
 import contextMenuIpc from '@lynx_shared/ipc/contextMenu';
 import {Export, Link, SquareTopDown} from '@solar-icons/react-perf/BoldDuotone';
 import {memo} from 'react';
 
+import Separator from './Separator';
 import {ActionButton, createActionHandler} from './Utils';
 
 type LinksProps = {
@@ -41,7 +41,7 @@ export const Links = memo(function Links({url}: LinksProps) {
         title="Copy Link Address"
         icon={<Link className="size-4" />}
       />
-      <Separator className="my-2" />
+      <Separator />
     </>
   );
 });
