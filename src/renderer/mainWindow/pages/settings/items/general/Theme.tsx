@@ -80,12 +80,7 @@ export default function Theme() {
           <SettingsSearchHighlight text={labelText} />
         </Label>
         <Select.Trigger>
-          <Select.Value>
-            <span className="flex flex-row items-center gap-x-2">
-              {selectedTheme === 'system' ? <Display /> : selectedTheme === 'dark' ? <Moon /> : <Sun2 />}
-              {selectedTheme === 'system' ? 'System Default' : selectedTheme === 'dark' ? 'Dark' : 'Light'}
-            </span>
-          </Select.Value>
+          <Select.Value className="flex flex-row items-center gap-x-2" />
           <Select.Indicator />
         </Select.Trigger>
         <Description>{descriptionText}</Description>
