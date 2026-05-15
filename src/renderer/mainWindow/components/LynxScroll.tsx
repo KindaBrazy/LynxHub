@@ -1,7 +1,7 @@
 import {useAppState} from '@lynx/redux/reducers/app';
 import {OverflowBehavior} from 'overlayscrollbars';
-import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
-import {ReactNode} from 'react';
+import {OverlayScrollbarsComponent, OverlayScrollbarsComponentRef} from 'overlayscrollbars-react';
+import {ReactNode, RefObject} from 'react';
 
 type Props = {
   children?: ReactNode;
@@ -14,13 +14,14 @@ type Props = {
     x: OverflowBehavior;
     y: OverflowBehavior;
   }>;
+  ref?: RefObject<OverlayScrollbarsComponentRef | null>;
 };
 
 /**
  * Custom scrollbar component wrapping OverlayScrollbars.
  * Adapts theme based on app state.
  */
-export default function LynxScroll({children, className, overflow = {x: 'hidden', y: 'scroll'}}: Props) {
+export default function LynxScroll({children, className, overflow = {x: 'hidden', y: 'scroll'}, ref}: Props) {
   const isDarkMode = useAppState('darkMode');
 
   return (
@@ -32,6 +33,7 @@ export default function LynxScroll({children, className, overflow = {x: 'hidden'
           theme: isDarkMode ? 'os-theme-light' : 'os-theme-dark',
         },
       }}
+      ref={ref}
       className={className}>
       {children}
     </OverlayScrollbarsComponent>
