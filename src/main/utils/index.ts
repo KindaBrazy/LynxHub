@@ -15,17 +15,18 @@ import calcFolderSize from './calcFolderSize';
  * Opens a system file/folder dialog and returns the selected path.
  *
  * @param options - Electron OpenDialogOptions to configure the dialog (e.g. title, properties)
- * @returns {Promise<string | undefined>} The selected file/folder path, or undefined if cancelled.
+ * @returns {Promise<string | string[] | undefined>} The selected file/folder path, selected paths, or undefined if cancelled.
  */
-export async function openDialog(options: OpenDialogOptions): Promise<string | undefined> {
+export async function openDialog(options: OpenDialogOptions): Promise<string | string[] | undefined> {
   const {appManager} = classHolder;
   try {
     const mainWindow = appManager?.getMainWindow();
     const result: OpenDialogReturnValue = mainWindow
       ? await dialog.showOpenDialog(mainWindow, options)
       : await dialog.showOpenDialog(options);
-    if (result.filePaths) return result.filePaths[0];
-    return undefined;
+    if (result.canceled || result.filePaths.length === 0) return undefined;
+    if (options.properties?.includes('multiSelections')) return result.filePaths;
+    return result.filePaths[0];
   } catch (error) {
     console.log('util:openDialog -> No valid directory or file selected');
     throw error;

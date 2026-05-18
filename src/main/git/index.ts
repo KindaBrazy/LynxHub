@@ -60,7 +60,8 @@ export default class GitManager {
       if (directory) {
         resultPath = directory;
       } else {
-        resultPath = await openDialog({properties: ['openDirectory']});
+        const selectedPath = await openDialog({properties: ['openDirectory']});
+        resultPath = Array.isArray(selectedPath) ? selectedPath[0] : selectedPath;
       }
 
       if (!resultPath) return undefined;

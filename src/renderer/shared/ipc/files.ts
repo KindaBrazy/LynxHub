@@ -8,6 +8,15 @@ const filesIpc = {
   // Opens file/folder selection dialog
   openDlg: (option: OpenDialogOptions) => lynxIpc.invoke<string | undefined>(fileChannels.dialog, option),
 
+  // Opens file/folder selection dialog and returns all selected paths.
+  openDlgMany: (option: OpenDialogOptions) =>
+    lynxIpc
+      .invoke<string | string[] | undefined>(fileChannels.dialog, {
+        ...option,
+        properties: Array.from(new Set([...(option.properties || []), 'multiSelections'])),
+      })
+      .then(result => (Array.isArray(result) ? result : result ? [result] : [])),
+
   // Opens directory in system file manager
   openPath: (dir: string) => lynxIpc.send(fileChannels.openPath, dir),
 

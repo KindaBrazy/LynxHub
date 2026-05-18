@@ -74,7 +74,7 @@ export const filesIpc = {
     getAppDirectories: (callback: (name: FolderNames) => MainHT<string>) =>
       lynxIpc.handle(fileChannels.getAppDirectories, callback),
     /** Handles open dialog request */
-    dialog: (callback: (option: OpenDialogOptions) => MainHT<string | undefined>) =>
+    dialog: (callback: (option: OpenDialogOptions) => MainHT<string | string[] | undefined>) =>
       lynxIpc.handle(fileChannels.dialog, callback),
     /** Handles save to file request */
     saveToFile: (callback: (content: string) => MainHT<string | null>) =>
