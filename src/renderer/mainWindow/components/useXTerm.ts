@@ -23,6 +23,7 @@ import {topToast} from '../layouts/ToastProviders';
 import {cardsActions} from '../redux/reducers/cards';
 import {useTabsState} from '../redux/reducers/tabs';
 import {triggerActions} from '../redux/reducers/triggers';
+import {RunningCard} from '../types';
 
 const FONT_FAMILY = 'JetBrainsMono';
 
@@ -59,6 +60,7 @@ export interface UseXTermProps {
   useConpty: TerminalUseConpty;
   enableLigatures: boolean;
   openLinkNewTab: boolean;
+  type?: RunningCard['type'];
 }
 
 export const useXTerm = ({
@@ -84,6 +86,7 @@ export const useXTerm = ({
   useConpty,
   enableLigatures,
   openLinkNewTab,
+  type,
 }: UseXTermProps) => {
   const activeTab = useTabsState('activeTab');
 
@@ -135,12 +138,12 @@ export const useXTerm = ({
 
       xTerm.loadAddon(
         new WebLinksAddon((event, uri) => {
-          if (openLinkNewTab || event.button === 1) {
-            window.open(uri);
-          } else {
+          if (!openLinkNewTab && event.button !== 1 && type === 'both') {
             dispatch(cardsActions.setRunningCardCustomAddress({tabId: activeTab, address: uri}));
             dispatch(cardsActions.setRunningCardView({tabId: activeTab, view: 'browser'}));
             dispatch(triggerActions.trigger('clearBrowserFail'));
+          } else {
+            window.open(uri);
           }
         }),
       );

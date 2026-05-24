@@ -9,6 +9,7 @@ import {Terminal as XTerminal} from '@xterm/xterm';
 import {forwardRef, memo, useImperativeHandle, useRef} from 'react';
 import {useDispatch} from 'react-redux';
 
+import {RunningCard} from '../types';
 import {useXTerm, XTermAPI} from './useXTerm';
 
 const MIN_RESIZE_COLS = 95;
@@ -18,6 +19,7 @@ export type {XTermAPI};
 
 export interface XTermCoreProps {
   id: string;
+  type?: RunningCard['type'];
   onReady?: (api: XTermAPI) => void;
   className?: string;
 
@@ -52,6 +54,7 @@ const XTermCore = memo(
     (
       {
         id,
+        type,
         onReady,
         className = '',
         serializeAddon,
@@ -110,6 +113,7 @@ const XTermCore = memo(
         dispatch,
         useConpty,
         enableLigatures,
+        type,
       });
 
       // Expose API via ref - only updates when apiRef is set

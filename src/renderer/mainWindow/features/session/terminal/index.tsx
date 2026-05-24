@@ -23,7 +23,7 @@ type Props = {
 
 const Terminal = memo(
   ({runningCard, serializeAddon, searchAddon, clearTerminal, setSelectedTerminalText, xtermRef}: Props) => {
-    const {webUIAddress, id, currentView, tabId} = useMemo(() => runningCard, [runningCard]);
+    const {webUIAddress, id, currentView, tabId, type} = useMemo(() => runningCard, [runningCard]);
     const activeTab = useTabsState('activeTab');
 
     useEffect(() => {
@@ -63,6 +63,7 @@ const Terminal = memo(
         <div className="absolute inset-0 top-10! overflow-hidden bg-white pl-3 pr-1 shadow-md dark:bg-LynxNearBlack">
           <XTermCore
             id={id}
+            type={type}
             ref={xtermRef}
             searchAddon={searchAddon}
             onProgress={handleProgress}
