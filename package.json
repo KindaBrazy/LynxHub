@@ -38,7 +38,7 @@
     "postinstall": "electron-builder install-app-deps",
     "build": "electron-vite build",
     "rebuild": "electron-builder node-gyp-rebuild",
-    "removeDotExtension": "node ./removeDotExtensions.js ./extension_out/renderer/rendererEntry.mjs",
+    "removeDotExtension": "node fixExtension.js",
     "build:extension": "rimraf extension_out && electron-vite build --config extension/electron.vite.config.ts && npm run removeDotExtension",
     "build:module": "rimraf module_out && rollup --config module/rollup.config.mjs",
     "build:unpack": "npm run build && electron-builder --dir --config electron-builder_x64.config.cjs",
