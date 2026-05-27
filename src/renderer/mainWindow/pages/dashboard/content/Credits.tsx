@@ -1,6 +1,5 @@
 import {Avatar, Button, Description, Label} from '@heroui/react';
 import SettingsSection from '@lynx/components/SettingsSection';
-import {Patreon_Icon} from '@lynx_assets/icons';
 import {PATREON_URL} from '@lynx_common/consts';
 import {PatreonSupporter, PatreonSupporterTier} from '@lynx_common/types';
 import staticsIpc from '@lynx_shared/ipc/statics';
@@ -9,26 +8,40 @@ import {memo, useEffect, useMemo, useState} from 'react';
 
 export const DashboardCreditsId = 'settings_credits_elem';
 
-const TIER_EMOJI: Record<PatreonSupporterTier, string> = {
-  'Platinum Sponsor': '🏆',
-  'Diamond Sponsor': '💎',
-};
+interface TierStyle {
+  emoji: string;
+  badge: string;
+  gradient: string;
+  glow: string;
+  borderColor: string;
+  dotColor: string;
+  accentText: string;
+}
 
-const TIER_COLORS: Record<PatreonSupporterTier, 'bg-warning' | 'bg-accent'> = {
-  'Platinum Sponsor': 'bg-warning',
-  'Diamond Sponsor': 'bg-accent',
-};
-
-const TIER_GRADIENTS: Record<PatreonSupporterTier, string> = {
-  'Platinum Sponsor': 'from-yellow-400 via-yellow-500 to-yellow-600',
-  'Diamond Sponsor': 'from-blue-400 via-blue-500 to-blue-600',
+const TIER_STYLES: Record<PatreonSupporterTier, TierStyle> = {
+  'Diamond Sponsor': {
+    emoji: '💎',
+    badge: 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/20',
+    gradient: 'from-cyan-500/10 via-transparent to-transparent',
+    glow: 'group-hover:shadow-[0_0_15px_rgba(6,182,212,0.12)]',
+    borderColor: 'hover:border-cyan-500/30',
+    dotColor: 'bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.6)]',
+    accentText: 'text-cyan-500 dark:text-cyan-400',
+  },
+  'Platinum Sponsor': {
+    emoji: '🏆',
+    badge: 'bg-amber-500/10 text-amber-400 border border-amber-500/20',
+    gradient: 'from-amber-500/10 via-transparent to-transparent',
+    glow: 'group-hover:shadow-[0_0_15px_rgba(245,158,11,0.12)]',
+    borderColor: 'hover:border-amber-500/30',
+    dotColor: 'bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.6)]',
+    accentText: 'text-amber-500 dark:text-amber-400',
+  },
 };
 
 const MAX_DISPLAYED_SUPPORTERS = 50;
-
 const tiers: PatreonSupporterTier[] = ['Diamond Sponsor', 'Platinum Sponsor'];
 
-/** Reporting app issues on GitHub */
 const DashboardCredits = memo(() => {
   const [expandedTier, setExpandedTier] = useState<PatreonSupporterTier | null>(null);
   const [supporters, setSupporters] = useState<PatreonSupporter[]>([]);
@@ -66,143 +79,223 @@ const DashboardCredits = memo(() => {
 
   return (
     <SettingsSection title="Credits" id={DashboardCreditsId} icon={<HeartPulse2 className="size-5" />} itemsCenter>
-      {/* Hero Section */}
+      {/* Premium Hero Banner */}
       <div
         className={
-          'relative mb-6 overflow-hidden rounded-2xl bg-linear-to-br from-blue-50 via-sky-50' +
-          ' to-indigo-50 p-6 dark:from-blue-900/20 dark:via-sky-900/20 dark:to-indigo-900/20'
+          'relative mb-10 overflow-hidden rounded-2xl border border-zinc-200/80 dark:border-zinc-800/80' +
+          ' bg-zinc-50 dark:bg-zinc-900/40 p-6 lg:p-8 shadow-xs'
         }>
-        <div className="absolute inset-0 bg-linear-to-br from-blue-500/10 via-sky-500/10 to-indigo-500/10" />
-        <div className="relative z-10 text-center">
-          <div className="mb-3 flex items-center justify-center">
-            <div className="animate-pulse rounded-full bg-linear-to-r from-blue-500 to-indigo-500 p-2">
-              <HeartAngle className="size-5 text-white" />
+        <div
+          className={
+            'absolute inset-0 bg-radial from-blue-500/5 via-transparent to-transparent opacity-80 pointer-events-none'
+          }
+        />
+
+        <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
+          <div className="max-w-xl text-start">
+            <div
+              className={
+                'inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-blue-500/10 text-blue-600' +
+                ' dark:text-blue-400 text-xs font-semibold mb-3'
+              }>
+              <HeartAngle className="size-3.5" />
+              <span>Backer Community</span>
+            </div>
+            <h2 className="text-xl md:text-2xl font-extrabold tracking-tight text-zinc-900 dark:text-zinc-50">
+              Supporting Open Development
+            </h2>
+            <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">
+              This project is built and maintained with dedication. Your contributions cover direct infrastructure, API
+              fees, and help support regular independent updates.
+            </p>
+          </div>
+
+          {/* Action Callout Box */}
+          <div
+            className={
+              'relative shrink-0 flex flex-col items-center lg:items-start bg-white/60 dark:bg-zinc-950/40 border' +
+              ' border-zinc-200/50 dark:border-zinc-800 p-5 rounded-2xl min-w-xs lg:min-w-sm'
+            }>
+            <Button
+              className={
+                'w-full font-bold text-sm text-white bg-rose-600 hover:bg-rose-500 dark:bg-rose-500' +
+                ' dark:hover:bg-rose-400 shadow-md shadow-rose-500/10 hover:shadow-rose-500/20 py-5' +
+                ' rounded-xl transition-all duration-300 hover:scale-[1.01]'
+              }
+              onPress={handleBecomePatron}>
+              Join the Patrons <SquareTopDown className="size-4" />
+            </Button>
+
+            <div
+              className={
+                'mt-4 w-full border-t border-zinc-200/60 dark:border-zinc-800/80 pt-3 flex items-center' +
+                ' justify-around text-2xs font-semibold text-zinc-500 dark:text-zinc-400'
+              }>
+              <span className="flex items-center gap-1.5">
+                <span className="size-1.5 rounded-full bg-rose-500" />
+                Profile Badge
+              </span>
+              <span className="text-zinc-300 dark:text-zinc-700">|</span>
+              <span className="flex items-center gap-1.5">
+                <span className="size-1.5 rounded-full bg-indigo-500" />
+                Discord Role
+              </span>
             </div>
           </div>
-          <h2
-            className={
-              'mb-1 bg-linear-to-r from-blue-600 to-indigo-600 bg-clip-text text-2xl font-bold text-transparent'
-            }>
-            Our Amazing Sponsors
-          </h2>
-          {supporters.length > 0 && (
-            <p className="text-sm text-gray-600 dark:text-gray-300">Thank you for making this project possible! 🙏</p>
-          )}
         </div>
       </div>
 
       {/* Sponsor Tiers */}
-      <div className="space-y-8">
-        {tiers.map(tier => (
-          <div key={tier} className="relative">
-            {/* Tier Header */}
-            <div className="mb-6 flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <div
-                  className={
-                    `rounded-full bg-linear-to-r ${TIER_GRADIENTS[tier]} size-12 flex` +
-                    ` items-center justify-center shadow-lg shrink-0`
-                  }>
-                  <span className="text-2xl">{TIER_EMOJI[tier]}</span>
-                </div>
-                <div className="flex flex-col items-start">
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white">{tier.replace('Sponsor', '')}</h3>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">
-                    {groupedSupporters[tier]?.length || 0} {tier}'s
-                  </p>
-                </div>
-              </div>
+      <div className="space-y-12">
+        {tiers.map(tier => {
+          const style = TIER_STYLES[tier];
+          const list = groupedSupporters[tier] || [];
+          const hasSupporters = list.length > 0;
+          const isExpanded = expandedTier === tier;
+          const displayedList = isExpanded ? list : list.slice(0, MAX_DISPLAYED_SUPPORTERS);
 
-              {groupedSupporters[tier]?.length > MAX_DISPLAYED_SUPPORTERS && (
-                <Button
-                  size="sm"
-                  className={TIER_COLORS[tier]}
-                  onPress={() => setExpandedTier(expandedTier === tier ? null : tier)}>
-                  {expandedTier === tier ? 'Show Less' : `Show All ${groupedSupporters[tier].length}`}
-                </Button>
-              )}
-            </div>
-
-            {/* Supporters Grid */}
-            <div className="grid grid-cols-[repeat(auto-fit,minmax(208px,1fr))] gap-4">
-              {(groupedSupporters[tier] || [])
-                .slice(0, expandedTier === tier ? undefined : MAX_DISPLAYED_SUPPORTERS)
-                .map(supporter => (
-                  <Button
-                    className={
-                      'group relative overflow-hidden bg-surface' +
-                      ' size-full py-4 shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105' +
-                      ' min-w-52! justify-start'
-                    }
-                    key={supporter.name}
-                    onPress={() => window.open(supporter.homePage)}>
-                    <div
-                      className={
-                        `absolute inset-0 bg-linear-to-br ${TIER_GRADIENTS[tier]} opacity-0` +
-                        ` transition-opacity duration-300 group-hover:opacity-10`
-                      }
-                    />
-                    <div className="inline-flex items-center gap-2 text-start">
-                      <Avatar className="size-12 shrink-0">
-                        <Avatar.Image alt={supporter.name} src={supporter.imageUrl} className={TIER_COLORS[tier]} />
-                        <Avatar.Fallback className={TIER_COLORS[tier]}>
-                          {...supporter.name.split(' ').map(item => item.slice(0, 1))}
-                        </Avatar.Fallback>
-                      </Avatar>
-                      <div className="flex flex-col">
-                        <Label>{supporter.name}</Label>
-                        <Description>Member Since: {supporter.memberSince}</Description>
-                      </div>
-                    </div>
-                  </Button>
-                ))}
-            </div>
-
-            {/* Empty State */}
-            {(!groupedSupporters[tier] || groupedSupporters[tier].length === 0) && (
+          return (
+            <div key={tier} className="relative">
+              {/* Tier Section Header */}
               <div
                 className={
-                  'rounded-xl border-2 border-dashed border-gray-300 bg-gray-50' +
-                  ' p-8 text-center dark:border-gray-600 dark:bg-gray-800'
+                  'mb-5 flex items-center justify-between border-b border-zinc-100 dark:border-zinc-800/80 pb-3'
                 }>
-                <div
-                  className={
-                    'mx-auto mb-3 flex size-12 items-center justify-center rounded-full' +
-                    ' bg-gray-200 dark:bg-gray-700'
-                  }>
-                  <HeartPulse2 className="size-6 text-gray-400" />
+                <div className="flex items-center space-x-3">
+                  <span className={`flex size-9 items-center justify-center rounded-lg text-lg ${style.badge}`}>
+                    {style.emoji}
+                  </span>
+                  <div>
+                    <h3 className="text-base font-extrabold text-zinc-900 dark:text-zinc-100 leading-none">{tier}s</h3>
+                    <p className="text-2xs font-medium text-zinc-400 dark:text-zinc-500 mt-1">
+                      {list.length} {list.length === 1 ? 'member' : 'members'} active
+                    </p>
+                  </div>
                 </div>
-                <h3 className="mb-1 text-lg font-semibold text-gray-900 dark:text-white">No {tier}s Yet</h3>
-                <p className="text-sm text-gray-500 dark:text-gray-400">Be the first to support at this tier!</p>
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
 
-      {/* Call to Action */}
-      <div className="mt-12 mb-4 text-center">
-        <div className="mx-auto max-w-xs">
-          <Button
-            className={
-              'overflow-hidden transition-all duration-300 shadow hover:scale-105 bg-surface size-fit py-5 px-8'
-            }
-            onPress={handleBecomePatron}>
-            <div className="flex flex-col items-center space-y-2">
-              <div className="rounded-full bg-linear-to-r from-blue-500 to-blue-600 p-2">
-                <Patreon_Icon className="size-5 text-white" />
+                {list.length > MAX_DISPLAYED_SUPPORTERS && (
+                  <Button
+                    size="sm"
+                    variant="tertiary"
+                    className={'font-semibold text-2xs'}
+                    onPress={() => setExpandedTier(isExpanded ? null : tier)}>
+                    {isExpanded ? 'Show Less' : `Show All ${list.length}`}
+                  </Button>
+                )}
               </div>
-              <div className="text-center">
-                <h3 className="text-lg font-bold text-gray-900 dark:text-white">Become a Patron</h3>
-                <p className="text-xs text-gray-600 dark:text-gray-300">Support my work and get exclusive perks</p>
-              </div>
-              <div className="flex items-center space-x-1 font-medium text-blue-600 dark:text-blue-400">
-                <span className="text-sm">Join now</span>
-                <SquareTopDown className="size-3" />
+
+              {/* Grid Layout */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3">
+                {hasSupporters ? (
+                  <>
+                    {displayedList.map(supporter => {
+                      const nameInitials = supporter.name
+                        .split(' ')
+                        .slice(0, 2)
+                        .map(item => item[0])
+                        .join('')
+                        .toUpperCase();
+
+                      return (
+                        <Button
+                          className={
+                            `group relative flex h-auto w-full items-center justify-start gap-3 rounded-xl border` +
+                            ` border-zinc-200/60 dark:border-zinc-800 bg-white dark:bg-zinc-950/40 p-3 text-start` +
+                            ` transition-all duration-300 ${style.borderColor} ${style.glow} hover:-translate-y-0.5`
+                          }
+                          key={supporter.name}
+                          onPress={() => window.open(supporter.homePage)}>
+                          <div
+                            className={
+                              `absolute inset-0 rounded-xl bg-linear-to-br ${style.gradient} opacity-0` +
+                              ` group-hover:opacity-100 transition-opacity duration-300 pointer-events-none`
+                            }
+                          />
+
+                          <Avatar
+                            className={'size-9 shrink-0 shadow-2xs border border-zinc-200/40 dark:border-zinc-700/50'}>
+                            <Avatar.Image alt={supporter.name} src={supporter.imageUrl} />
+                            <Avatar.Fallback
+                              className={
+                                'font-semibold text-xs bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400'
+                              }>
+                              {nameInitials}
+                            </Avatar.Fallback>
+                          </Avatar>
+
+                          <div className="flex flex-col min-w-0 z-10">
+                            <div className="flex items-center gap-1.5">
+                              <span className={`size-1.5 rounded-full shrink-0 ${style.dotColor}`} />
+                              <Label
+                                className={
+                                  'truncate font-bold text-xs text-zinc-800 dark:text-zinc-200 ' +
+                                  'group-hover:text-zinc-900 dark:group-hover:text-white transition-colors'
+                                }>
+                                {supporter.name}
+                              </Label>
+                            </div>
+                            <Description className="truncate text-3xs text-zinc-400 dark:text-zinc-400 mt-1">
+                              Since {supporter.memberSince}
+                            </Description>
+                          </div>
+                        </Button>
+                      );
+                    })}
+
+                    {/* Standardized "+ Join this tier" button */}
+                    <button
+                      className={
+                        'group relative flex h-full w-full items-center justify-center gap-2 rounded-xl ' +
+                        'border border-dashed border-zinc-300 dark:border-zinc-700 bg-zinc-50/40 ' +
+                        'dark:bg-zinc-900/40 hover:bg-zinc-100 dark:hover:bg-zinc-900/80 p-3 text-center' +
+                        ' transition-all duration-300 hover:border-zinc-450 dark:hover:border-zinc-600 min-h-14.5'
+                      }
+                      onClick={handleBecomePatron}>
+                      <span
+                        className={
+                          'text-zinc-500 dark:text-zinc-300 group-hover:text-zinc-850' +
+                          ' dark:group-hover:text-white font-bold text-xs transition-colors'
+                        }>
+                        + Join this tier
+                      </span>
+                    </button>
+                  </>
+                ) : (
+                  /* Standardized Card-sized Placeholder */
+                  <button
+                    className={
+                      'group relative flex h-auto w-full items-center justify-start gap-3 rounded-xl border' +
+                      ' border-dashed border-zinc-300 dark:border-zinc-700 bg-zinc-50/40 ' +
+                      'dark:bg-zinc-900/40 hover:bg-zinc-100 dark:hover:bg-zinc-900/80 p-3 ' +
+                      'text-start transition-all duration-300 hover:border-zinc-450 ' +
+                      'dark:hover:border-zinc-600 min-h-14.5'
+                    }
+                    onClick={handleBecomePatron}>
+                    <div
+                      className={
+                        'flex size-9 shrink-0 items-center justify-center rounded-lg bg-zinc-100' +
+                        ' dark:bg-zinc-800/80 text-zinc-500 group-hover:scale-105 transition-transform'
+                      }>
+                      <HeartPulse2 className={`size-4.5 ${style.accentText}`} />
+                    </div>
+                    <div className="flex flex-col min-w-0">
+                      <span
+                        className={
+                          'font-bold text-xs text-zinc-700 dark:text-zinc-200 group-hover:text-zinc-900' +
+                          ' dark:group-hover:text-white transition-colors'
+                        }>
+                        Be the first {tier.replace('Sponsor', '')}
+                      </span>
+                      <span className="text-3xs text-zinc-450 dark:text-zinc-400 mt-0.5 font-medium">
+                        Claim this card slot
+                      </span>
+                    </div>
+                  </button>
+                )}
               </div>
             </div>
-          </Button>
-        </div>
+          );
+        })}
       </div>
     </SettingsSection>
   );
