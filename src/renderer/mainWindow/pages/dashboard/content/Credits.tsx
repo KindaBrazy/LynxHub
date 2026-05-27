@@ -3,13 +3,20 @@ import SettingsSection from '@lynx/components/SettingsSection';
 import {PATREON_URL} from '@lynx_common/consts';
 import {PatreonSupporter, PatreonSupporterTier} from '@lynx_common/types';
 import staticsIpc from '@lynx_shared/ipc/statics';
-import {HeartAngle, HeartPulse2, SquareTopDown} from '@solar-icons/react-perf/BoldDuotone';
-import {memo, useEffect, useMemo, useState} from 'react';
-
+import {
+  ArrowRightUp,
+  CrownStar,
+  CupFirst,
+  HeartAngle,
+  HeartPulse2,
+  SquareTopDown,
+} from '@solar-icons/react-perf/BoldDuotone';
+import {Plus} from 'lucide-react';
+import {memo, ReactNode, useEffect, useMemo, useState} from 'react';
 export const DashboardCreditsId = 'settings_credits_elem';
 
 interface TierStyle {
-  emoji: string;
+  icon: ReactNode;
   badge: string;
   gradient: string;
   glow: string;
@@ -20,7 +27,7 @@ interface TierStyle {
 
 const TIER_STYLES: Record<PatreonSupporterTier, TierStyle> = {
   'Diamond Sponsor': {
-    emoji: '💎',
+    icon: <CrownStar className="size-5" />,
     badge: 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/20',
     gradient: 'from-cyan-500/10 via-transparent to-transparent',
     glow: 'group-hover:shadow-[0_0_15px_rgba(6,182,212,0.12)]',
@@ -29,7 +36,7 @@ const TIER_STYLES: Record<PatreonSupporterTier, TierStyle> = {
     accentText: 'text-cyan-500 dark:text-cyan-400',
   },
   'Platinum Sponsor': {
-    emoji: '🏆',
+    icon: <CupFirst className="size-5" />,
     badge: 'bg-amber-500/10 text-amber-400 border border-amber-500/20',
     gradient: 'from-amber-500/10 via-transparent to-transparent',
     glow: 'group-hover:shadow-[0_0_15px_rgba(245,158,11,0.12)]',
@@ -41,6 +48,19 @@ const TIER_STYLES: Record<PatreonSupporterTier, TierStyle> = {
 
 const MAX_DISPLAYED_SUPPORTERS = 50;
 const tiers: PatreonSupporterTier[] = ['Diamond Sponsor', 'Platinum Sponsor'];
+
+const formatMemberSince = (dateString: string) => {
+  try {
+    const date = new Date(dateString.replace(/-/g, '/'));
+
+    if (!isNaN(date.getTime())) {
+      return date.toLocaleDateString('en-US', {month: 'short', year: 'numeric'});
+    }
+    return dateString;
+  } catch {
+    return dateString;
+  }
+};
 
 const DashboardCredits = memo(() => {
   const [expandedTier, setExpandedTier] = useState<PatreonSupporterTier | null>(null);
@@ -96,7 +116,7 @@ const DashboardCredits = memo(() => {
             <div
               className={
                 'inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-blue-500/10 text-blue-600' +
-                ' dark:text-blue-400 text-xs font-semibold mb-3'
+                ' dark:text-blue-400 text-[11px] font-semibold mb-3'
               }>
               <HeartAngle className="size-3.5" />
               <span>Backer Community</span>
@@ -105,8 +125,8 @@ const DashboardCredits = memo(() => {
               Supporting Open Development
             </h2>
             <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">
-              This project is built and maintained with dedication. Your contributions cover direct infrastructure, API
-              fees, and help support regular independent updates.
+              I'm a solo developer working on this app, its extensions, and modules full-time. Your support helps keep
+              this project going and allows me to focus on releasing regular updates and improvements.
             </p>
           </div>
 
@@ -118,9 +138,10 @@ const DashboardCredits = memo(() => {
             }>
             <Button
               className={
-                'w-full font-bold text-sm text-white bg-rose-600 hover:bg-rose-500 dark:bg-rose-500' +
-                ' dark:hover:bg-rose-400 shadow-md shadow-rose-500/10 hover:shadow-rose-500/20 py-5' +
-                ' rounded-xl transition-all duration-300 hover:scale-[1.01]'
+                'w-full font-bold text-sm text-white bg-linear-to-r from-rose-600 to-rose-500' +
+                ' hover:from-rose-500 hover:to-rose-450 dark:from-rose-500 dark:to-rose-400' +
+                ' shadow-md shadow-rose-500/10 hover:shadow-rose-500/20 py-5' +
+                ' rounded-xl transition-all duration-300 active:scale-[0.98]'
               }
               onPress={handleBecomePatron}>
               Join the Patrons <SquareTopDown className="size-4" />
@@ -129,7 +150,7 @@ const DashboardCredits = memo(() => {
             <div
               className={
                 'mt-4 w-full border-t border-zinc-200/60 dark:border-zinc-800/80 pt-3 flex items-center' +
-                ' justify-around text-2xs font-semibold text-zinc-500 dark:text-zinc-400'
+                ' justify-around text-[10px] font-semibold text-zinc-500 dark:text-zinc-400'
               }>
               <span className="flex items-center gap-1.5">
                 <span className="size-1.5 rounded-full bg-rose-500" />
@@ -162,12 +183,12 @@ const DashboardCredits = memo(() => {
                   'mb-5 flex items-center justify-between border-b border-zinc-100 dark:border-zinc-800/80 pb-3'
                 }>
                 <div className="flex items-center space-x-3">
-                  <span className={`flex size-9 items-center justify-center rounded-lg text-lg ${style.badge}`}>
-                    {style.emoji}
+                  <span className={`flex size-9 items-center justify-center rounded-lg ${style.badge}`}>
+                    {style.icon}
                   </span>
                   <div>
                     <h3 className="text-base font-extrabold text-zinc-900 dark:text-zinc-100 leading-none">{tier}s</h3>
-                    <p className="text-2xs font-medium text-zinc-400 dark:text-zinc-500 mt-1">
+                    <p className="text-[10px] font-medium text-zinc-400 dark:text-zinc-500 mt-1">
                       {list.length} {list.length === 1 ? 'member' : 'members'} active
                     </p>
                   </div>
@@ -177,7 +198,7 @@ const DashboardCredits = memo(() => {
                   <Button
                     size="sm"
                     variant="tertiary"
-                    className={'font-semibold text-2xs'}
+                    className={'font-semibold text-xs'}
                     onPress={() => setExpandedTier(isExpanded ? null : tier)}>
                     {isExpanded ? 'Show Less' : `Show All ${list.length}`}
                   </Button>
@@ -223,7 +244,7 @@ const DashboardCredits = memo(() => {
                             </Avatar.Fallback>
                           </Avatar>
 
-                          <div className="flex flex-col min-w-0 z-10">
+                          <div className="flex flex-col min-w-0 z-10 pr-4">
                             <div className="flex items-center gap-1.5">
                               <span className={`size-1.5 rounded-full shrink-0 ${style.dotColor}`} />
                               <Label
@@ -234,49 +255,65 @@ const DashboardCredits = memo(() => {
                                 {supporter.name}
                               </Label>
                             </div>
-                            <Description className="truncate text-3xs text-zinc-400 dark:text-zinc-400 mt-1">
-                              Since {supporter.memberSince}
+                            <Description className="truncate text-[10px] text-zinc-400 dark:text-zinc-400 mt-1">
+                              Since {formatMemberSince(supporter.memberSince)}
                             </Description>
                           </div>
+
+                          {/* Subtle arrow indicator appearing on hover */}
+                          <ArrowRightUp
+                            className={
+                              'absolute top-2.5 right-2.5 size-3.5 text-zinc-400 dark:text-zinc-500 opacity-0' +
+                              ' group-hover:opacity-100 transition-all duration-300 group-hover:translate-x-0.5' +
+                              ' group-hover:-translate-y-0.5'
+                            }
+                          />
                         </Button>
                       );
                     })}
 
-                    {/* Standardized "+ Join this tier" button */}
+                    {/* Standardized "Join this tier" button */}
                     <button
                       className={
                         'group relative flex h-full w-full items-center justify-center gap-2 rounded-xl ' +
-                        'border border-dashed border-zinc-300 dark:border-zinc-700 bg-zinc-50/40 ' +
+                        'border border-dashed border-zinc-400/50 dark:border-zinc-700 bg-zinc-50/40 ' +
                         'dark:bg-zinc-900/40 hover:bg-zinc-100 dark:hover:bg-zinc-900/80 p-3 text-center' +
-                        ' transition-all duration-300 hover:border-zinc-450 dark:hover:border-zinc-600 min-h-14.5'
+                        ' transition-all duration-300 hover:border-zinc-500 dark:hover:border-zinc-500' +
+                        ' min-h-14.5 cursor-pointer'
                       }
                       onClick={handleBecomePatron}>
+                      <Plus
+                        className={
+                          'size-4 text-zinc-400 dark:text-zinc-500 group-hover:text-zinc-800' +
+                          ' dark:group-hover:text-white transition-colors duration-300'
+                        }
+                      />
                       <span
                         className={
-                          'text-zinc-500 dark:text-zinc-300 group-hover:text-zinc-850' +
-                          ' dark:group-hover:text-white font-bold text-xs transition-colors'
+                          'text-zinc-500 dark:text-zinc-350 group-hover:text-zinc-850' +
+                          ' dark:group-hover:text-white font-bold text-xs transition-colors duration-300'
                         }>
-                        + Join this tier
+                        Join this tier
                       </span>
                     </button>
                   </>
                 ) : (
-                  /* Standardized Card-sized Placeholder */
+                  /* Standardized Card-sized Placeholder using specific style icon */
                   <button
                     className={
                       'group relative flex h-auto w-full items-center justify-start gap-3 rounded-xl border' +
-                      ' border-dashed border-zinc-300 dark:border-zinc-700 bg-zinc-50/40 ' +
+                      ' border-dashed border-zinc-400/50 dark:border-zinc-700 bg-zinc-50/40 ' +
                       'dark:bg-zinc-900/40 hover:bg-zinc-100 dark:hover:bg-zinc-900/80 p-3 ' +
-                      'text-start transition-all duration-300 hover:border-zinc-450 ' +
-                      'dark:hover:border-zinc-600 min-h-14.5'
+                      'text-start transition-all duration-300 hover:border-zinc-500 ' +
+                      'dark:hover:border-zinc-500 min-h-14.5 cursor-pointer'
                     }
                     onClick={handleBecomePatron}>
                     <div
                       className={
                         'flex size-9 shrink-0 items-center justify-center rounded-lg bg-zinc-100' +
-                        ' dark:bg-zinc-800/80 text-zinc-500 group-hover:scale-105 transition-transform'
+                        ' dark:bg-zinc-800/80 text-zinc-500 group-hover:scale-105 transition-transform duration-300'
                       }>
-                      <HeartPulse2 className={`size-4.5 ${style.accentText}`} />
+                      {style.icon}
                     </div>
                     <div className="flex flex-col min-w-0">
                       <span
@@ -286,7 +323,7 @@ const DashboardCredits = memo(() => {
                         }>
                         Be the first {tier.replace('Sponsor', '')}
                       </span>
-                      <span className="text-3xs text-zinc-450 dark:text-zinc-400 mt-0.5 font-medium">
+                      <span className="text-[10px] text-zinc-500 dark:text-zinc-400 mt-0.5 font-medium">
                         Claim this card slot
                       </span>
                     </div>
