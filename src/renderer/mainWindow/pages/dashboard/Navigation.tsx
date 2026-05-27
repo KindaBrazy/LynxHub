@@ -1,11 +1,9 @@
 import {Button, Card, Header, ScrollShadow} from '@heroui/react';
 import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {DashboardPage_Icon} from '@lynx_assets/icons/pages';
-import staticsIpc from '@lynx_shared/ipc/statics';
 import {Download, HeartPulse2, InfoSquare, SmileCircle} from '@solar-icons/react-perf/BoldDuotone';
 import {motion} from 'framer-motion';
-import {isEmpty} from 'lodash-es';
-import {memo, ReactNode, useCallback, useEffect, useMemo, useState} from 'react';
+import {memo, ReactNode, useCallback, useMemo} from 'react';
 
 import SettingsSearchHighlight from '../settings/SettingsSearchHighlight';
 import {dashboardSectionId} from './Container';
@@ -49,6 +47,11 @@ const initialGroupSections: GroupProps[] = [
         elementId: dashboardSectionId.DashboardReportIssueId,
       },
       {
+        title: 'Credits',
+        icon: <HeartPulse2 className="size-4 shrink-0" />,
+        elementId: dashboardSectionId.DashboardCreditsId,
+      },
+      {
         title: 'About',
         icon: <InfoSquare className="size-4 shrink-0" />,
         elementId: dashboardSectionId.DashboardAboutId,
@@ -56,6 +59,8 @@ const initialGroupSections: GroupProps[] = [
     ],
   },
 ];
+
+const allItemIds = initialGroupSections.flatMap(group => group.items.map(item => item.elementId));
 
 /** Dashboard navigation bar group and items */
 const DashboardGroupSection = memo(
@@ -107,38 +112,6 @@ const DashboardNavigation = memo(() => {
     () => extensionsData.customizePages.dashboard.add.navButton as React.ComponentType<any>[],
     [],
   );
-  const [sections, setSections] = useState<GroupProps[]>(initialGroupSections);
-
-  useEffect(() => {
-    let mounted = true;
-    staticsIpc.getPatrons().then(cr => {
-      if (!mounted) return;
-      if (!isEmpty(cr)) {
-        setSections(prev => {
-          // Avoid duplicate addition if this runs multiple times
-          if (prev[0].items.some(item => item.elementId === dashboardSectionId.DashboardCreditsId)) {
-            return prev;
-          }
-
-          const updatedSections = JSON.parse(JSON.stringify(initialGroupSections));
-          updatedSections[0].items.push({
-            title: 'Credits',
-            icon: <HeartPulse2 className="size-4 shrink-0" />,
-            elementId: dashboardSectionId.DashboardCreditsId,
-          });
-          return updatedSections;
-        });
-      }
-    });
-    return () => {
-      mounted = false;
-    };
-  }, []);
-
-  // Collect all item IDs across all groups
-  const allItemIds = useMemo(() => {
-    return sections.flatMap(group => group.items.map(item => item.elementId));
-  }, [sections]);
 
   const activeSection = useScrollSpy(allItemIds);
 
@@ -150,7 +123,7 @@ const DashboardNavigation = memo(() => {
       </Card.Header>
       <Card.Content>
         <ScrollShadow className="h-full flex flex-col gap-y-3">
-          {sections.map((section, index) => (
+          {initialGroupSections.map((section, index) => (
             <DashboardGroupSection key={index} {...section} activeSection={activeSection} />
           ))}
           {buttons.map((Btn, index) => (
