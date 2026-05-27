@@ -1,7 +1,7 @@
 import {Button, Card, Header, ScrollShadow} from '@heroui/react';
 import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {DashboardPage_Icon} from '@lynx_assets/icons/pages';
-import {Download, HeartPulse2, InfoSquare, SmileCircle} from '@solar-icons/react-perf/BoldDuotone';
+import {Bug, Download, HeartPulse2, InfoSquare} from '@solar-icons/react-perf/BoldDuotone';
 import {motion} from 'framer-motion';
 import {memo, ReactNode, useCallback, useMemo} from 'react';
 
@@ -43,7 +43,7 @@ const initialGroupSections: GroupProps[] = [
     items: [
       {
         title: 'Help & Feedback',
-        icon: <SmileCircle className="size-4 shrink-0" />,
+        icon: <Bug className="size-4 shrink-0" />,
         elementId: dashboardSectionId.DashboardReportIssueId,
       },
       {
