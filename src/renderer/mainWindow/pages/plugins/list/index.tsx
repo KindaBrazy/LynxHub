@@ -4,7 +4,7 @@ import LynxScroll from '@lynx/components/LynxScroll';
 import {pluginsActions, usePluginsState} from '@lynx/redux/reducers/plugins';
 import {AppDispatch} from '@lynx/redux/store';
 import {searchInStrings, showRestartModal} from '@lynx/utils';
-import {Circle_Icon} from '@lynx_assets/icons';
+import {Circle_Icon, Grid_Icon, List_Icon} from '@lynx_assets/icons';
 import {PluginPage_Icon} from '@lynx_assets/icons/pages';
 import {PluginFilter} from '@lynx_common/types/plugins';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
@@ -13,6 +13,7 @@ import {isEmpty} from 'lodash-es';
 import {useCallback, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
+import LynxTooltip from '../../../components/LynxTooltip';
 import {topToast} from '../../../layouts/ToastProviders';
 import {PluginListItem} from './Items';
 import {FilterMenu, useFetchExtensions, useFilteredList, useSortedList} from './utils';
@@ -20,10 +21,21 @@ import {FilterMenu, useFetchExtensions, useFilteredList, useSortedList} from './
 /**
  * Main component for the plugin list view.
  * Displays a searchable, filterable list of available extensions and modules.
+ * Supports both Default (Card) and Compact (List) view modes.
  */
 export default function PluginList() {
   const [selectedFilters, setSelectedFilters] = useState<PluginFilter>('all');
   const [searchValue, setSearchValue] = useState<string>('');
+
+  // Persist the user's preferred layout mode in localStorage
+  const [layoutMode, setLayoutMode] = useState<'default' | 'compact'>(() => {
+    try {
+      const saved = localStorage.getItem('lynx_plugin_layout_mode');
+      return saved === 'compact' ? 'compact' : 'default';
+    } catch {
+      return 'default';
+    }
+  });
 
   const installed = usePluginsState('installedList');
   const installedID = useMemo(() => installed.map(item => item.id), [installed]);
@@ -42,6 +54,15 @@ export default function PluginList() {
     );
   }, [searchValue, filteredList]);
 
+  const handleLayoutChange = (mode: 'default' | 'compact') => {
+    setLayoutMode(mode);
+    try {
+      localStorage.setItem('lynx_plugin_layout_mode', mode);
+    } catch (e) {
+      console.error('Failed to save layout mode preference:', e);
+    }
+  };
+
   const emptyText = useMemo(() => {
     return (
       <EmptyStateCard
@@ -52,7 +73,7 @@ export default function PluginList() {
         }
         title={
           isEmpty(searchValue)
-            ? 'It looks like there are no plugin available right now.'
+            ? 'It looks like there are no plugins available right now.'
             : `Couldn't find any plugins matching your search.`
         }
         description={
@@ -101,6 +122,35 @@ export default function PluginList() {
               </SearchField.Group>
             </SearchField>
             <FilterMenu selectedKeys={selectedFilters} setSelectedKeys={setSelectedFilters} />
+
+            {/* View Mode Switcher */}
+            <div
+              className={
+                'flex items-center shrink-0 bg-surface rounded-xl p-0.5 border border-surface/50 shadow-sm h-10'
+              }>
+              <LynxTooltip content="Default Card View">
+                <Button
+                  className={`size-8 rounded-lg min-w-0 transition-colors duration-200 ${
+                    layoutMode === 'default' ? 'bg-surface-secondary text-foreground' : 'bg-transparent text-muted'
+                  }`}
+                  variant="secondary"
+                  onPress={() => handleLayoutChange('default')}
+                  isIconOnly>
+                  <Grid_Icon />
+                </Button>
+              </LynxTooltip>
+              <LynxTooltip content="Compact List View">
+                <Button
+                  className={`size-8 rounded-lg min-w-0 transition-colors duration-200 ${
+                    layoutMode === 'compact' ? 'bg-surface-secondary text-foreground' : 'bg-transparent text-muted'
+                  }`}
+                  variant="secondary"
+                  onPress={() => handleLayoutChange('compact')}
+                  isIconOnly>
+                  <List_Icon />
+                </Button>
+              </LynxTooltip>
+            </div>
           </div>
         </div>
       </Card.Header>
@@ -123,7 +173,12 @@ export default function PluginList() {
           ) : (
             <div className="flex flex-col gap-y-2 pb-4">
               {resultList.map(item => (
-                <PluginListItem item={item} installed={installed} key={`${item.metadata.id}_list_item`} />
+                <PluginListItem
+                  item={item}
+                  installed={installed}
+                  layoutMode={layoutMode}
+                  key={`${item.metadata.id}_list_item`}
+                />
               ))}
             </div>
           )}
@@ -163,7 +218,7 @@ function SyncAllButton() {
       .catch(() => topToast.danger('Failed to sync plugins. Please try again later.'))
       .finally(() => {
         dispatch(pluginsActions.manageSet({key: 'updating', id: syncList.map(item => item.id), operation: 'remove'}));
-        dispatch(pluginsActions.setUpdatingAll(false)); // Fixed logical error in the original code, should be false when finally
+        dispatch(pluginsActions.setUpdatingAll(false));
       });
   }, [dispatch, syncList]);
 

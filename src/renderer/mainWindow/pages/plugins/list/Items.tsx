@@ -42,13 +42,15 @@ interface PluginListItemProps {
   item: PluginItem;
   /** The list of currently installed plugins used to check the installation state. */
   installed: PluginInstalledItem[];
+  /** Layout mode setting for layout customization. */
+  layoutMode?: 'default' | 'compact';
 }
 
 /**
  * Renders an individual card representing a plugin (extension or module).
- * Handles the display of metadata, installation status, OS compatibility, and module configuration.
+ * Handles standard (card) and compact (list) representations with smooth sizing.
  */
-export function PluginListItem({item, installed}: PluginListItemProps) {
+export function PluginListItem({item, installed, layoutMode = 'default'}: PluginListItemProps) {
   const dispatch = useDispatch<AppDispatch>();
 
   const selectedPlugin = usePluginsState('selectedPlugin');
@@ -112,26 +114,158 @@ export function PluginListItem({item, installed}: PluginListItemProps) {
     };
   }, [syncList, item.metadata.id]);
 
-  const handleUninstall = useCallback(() => {
-    pluginsIpc.uninstall(item.metadata.id).then(result => {
-      if (result) {
-        topToast.success(`${item.metadata.title} uninstalled successfully`);
-        showRestartModal(dispatch, 'To complete the uninstallation, please restart the app.');
-        dispatch(pluginsActions.removeInstalled(item.metadata.id));
-      }
-    });
-  }, [item]);
+  const handleUninstall = useCallback(
+    (e?: React.MouseEvent) => {
+      e?.stopPropagation();
+      pluginsIpc.uninstall(item.metadata.id).then(result => {
+        if (result) {
+          topToast.success(`${item.metadata.title} uninstalled successfully`);
+          showRestartModal(dispatch, 'To complete the uninstallation, please restart the app.');
+          dispatch(pluginsActions.removeInstalled(item.metadata.id));
+        }
+      });
+    },
+    [item, dispatch],
+  );
 
   const handleSelect = useCallback(() => {
     AddBreadcrumb_Renderer(`Plugin Select: id:${item.metadata.id}`);
     dispatch(pluginsActions.setSelectedPlugin(item));
   }, [dispatch, item]);
 
+  // Render Compact Layout
+  if (layoutMode === 'compact') {
+    return (
+      <Card
+        className={
+          `relative border border-surface/50 transition-all! duration-300!` +
+          ` hover:bg-surface/70 dark:hover:bg-black/70 ${isCompatible ? 'cursor-pointer' : ''}` +
+          ` ${isSelected && (isExtension ? 'border-accent!' : 'border-LynxPurple!')}` +
+          ` px-3 py-2 min-h-14 flex flex-row items-center justify-between gap-x-2`
+        }
+        key={`${item.metadata.id}_plugin_compact_item`}
+        onClick={isCompatible ? handleSelect : undefined}>
+        {!isCompatible && (
+          <div
+            className={
+              'absolute inset-0 z-20 flex flex-row items-center justify-between px-3' +
+              ' bg-surface-tertiary/75 rounded-xl'
+            }>
+            <span className="text-xs font-semibold text-warning/90">Incompatible</span>
+            {foundInstalled && (
+              <Button size="sm" variant="danger-soft" onClick={handleUninstall} className="size-6 min-w-0 p-0">
+                <TrashBin2 className="size-3.5" />
+              </Button>
+            )}
+          </div>
+        )}
+
+        {/* Left Side: Avatar, Title and Author */}
+        <div className="flex items-center gap-x-2.5 overflow-hidden min-w-0 flex-1">
+          <Avatar className="size-8 min-w-8 shrink-0">
+            <Avatar.Image alt={item.metadata.title} src={getCacheUrl(getPluginIconUrl(item.url))} />
+            <Avatar.Fallback className="text-xs">{getFallbackString(item.metadata.title)}</Avatar.Fallback>
+          </Avatar>
+          <div className="flex flex-col min-w-0 overflow-hidden leading-tight">
+            <div className="flex items-center gap-x-1.5">
+              <Link
+                onClick={e => {
+                  e.stopPropagation();
+                  window.open(item.url);
+                }}
+                className={`no-underline hover:underline text-sm font-semibold truncate ${
+                  isExtension ? 'text-accent' : 'text-LynxPurple'
+                }`}>
+                {item.metadata.title}
+              </Link>
+              {foundInstalled && <CheckRead className="text-success size-3.5 shrink-0" />}
+            </div>
+            <span className="text-[10px] text-muted truncate">
+              By <span className="font-semibold">{extractGitUrl(item.url).owner}</span>
+            </span>
+          </div>
+        </div>
+
+        {/* Right Side: Platforms, Version Info and Inline Actions */}
+        <div className="flex items-center gap-x-2 shrink-0">
+          {/* OS Platform Indicators */}
+          <div className="flex items-center gap-x-0.5 max-sm:hidden">
+            {linux && <Linux_Icon className="size-3 text-surface-foreground/60" />}
+            {win32 && <Windows_Icon className="size-3 text-surface-foreground/60" />}
+            {darwin && <MacOS_Icon className="size-3 text-surface-foreground/60" />}
+          </div>
+
+          {/* Compact Version Badge */}
+          {currentVersion !== 'N/A' && (
+            <span
+              className={
+                'text-[10px] bg-surface/50 px-1.5 py-0.5 rounded border border-surface/80' +
+                ' text-muted font-medium flex items-center gap-x-1'
+              }>
+              <span>{currentVersion}</span>
+              {targetUpdate && (
+                <>
+                  <ArrowRight className="size-2" />
+                  <span className={`font-bold ${isUpgrade ? 'text-success' : 'text-warning'}`}>{targetVersion}</span>
+                </>
+              )}
+            </span>
+          )}
+
+          {/* Warnings/Unloaded Indicators */}
+          {foundUnloaded && (
+            <Tooltip delay={300}>
+              <Tooltip.Trigger>
+                <div className="text-warning cursor-help shrink-0">
+                  <ShieldWarning className="size-4" />
+                </div>
+              </Tooltip.Trigger>
+              <Tooltip.Content showArrow>
+                <Tooltip.Arrow />
+                <p className="text-xs">{foundUnloaded.message}</p>
+              </Tooltip.Content>
+            </Tooltip>
+          )}
+
+          {/* Module Config Trigger */}
+          {foundInstalled && !isExtension && (
+            <>
+              <ModuleConfigModal isOpen={configModal.isOpen} onClose={configModal.close} />
+              <Button
+                onClick={e => {
+                  e.stopPropagation();
+                  configModal.open();
+                }}
+                size="sm"
+                variant="secondary"
+                className="size-7 min-w-0 p-0 rounded-lg hover:bg-surface-secondary"
+                isIconOnly>
+                <SettingsMinimalistic className="size-3.5" />
+              </Button>
+            </>
+          )}
+
+          {/* Update Action Button */}
+          <div className="scale-90 origin-right">
+            <UpdateButton item={item} />
+          </div>
+
+          {/* Spinning Actions */}
+          {isInstalling && <Spinner size="sm" className="size-4 shrink-0" />}
+          {isUnInstalling && <Spinner size="sm" color="warning" className="size-4 shrink-0" />}
+        </div>
+
+        <InstallProgress pluginUrl={item.url} isInstalling={isInstalling} />
+      </Card>
+    );
+  }
+
+  // Render Default Layout
   return (
     <Card
       className={
         `relative border border-surface/50 transition-all! duration-300!` +
-        ` hover:bg-surface-secondary ${isCompatible ? 'cursor-pointer' : ''}` +
+        ` hover:bg-surface/70 dark:hover:bg-black/70 ${isCompatible ? 'cursor-pointer' : ''}` +
         ` ${isSelected && (isExtension ? 'border-accent!' : 'border-LynxPurple!')}`
       }
       key={`${item.metadata.id}_plugin_list_item`}
@@ -158,7 +292,7 @@ export function PluginListItem({item, installed}: PluginListItemProps) {
           <span className="rounded-lg bg-surface px-2 py-1 text-sm">Incompatible</span>
           {foundInstalled && (
             <div className="absolute right-2 top-2 rounded-lg bg-surface p-1">
-              <Button size="sm" variant="danger-soft" onPress={handleUninstall} isIconOnly>
+              <Button size="sm" variant="danger-soft" onClick={handleUninstall} isIconOnly>
                 <TrashBin2 className="size-4" />
               </Button>
             </div>
@@ -286,14 +420,11 @@ function InstallProgress({isInstalling, pluginUrl}: InstallProgressProps) {
   const [installProgress, setInstallProgress] = useState<number>(0);
 
   useEffect(() => {
-    // We only attach the event listener if an installation is actually taking place
     if (!isInstalling) return;
 
     let isMounted = true;
 
-    // Attach listener via IPC
     const removeListener = gitIpc.onProgress((url, state, result) => {
-      // Validate that this notification belongs to this particular plugin installation
       if (url === pluginUrl && isMounted) {
         switch (state) {
           case 'Progress':
