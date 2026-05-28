@@ -82,9 +82,8 @@ export const CardHeaderContent = memo(({modifiedTitle, onTitleChange, updateAvai
             exit={{opacity: 0, translateY: 2}}
             animate={{opacity: 1, translateY: 0}}
             initial={{opacity: 0, translateY: 2}}>
-            <Chip size="sm" variant="soft" color="success" className="px-2" key="chip_update">
+            <Chip size="sm" variant="soft" color="success" key="chip_update" className="px-2 py-1">
               <DownloadMinimalistic />
-              Update
             </Chip>
           </motion.div>
         )}
