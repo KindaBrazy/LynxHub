@@ -99,11 +99,13 @@ export default function PluginPreviewHeader({installedPlugin}: PluginPreviewHead
 
                 {/* Plugin type indicator (extension vs module) */}
                 <div
-                  className={`flex flex-row gap-x-1 items-center ${
-                    pluginType === 'extension' ? 'text-accent' : 'text-LynxPurple'
+                  className={`flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-md ${
+                    pluginType === 'extension'
+                      ? 'bg-blue-500/10 text-blue-500 dark:bg-blue-500/20 dark:text-blue-400'
+                      : 'bg-purple-500/10 text-purple-500 dark:bg-purple-500/20 dark:text-purple-400'
                   }`}>
-                  <WidgetAdd />
-                  <span>{pluginType === 'extension' ? 'Extension' : 'Module'}</span>
+                  <WidgetAdd className="size-3.5" />
+                  <span className="capitalize">{pluginType || 'Extension'}</span>
                 </div>
               </div>
             </Description>
