@@ -69,8 +69,8 @@ export default function PluginPreviewHeader({installedPlugin}: PluginPreviewHead
       }>
       <div className="w-full flex flex-col">
         <div className="inline-flex items-center gap-2">
-          <Avatar>
-            <Avatar.Image src={getCacheUrl(pluginIconUrl)} alt={selectedPlugin?.metadata.title} />
+          <Avatar className="rounded-lg">
+            <Avatar.Image src={pluginIconUrl} alt={selectedPlugin?.metadata.title} />
             {selectedPlugin && (
               <Avatar.Fallback>{getFallbackString(selectedPlugin?.metadata.title || '')}</Avatar.Fallback>
             )}
