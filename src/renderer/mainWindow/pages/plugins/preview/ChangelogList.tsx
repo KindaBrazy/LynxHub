@@ -4,24 +4,49 @@ import {usePluginsState} from '@lynx/redux/reducers/plugins';
 import {SubscribeStages} from '@lynx_common/types';
 import {ChangelogItem, ChangelogSubItem, PluginChangelog} from '@lynx_common/types/plugins';
 import {motion} from 'framer-motion';
+import {Bug, ChevronRight, HelpCircle, Sparkles, Zap} from 'lucide-react';
 import {memo} from 'react';
 
 import {getStageColor, getStageDisplayName} from './utils';
 
 /**
- * Props for the {@link ChangelogEntry} component.
+ * Sanitizes category strings by removing any leading emojis/icons coming from the backend data.
  */
+function sanitizeCategoryName(category: string): string {
+  return category
+    .replace(
+      // eslint-disable-next-line max-len
+      /[\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF]/g,
+      '',
+    )
+    .trim();
+}
+
+/**
+ * Maps cleaned categories to clean, micro-sized icons.
+ */
+function getCategoryIcon(cleanCategory: string) {
+  const norm = cleanCategory.toLowerCase();
+  if (norm.includes('new') || norm.includes('add')) {
+    return <Sparkles className="size-3.5 text-amber-500" />;
+  }
+  if (norm.includes('improve') || norm.includes('update') || norm.includes('change')) {
+    return <Zap className="size-3.5 text-blue-500" />;
+  }
+  if (norm.includes('fix') || norm.includes('bug')) {
+    return <Bug className="size-3.5 text-emerald-500" />;
+  }
+  return <HelpCircle className="size-3.5 text-zinc-400 dark:text-zinc-500" />;
+}
+
 interface ChangelogEntryProps {
-  /** The specific changelog item (string or nested object). */
   item: ChangelogSubItem;
-  /** Recursion depth for indentation. */
   depth?: number;
-  /** Unique key for React rendering. */
   id: string | number;
 }
 
 /**
- * Renders a single changelog entry, supporting nested categories recursively.
+ * Renders individual changelog rows using safe Tailwind v3/v4 responsive theme text.
  */
 function ChangelogEntry({item, depth = 0, id}: ChangelogEntryProps) {
   if (typeof item === 'string') {
@@ -29,19 +54,22 @@ function ChangelogEntry({item, depth = 0, id}: ChangelogEntryProps) {
       <motion.div
         key={id}
         animate={{opacity: 1, x: 0}}
-        initial={{opacity: 0, x: -10}}
-        className={`${depth > 0 && 'ml-6'} mt-1`}
-        transition={{duration: 0.3, delay: depth * 0.05}}>
-        <div className="flex items-start gap-x-2 group">
-          <motion.div
-            className={`size-2 rounded-full mt-1.5 shrink-0 transition-colors duration-200 group-hover:scale-110 ${
-              depth > 0 ? 'bg-muted group-hover:bg-muted/70' : 'bg-accent group-hover:bg-accent-hover'
-            }`}
-            whileHover={{scale: 1.3}}
-          />
+        initial={{opacity: 0, x: -4}}
+        className={`${depth > 0 ? 'ml-4' : ''} py-0.5`}
+        transition={{duration: 0.15, delay: depth * 0.01}}>
+        <div className="flex items-start gap-2.5 group">
+          {/* Micro bullet, styled to match native desktop lists in both themes */}
+          <div className="flex items-center justify-center h-4.5 shrink-0 mt-0.5">
+            <span
+              className={`rounded-full transition-all duration-150 ${
+                depth > 0 ? 'size-1 bg-zinc-400 dark:bg-zinc-600' : 'size-1.5 bg-blue-500 group-hover:bg-blue-400'
+              }`}
+            />
+          </div>
           <span
             className={
-              'text-sm leading-relaxed transition-colors duration-200 text-foreground group-hover:text-foreground/80'
+              'text-xs md:text-sm font-medium leading-normal text-zinc-600 dark:text-zinc-300' +
+              ' group-hover:text-zinc-900 dark:group-hover:text-white transition-colors duration-100'
             }>
             {item}
           </span>
@@ -54,21 +82,21 @@ function ChangelogEntry({item, depth = 0, id}: ChangelogEntryProps) {
     <motion.div
       key={id}
       animate={{opacity: 1, y: 0}}
-      transition={{duration: 0.4}}
-      initial={{opacity: 0, y: -10}}
-      className={`${depth > 0 && 'ml-6'} mt-1`}>
+      transition={{duration: 0.2}}
+      initial={{opacity: 0, y: -4}}
+      className={`${depth > 0 ? 'ml-4' : ''} mt-0.5`}>
       {Object.entries(item).map(([label, subItems]) => (
-        <div key={label}>
-          <div className="flex items-start gap-x-2 group">
-            <motion.div
-              className={`size-2 rounded-full mt-1.5 shrink-0 transition-colors duration-200 group-hover:scale-110 ${
-                depth > 0 ? 'bg-muted group-hover:bg-muted/70' : 'bg-accent group-hover:bg-accent-hover'
-              }`}
-              whileHover={{scale: 1.3}}
+        <div key={label} className="mt-1">
+          <div className="flex items-start gap-1.5 group mb-1">
+            <ChevronRight
+              className={
+                'size-3 text-zinc-400 dark:text-zinc-500 mt-0.5 group-hover:text-blue-500 transition-colors shrink-0'
+              }
             />
-            <div className="text-sm font-semibold text-foreground mb-1.5">{label}</div>
+            <span className="text-xs font-semibold text-zinc-800 dark:text-zinc-200 leading-normal">{label}</span>
           </div>
-          <div className="space-y-1">
+          {/* Theme-safe nested timeline connector */}
+          <div className="space-y-0.5 border-l border-zinc-200 dark:border-zinc-800 ml-1.5 pl-3">
             {subItems.map((subItem, index) => (
               <ChangelogEntry id={index} item={subItem} depth={depth + 1} key={`${label}_${index}`} />
             ))}
@@ -80,17 +108,27 @@ function ChangelogEntry({item, depth = 0, id}: ChangelogEntryProps) {
 }
 
 /**
- * Renders a group of changelog entries under a specific category (e.g., "Added").
+ * Clean, compact category bands.
  */
 function CategoryGroup({category, entries}: {category: string; entries: ChangelogSubItem[]}) {
+  const cleanName = sanitizeCategoryName(category);
+
   return (
-    <div>
-      <div className="flex items-center gap-3 my-4">
-        <div className="h-px flex-1 bg-linear-to-r from-transparent via-muted/30 to-transparent" />
-        <Chip>{category}</Chip>
-        <div className="h-px flex-1 bg-linear-to-r from-transparent via-muted/30 to-transparent" />
+    <div className="mb-4 last:mb-0">
+      <div className="flex items-center gap-2 mb-2">
+        <div
+          className={
+            'flex items-center gap-1.5 bg-zinc-100 dark:bg-zinc-900/80 border border-zinc-200' +
+            ' dark:border-zinc-800/60 px-2 py-1 rounded-lg'
+          }>
+          {getCategoryIcon(cleanName)}
+          <span className="text-[10px] font-bold tracking-wider uppercase text-zinc-700 dark:text-zinc-300">
+            {cleanName}
+          </span>
+        </div>
+        <div className="h-px grow bg-zinc-200/60 dark:bg-zinc-800/60" />
       </div>
-      <div className="space-y-2">
+      <div className="space-y-0.5 pl-0.5">
         {entries.map((entry, index) => (
           <ChangelogEntry depth={0} id={index} item={entry} key={`${category}_${index}`} />
         ))}
@@ -99,18 +137,15 @@ function CategoryGroup({category, entries}: {category: string; entries: Changelo
   );
 }
 
-/**
- * Renders a list of categories for a single changelog item.
- */
 function ChangelogSection({item}: {item: ChangelogItem}) {
   return (
-    <div className="space-y-6">
+    <div className="space-y-3">
       {Object.entries(item).map(([category, entries], idx) => (
         <motion.div
           key={category}
           animate={{opacity: 1, y: 0}}
-          initial={{opacity: 0, y: 20}}
-          transition={{duration: 0.5, delay: idx * 0.1}}>
+          initial={{opacity: 0, y: 6}}
+          transition={{duration: 0.2, delay: idx * 0.03}}>
           <CategoryGroup entries={entries} category={category} />
         </motion.div>
       ))}
@@ -118,90 +153,84 @@ function ChangelogSection({item}: {item: ChangelogItem}) {
   );
 }
 
-/**
- * Props for the {@link VersionHistoryCard} component.
- */
 interface VersionHistoryCardProps {
-  /** The changelog data for a specific version. */
   versionData: PluginChangelog;
-  /** Index in the list (used for styling and animation delay). */
   index: number;
-  /** Whether this version matches the currently installed version. */
   isInstalledVersion: boolean;
-  /** Total number of versions in the list. */
-  totalCount: number;
   stage: SubscribeStages | undefined;
 }
 
 /**
- * Renders a card representing a single version in the plugin's history.
+ * Micro-density Version Card utilizing core Tailwind variables to support Light and Dark mode flawlessly.
  */
-function VersionHistoryCard({versionData, index, isInstalledVersion, totalCount, stage}: VersionHistoryCardProps) {
+function VersionHistoryCard({versionData, index, isInstalledVersion, stage}: VersionHistoryCardProps) {
   const isLatest = index === 0;
 
   return (
     <motion.div
-      className="relative"
+      className={`relative rounded-2xl border p-4.5 transition-all duration-150 ${
+        isLatest
+          ? 'bg-white/80 dark:bg-zinc-900/40 border-l-2 border-l-purple-500 border-y-zinc-200/60' +
+            ' border-r-zinc-200/60 dark:border-y-zinc-800/60 dark:border-r-zinc-800/60 shadow-xs'
+          : 'bg-white/40 dark:bg-zinc-950/20 border-l-2 border-l-zinc-300 dark:border-l-zinc-700' +
+            ' border-y-zinc-200/40 border-r-zinc-200/40 dark:border-y-zinc-900/60 dark:border-r-zinc-900/60'
+      }`}
       key={versionData.version}
-      animate={{opacity: 1, x: 0}}
-      initial={{opacity: 0, x: -30}}
-      transition={{duration: 0.5, delay: index * 0.1}}>
+      animate={{opacity: 1, y: 0}}
+      initial={{opacity: 0, y: 10}}
+      transition={{duration: 0.3, delay: index * 0.04}}>
+      {/* Header Panel */}
       <div
-        className={`border shadow-sm hover:shadow-md bg-surface relative overflow-hidden 
-        rounded-3xl px-4 py-4 mb-6 transition-all duration-300 ${
-          isLatest ? 'border-LynxPurple/50 hover:border-LynxPurple/70' : 'border-surface hover:border-surface-secondary'
-        }`}>
-        {/* Version markers (Latest, Current, Version Number) */}
-        <div className="flex items-center gap-x-2 relative w-full justify-between">
-          <div className="flex items-center gap-x-2">
+        className={
+          'flex items-center justify-between gap-3 border-b border-zinc-100 dark:border-zinc-800/60 pb-3 mb-4'
+        }>
+        <div className="flex items-center gap-2">
+          {/* Native theme-responsive text title */}
+          <h3 className="text-base font-bold tracking-tight text-zinc-950 dark:text-white">{versionData.version}</h3>
+
+          <div className="flex items-center gap-1">
             {isLatest && (
-              <Chip size="sm" variant="soft" color="accent">
-                Latest
+              <Chip
+                size="sm"
+                variant="secondary"
+                className="font-bold text-[9px] uppercase tracking-wider h-4 px-1.5 min-w-0">
+                Latest Release
               </Chip>
             )}
 
-            <Chip size="sm" variant="soft" color={isLatest ? 'accent' : 'warning'}>
-              {versionData.version}
-            </Chip>
-
             {isInstalledVersion && (
-              <Chip size="sm" variant="soft" color="success">
+              <Chip
+                size="sm"
+                variant="soft"
+                color="success"
+                className="font-bold text-[9px] uppercase tracking-wider h-4 px-1.5 min-w-0">
                 Installed
               </Chip>
             )}
           </div>
-
-          {stage && (
-            <Chip size="sm" variant="soft" color={getStageColor(stage)}>
-              {getStageDisplayName(stage)}
-            </Chip>
-          )}
         </div>
 
-        {/* Categories and entries for this version */}
-        <div className="relative z-10 mt-4">
-          {versionData.items.map((changelogItem, itemIndex) => (
-            <ChangelogSection item={changelogItem} key={`${versionData.version}_v_${itemIndex}`} />
-          ))}
-        </div>
+        {stage && (
+          <Chip
+            size="sm"
+            variant="secondary"
+            color={getStageColor(stage)}
+            className="font-bold text-[9px] uppercase tracking-wider h-5">
+            {getStageDisplayName(stage)}
+          </Chip>
+        )}
       </div>
 
-      {/* Connecting line between version cards to represent a timeline */}
-      {index < totalCount - 1 && (
-        <motion.div
-          initial={{scaleY: 0}}
-          animate={{scaleY: 1}}
-          transition={{duration: 0.5, delay: index * 0.1 + 0.3}}
-          className={'absolute left-6 top-full w-0.5 h-6 bg-linear-to-b from-muted/60 to-transparent origin-top'}
-        />
-      )}
+      {/* Changes list body */}
+      <div className="relative z-10">
+        {versionData.items.map((changelogItem, itemIndex) => (
+          <ChangelogSection item={changelogItem} key={`${versionData.version}_v_${itemIndex}`} />
+        ))}
+      </div>
     </motion.div>
   );
 }
 
-/**
- * Component that displays the complete version history/changelog for a plugin.
- */
 const PluginChangelogList = memo(() => {
   const selectedPlugin = usePluginsState('selectedPlugin');
   const installedList = usePluginsState('installedList');
@@ -215,22 +244,23 @@ const PluginChangelogList = memo(() => {
       exit={{opacity: 0}}
       initial={{opacity: 0}}
       animate={{opacity: 1}}
-      transition={{duration: 0.3}}
+      transition={{duration: 0.15}}
       className="size-full overflow-hidden">
-      <LynxScroll className="gap-y-8 px-6 py-4 size-full">
-        {selectedPlugin?.changes.map((version, index) => {
-          const stage = selectedPlugin?.versions.find(v => v.version === version.version)?.stage;
-          return (
-            <VersionHistoryCard
-              index={index}
-              stage={stage}
-              key={version.version}
-              versionData={version}
-              totalCount={selectedPlugin.changes.length}
-              isInstalledVersion={version.version === installedVersion}
-            />
-          );
-        })}
+      <LynxScroll className="gap-y-4 px-4 py-4 size-full">
+        <div className="max-w-175 mx-auto space-y-4 pb-6">
+          {selectedPlugin?.changes.map((version, index) => {
+            const stage = selectedPlugin?.versions.find(v => v.version === version.version)?.stage;
+            return (
+              <VersionHistoryCard
+                index={index}
+                stage={stage}
+                key={version.version}
+                versionData={version}
+                isInstalledVersion={version.version === installedVersion}
+              />
+            );
+          })}
+        </div>
       </LynxScroll>
     </motion.div>
   );
