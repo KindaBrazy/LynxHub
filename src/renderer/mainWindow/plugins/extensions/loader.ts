@@ -1,6 +1,7 @@
 import {rendererIpcEventsApi} from '@lynx_shared/ipc/ipcEvents';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 
+import {bottomToast, topToast} from '../../layouts/ToastProviders';
 import {allCards, allModules, getCardMethod, useGetArgumentsByID, useGetCardsByPath} from '../modules';
 import {initPluginBrowserSentry} from '../sentry';
 import {rendererIpcApi} from './ipcApi';
@@ -498,6 +499,8 @@ export const extensionRendererApi: ExtensionRendererApi = {
 
   // ── Sentry ───────────────────────────────────────────────────────────────
   initBrowserSentry: initPluginBrowserSentry,
+
+  toast: {top: topToast, bottom: bottomToast},
 };
 
 // ─── Extension Initializer ────────────────────────────────────────────────────

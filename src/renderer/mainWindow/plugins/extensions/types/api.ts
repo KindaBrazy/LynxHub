@@ -11,6 +11,7 @@ import type {Reducer} from '@reduxjs/toolkit';
 import type {Scope} from '@sentry/browser';
 import type {FC} from 'react';
 
+import type {bottomToast, topToast} from '../../../layouts/ToastProviders';
 import type {ExtensionEvents} from './events';
 import {
   AddMenuType,
@@ -457,4 +458,6 @@ export type ExtensionRendererApi = {
    * @returns The Sentry scope.
    */
   initBrowserSentry: (dsn: string) => Scope;
+
+  toast: {top: typeof topToast; bottom: typeof bottomToast};
 };
