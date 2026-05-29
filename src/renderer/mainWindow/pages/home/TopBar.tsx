@@ -71,7 +71,7 @@ export default function HomeTopBar() {
         </motion.div>
 
         <motion.div transition={{delay: 0.3}} animate={{opacity: 1, y: 0}} initial={{opacity: 0, y: -10}}>
-          <Button size="sm" className="w-24" onPress={handleNewTerminalBrowser}>
+          <Button size="sm" className="w-22" onPress={handleNewTerminalBrowser}>
             <Terminal_Icon className="flex-1" />
             <Plus className="size-2.5 opacity-80" />
             <Earth className="flex-1" />
