@@ -57,24 +57,24 @@ export default function HomeTopBar() {
         animate={{scale: 1, translateY: 0, opacity: 1}}
         initial={{scale: 0.96, translateY: -10, opacity: 0}}>
         <motion.div transition={{delay: 0.1}} animate={{opacity: 1, y: 0}} initial={{opacity: 0, y: -10}}>
-          <Button size="sm" variant="tertiary" onPress={handleNewTerminal}>
+          <Button size="sm" className="w-25" variant="tertiary" onPress={handleNewTerminal}>
             <Terminal_Icon />
             Terminal
           </Button>
         </motion.div>
 
         <motion.div transition={{delay: 0.2}} animate={{opacity: 1, y: 0}} initial={{opacity: 0, y: -10}}>
-          <Button size="sm" variant="tertiary" onPress={handleNewBrowser}>
+          <Button size="sm" className="w-25" variant="tertiary" onPress={handleNewBrowser}>
             <Earth />
             Browser
           </Button>
         </motion.div>
 
         <motion.div transition={{delay: 0.3}} animate={{opacity: 1, y: 0}} initial={{opacity: 0, y: -10}}>
-          <Button size="sm" onPress={handleNewTerminalBrowser}>
-            <Terminal_Icon />
-            <Plus className="size-2 opacity-60" />
-            <Earth />
+          <Button size="sm" className="w-24" onPress={handleNewTerminalBrowser}>
+            <Terminal_Icon className="flex-1" />
+            <Plus className="size-2.5 opacity-80" />
+            <Earth className="flex-1" />
           </Button>
         </motion.div>
       </motion.div>
