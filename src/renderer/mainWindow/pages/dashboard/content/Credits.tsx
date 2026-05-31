@@ -138,13 +138,27 @@ const DashboardCredits = memo(() => {
             }>
             <Button
               className={
-                'w-full font-bold text-sm text-white bg-linear-to-r from-rose-600 to-rose-500' +
-                ' hover:from-rose-500 hover:to-rose-450 dark:from-rose-500 dark:to-rose-400' +
-                ' shadow-md shadow-rose-500/10 hover:shadow-rose-500/20 py-5' +
-                ' rounded-xl transition-all duration-300 active:scale-[0.98]'
+                'relative isolate overflow-hidden w-full font-bold text-sm text-white' +
+                // Base Gradients (Light & Dark)
+                ' bg-linear-to-r from-rose-600 to-rose-500' +
+                ' dark:from-rose-700 dark:to-rose-600' +
+                // Hover Gradient Overlay (Light)
+                ' before:absolute before:inset-0 before:-z-10 before:opacity-0' +
+                ' before:transition-opacity before:duration-300' +
+                ' before:bg-linear-to-r before:from-rose-500 before:to-rose-400' +
+                // Hover Gradient Overlay (Dark)
+                ' dark:before:from-rose-600 dark:before:to-rose-500' +
+                // Hover Action to trigger the opacity transition
+                ' hover:before:opacity-100' +
+                // Shadows & Transitions
+                ' shadow-md shadow-rose-500/10 hover:shadow-rose-500/20' +
+                ' dark:shadow-rose-950/30 dark:hover:shadow-rose-900/20' +
+                ' py-5 rounded-xl transition-all duration-300 active:scale-[0.98]'
               }
               onPress={handleBecomePatron}>
-              Join the Patrons <SquareTopDown className="size-4" />
+              <span className="flex items-center justify-center gap-2 w-full">
+                Join the Patrons <SquareTopDown className="size-4" />
+              </span>
             </Button>
 
             <div
