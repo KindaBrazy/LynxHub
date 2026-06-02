@@ -203,7 +203,7 @@ Massive thanks to my Gold Sponsors:
 
 [![LynxHub Discord](http://invidget.switchblade.xyz/e8rBzhtcnK)](https://discord.gg/e8rBzhtcnK)
 
-**© 2025 LynxHub.**
+**© 2026 LynxHub.**
 
 </div>
 
