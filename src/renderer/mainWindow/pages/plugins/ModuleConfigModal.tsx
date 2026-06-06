@@ -64,7 +64,8 @@ function useModuleCardsLoader(isOpen: boolean) {
 
         if (isDev()) {
           try {
-            const devImport = await import(/* @vite-ignore */ '@lynx_module/renderer');
+            const devPath = '@lynx_module/renderer';
+            const devImport = await import(/* @vite-ignore */ devPath);
             modules = devImport.default || [];
           } catch (e) {
             console.log('No dev module found, skipping...');

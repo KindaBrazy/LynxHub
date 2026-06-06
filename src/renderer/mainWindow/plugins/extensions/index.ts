@@ -57,7 +57,8 @@ export async function loadExtensions() {
     // Import the local dev extension directly via the Vite alias so developers
     // get instant feedback without a running plugin server.
     try {
-      const extension = await import(/* @vite-ignore */ '@lynx_extension/renderer/Extension');
+      const devPath = '@lynx_extension/renderer/Extension';
+      const extension = await import(/* @vite-ignore */ devPath);
       importedExtensions = [extension];
       extensionIds = ['dev-extension'];
     } catch {
