@@ -91,7 +91,7 @@ export default function ArgumentSelectionList({
     (item: ArgumentItem) => {
       const searchWords = searchValue.split(/\s+/);
       return (
-        <ListBox.Item id={item.name} textValue={`Select ${item.name}`}>
+        <ListBox.Item id={item.name} key={item.name} textValue={`Select ${item.name}`}>
           <ListBox.ItemIndicator />
           <div className="flex flex-col">
             <Label>
