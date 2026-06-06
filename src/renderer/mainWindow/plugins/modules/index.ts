@@ -396,8 +396,7 @@ const loadModules = async () => {
     if (isDev()) {
       // ── Dev shortcut ───────────────────────────────────────────────────────
       try {
-        const devPath = '@lynx_module/renderer';
-        const devImport = await import(/* @vite-ignore */ devPath);
+        const devImport = await import(/* @vite-ignore */ '@lynx_module/renderer');
         importedModules = [{path: 'dev', module: devImport}];
       } catch {
         console.log('No dev module found, skipping...');

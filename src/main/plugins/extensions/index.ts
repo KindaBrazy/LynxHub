@@ -4,6 +4,7 @@ import {isDev} from '@lynx_common/utils';
 import ElectronAppManager from '@lynx_main/mainWindow';
 import StorageManager from '@lynx_main/storage/storageOperations';
 import {captureException} from '@sentry/electron/main';
+import {getAbsolutePath, getExePath} from '@lynx_main/utils';
 
 import ModuleManager from '../modules';
 import ExtensionApi from './api';
@@ -30,9 +31,8 @@ export default class ExtensionManager {
    */
   private async importDevExtension(): Promise<void> {
     try {
-      const devPath = '../../../../extension/src/main/lynxExtension';
       const initial: ExtensionImport_Main = await import(
-        /* @vite-ignore */ devPath
+        /* @vite-ignore */ '../../../../extension/src/main/lynxExtension'
       );
       await initial.initialExtension(this.extensionApi.getApi(), this.extensionUtils, mainIpcApi);
     } catch (e) {

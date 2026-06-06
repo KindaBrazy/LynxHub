@@ -27,9 +27,7 @@ export default defineConfig(({mode}) => {
       build: {
         sourcemap: true,
         rollupOptions: {
-          external: isDev
-            ? undefined
-            : ['../../../../../extension/src/main/lynxExtension', '../../../../../module/src/main'],
+          external: isDev ? undefined : ['../../../../extension/src/main/lynxExtension', '../../../../module/src/main'],
         },
       },
       resolve: {
