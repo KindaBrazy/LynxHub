@@ -66,7 +66,7 @@ const LynxCard = memo(() => {
           else install();
         }}
         className={
-          'relative h-46 w-75 border border-surface transition-all duration-200 ' +
+          'relative h-46 w-75 border border-surface transition-all duration-200 overflow-hidden ' +
           `group hover:scale-[1.02] hover:shadow-lg ${isPressable && 'cursor-pointer'}`
         }
         whileHover="hover"
