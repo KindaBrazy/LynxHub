@@ -1,4 +1,4 @@
-import {Button, Dropdown, Separator, useOverlayState} from '@heroui/react';
+import {Button, Dropdown, Separator, Spinner, useOverlayState} from '@heroui/react';
 import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {useUpdatingCard} from '@lynx/utils/hooks';
 import {MenuDots} from '@solar-icons/react-perf/BoldDuotone';
@@ -57,13 +57,15 @@ export const InstalledMenu = memo(({setType, state}: {setType: (type: 'install' 
   return (
     <>
       <Dropdown isOpen={menuIsOpen} onOpenChange={setMenuIsOpen}>
-        {!updating && (
-          <Button variant="tertiary" isPending={updating} isIconOnly>
+        <Button variant="tertiary" isPending={updating} isIconOnly>
+          {updating ? (
+            <Spinner size="sm" color="current" />
+          ) : (
             <MenuDots
               className={`size-[1.3rem] ${menuIsOpen ? 'rotate-90' : 'rotate-0'} transition-all duration-500`}
             />
-          </Button>
-        )}
+          )}
+        </Button>
         <Dropdown.Popover>
           <Dropdown.Menu aria-label="Card Menu" shouldCloseOnSelect={false}>
             {first.map((Comp, index) => {

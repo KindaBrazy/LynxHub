@@ -1,4 +1,4 @@
-import {Button, Key, Label, ListBox, Select} from '@heroui/react';
+import {Button, Key, Label, ListBox, Select, Spinner} from '@heroui/react';
 import gitIpc from '@lynx_shared/ipc/git';
 import {useCallback, useEffect, useState} from 'react';
 
@@ -71,7 +71,7 @@ export default function Branches({dir, availableBranches, currentBranch, refresh
         className="shrink-0"
         onPress={handleBranchChange}
         isDisabled={!selectedBranch || selectedBranch === currentBranch}>
-        {loading ? 'Switching...' : 'Switch Branch'}
+        {loading ? <Spinner size="sm" color="current" /> : 'Switch Branch'}
       </Button>
     </div>
   );

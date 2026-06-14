@@ -1,4 +1,4 @@
-import {Alert, Avatar, Button, Card, Description, Label} from '@heroui/react';
+import {Alert, Avatar, Button, Card, Description, Label, Spinner} from '@heroui/react';
 import {userActions, useUserState} from '@lynx/redux/reducers/user';
 import {AppDispatch} from '@lynx/redux/store';
 import {Patreon_Icon} from '@lynx_assets/icons';
@@ -117,11 +117,11 @@ const Profile_Patreon = memo(() => {
           <div className="flex flex-row space-x-2">
             {patreonLoggedIn ? (
               <Button size="sm" variant="danger-soft" isPending={isLoading} onPress={logoutPatreon}>
-                Logout
+                {isLoading ? <Spinner size="sm" color="current" /> : 'Logout'}
               </Button>
             ) : (
               <Button size="sm" variant="primary" isPending={isLoading} onPress={loginPatreon}>
-                Login
+                {isLoading ? <Spinner size="sm" color="current" /> : 'Login'}
               </Button>
             )}
             {isLoading && !patreonLoggedIn && (

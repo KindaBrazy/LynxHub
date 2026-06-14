@@ -1,4 +1,4 @@
-import {Button, ButtonGroup, Description, Popover, useOverlayState} from '@heroui/react';
+import {Button, ButtonGroup, Description, Popover, Spinner, useOverlayState} from '@heroui/react';
 import gitIpc from '@lynx_shared/ipc/git';
 import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
 import {useCallback, useState} from 'react';
@@ -71,7 +71,7 @@ export default function ResetShallow({isShallow, dir, refreshData, title}: Reset
     <ButtonGroup fullWidth>
       <Popover isOpen={resetDialog.isOpen} onOpenChange={resetDialog.setOpen}>
         <Button className="flex-1" variant="danger-soft" isPending={isResetting} fullWidth>
-          Reset Hard
+          {isResetting ? <Spinner size="sm" color="current" /> : 'Reset Hard'}
         </Button>
         <Popover.Content>
           <Popover.Dialog>
@@ -90,7 +90,7 @@ export default function ResetShallow({isShallow, dir, refreshData, title}: Reset
       {isShallow && (
         <Popover isOpen={shallowDialog.isOpen} onOpenChange={shallowDialog.setOpen}>
           <Button className="flex-1" variant="secondary" isPending={isLoadingShallow} fullWidth>
-            UnShallow
+            {isLoadingShallow ? <Spinner size="sm" color="current" /> : 'UnShallow'}
           </Button>
           <Popover.Content>
             <Popover.Dialog>
@@ -108,7 +108,7 @@ export default function ResetShallow({isShallow, dir, refreshData, title}: Reset
       )}
 
       <Button className="flex-1" variant="tertiary" onPress={handleStashDrop} isPending={isStashingDrop} fullWidth>
-        Stash & Drop
+        {isStashingDrop ? <Spinner size="sm" color="current" /> : 'Stash & Drop'}
       </Button>
     </ButtonGroup>
   );

@@ -1,4 +1,4 @@
-import {Button, Modal, Tabs} from '@heroui/react';
+import {Button, Modal, Spinner, Tabs} from '@heroui/react';
 import {ChosenArgumentsData} from '@lynx_common/types';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {useDebounceBreadcrumb} from '@lynx_shared/sentry/Breadcrumbs';
@@ -102,8 +102,8 @@ const LaunchConfig = memo(({state}: CommonProps) => {
       {currentTab === tabs.arguments && (
         <Modal.Footer className="px-6 pb-4">
           <Button onPress={saveArguments} isPending={isSavingArgs}>
-            <Diskette className="size-4" />
-            {!isSavingArgs && 'Save Arguments'}
+            {isSavingArgs ? <Spinner size="sm" color="current" /> : <Diskette className="size-4" />}
+            {isSavingArgs ? 'Saving...' : 'Save Arguments'}
           </Button>
         </Modal.Footer>
       )}

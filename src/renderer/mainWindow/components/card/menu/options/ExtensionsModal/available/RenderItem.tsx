@@ -107,7 +107,7 @@ const RenderItem = memo(({item, updateTable, dir, searchValue}: Props) => {
 
         <div className="ml-4 flex shrink-0 flex-row items-center gap-2">
           <Button size="sm" onPress={install} isPending={installing} isDisabled={installing}>
-            {installing ? <Spinner /> : 'Install'}
+            {installing ? <Spinner color="current" size="sm" /> : 'Install'}
           </Button>
           <Button size="sm" variant="secondary" onPress={readmeModal.open} isIconOnly>
             <Home2 className="size-4" />

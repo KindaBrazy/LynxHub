@@ -1,4 +1,4 @@
-import {Button, Description, Header, Input, Label, ListBox, Surface} from '@heroui/react';
+import {Button, Description, Header, Input, Label, ListBox, Spinner, Surface} from '@heroui/react';
 import SettingsSection from '@lynx/components/SettingsSection';
 import {hotkeysActions, useHotkeysState} from '@lynx/redux/reducers/hotkeys';
 import {useSettingsState} from '@lynx/redux/reducers/settings';
@@ -185,7 +185,7 @@ export default function SettingsHotkeys() {
                   isDisabled={isRecording}
                   onPress={() => handleRecordClick(name)}
                   isIconOnly>
-                  <Keyboard className="size-5" />
+                  {isRecording ? <Spinner size="sm" color="current" /> : <Keyboard className="size-5" />}
                 </Button>
                 <Input
                   ref={el => {

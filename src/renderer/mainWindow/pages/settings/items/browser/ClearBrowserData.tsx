@@ -1,4 +1,4 @@
-import {Button, Card, Checkbox, CheckboxGroup, Label} from '@heroui/react';
+import {Button, Card, Checkbox, CheckboxGroup, Label, Spinner} from '@heroui/react';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import {AppDispatch} from '@lynx/redux/store';
 import browserIpc from '@lynx_shared/ipc/browser';
@@ -126,7 +126,7 @@ export default function ClearBrowserData() {
             isPending={isClearing}
             onPress={performClearData}
             isDisabled={isEmpty(selectedOptions)}>
-            {!isClearing && <Broom />}
+            {isClearing ? <Spinner size="sm" color="current" /> : <Broom />}
             Clear
           </Button>
         </Card.Content>

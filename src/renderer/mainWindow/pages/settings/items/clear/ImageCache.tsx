@@ -96,14 +96,14 @@ export default function ImageCache() {
 
           {cacheStats.entryCount === 0 || isClearing ? (
             <Button variant="danger-soft" isPending={isClearing} fullWidth isDisabled>
-              <Broom />
+              {isClearing ? <Spinner size="sm" color="current" /> : <Broom />}
               <SettingsSearchHighlight text="Clear Image Cache" />
             </Button>
           ) : (
             <Popover isOpen={isClearCacheOpen} onOpenChange={setIsClearCacheOpen}>
               <Popover.Trigger>
                 <Button variant="danger-soft" isPending={isClearing} fullWidth>
-                  <Broom />
+                  {isClearing ? <Spinner size="sm" color="current" /> : <Broom />}
                   <SettingsSearchHighlight text="Clear Image Cache" />
                 </Button>
               </Popover.Trigger>

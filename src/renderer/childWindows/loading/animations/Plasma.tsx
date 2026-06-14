@@ -241,7 +241,9 @@ export const Plasma: React.FC<PlasmaProps> = ({
       }
       try {
         containerEl?.removeChild(canvas);
-      } catch {}
+      } catch {
+        // Ignore errors
+      }
     };
   }, [color, speed, direction, scale, opacity, mouseInteractive]);
 

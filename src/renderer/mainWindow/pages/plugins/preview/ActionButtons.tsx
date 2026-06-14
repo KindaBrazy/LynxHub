@@ -1,4 +1,4 @@
-import {Button, useOverlayState} from '@heroui/react';
+import {Button, Spinner, useOverlayState} from '@heroui/react';
 import {
   pluginsActions,
   useIsInstallingPlugin,
@@ -162,7 +162,7 @@ export default function PluginActionButtons({isInstalled, currentVersion}: Plugi
             onPress={uninstallPlugin}
             isPending={isUninstalling}
             aria-label="Uninstall plugin">
-            {!isUninstalling && <TrashBin2 />}
+            {isUninstalling ? <Spinner size="sm" color="current" /> : <TrashBin2 />}
             {isUninstalling ? 'Uninstalling...' : 'Uninstall'}
           </Button>
         ) : (
@@ -173,7 +173,7 @@ export default function PluginActionButtons({isInstalled, currentVersion}: Plugi
             isDisabled={!isPlatformCompatible}
             variant={isPlatformCompatible ? 'primary' : 'danger-soft'}
             aria-label={isPlatformCompatible ? 'Install plugin' : 'Plugin not compatible with your platform'}>
-            {!isInstalling && <DownloadMinimalistic />}
+            {isInstalling ? <Spinner size="sm" color="current" /> : <DownloadMinimalistic />}
             {!isPlatformCompatible ? 'Not Compatible' : isInstalling ? 'Installing...' : 'Install'}
           </Button>
         )}

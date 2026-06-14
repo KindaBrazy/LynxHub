@@ -1,4 +1,4 @@
-import {Button, Checkbox, Label, Modal} from '@heroui/react';
+import {Button, Checkbox, Label, Modal, Spinner} from '@heroui/react';
 import {AppDispatch} from '@lynx/redux/store';
 import {showRestartModal} from '@lynx/utils';
 import {CardModules, RendererModuleImportType} from '@lynx_common/types/plugins/modules';
@@ -258,7 +258,7 @@ export default function ModuleConfigModal({isOpen, onClose}: ModuleConfigModalPr
       </Modal.Body>
       <Modal.Footer>
         <Button isPending={saving} onPress={handleSave}>
-          <Diskette />
+          {saving ? <Spinner size="sm" color="current" /> : <Diskette />}
           Save & Restart
         </Button>
       </Modal.Footer>

@@ -1,4 +1,4 @@
-import {Avatar, Button, Checkbox, CheckboxGroup, cn, Description, Label} from '@heroui/react';
+import {Avatar, Button, Checkbox, CheckboxGroup, cn, Description, Label, Spinner} from '@heroui/react';
 import {getFallbackString} from '@lynx_common/utils';
 import {ArrowRight} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty} from 'lodash-es';
@@ -110,7 +110,13 @@ export default function PluginSelector({
         isPending={isInstalling}
         isDisabled={!requirementsSatisfied || isEmpty(selectedPlugins)}
         fullWidth>
-        {requirementsSatisfied ? 'Install Selected' : 'Complete Requirements First'}
+        {isInstalling ? (
+          <Spinner size="sm" color="current" />
+        ) : requirementsSatisfied ? (
+          'Install Selected'
+        ) : (
+          'Complete Requirements First'
+        )}
       </Button>
     </div>
   );

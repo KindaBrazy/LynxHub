@@ -1,4 +1,4 @@
-import {Button, Card, ProgressBar, SearchField, Skeleton} from '@heroui/react';
+import {Button, Card, ProgressBar, SearchField, Skeleton, Spinner} from '@heroui/react';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import LynxScroll from '@lynx/components/LynxScroll';
 import {pluginsActions, usePluginsState} from '@lynx/redux/reducers/plugins';
@@ -226,7 +226,7 @@ function SyncAllButton() {
 
   return (
     <Button size="sm" onPress={syncAll} isPending={updatingAll}>
-      {!updatingAll && <Refresh />}
+      {updatingAll ? <Spinner size="sm" color="current" /> : <Refresh />}
       {updatingAll ? 'Syncing...' : `Sync All (${syncList.length})`}
     </Button>
   );

@@ -1,4 +1,4 @@
-import {Button, ButtonProps} from '@heroui/react';
+import {Button, ButtonProps, Spinner} from '@heroui/react';
 import {pluginsActions, useIsUpdatingPlugin, usePluginsState} from '@lynx/redux/reducers/plugins';
 import {AppDispatch} from '@lynx/redux/store';
 import {showRestartModal} from '@lynx/utils';
@@ -69,7 +69,7 @@ export function UpdateButton({item}: UpdateButtonProps) {
 
   return (
     <Button size="sm" variant={variant} onPress={handleSync} isPending={isUpdating} isDisabled={updatingAll}>
-      {!isUpdating && <DownloadMinimalistic className="size-3" />}
+      {isUpdating ? <Spinner size="sm" color="current" /> : <DownloadMinimalistic className="size-3" />}
       {text}
     </Button>
   );

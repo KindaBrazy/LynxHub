@@ -72,7 +72,7 @@ export const UpdateButton = memo(({status, onPress}: UpdateButtonProps) => {
     case 'updating':
       return (
         <Button size="sm" variant="tertiary" isPending>
-          <Spinner size="sm" />
+          <Spinner size="sm" color="current" />
         </Button>
       );
   }
@@ -89,7 +89,7 @@ export const DisableButton = memo(({isDisabled, isLoading, onPress, isActionDisa
   if (isActionDisabled) {
     return (
       <Button size="sm" isDisabled={true} variant="tertiary" isPending={isLoading} isIconOnly>
-        {isLoading ? <Spinner size="sm" /> : <InfoCircle className="size-5" />}
+        {isLoading ? <Spinner size="sm" color="current" /> : <InfoCircle className="size-5" />}
       </Button>
     );
   }
