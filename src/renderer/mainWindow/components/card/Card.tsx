@@ -1,11 +1,8 @@
 import {Card, Description, useOverlayState} from '@heroui/react';
-import {useAppState} from '@lynx/redux/reducers/app';
 import {getAccentColorAsHex} from '@lynx/utils/accentColorGenerator';
 import {extractGitUrl} from '@lynx_common/utils';
 import {motion} from 'framer-motion';
 import {CSSProperties, memo, useMemo, useState} from 'react';
-
-const MotionCard = motion.create(Card);
 
 import Footer from './Footer';
 import {CardHeaderContent} from './Header';
@@ -13,6 +10,8 @@ import InstallCardModal from './menu/update/installModal';
 import {useCardStore} from './store';
 import {useCardActions} from './useCardActions';
 import {useCardTitle} from './useCardTitle';
+
+const MotionCard = motion.create(Card);
 
 type AccentStyle = CSSProperties & {'--accent-bg-color'?: string};
 
@@ -36,8 +35,6 @@ const LynxCard = memo(() => {
 
   const {modifiedTitle, onTitleChange} = useCardTitle();
 
-  const isDarkMode = useAppState('darkMode');
-
   // Calculate accent color based on developer name and title
   const {developer} = useMemo(() => {
     const {owner} = extractGitUrl(repoUrl);
@@ -47,11 +44,8 @@ const LynxCard = memo(() => {
   const accentColor = useMemo(() => getAccentColorAsHex(title, developer), [title, developer]);
 
   const accentStyle: AccentStyle = useMemo(
-    () =>
-      isInstalled
-        ? {'--accent-bg-color': `${accentColor}${isDarkMode ? '25' : '15'}`} // Use 18% opacity for dark, 8% for light
-        : {},
-    [isInstalled, accentColor, isDarkMode],
+    () => (isInstalled ? {'--accent-bg-color': accentColor} : {}),
+    [isInstalled, accentColor],
   );
 
   const isPressable = !isRunning && !updating && !isUpdatingExtensions;
@@ -66,14 +60,18 @@ const LynxCard = memo(() => {
           else install();
         }}
         className={
-          'relative h-46 w-75 border border-surface transition-all duration-200 overflow-hidden ' +
+          'relative h-46 w-75 border border-surface/50 transition-all duration-200 overflow-hidden ' +
           `group hover:scale-[1.02] hover:shadow-lg ${isPressable && 'cursor-pointer'}`
         }
         whileHover="hover"
         onContextMenu={() => setMenuIsOpen(true)}>
         <div
+          className={
+            'absolute inset-0 z-0 scale-150 transition-opacity duration-300 opacity-[0.09]' +
+            ' group-hover:opacity-[0.14] ' +
+            (isInstalled ? 'bg-installed' : 'bg-uninstalled')
+          }
           style={accentStyle}
-          className={`absolute inset-0 z-0 scale-150 opacity-50 ${isInstalled ? 'bg-installed' : 'bg-uninstalled'}`}
         />
 
         <CardHeaderContent
