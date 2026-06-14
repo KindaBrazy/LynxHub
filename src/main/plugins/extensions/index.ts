@@ -4,6 +4,8 @@ import {isDev} from '@lynx_common/utils';
 import ElectronAppManager from '@lynx_main/mainWindow';
 import StorageManager from '@lynx_main/storage/storageOperations';
 import {captureException} from '@sentry/electron/main';
+import {app} from 'electron';
+import fs from 'graceful-fs';
 
 import ModuleManager from '../modules';
 import ExtensionApi from './api';
@@ -19,9 +21,30 @@ export default class ExtensionManager {
   private readonly extensionUtils: ExtensionUtils;
   private readonly extensionApi: ExtensionApi;
 
+  private storageManager?: StorageManager;
+  private appManager?: ElectronAppManager;
+  private moduleManager?: ModuleManager;
+
   constructor() {
-    this.extensionUtils = new ExtensionUtils();
+    this.extensionUtils = new ExtensionUtils('default');
     this.extensionApi = new ExtensionApi();
+  }
+
+  /**
+   * Helper to resolve the extension name from its package.json, falling back to folder name.
+   */
+  private async getExtensionName(rootPath: string): Promise<string> {
+    try {
+      const pkgPath = path.join(rootPath, 'package.json');
+      if (fs.existsSync(pkgPath)) {
+        const data = await fs.promises.readFile(pkgPath, 'utf8');
+        const pkg = JSON.parse(data);
+        if (pkg.name) return pkg.name;
+      }
+    } catch (e) {
+      console.error('Failed to read extension name from package.json', e);
+    }
+    return path.basename(rootPath);
   }
 
   /**
@@ -34,7 +57,15 @@ export default class ExtensionManager {
         // @ts-ignore
         /* @vite-ignore */ '../../../../extension/src/main/lynxExtension.ts'
       );
-      await initial.initialExtension(this.extensionApi.getApi(), this.extensionUtils, mainIpcApi);
+      const devExtensionRoot = path.resolve(app.getAppPath(), '../extension');
+      const name = await this.getExtensionName(devExtensionRoot);
+      const extensionUtils = new ExtensionUtils(name);
+
+      if (this.storageManager) extensionUtils.setStorageManager(this.storageManager);
+      if (this.appManager) extensionUtils.setAppManager(this.appManager);
+      if (this.moduleManager) extensionUtils.setModuleManager(this.moduleManager);
+
+      await initial.initialExtension(this.extensionApi.getApi(), extensionUtils, mainIpcApi);
     } catch (e) {
       console.log('No dev extension found or failed to load, skipping...', e);
     }
@@ -49,7 +80,15 @@ export default class ExtensionManager {
       const fullExtensionPath = path.join(extensionPath, 'scripts', 'main', 'mainEntry.cjs');
       const extensionUrl = `file://${fullExtensionPath}`;
       const initial: ExtensionImport_Main = await import(extensionUrl);
-      await initial.initialExtension(this.extensionApi.getApi(), this.extensionUtils, mainIpcApi);
+
+      const name = await this.getExtensionName(extensionPath);
+      const extensionUtils = new ExtensionUtils(name);
+
+      if (this.storageManager) extensionUtils.setStorageManager(this.storageManager);
+      if (this.appManager) extensionUtils.setAppManager(this.appManager);
+      if (this.moduleManager) extensionUtils.setModuleManager(this.moduleManager);
+
+      await initial.initialExtension(this.extensionApi.getApi(), extensionUtils, mainIpcApi);
     } catch (e) {
       console.error(`Failed to load extension from ${extensionPath}:`, e);
       captureException(e);
@@ -73,6 +112,7 @@ export default class ExtensionManager {
    * @param manager - The StorageManager instance.
    */
   public setStorageManager(manager: StorageManager): void {
+    this.storageManager = manager;
     this.extensionUtils.setStorageManager(manager);
   }
 
@@ -81,6 +121,7 @@ export default class ExtensionManager {
    * @param manager - The ElectronAppManager instance.
    */
   public setAppManager(manager: ElectronAppManager): void {
+    this.appManager = manager;
     this.extensionUtils.setAppManager(manager);
   }
 
@@ -89,6 +130,7 @@ export default class ExtensionManager {
    * @param manager - The ModuleManager instance.
    */
   public setModuleManager(manager: ModuleManager): void {
+    this.moduleManager = manager;
     this.extensionUtils.setModuleManager(manager);
   }
 

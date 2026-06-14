@@ -227,11 +227,27 @@ class BaseStorage {
     return this.storage.data[key];
   }
 
+  public static readonly extensionStorages = new Map<string, any>();
+  public static readonly keyToExtensionMap = new Map<string, string>();
+
   /**
    * Retrieves custom data by ID.
    * @param id - The ID of the custom data
    */
   public getCustomData(id: string): any {
+    const extensionName = BaseStorage.keyToExtensionMap.get(id);
+    if (extensionName) {
+      const extStorage = BaseStorage.extensionStorages.get(extensionName);
+      if (extStorage) {
+        return extStorage.data[id];
+      }
+    }
+    for (const [extName, extStorage] of BaseStorage.extensionStorages.entries()) {
+      if (extStorage.data && id in extStorage.data) {
+        BaseStorage.keyToExtensionMap.set(id, extName);
+        return extStorage.data[id];
+      }
+    }
     return this.storage.data[id];
   }
 
@@ -241,6 +257,23 @@ class BaseStorage {
    * @param data - The data to store
    */
   public setCustomData(id: string, data: any): void {
+    const extensionName = BaseStorage.keyToExtensionMap.get(id);
+    if (extensionName) {
+      const extStorage = BaseStorage.extensionStorages.get(extensionName);
+      if (extStorage) {
+        extStorage.data[id] = data;
+        extStorage.write();
+        return;
+      }
+    }
+    for (const [extName, extStorage] of BaseStorage.extensionStorages.entries()) {
+      if (extStorage.data && id in extStorage.data) {
+        BaseStorage.keyToExtensionMap.set(id, extName);
+        extStorage.data[id] = data;
+        extStorage.write();
+        return;
+      }
+    }
     this.storage.data[id] = data;
     this.write();
   }
