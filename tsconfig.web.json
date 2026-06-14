@@ -13,25 +13,24 @@
     "allowSyntheticDefaultImports": true,
     "composite": true,
     "jsx": "react-jsx",
-    "baseUrl": ".",
     "paths": {
       "@lynx_module/*": [
-        "module/src/*"
+        "./module/src/*"
       ],
       "@lynx_extension/*": [
-        "extension/src/*"
+        "./extension/src/*"
       ],
       "@lynx_common/*": [
-        "src/common/*"
+        "./src/common/*"
       ],
       "@lynx/*": [
-        "src/renderer/mainWindow/*"
+        "./src/renderer/mainWindow/*"
       ],
       "@lynx_shared/*": [
-        "src/renderer/shared/*"
+        "./src/renderer/shared/*"
       ],
       "@lynx_assets/*": [
-        "src/renderer/shared/assets/*"
+        "./src/renderer/shared/assets/*"
       ],
     }
   }
