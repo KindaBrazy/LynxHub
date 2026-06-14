@@ -30,11 +30,7 @@ const getOrCreateChannelListeners = (phase: IpcHookPhase, channel: string): Set<
   return created;
 };
 
-const addListener = (
-  phase: IpcHookPhase,
-  listener: MainIpcListener,
-  channel?: string,
-): (() => void) => {
+const addListener = (phase: IpcHookPhase, listener: MainIpcListener, channel?: string): (() => void) => {
   const target = channel ? getOrCreateChannelListeners(phase, channel) : listeners[phase];
   target.add(listener);
 

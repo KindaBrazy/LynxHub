@@ -4,7 +4,6 @@ import {isDev} from '@lynx_common/utils';
 import ElectronAppManager from '@lynx_main/mainWindow';
 import StorageManager from '@lynx_main/storage/storageOperations';
 import {captureException} from '@sentry/electron/main';
-import {getAbsolutePath, getExePath} from '@lynx_main/utils';
 
 import ModuleManager from '../modules';
 import ExtensionApi from './api';

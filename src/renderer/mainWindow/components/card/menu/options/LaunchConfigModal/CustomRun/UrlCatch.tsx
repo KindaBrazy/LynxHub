@@ -1,4 +1,4 @@
-import {Description, Input, Key, Label, ListBox, NumberField, Select, Separator, TextField} from '@heroui/react';
+import {Description, Input, Key, Label, ListBox, NumberField, Select, TextField} from '@heroui/react';
 import {CustomRunBehaviorData} from '@lynx_common/types/ipc';
 import {useMemo} from 'react';
 

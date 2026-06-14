@@ -98,7 +98,6 @@ export default function Confirm() {
           'bypass confirmation',
         ]}>
         <LynxSwitch
-          size="default"
           enabled={exitSignalConfirm}
           title="Send Exit Signal (Terminal)"
           onEnabledChange={onSendSignalConfirmChange}
