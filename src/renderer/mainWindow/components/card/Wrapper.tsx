@@ -4,6 +4,7 @@ import {memo, useMemo} from 'react';
 
 import LynxCard from './Card';
 import {CardStoreContext, createCardStore, useCardStore} from './store';
+import {useCardOverlayState} from './useCardOverlayState';
 
 type WrapperProps = {
   /** The data for the card. */
@@ -29,7 +30,11 @@ const Wrapper = memo(({cardData, isInstalled, hasArguments}: WrapperProps) => {
   return (
     <CardStoreContext.Provider value={storeValue}>
       {ReplaceComponent ? (
-        <ReplaceComponent useCardStore={useCardStore} key={`${cardData.id}-card-key`} />
+        <ReplaceComponent
+          useCardStore={useCardStore}
+          key={`${cardData.id}-card-key`}
+          useCardOverlayState={useCardOverlayState}
+        />
       ) : (
         <LynxCard key={`${cardData.id}-card-key`} />
       )}
