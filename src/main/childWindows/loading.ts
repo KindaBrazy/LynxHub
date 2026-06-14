@@ -1,7 +1,7 @@
 import path from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
-import {isMac} from '@lynx_common/utils';
+import {isMac, isWin} from '@lynx_common/utils';
 import {applicationIpc} from '@lynx_main/ipc/application';
 import classHolder from '@lynx_main/managers/classHolder';
 import {getWindowColor} from '@lynx_main/utils';
@@ -17,7 +17,11 @@ export default class LoadingWindow {
     show: false,
     width: 307,
     height: 350,
-    resizable: false,
+    resizable: isWin,
+    minWidth: isWin ? 307 : undefined,
+    maxWidth: isWin ? 307 : undefined,
+    minHeight: isWin ? 350 : undefined,
+    maxHeight: isWin ? 350 : undefined,
     maximizable: false,
     minimizable: false,
     titleBarStyle: isMac ? 'customButtonsOnHover' : 'default',

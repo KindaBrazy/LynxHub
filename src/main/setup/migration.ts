@@ -1,5 +1,6 @@
 import {setTimeout} from 'node:timers/promises';
 
+import {isWin} from '@lynx_common/utils';
 import {PluginManager} from '@lynx_main/plugins';
 import StorageManager from '@lynx_main/storage/storageOperations';
 import {app, BrowserWindow, dialog} from 'electron';
@@ -69,7 +70,11 @@ export function PluginMigrate(storageManager: StorageManager, pluginManager: Plu
     const migrationWindow = new BrowserWindow({
       width: 450,
       height: 200,
-      resizable: false,
+      resizable: isWin,
+      minWidth: isWin ? 450 : undefined,
+      maxWidth: isWin ? 450 : undefined,
+      minHeight: isWin ? 200 : undefined,
+      maxHeight: isWin ? 200 : undefined,
       frame: false,
       show: false,
       alwaysOnTop: true,

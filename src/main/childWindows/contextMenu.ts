@@ -2,7 +2,7 @@ import path from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
 import {ElementResizeData} from '@lynx_common/types';
-import {isMac} from '@lynx_common/utils';
+import {isMac, isWin} from '@lynx_common/utils';
 import {contextMenuIpc} from '@lynx_main/ipc/contextMenu';
 import {dialogBlurred} from '@lynx_main/ipc/dialogsWindow';
 import lynxIpc from '@lynx_main/ipc/ipcWrapper';
@@ -23,7 +23,7 @@ export default class ContextMenuManager {
     show: false,
     minWidth: 1,
     minHeight: 1,
-    resizable: false,
+    resizable: isWin,
     maximizable: false,
     skipTaskbar: true,
     minimizable: false,
@@ -225,7 +225,7 @@ export default class ContextMenuManager {
 
     if (!isValid(width) || !isValid(height)) return;
 
-    const scale = isValid(dpr) ? dpr : 1;
+    const scale = isWin ? 1 : isValid(dpr) ? dpr : 1;
     const contentW = Math.max(20, Math.min(Math.ceil(width * scale), 4096));
     const contentH = Math.max(20, Math.min(Math.ceil(height * scale), 4096));
 

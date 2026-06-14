@@ -1,6 +1,7 @@
 import path from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
+import {isWin} from '@lynx_common/utils';
 import {browserIpc} from '@lynx_main/ipc/browser';
 import lynxIpc from '@lynx_main/ipc/ipcWrapper';
 import {BrowserWindow, BrowserWindowConstructorOptions, WebContents} from 'electron';
@@ -22,7 +23,7 @@ export default class LinkPreviewManager {
     height: 24,
     minWidth: 0,
     minHeight: 0,
-    resizable: false,
+    resizable: isWin,
     maximizable: false,
     minimizable: false,
     skipTaskbar: true,
