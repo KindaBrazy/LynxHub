@@ -128,7 +128,7 @@ const DashboardUpdate = memo(() => {
                   <span>Early Access</span>
                   {patreonLoggedIn ? (
                     <span className="text-warning">
-                      {patreonUserData.subscribeStage === 'public' && '(Upgrade your Patreon tier to unlock)'}
+                      {patreonUserData.subscribeStage === 'public' && ' (Upgrade your Patreon tier to unlock)'}
                     </span>
                   ) : (
                     <span className="text-warning">(Login to Patreon to unlock)</span>
@@ -144,7 +144,7 @@ const DashboardUpdate = memo(() => {
                   <span>Insider</span>
                   {patreonLoggedIn ? (
                     <span className="text-warning">
-                      {patreonUserData.subscribeStage !== 'insider' && '(Upgrade your Patreon tier to unlock)'}
+                      {patreonUserData.subscribeStage !== 'insider' && ' (Upgrade your Patreon tier to unlock)'}
                     </span>
                   ) : (
                     <span className="text-warning">(Login to Patreon to unlock)</span>
