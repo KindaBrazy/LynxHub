@@ -1,6 +1,6 @@
 import {Avatar, CardHeader, Chip, Description, Label, Spinner} from '@heroui/react';
 import {extractGitUrl, getCacheUrl, getFallbackString} from '@lynx_common/utils';
-import {DownloadMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
+import {DownloadMinimalistic} from '@solar-icons/react-perf/Linear';
 import {AnimatePresence, motion} from 'framer-motion';
 import {memo, useMemo} from 'react';
 
@@ -87,8 +87,8 @@ export const CardHeaderContent = memo(({modifiedTitle, onTitleChange, updateAvai
               variant="soft"
               color="success"
               key="chip_update"
-              className="size-7 items-center justify-center">
-              <DownloadMinimalistic className="size-4" />
+              className="size-6 items-center justify-center">
+              <DownloadMinimalistic />
             </Chip>
           </motion.div>
         )}
