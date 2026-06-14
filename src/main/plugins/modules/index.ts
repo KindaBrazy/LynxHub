@@ -8,9 +8,11 @@ import {removeDirRecursive, trashDir} from '@lynx_main/ipc/methods/windowUtils';
 import {modulesIpc} from '@lynx_main/ipc/plugins/modules';
 import classHolder from '@lynx_main/managers/classHolder';
 import {getAppDataPath} from '@lynx_main/managers/dataFolder';
+import BaseStorage from '@lynx_main/storage/index';
 import {getAbsolutePath, getExePath, isPortable} from '@lynx_main/utils';
 import {captureException} from '@sentry/electron/main';
-import {ipcMain} from 'electron';
+import {app, ipcMain} from 'electron';
+import fs from 'graceful-fs';
 import {isEmpty} from 'lodash-es';
 import pty from 'node-pty';
 
@@ -29,17 +31,35 @@ export default class ModuleManager {
   private currentRetries = 0;
 
   /**
+   * Helper to resolve the module name from its package.json, falling back to folder name.
+   */
+  private async getModuleName(rootPath: string): Promise<string> {
+    try {
+      const pkgPath = path.join(rootPath, 'package.json');
+      if (fs.existsSync(pkgPath)) {
+        const data = await fs.promises.readFile(pkgPath, 'utf8');
+        const pkg = JSON.parse(data);
+        if (pkg.name) return pkg.name;
+      }
+    } catch (e) {
+      console.error('Failed to read module name from package.json', e);
+    }
+    return path.basename(rootPath);
+  }
+
+  /**
    * Generates utility functions for modules.
+   * @param moduleName - The name of the module
    * @returns The utility object or undefined if webContent is not available
    */
-  private getUtils(): MainModuleUtils | undefined {
+  private getUtils(moduleName: string): MainModuleUtils | undefined {
     const webContent = classHolder.appManager?.getWebContent();
     if (!webContent) return undefined;
 
     return {
       storage: {
-        get: key => classHolder.storageManager.getCustomData(key),
-        set: (key, data) => classHolder.storageManager.setCustomData(key, data),
+        get: key => classHolder.storageManager.getCustomData(`${moduleName}::${key}`),
+        set: (key, data) => classHolder.storageManager.setCustomData(`${moduleName}::${key}`, data),
       },
       ipc: {
         on(channel: string, listener: (event: any, ...args: any[]) => void) {
@@ -81,9 +101,9 @@ export default class ModuleManager {
    */
   public async importPlugins(moduleFolders: string[]): Promise<void> {
     try {
-      const utils = this.getUtils();
+      const webContent = classHolder.appManager?.getWebContent();
 
-      if (!utils) {
+      if (!webContent) {
         if (this.importRetryCount < this.maxImportRetries) {
           this.importRetryCount++;
           setTimeout(
@@ -93,7 +113,7 @@ export default class ModuleManager {
             toMs(1, 'seconds'),
           );
         } else {
-          console.error('Max retries reached for importPlugins - utils unavailable');
+          console.error('Max retries reached for importPlugins - webContent unavailable');
           this.importRetryCount = 0;
         }
         return;
@@ -105,9 +125,9 @@ export default class ModuleManager {
       const disabledCards = new Set(classHolder.storageManager.getData('plugin').disabledCards || []);
 
       if (isDev()) {
-        await this.loadDevModule(utils, disabledCards);
+        await this.loadDevModule(disabledCards);
       } else {
-        await this.loadProductionModules(moduleFolders, utils, disabledCards);
+        await this.loadProductionModules(moduleFolders, disabledCards);
       }
     } catch (e) {
       console.error(e);
@@ -116,39 +136,64 @@ export default class ModuleManager {
 
   /**
    * Loads the development module.
-   * @param utils - The module utilities
    * @param disabledCards - Set of disabled card IDs
    */
-  private async loadDevModule(utils: MainModuleUtils, disabledCards: Set<string>) {
+  private async loadDevModule(disabledCards: Set<string>) {
     try {
-      const initialModule: MainModuleImportType = await import(/* @vite-ignore */ '../../../../module/src/main');
+      const devRoot = path.resolve(app.getAppPath(), '../module');
+      const moduleName = await this.getModuleName(devRoot);
+      const utils = this.getUtils(moduleName);
+
+      if (!utils) return;
+
+      // @ts-ignore
+      const initialModule: MainModuleImportType = await import(/* @vite-ignore */ '../../../../module/src/main.ts');
       const allMethods = await initialModule.default(utils);
-      // Filter out disabled cards
-      const enabledMethods = allMethods.filter(m => !disabledCards.has(m.id));
+      // Filter out disabled cards and register mapping
+      const enabledMethods = allMethods.filter(m => {
+        const isEnabled = !disabledCards.has(m.id);
+        if (isEnabled) {
+          BaseStorage.cardToModuleMap.set(m.id, moduleName);
+        }
+        return isEnabled;
+      });
       this.mainMethods.push(...enabledMethods);
     } catch (e) {
-      console.log('No dev module found, skipping...');
+      console.log('No dev module found, skipping...', e);
     }
   }
 
   /**
    * Loads production modules from folders.
    * @param moduleFolders - Array of folders containing modules
-   * @param utils - The module utilities
    * @param disabledCards - Set of disabled card IDs
    */
-  private async loadProductionModules(moduleFolders: string[], utils: MainModuleUtils, disabledCards: Set<string>) {
+  private async loadProductionModules(moduleFolders: string[], disabledCards: Set<string>) {
     await Promise.all(
       moduleFolders.map(async modulePath => {
         try {
+          const moduleName = await this.getModuleName(modulePath);
+          const utils = this.getUtils(moduleName);
+
+          if (!utils) {
+            console.error(`Utils unavailable for production module: ${moduleName}`);
+            return;
+          }
+
           const fullModulePath = path.join(modulePath, 'scripts', 'main.mjs');
           const moduleUrl = `file://${fullModulePath}`;
 
           const importedModule = (await import(moduleUrl)) as MainModuleImportType;
           const allMethods = await importedModule.default(utils);
 
-          // Filter out disabled cards
-          const enabledMethods = allMethods.filter(m => !disabledCards.has(m.id));
+          // Filter out disabled cards and register mapping
+          const enabledMethods = allMethods.filter(m => {
+            const isEnabled = !disabledCards.has(m.id);
+            if (isEnabled) {
+              BaseStorage.cardToModuleMap.set(m.id, moduleName);
+            }
+            return isEnabled;
+          });
 
           this.mainMethods.push(...enabledMethods);
         } catch (e) {

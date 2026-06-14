@@ -83,7 +83,10 @@ export default class InstallStepper {
       },
     };
 
-    this.storage = {set: storageIpc.setCustom, get: storageIpc.getCustom};
+    this.storage = {
+      set: (key, dataVal) => storageIpc.setCustom(`${this.cardId}::${key}`, dataVal),
+      get: key => storageIpc.getCustom(`${this.cardId}::${key}`),
+    };
 
     this.utils = {
       decompressFile: utilsIpc.decompressFile,

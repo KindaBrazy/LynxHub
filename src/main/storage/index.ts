@@ -229,12 +229,110 @@ class BaseStorage {
 
   public static readonly extensionStorages = new Map<string, any>();
   public static readonly keyToExtensionMap = new Map<string, string>();
+  public static readonly moduleStorages = new Map<string, any>();
+  public static readonly cardToModuleMap = new Map<string, string>();
+
+  private getModuleStorage(moduleName: string): any {
+    let db = BaseStorage.moduleStorages.get(moduleName);
+    if (!db) {
+      const isDevMode = is.dev;
+      const moduleStorageFile = isDevMode ? `${moduleName}-Dev.config` : `${moduleName}.config`;
+      const moduleStoragePath = isPortable()
+        ? join(getExePath(), `${APP_NAME}_Data`, moduleStorageFile)
+        : join(app.getPath('userData'), moduleStorageFile);
+
+      db = JSONFileSyncPreset<Record<string, any>>(moduleStoragePath, {});
+      db.read();
+      BaseStorage.moduleStorages.set(moduleName, db);
+    }
+    return db;
+  }
+
+  private getModuleNameForKey(id: string): string | undefined {
+    const normId = id.toLowerCase();
+    for (const [cardId, moduleName] of BaseStorage.cardToModuleMap.entries()) {
+      const normCardId = cardId.toLowerCase();
+      const baseCardId = normCardId.replace(/_(tg|sd|ag|id)$/, '');
+
+      if (
+        normId === normCardId ||
+        normId === baseCardId ||
+        normId.startsWith(`${normCardId}_`) ||
+        normId.startsWith(`${normCardId}-`) ||
+        normId.startsWith(`${baseCardId}_`) ||
+        normId.startsWith(`${baseCardId}-`) ||
+        normId.endsWith(`_${normCardId}`) ||
+        normId.endsWith(`-${normCardId}`) ||
+        normId.endsWith(`_${baseCardId}`) ||
+        normId.endsWith(`-${baseCardId}`)
+      ) {
+        return moduleName;
+      }
+
+      if (baseCardId.length >= 3) {
+        const parts = normId.split(/[-_]/);
+        const lastPart = parts[parts.length - 1];
+        const firstPart = parts[0];
+        if (
+          (lastPart && lastPart.length >= 3 && (baseCardId.startsWith(lastPart) || lastPart.startsWith(baseCardId))) ||
+          (firstPart && firstPart.length >= 3 && (baseCardId.startsWith(firstPart) || firstPart.startsWith(baseCardId)))
+        ) {
+          return moduleName;
+        }
+      }
+    }
+    return undefined;
+  }
 
   /**
    * Retrieves custom data by ID.
    * @param id - The ID of the custom data
    */
   public getCustomData(id: string): any {
+    if (id.includes('::')) {
+      const parts = id.split('::');
+      let moduleName = parts[0];
+      const actualId = parts[1];
+      const mappedModuleName = BaseStorage.cardToModuleMap.get(moduleName);
+      if (mappedModuleName) {
+        moduleName = mappedModuleName;
+      }
+      const db = this.getModuleStorage(moduleName);
+      if (db.data[actualId] === undefined) {
+        // Migrate from main storage
+        const mainData = this.storage.data[actualId];
+        if (mainData !== undefined) {
+          console.log(
+            `Migrating module data for key '${actualId}' of module ` + `'${moduleName}' to dedicated config file...`,
+          );
+          db.data[actualId] = mainData;
+          db.write();
+          delete this.storage.data[actualId];
+          this.write();
+        }
+      }
+      return db.data[actualId];
+    }
+
+    const foundModuleName = this.getModuleNameForKey(id);
+    if (foundModuleName) {
+      const db = this.getModuleStorage(foundModuleName);
+      if (db.data[id] === undefined) {
+        // Migrate from main storage
+        const mainData = this.storage.data[id];
+        if (mainData !== undefined) {
+          console.log(
+            `Migrating module data for key '${id}' of module ` + `'${foundModuleName}' to dedicated config file...`,
+          );
+          db.data[id] = mainData;
+          db.write();
+          delete this.storage.data[id];
+          this.write();
+        }
+      }
+      return db.data[id];
+    }
+
     const extensionName = BaseStorage.keyToExtensionMap.get(id);
     if (extensionName) {
       const extStorage = BaseStorage.extensionStorages.get(extensionName);
@@ -248,6 +346,11 @@ class BaseStorage {
         return extStorage.data[id];
       }
     }
+    for (const modStorage of BaseStorage.moduleStorages.values()) {
+      if (modStorage.data && id in modStorage.data) {
+        return modStorage.data[id];
+      }
+    }
     return this.storage.data[id];
   }
 
@@ -257,6 +360,40 @@ class BaseStorage {
    * @param data - The data to store
    */
   public setCustomData(id: string, data: any): void {
+    if (id.includes('::')) {
+      const parts = id.split('::');
+      let moduleName = parts[0];
+      const actualId = parts[1];
+      const mappedModuleName = BaseStorage.cardToModuleMap.get(moduleName);
+      if (mappedModuleName) {
+        moduleName = mappedModuleName;
+      }
+      const db = this.getModuleStorage(moduleName);
+
+      // Clean from main storage if exists
+      if (this.storage.data && actualId in this.storage.data) {
+        delete this.storage.data[actualId];
+        this.write();
+      }
+
+      db.data[actualId] = data;
+      db.write();
+      return;
+    }
+
+    const foundModuleName = this.getModuleNameForKey(id);
+    if (foundModuleName) {
+      const db = this.getModuleStorage(foundModuleName);
+      // Clean from main storage if exists
+      if (this.storage.data && id in this.storage.data) {
+        delete this.storage.data[id];
+        this.write();
+      }
+      db.data[id] = data;
+      db.write();
+      return;
+    }
+
     const extensionName = BaseStorage.keyToExtensionMap.get(id);
     if (extensionName) {
       const extStorage = BaseStorage.extensionStorages.get(extensionName);
@@ -271,6 +408,17 @@ class BaseStorage {
         BaseStorage.keyToExtensionMap.set(id, extName);
         extStorage.data[id] = data;
         extStorage.write();
+        return;
+      }
+    }
+    for (const modStorage of BaseStorage.moduleStorages.values()) {
+      if (modStorage.data && id in modStorage.data) {
+        if (this.storage.data && id in this.storage.data) {
+          delete this.storage.data[id];
+          this.write();
+        }
+        modStorage.data[id] = data;
+        modStorage.write();
         return;
       }
     }
