@@ -1,6 +1,6 @@
 import {gitChannels} from '@lynx_common/consts/ipcChannels/git';
 import type {RepositoryInfo} from '@lynx_common/types';
-import type {ShallowCloneOptions} from '@lynx_common/types/git';
+import type {CommitItem, ShallowCloneOptions} from '@lynx_common/types/git';
 import type {GitProgressCallback} from '@lynx_common/types/ipc';
 
 import lynxIpc from './lynxIpc';
@@ -23,6 +23,9 @@ const gitIpc = {
 
   // Performs hard reset to HEAD
   resetHard: (dir: string) => lynxIpc.invoke<string>(gitChannels.resetHard, dir),
+
+  // Gets repository commit log
+  getCommits: (dir: string, maxCount?: number) => lynxIpc.invoke<CommitItem[]>(gitChannels.getCommits, dir, maxCount),
 
   // Validates if directory is a valid Git repository matching the URL
   validateGitDir: (dir: string, url: string) => lynxIpc.invoke<boolean>(gitChannels.validateGitDir, dir, url),

@@ -1,12 +1,13 @@
 import {gitChannels} from '@lynx_common/consts/ipcChannels/git';
 import {RepositoryInfo} from '@lynx_common/types';
-import {ShallowCloneOptions} from '@lynx_common/types/git';
+import {CommitItem, ShallowCloneOptions} from '@lynx_common/types/git';
 import {GitProgressState, MainHT} from '@lynx_common/types/ipc';
 import {PullResult, SimpleGitProgressEvent} from 'simple-git';
 
 import lynxIpc from './ipcWrapper';
 import {
   changeBranch,
+  getCommits,
   getRepositoryInfo,
   pullRepo,
   resetHard,
@@ -48,6 +49,9 @@ export default function listenGit() {
 
   // Performs hard reset to HEAD
   gitIpc.handle.resetHard(dir => resetHard(dir));
+
+  // Gets repository commit log
+  gitIpc.handle.getCommits((dir, maxCount) => getCommits(dir, maxCount));
 }
 
 /**
@@ -88,5 +92,8 @@ export const gitIpc = {
     unShallow: (callback: (dir: string) => MainHT<void>) => lynxIpc.handle(gitChannels.unShallow, callback),
     /** Handles reset hard request */
     resetHard: (callback: (dir: string) => MainHT<string>) => lynxIpc.handle(gitChannels.resetHard, callback),
+    /** Handles get commits history request */
+    getCommits: (callback: (dir: string, maxCount?: number) => MainHT<CommitItem[]>) =>
+      lynxIpc.handle(gitChannels.getCommits, callback),
   },
 };

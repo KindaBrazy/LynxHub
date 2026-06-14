@@ -50,7 +50,7 @@ function GitManagerModalContent({state}: CommonProps) {
 
   useEffect(() => {
     if (dir && state.isOpen) {
-      getRepoInfo();
+      // getRepoInfo();
     }
   }, [state.isOpen, dir, getRepoInfo]);
 
@@ -98,7 +98,7 @@ function GitManagerModalContent({state}: CommonProps) {
 
                 <Separator />
 
-                <CommitInfo repoInfo={repoInfo} />
+                <CommitInfo dir={dir} repoInfo={repoInfo} />
               </>
             )}
           </div>

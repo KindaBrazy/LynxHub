@@ -14,3 +14,15 @@ export type ShallowCloneOptions = {
   /** The specific branch to clone. */
   branch?: string;
 };
+
+/**
+ * Represents a single git commit log entry.
+ */
+export type CommitItem = {
+  hash: string;
+  date: string;
+  message: string;
+  author_name: string;
+  author_email: string;
+};
+

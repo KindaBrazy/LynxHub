@@ -1,7 +1,7 @@
 // Git repository IPC methods - Handles Git operations (clone, pull, branch changes, etc.)
 import path from 'node:path';
 
-import {ShallowCloneOptions} from '@lynx_common/types/git';
+import {CommitItem, ShallowCloneOptions} from '@lynx_common/types/git';
 import GitManager from '@lynx_main/git';
 import {setupGitManagerListeners} from '@lynx_main/git/gitListeners';
 
@@ -66,6 +66,15 @@ export async function unShallow(dir: string): Promise<void> {
  */
 export async function resetHard(dir: string): Promise<string> {
   return new GitManager(true).resetHard(dir);
+}
+
+/**
+ * Retrieves the commit history of the repository.
+ * @param dir - The repository directory.
+ * @param maxCount - The maximum number of commits to retrieve.
+ */
+export async function getCommits(dir: string, maxCount?: number): Promise<CommitItem[]> {
+  return new GitManager(true).getCommits(dir, maxCount);
 }
 
 /**

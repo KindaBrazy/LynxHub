@@ -14,6 +14,7 @@ export const gitChannels = {
   changeBranch: 'git:changeBranch',
   unShallow: 'git:unShallow',
   resetHard: 'git:resetHard',
+  getCommits: 'git:get-commits',
 
   pull: 'git:pull',
 

@@ -1,7 +1,7 @@
 import path from 'node:path';
 
 import {RepositoryInfo} from '@lynx_common/types';
-import {ShallowCloneOptions} from '@lynx_common/types/git';
+import {CommitItem, ShallowCloneOptions} from '@lynx_common/types/git';
 import {extractGitUrl, validateGitRepoUrl} from '@lynx_common/utils';
 import classHolder from '@lynx_main/managers/classHolder';
 import {checkPathExists, openDialog} from '@lynx_main/utils';
@@ -750,6 +750,29 @@ export default class GitManager {
       return changes > 0 || insertions > 0 || deletions > 0;
     } catch {
       return false;
+    }
+  }
+
+  /**
+   * Retrieves the commit log history for a repository.
+   * @param dir - The repository directory.
+   * @param maxCount - The maximum number of commits to retrieve (default: 50).
+   */
+  public async getCommits(dir: string, maxCount: number = 50): Promise<CommitItem[]> {
+    const targetDirectory = path.resolve(dir);
+    try {
+      await this.git.cwd(targetDirectory);
+      const log = await this.git.log({maxCount});
+      return log.all.map(commit => ({
+        hash: commit.hash,
+        date: commit.date,
+        message: commit.message,
+        author_name: commit.author_name,
+        author_email: commit.author_email,
+      }));
+    } catch (error) {
+      console.error(`Error getting commits for ${dir}:`, error);
+      throw error;
     }
   }
 
