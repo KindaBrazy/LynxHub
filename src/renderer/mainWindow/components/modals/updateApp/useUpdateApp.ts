@@ -20,7 +20,7 @@ export type ReleaseNote = {
 };
 
 export const useUpdateApp = () => {
-  const {isOpen} = useModalsState('updateApp');
+  const {isOpen, userDismissed} = useModalsState('updateApp');
   const activeTab = useTabsState('activeTab');
   const runningCard = useCardsState('runningCard');
   const checkCustomUpdate = useSettingsState('checkCustomUpdate');
@@ -45,11 +45,12 @@ export const useUpdateApp = () => {
           dispatch(settingsActions.setSettingsState({key: 'updateAvailable', value: true}));
           topToast.info('New Update Available!');
           const isRunningAI = runningCard.some(card => card.tabId === activeTab);
-          if (!isRunningAI) {
+          if (!isRunningAI && !userDismissed) {
             dispatch(modalActions.openUpdateApp());
           }
           break;
         }
+
         case 'download-progress': {
           setDownloadState('progress');
           if (status && typeof status !== 'string') setDownloadProgress(status);
@@ -70,7 +71,7 @@ export const useUpdateApp = () => {
     });
 
     return () => removeListener.current?.();
-  }, [dispatch, runningCard, activeTab]);
+  }, [dispatch, runningCard, activeTab, userDismissed]);
 
   const onClose = useCallback(() => {
     dispatch(modalActions.closeUpdateApp());

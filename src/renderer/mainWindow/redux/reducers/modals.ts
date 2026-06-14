@@ -6,6 +6,7 @@ import {RootState} from '../store';
 type ModalsState = {
   updateApp: {
     isOpen: boolean;
+    userDismissed: boolean;
   };
   restartModal: {
     isOpen: boolean;
@@ -20,6 +21,7 @@ type ModalsStateValueByKey = {
 const initialState: ModalsState = {
   updateApp: {
     isOpen: false,
+    userDismissed: false,
   },
   restartModal: {
     isOpen: false,
@@ -31,11 +33,15 @@ const modalSlice = createSlice({
   initialState,
   name: 'modals',
   reducers: {
-    openUpdateApp: state => {
+    openUpdateApp: (state, action: PayloadAction<{manual?: boolean} | undefined>) => {
       state.updateApp.isOpen = true;
+      if (action.payload?.manual) {
+        state.updateApp.userDismissed = false;
+      }
     },
     closeUpdateApp: state => {
       state.updateApp.isOpen = false;
+      state.updateApp.userDismissed = true;
     },
 
     openRestartModal: (state, action: PayloadAction<{message: string}>) => {

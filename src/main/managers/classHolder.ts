@@ -60,6 +60,7 @@ class ClassHolder {
    */
   private async checkOnline() {
     const setResult = (isOnline: boolean) => {
+      if (this._isOnline === isOnline) return;
       this.isOnline = isOnline;
       applicationIpc.send.onOnline(isOnline);
     };

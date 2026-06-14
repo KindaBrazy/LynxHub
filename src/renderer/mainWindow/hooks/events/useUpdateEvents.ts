@@ -1,6 +1,6 @@
 import {useAllCardMethods} from '@lynx/plugins/modules';
 import {cardsActions, useCardsState} from '@lynx/redux/reducers/cards';
-import {modalActions} from '@lynx/redux/reducers/modals';
+import {modalActions, useModalsState} from '@lynx/redux/reducers/modals';
 import {pluginsActions} from '@lynx/redux/reducers/plugins';
 import {settingsActions} from '@lynx/redux/reducers/settings';
 import {useTabsState} from '@lynx/redux/reducers/tabs';
@@ -90,6 +90,7 @@ export const useListenForUpdateError = () => {
   const dispatch = useDispatch<AppDispatch>();
   const activeTab = useTabsState('activeTab');
   const runningCard = useCardsState('runningCard');
+  const {userDismissed} = useModalsState('updateApp');
 
   useEffect(() => {
     const statusError = async () => {
@@ -111,7 +112,7 @@ export const useListenForUpdateError = () => {
           topToast.info('New Update Available!');
 
           const isRunningAI = runningCard.some(card => card.tabId === activeTab);
-          if (!isRunningAI) {
+          if (!isRunningAI && !userDismissed) {
             dispatch(modalActions.openUpdateApp());
           }
         }
@@ -123,5 +124,5 @@ export const useListenForUpdateError = () => {
     const offStatusError = applicationIpc.on.updateError(() => statusError());
 
     return () => offStatusError();
-  }, [dispatch, activeTab, runningCard]);
+  }, [dispatch, activeTab, runningCard, userDismissed]);
 };

@@ -25,4 +25,3 @@ export type CommitItem = {
   author_name: string;
   author_email: string;
 };
-

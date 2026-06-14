@@ -62,7 +62,7 @@ const DashboardUpdate = memo(() => {
   }, []);
 
   const openUpdate = useCallback(() => {
-    dispatch(modalActions.openUpdateApp());
+    dispatch(modalActions.openUpdateApp({manual: true}));
   }, [dispatch]);
 
   const [selection, setSelection] = useState<string>('public');
