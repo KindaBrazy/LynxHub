@@ -160,10 +160,10 @@
     "vite": "^8.0.16"
   },
   "allowScripts": {
-    "electron@40.10.3": true,
-    "esbuild@0.25.12": true,
-    "keytar@7.9.0": true,
-    "node-pty@1.2.0-beta.13": true,
-    "@sentry/cli@2.58.6": true
+    "electron": true,
+    "esbuild": true,
+    "keytar": true,
+    "node-pty": true,
+    "@sentry/cli": true
   }
 }
