@@ -31,7 +31,8 @@ export default class ExtensionManager {
   private async importDevExtension(): Promise<void> {
     try {
       const initial: ExtensionImport_Main = await import(
-        /* @vite-ignore */ '../../../../extension/src/main/lynxExtension'
+        // @ts-ignore
+        /* @vite-ignore */ '../../../../extension/src/main/lynxExtension.ts'
       );
       await initial.initialExtension(this.extensionApi.getApi(), this.extensionUtils, mainIpcApi);
     } catch (e) {
