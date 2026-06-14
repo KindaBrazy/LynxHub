@@ -3,7 +3,7 @@ import {join} from 'node:path';
 import {is} from '@electron-toolkit/utils';
 import {APP_NAME} from '@lynx_common/consts';
 import {Get_Default_Hotkeys} from '@lynx_common/consts/hotkeys';
-import AppStorageData from '@lynx_common/types/storage';
+import AppStorageData, {BrowserStorage} from '@lynx_common/types/storage';
 import {applicationIpc} from '@lynx_main/ipc/application';
 import {changeWindowState} from '@lynx_main/ipc/methods/windowUtils';
 import classHolder from '@lynx_main/managers/classHolder';
@@ -22,6 +22,7 @@ import {StorageMigrationManager} from './migrations';
  */
 class BaseStorage {
   private readonly storage: LowSync<AppStorageData>;
+  private readonly browserStorage: LowSync<BrowserStorage>;
   private readonly migrationManager: StorageMigrationManager;
 
   private readonly DEFAULT_DATA: AppStorageData = {
@@ -128,13 +129,16 @@ class BaseStorage {
   };
 
   constructor() {
-    // Determine storage file name based on environment
+    // Determine storage file names based on environment
     const storageFile = is.dev ? `${APP_NAME}-Dev.config` : `${APP_NAME}.config`;
+    const browserStorageFile = is.dev ? `${APP_NAME}-Browser-Dev.config` : `${APP_NAME}-Browser.config`;
     let storagePath = join(app.getPath('userData'), storageFile);
+    let browserStoragePath = join(app.getPath('userData'), browserStorageFile);
 
     // Handle portable mode: store data next to executable
     if (isPortable()) {
       storagePath = join(getExePath(), `${APP_NAME}_Data`, storageFile);
+      browserStoragePath = join(getExePath(), `${APP_NAME}_Data`, browserStorageFile);
       const dataFolderPath = join(getExePath(), `${APP_NAME}_Data`);
 
       // Ensure data folder exists
@@ -151,8 +155,58 @@ class BaseStorage {
       }
     }
 
-    this.storage = JSONFileSyncPreset<AppStorageData>(storagePath, this.DEFAULT_DATA);
+    // Initialize main storage without writing browser key on default creation
+    const mainDefaultData = cloneDeep(this.DEFAULT_DATA);
+    delete (mainDefaultData as any).browser;
+
+    this.storage = JSONFileSyncPreset<AppStorageData>(storagePath, mainDefaultData);
     this.storage.read();
+
+    // Initialize browser storage
+    this.browserStorage = JSONFileSyncPreset<BrowserStorage>(browserStoragePath, this.DEFAULT_DATA.browser);
+    this.browserStorage.read();
+
+    // Migrate existing browser data from main configuration file to browser configuration file
+    if (this.storage.data && 'browser' in this.storage.data && (this.storage.data as any).browser) {
+      console.log('Migrating browser data to separate configuration file...');
+      this.browserStorage.data = {
+        ...this.browserStorage.data,
+        ...(this.storage.data as any).browser,
+      };
+      this.writeBrowser();
+      delete (this.storage.data as any).browser;
+      this.storage.write();
+      console.log('Browser data migrated and removed from main config file.');
+    }
+
+    // Define interceptor on this.storage.data to virtualize the 'browser' key
+    let currentData = this.storage.data;
+    const defineBrowserProperty = (obj: any) => {
+      if (obj && !Object.prototype.hasOwnProperty.call(obj, 'browser')) {
+        Object.defineProperty(obj, 'browser', {
+          get: () => this.browserStorage.data,
+          set: value => {
+            this.browserStorage.data = value;
+            this.writeBrowser();
+          },
+          configurable: true,
+          enumerable: false,
+        });
+      }
+    };
+
+    defineBrowserProperty(currentData);
+
+    Object.defineProperty(this.storage, 'data', {
+      get: () => currentData,
+      set: value => {
+        currentData = value;
+        defineBrowserProperty(currentData);
+      },
+      configurable: true,
+      enumerable: true,
+    });
+
     this.migrationManager = new StorageMigrationManager(this.storage, this.DEFAULT_DATA, () => this.write());
     this.migrationManager.runStorageMigrations(this.DEFAULT_DATA.storage.version);
   }
@@ -198,6 +252,7 @@ class BaseStorage {
   public getAll(): AppStorageData {
     const data = this.storage.data;
     const result = cloneDeep(data);
+    result.browser = cloneDeep(this.browserStorage.data);
 
     // Convert relative paths to absolute paths in portable mode
     if (isPortable()) {
@@ -226,7 +281,20 @@ class BaseStorage {
   public clearStorage(): void {
     const {appManager} = classHolder;
     this.storage.data = {...this.DEFAULT_DATA};
+    if (this.storage.data) {
+      Object.defineProperty(this.storage.data, 'browser', {
+        get: () => this.browserStorage.data,
+        set: value => {
+          this.browserStorage.data = value;
+          this.writeBrowser();
+        },
+        configurable: true,
+        enumerable: false,
+      });
+    }
+    this.browserStorage.data = cloneDeep(this.DEFAULT_DATA.browser);
     this.write();
+    this.writeBrowser();
     if (isPortable() === 'linux') {
       changeWindowState('close');
     } else {
@@ -250,6 +318,19 @@ class BaseStorage {
       } else {
         applicationIpc.send.showToast(`Failed to save app configs: ${errorMessage}`, 'danger');
       }
+    }
+  }
+
+  /**
+   * Writes browser storage data to disk.
+   */
+  public writeBrowser(): void {
+    try {
+      this.browserStorage.write();
+    } catch (e) {
+      console.error('Browser storage write failed:', e);
+      const errorMessage = e instanceof Error ? e.message : String(e);
+      applicationIpc.send.showToast(`Failed to save browser configs: ${errorMessage}`, 'danger');
     }
   }
 }
