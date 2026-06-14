@@ -134,13 +134,30 @@ export default class ModuleManager {
     }
   }
 
+  private getDevFolderPath(folderName: string): string {
+    const appPath = app.getAppPath();
+    let dir = path.resolve(appPath, folderName);
+    if (fs.existsSync(path.join(dir, 'package.json'))) {
+      return dir;
+    }
+    dir = path.resolve(appPath, '..', folderName);
+    if (fs.existsSync(path.join(dir, 'package.json'))) {
+      return dir;
+    }
+    dir = path.resolve(appPath, '../..', folderName);
+    if (fs.existsSync(path.join(dir, 'package.json'))) {
+      return dir;
+    }
+    return path.resolve(appPath, '../', folderName);
+  }
+
   /**
    * Loads the development module.
    * @param disabledCards - Set of disabled card IDs
    */
   private async loadDevModule(disabledCards: Set<string>) {
     try {
-      const devRoot = path.resolve(app.getAppPath(), '../module');
+      const devRoot = this.getDevFolderPath('module');
       const moduleName = await this.getModuleName(devRoot);
       const utils = this.getUtils(moduleName);
 

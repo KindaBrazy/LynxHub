@@ -47,6 +47,23 @@ export default class ExtensionManager {
     return path.basename(rootPath);
   }
 
+  private getDevFolderPath(folderName: string): string {
+    const appPath = app.getAppPath();
+    let dir = path.resolve(appPath, folderName);
+    if (fs.existsSync(path.join(dir, 'package.json'))) {
+      return dir;
+    }
+    dir = path.resolve(appPath, '..', folderName);
+    if (fs.existsSync(path.join(dir, 'package.json'))) {
+      return dir;
+    }
+    dir = path.resolve(appPath, '../..', folderName);
+    if (fs.existsSync(path.join(dir, 'package.json'))) {
+      return dir;
+    }
+    return path.resolve(appPath, '../', folderName);
+  }
+
   /**
    * Imports the development extension if in dev mode.
    * Scans the specific local path for the extension entry point.
@@ -57,7 +74,7 @@ export default class ExtensionManager {
         // @ts-ignore
         /* @vite-ignore */ '../../../../extension/src/main/lynxExtension.ts'
       );
-      const devExtensionRoot = path.resolve(app.getAppPath(), '../extension');
+      const devExtensionRoot = this.getDevFolderPath('extension');
       const name = await this.getExtensionName(devExtensionRoot);
       const extensionUtils = new ExtensionUtils(name);
 
