@@ -34,7 +34,7 @@ const CommitInfo = memo(({repoInfo, dir}: CommitInfoProps) => {
 
   useEffect(() => {
     if (isCommitsModalOpen) {
-      // fetchCommits();
+      fetchCommits();
     }
   }, [isCommitsModalOpen, fetchCommits]);
 

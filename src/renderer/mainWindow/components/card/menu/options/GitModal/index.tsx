@@ -50,7 +50,7 @@ function GitManagerModalContent({state}: CommonProps) {
 
   useEffect(() => {
     if (dir && state.isOpen) {
-      // getRepoInfo();
+      getRepoInfo();
     }
   }, [state.isOpen, dir, getRepoInfo]);
 
