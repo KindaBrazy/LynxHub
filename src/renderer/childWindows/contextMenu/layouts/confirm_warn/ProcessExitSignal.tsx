@@ -39,7 +39,7 @@ export default function ProcessExitSignal() {
               <Button size="sm" ref={focusRef} variant="danger" className="w-25" onPress={exitWithY}>
                 <Exit className="shrink-0 size-3.5" />
                 Exit
-                <Chip size="sm" color="danger" className="scale-90">
+                <Chip size="sm" className="bg-surface/30 shrink-0">
                   Y
                 </Chip>
               </Button>
