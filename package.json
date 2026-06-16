@@ -32,6 +32,7 @@
     "fix-linter-ext": "prettier --write extension --list-different && eslint --fix extension",
     "validate:web": "npm run fix-linter:web && npm run typecheck:web",
     "validate:node": "npm run fix-linter:node && npm run typecheck:node",
+    "validate:ext": "npm run fix-linter-ext && npm run typecheck",
     "validate": "npm run fix-linter && npm run typecheck",
     "preview": "electron-vite preview --noSandbox",
     "preview:skip": "electron-vite preview --noSandbox --skipBuild",
