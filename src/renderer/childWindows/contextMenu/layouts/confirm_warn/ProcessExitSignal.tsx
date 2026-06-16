@@ -3,9 +3,9 @@ import {terminalLineEnding} from '@lynx_common/utils';
 import ptyIpc from '@lynx_shared/ipc/pty';
 import {Exit, Forward2} from '@solar-icons/react-perf/BoldDuotone';
 
-import {useContextState} from '../redux/reducer';
-import ConfirmElement from './confirm_warn/ConfirmElement';
-import {hideContextWindow, useFocus} from './Shared';
+import {useContextState} from '../../redux/reducer';
+import {hideContextWindow, useFocus} from '../Shared';
+import ConfirmElement from './ConfirmElement';
 
 export default function ProcessExitSignal() {
   const id = useContextState('targetID');
