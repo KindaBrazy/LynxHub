@@ -2,8 +2,10 @@ import {useAppState} from '@lynx/redux/reducers/app';
 import {Maximize_Icon, Minimize_Icon, UnMaximize_Icon} from '@lynx_assets/icons';
 import applicationIpc from '@lynx_shared/ipc/application';
 import {HTMLMotionProps, motion} from 'framer-motion';
+import isEmpty from 'lodash/isEmpty';
 import {ReactNode, useCallback, useMemo} from 'react';
 
+import {extensionsData} from '../../plugins/extensions/loader';
 import WindowButtons_Close from './WindowButtonsClose';
 
 const BUTTONS_COMMON_STYLE = 'notDraggable cursor-default transition-colors duration-200 ease-out';
@@ -16,6 +18,8 @@ type WindowOperation = 'fullscreen' | 'minimize' | 'maximize' | 'close' | 'resta
 const WindowButtons = () => {
   const onFocus = useAppState('onFocus');
   const maximized = useAppState('maximized');
+
+  const addEnd = useMemo(() => extensionsData.titleBar.addEnd, []);
 
   const changeWindowState = useCallback(
     (operation: WindowOperation) => applicationIpc.send.changeWinState(operation),
@@ -45,6 +49,8 @@ const WindowButtons = () => {
 
   return (
     <div className="right-0 flex h-full flex-row space-x-0.5 bg-blue-800/0">
+      <div>{!isEmpty(addEnd) && addEnd.map((End, index) => <End key={index} />)}</div>
+
       <div className="h-full w-10" />
       {renderButton('minimize', <Minimize_Icon className="size-3" />, 'px-4 hover:bg-surface-secondary')}
       {renderButton(

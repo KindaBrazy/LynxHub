@@ -40,13 +40,7 @@ const TitleBar = memo(() => {
       ref={onRef}>
       {showWizard ? <div /> : <TabContainer />}
 
-      {fullscreen ? (
-        <div>{!isEmpty(titleBar.addEnd) && titleBar.addEnd.map((End, index) => <End key={index} />)}</div>
-      ) : !isEmpty(titleBar.replaceEnd) ? (
-        <titleBar.replaceEnd />
-      ) : (
-        <WindowButtons />
-      )}
+      {!isEmpty(titleBar.replaceEnd) ? <titleBar.replaceEnd /> : <WindowButtons />}
     </div>
   );
 });
