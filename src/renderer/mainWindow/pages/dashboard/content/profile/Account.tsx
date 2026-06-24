@@ -7,7 +7,7 @@ import {getCacheUrl, getFallbackString} from '@lynx_common/utils';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
 import userIpc from '@lynx_shared/ipc/user';
 import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
-import {Refresh} from '@solar-icons/react-perf/BoldDuotone';
+import {CloseCircle, Crown, Login, Logout, Refresh, Settings} from '@solar-icons/react-perf/BoldDuotone';
 import {memo, useCallback, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -113,7 +113,10 @@ const Profile_Account = memo(() => {
                 variant="secondary"
                 isDisabled={isLoading || isSyncing}
                 onPress={() => window.open(`${LYNXHUB_WEBSITE}/account`)}>
-                Manage Account
+                <div className="flex items-center gap-2">
+                  <Settings className="size-3.5 shrink-0" />
+                  <span>Manage Account</span>
+                </div>
               </Button>
               <Button
                 size="sm"
@@ -124,7 +127,7 @@ const Profile_Account = memo(() => {
                 {isSyncing ? (
                   <Spinner size="sm" color="current" />
                 ) : (
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-2">
                     <Refresh className="size-3.5 shrink-0" />
                     <span>Sync</span>
                   </div>
@@ -136,17 +139,34 @@ const Profile_Account = memo(() => {
                 isPending={isLoading}
                 onPress={logoutAccount}
                 isDisabled={isLoading || isSyncing}>
-                {isLoading ? <Spinner size="sm" color="current" /> : 'Logout'}
+                {isLoading ? (
+                  <Spinner size="sm" color="current" />
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <Logout className="size-3.5 shrink-0" />
+                    <span>Logout</span>
+                  </div>
+                )}
               </Button>
             </>
           ) : (
             <Button size="sm" variant="primary" isPending={isLoading} isDisabled={isLoading} onPress={loginAccount}>
-              {isLoading ? <Spinner size="sm" color="current" /> : 'Login'}
+              {isLoading ? (
+                <Spinner size="sm" color="current" />
+              ) : (
+                <div className="flex items-center gap-2">
+                  <Login className="size-3.5 shrink-0" />
+                  <span>Login</span>
+                </div>
+              )}
             </Button>
           )}
           {isLoading && !isLoggedIn && (
             <Button size="sm" variant="danger-soft" onPress={cancelLoading}>
-              Cancel
+              <div className="flex items-center gap-2">
+                <CloseCircle className="size-3.5 shrink-0" />
+                <span>Cancel</span>
+              </div>
             </Button>
           )}
         </div>
@@ -168,8 +188,11 @@ const Profile_Account = memo(() => {
             size="sm"
             variant="secondary"
             onPress={() => window.open(`${LYNXHUB_WEBSITE}/account`)}
-            className="font-bold shrink-0 self-start sm:self-center cursor-pointer">
-            Connect Patreon
+            className="font-bold shrink-0 self-start sm:self-center cursor-pointer bg-surface hover:bg-surface-hover">
+            <div className="flex items-center gap-2">
+              <SiPatreon className="size-3.5 shrink-0 text-LynxPurple" />
+              <span>Connect Patreon</span>
+            </div>
           </Button>
         </div>
       )}
@@ -191,7 +214,10 @@ const Profile_Account = memo(() => {
             variant="primary"
             onPress={() => window.open(`${LYNXHUB_WEBSITE}/account`)}
             className="font-bold shrink-0 self-start sm:self-center cursor-pointer">
-            Upgrade to Access
+            <div className="flex items-center gap-1">
+              <Crown className="size-3.5 shrink-0" />
+              <span>Upgrade to Access</span>
+            </div>
           </Button>
         </div>
       )}
