@@ -383,8 +383,8 @@ export default function HomeNotificationDrawer() {
                     <Bell className="size-4" />
                     <Label>Notifications</Label>
                   </div>
-                  <Button onPress={readAll} variant="secondary" isIconOnly>
-                    <CheckRead />
+                  <Button onPress={readAll} variant="tertiary" isIconOnly>
+                    <CheckRead className="size-4.5" />
                   </Button>
                 </Drawer.Heading>
               </Drawer.Header>
