@@ -17,7 +17,7 @@ import {
   X_URL,
   YOUTUBE_URL,
 } from '@lynx_common/consts';
-import {Copy, InfoSquare, SquareTopDown} from '@solar-icons/react-perf/BoldDuotone';
+import {Copy, InfoCircle, SquareTopDown} from '@solar-icons/react-perf/BoldDuotone';
 import {memo, useCallback} from 'react';
 
 import {topToast} from '../../../layouts/ToastProviders';
@@ -77,7 +77,7 @@ const DashboardAbout = memo(() => {
   ];
 
   return (
-    <SettingsSection title="About" id={DashboardAboutId} icon={<InfoSquare className="size-5" />} itemsCenter>
+    <SettingsSection title="About" id={DashboardAboutId} icon={<InfoCircle className="size-5" />} itemsCenter>
       <div className="w-full max-w-4xl mx-auto space-y-4">
         {/* App Info Card */}
         <Card className="overflow-hidden border-none bg-transparent shadow-none">

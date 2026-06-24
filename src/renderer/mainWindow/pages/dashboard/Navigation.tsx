@@ -1,7 +1,7 @@
 import {Button, Card, Header, ScrollShadow} from '@heroui/react';
 import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {DashboardPage_Icon} from '@lynx_assets/icons/pages';
-import {Bug, Download, HeartPulse2, InfoSquare} from '@solar-icons/react-perf/BoldDuotone';
+import {Bug, Download, HeartPulse2, InfoCircle} from '@solar-icons/react-perf/BoldDuotone';
 import {motion} from 'framer-motion';
 import {memo, ReactNode, useCallback, useMemo} from 'react';
 
@@ -53,7 +53,7 @@ const initialGroupSections: GroupProps[] = [
       },
       {
         title: 'About',
-        icon: <InfoSquare className="size-4 shrink-0" />,
+        icon: <InfoCircle className="size-4 shrink-0" />,
         elementId: dashboardSectionId.DashboardAboutId,
       },
     ],
