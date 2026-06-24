@@ -1,12 +1,12 @@
-import {PatreonUserData, SubscribeStages} from '@lynx_common/types';
+import {SubscribeStages, UserAccountData} from '@lynx_common/types';
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {useSelector} from 'react-redux';
 
 import {RootState} from '../store';
 
 type UserState = {
-  patreonUserData: PatreonUserData;
-  patreonLoggedIn: boolean;
+  userData: UserAccountData;
+  isLoggedIn: boolean;
   updateChannel: SubscribeStages;
 };
 
@@ -15,13 +15,13 @@ type UserStateValueByKey = {
 };
 
 const initialState: UserState = {
-  patreonUserData: {
+  userData: {
     tier: 'Not available',
     name: 'Guest',
     imageUrl: '',
     subscribeStage: 'public',
   },
-  patreonLoggedIn: false,
+  isLoggedIn: false,
   updateChannel: 'public',
 };
 

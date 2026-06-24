@@ -1,33 +1,33 @@
 import {userChannels} from '@lynx_common/consts/ipcChannels/user';
-import {PatreonUserData, SubscribeStages} from '@lynx_common/types';
+import {SubscribeStages, UserAccountData} from '@lynx_common/types';
 import {MainHT} from '@lynx_common/types/ipc';
 
 import lynxIpc from './ipcWrapper';
 import {sendToMain} from './sender';
 
 /**
- * IPC interface for user-related operations (Patreon).
- * Note: Handlers are registered in src/main/monitoring/patreonAuth.ts
+ * IPC interface for user-related operations (Account).
+ * Note: Handlers are registered in src/main/monitoring/auth.ts
  */
 export const userIpc = {
-  patreon: {
+  account: {
     send: {
       /** Sends release channel update */
-      onReleaseChannel: (channel: SubscribeStages) => sendToMain(userChannels.patreon.onReleaseChannel, channel),
+      onReleaseChannel: (channel: SubscribeStages) => sendToMain(userChannels.account.onReleaseChannel, channel),
     },
     on: {
       /** Listens for channel update request */
       updateChannel: (callback: (channel: SubscribeStages | 'get') => void) =>
-        lynxIpc.on(userChannels.patreon.updateChannel, callback),
+        lynxIpc.on(userChannels.account.updateChannel, callback),
     },
     handle: {
       /** Handles get info request */
-      getInfo: (callback: () => MainHT<PatreonUserData | null>) =>
-        lynxIpc.handle(userChannels.patreon.getInfo, callback),
+      getInfo: (callback: () => MainHT<UserAccountData | null>) =>
+        lynxIpc.handle(userChannels.account.getInfo, callback),
       /** Handles login request */
-      login: (callback: () => MainHT<PatreonUserData>) => lynxIpc.handle(userChannels.patreon.login, callback),
+      login: (callback: () => MainHT<UserAccountData>) => lynxIpc.handle(userChannels.account.login, callback),
       /** Handles logout request */
-      logout: (callback: () => MainHT<void>) => lynxIpc.handle(userChannels.patreon.logout, callback),
+      logout: (callback: () => MainHT<void>) => lynxIpc.handle(userChannels.account.logout, callback),
     },
   },
 };

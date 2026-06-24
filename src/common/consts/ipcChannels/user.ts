@@ -3,12 +3,12 @@
  * Handles user authentication and Patreon integration.
  */
 export const userChannels = {
-  patreon: {
-    getInfo: 'patreon:getInfo',
-    login: 'patreon:login',
-    logout: 'patreon:logout',
-    updateChannel: 'patreon:updateChannel',
+  account: {
+    getInfo: 'account:getInfo',
+    login: 'account:login',
+    logout: 'account:logout',
+    updateChannel: 'account:updateChannel',
 
-    onReleaseChannel: 'patreon:onReleaseChannel',
+    onReleaseChannel: 'account:onReleaseChannel',
   },
 } as const;

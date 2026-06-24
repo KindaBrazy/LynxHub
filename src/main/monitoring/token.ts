@@ -98,7 +98,7 @@ export async function saveChannel(userId: string, channel: SubscribeStages): Pro
     creds.channels[userId] = channel;
     const success = saveCredentials(creds);
     if (success) {
-      userIpc.patreon.send.onReleaseChannel(channel);
+      userIpc.account.send.onReleaseChannel(channel);
     }
     return success;
   } catch (error) {
@@ -131,7 +131,7 @@ export async function getChannel(userId: string): Promise<SubscribeStages> {
 
   // Ensure the UI is updated with the current stage
   if (stage) {
-    userIpc.patreon.send.onReleaseChannel(stage as SubscribeStages);
+    userIpc.account.send.onReleaseChannel(stage as SubscribeStages);
   }
 
   return stage as SubscribeStages;

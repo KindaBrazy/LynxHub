@@ -9,21 +9,21 @@ import {User} from '@solar-icons/react-perf/BoldDuotone';
 import {memo, useCallback, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-const Profile_Patreon = memo(() => {
-  const patreonLoggedIn = useUserState('patreonLoggedIn');
-  const patreonUserData = useUserState('patreonUserData');
+const Profile_Account = memo(() => {
+  const isLoggedIn = useUserState('isLoggedIn');
+  const userData = useUserState('userData');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const dispatch = useDispatch<AppDispatch>();
 
-  const loginPatreon = useCallback(() => {
+  const loginAccount = useCallback(() => {
     AddBreadcrumb_Renderer(`Website Login`);
-    if (!patreonLoggedIn) {
+    if (!isLoggedIn) {
       setIsLoading(true);
-      userIpc.patreon
+      userIpc.account
         .login()
-        .then(userData => {
-          dispatch(userActions.setUserState({key: 'patreonUserData', value: userData}));
-          dispatch(userActions.setUserState({key: 'patreonLoggedIn', value: true}));
+        .then(data => {
+          dispatch(userActions.setUserState({key: 'userData', value: data}));
+          dispatch(userActions.setUserState({key: 'isLoggedIn', value: true}));
         })
         .catch(e => {
           console.error(e);
@@ -32,16 +32,16 @@ const Profile_Patreon = memo(() => {
           setIsLoading(false);
         });
     }
-  }, [patreonLoggedIn, dispatch]);
+  }, [isLoggedIn, dispatch]);
 
-  const logoutPatreon = useCallback(() => {
+  const logoutAccount = useCallback(() => {
     AddBreadcrumb_Renderer(`Website Logout`);
     setIsLoading(true);
-    userIpc.patreon
+    userIpc.account
       .logout()
       .then(() => {
-        dispatch(userActions.resetUserState('patreonUserData'));
-        dispatch(userActions.resetUserState('patreonLoggedIn'));
+        dispatch(userActions.resetUserState('userData'));
+        dispatch(userActions.resetUserState('isLoggedIn'));
         pluginsIpc.checkForSync('public');
       })
       .catch(console.warn)
@@ -55,7 +55,7 @@ const Profile_Patreon = memo(() => {
   }, []);
 
   return (
-    <Card className={`border ${patreonLoggedIn ? 'border-success/70 bg-success/5' : 'border-surface-secondary'} `}>
+    <Card className={`border ${isLoggedIn ? 'border-success/70 bg-success/5' : 'border-surface-secondary'} `}>
       <Card.Header>
         <div className="flex flex-row items-center space-x-1.5">
           <User className="text-large text-accent animate-pulse" />
@@ -66,8 +66,8 @@ const Profile_Patreon = memo(() => {
       <Card.Content className="space-between flex flex-row justify-between items-center">
         <div className="inline-flex items-center gap-2">
           <Avatar className={`shrink-0`}>
-            <Avatar.Image src={getCacheUrl(patreonUserData.imageUrl)} />
-            <Avatar.Fallback>{getFallbackString(patreonUserData.name)}</Avatar.Fallback>
+            <Avatar.Image src={getCacheUrl(userData.imageUrl)} />
+            <Avatar.Fallback>{getFallbackString(userData.name)}</Avatar.Fallback>
           </Avatar>
           <div className="flex flex-col">
             <Label
@@ -79,23 +79,23 @@ const Profile_Patreon = memo(() => {
               onClick={e => e.stopPropagation()}
               contentEditable
               suppressContentEditableWarning>
-              {patreonUserData.name}
+              {userData.name}
             </Label>
-            <Description>{patreonUserData.tier}</Description>
+            <Description>{userData.tier}</Description>
           </div>
         </div>
 
         <div className="flex flex-row space-x-2">
-          {patreonLoggedIn ? (
-            <Button size="sm" variant="danger-soft" isPending={isLoading} onPress={logoutPatreon}>
+          {isLoggedIn ? (
+            <Button size="sm" variant="danger-soft" isPending={isLoading} onPress={logoutAccount}>
               {isLoading ? <Spinner size="sm" color="current" /> : 'Logout'}
             </Button>
           ) : (
-            <Button size="sm" variant="primary" isPending={isLoading} onPress={loginPatreon}>
+            <Button size="sm" variant="primary" isPending={isLoading} onPress={loginAccount}>
               {isLoading ? <Spinner size="sm" color="current" /> : 'Login'}
             </Button>
           )}
-          {isLoading && !patreonLoggedIn && (
+          {isLoading && !isLoggedIn && (
             <Button size="sm" variant="danger-soft" onPress={cancelLoading}>
               Cancel
             </Button>
@@ -106,6 +106,6 @@ const Profile_Patreon = memo(() => {
   );
 });
 
-Profile_Patreon.displayName = 'Profile_Patreon';
+Profile_Account.displayName = 'Profile_Account';
 
-export default Profile_Patreon;
+export default Profile_Account;

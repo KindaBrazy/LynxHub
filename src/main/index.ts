@@ -18,7 +18,7 @@ import classHolder from './managers/classHolder';
 import {checkAppDirectories} from './managers/dataFolder';
 import {getImageCacheManager} from './managers/imageCache';
 import {checkForUpdate} from './managers/updater';
-import PatreonAuth, {handleDeepLink} from './monitoring/patreonAuth';
+import Auth, {handleDeepLink} from './monitoring/auth';
 import {PluginMigrate} from './setup/migration';
 import {getPrivilegeText} from './utils';
 import downloadDU from './utils/calcFolderSize/downloadDiskUsageUtility';
@@ -138,7 +138,7 @@ async function initializeLynxHub(): Promise<void> {
 
   listenToIpcChannels();
 
-  PatreonAuth();
+  Auth();
 
   const appManager = await classHolder.waitForClass('appManager');
 

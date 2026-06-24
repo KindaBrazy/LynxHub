@@ -166,7 +166,7 @@ export type FolderNames =
   | typeof REPOSITORIES_FOLDER_NAME
   | typeof STATICS_FOLDER_NAME;
 
-export type PatreonUserData = {
+export type UserAccountData = {
   tier: string;
   name: string;
   imageUrl: string;

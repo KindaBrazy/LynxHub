@@ -14,7 +14,7 @@ export const DashboardUpdateId = 'settings_update_elem';
 type UpdateStatus = {version: string; build: number; date: string};
 
 const DashboardUpdate = memo(() => {
-  const patreonUserData = useUserState('patreonUserData');
+  const userData = useUserState('userData');
 
   const appUpdateAvailable = useSettingsState('updateAvailable');
   const [statusPublic, setStatusPublic] = useState<UpdateStatus>({version: '?', build: 0, date: '?'});
@@ -57,7 +57,7 @@ const DashboardUpdate = memo(() => {
     dispatch(modalActions.openUpdateApp({manual: true}));
   }, [dispatch]);
 
-  const selection = patreonUserData.subscribeStage || 'public';
+  const selection = userData.subscribeStage || 'public';
 
   return (
     <SettingsSection title="Updates" id={DashboardUpdateId} icon={<Download className="size-5" />} itemsCenter>

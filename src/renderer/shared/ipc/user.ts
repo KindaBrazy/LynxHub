@@ -1,23 +1,23 @@
 import {userChannels} from '@lynx_common/consts/ipcChannels/user';
-import type {PatreonUserData, SubscribeStages} from '@lynx_common/types';
+import type {SubscribeStages, UserAccountData} from '@lynx_common/types';
 
 import lynxIpc from './lynxIpc';
 
 const userIpc = {
-  patreon: {
-    // Gets Patreon user information
-    getInfo: (): Promise<PatreonUserData | null> => lynxIpc.invoke(userChannels.patreon.getInfo),
-    // Logs in to Patreon
-    login: (): Promise<PatreonUserData> => lynxIpc.invoke(userChannels.patreon.login),
-    // Logs out from Patreon
-    logout: (): Promise<void> => lynxIpc.invoke(userChannels.patreon.logout),
-    // Updates Patreon subscription channel
+  account: {
+    // Gets user account information
+    getInfo: (): Promise<UserAccountData | null> => lynxIpc.invoke(userChannels.account.getInfo),
+    // Logs in to website account
+    login: (): Promise<UserAccountData> => lynxIpc.invoke(userChannels.account.login),
+    // Logs out from website account
+    logout: (): Promise<void> => lynxIpc.invoke(userChannels.account.logout),
+    // Updates subscription channel
     updateChannel: (channel: SubscribeStages | 'get'): void =>
-      lynxIpc.send(userChannels.patreon.updateChannel, channel),
+      lynxIpc.send(userChannels.account.updateChannel, channel),
 
-    // Listens for Patreon release channel changes
+    // Listens for release channel changes
     onReleaseChannel: (result: (stage: SubscribeStages) => void) =>
-      lynxIpc.on(userChannels.patreon.onReleaseChannel, result),
+      lynxIpc.on(userChannels.account.onReleaseChannel, result),
   },
 };
 

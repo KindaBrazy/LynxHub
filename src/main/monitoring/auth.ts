@@ -1,5 +1,5 @@
 import {LYNXHUB_WEBSITE} from '@lynx_common/consts';
-import {PatreonUserData, SubscribeStages} from '@lynx_common/types';
+import {SubscribeStages, UserAccountData} from '@lynx_common/types';
 import {applicationIpc} from '@lynx_main/ipc/application';
 import {userIpc} from '@lynx_main/ipc/user';
 import classHolder from '@lynx_main/managers/classHolder';
@@ -10,8 +10,8 @@ import {autoUpdater} from 'electron-updater';
 import {deleteTokens, getChannel, getTokens, saveChannel, saveTokens} from './token';
 
 // Constants
-const PATREON_CHANNEL_KEY = 'LynxHub-Patreon-Update-Channel';
-const PATREON_LOGIN_KEY = 'LynxHub-Patreon-Login-User';
+const AUTH_CHANNEL_KEY = 'LynxHub-Auth-Update-Channel';
+const AUTH_LOGIN_KEY = 'LynxHub-Auth-Login-User';
 
 // GitHub Tokens
 const GH_TOKEN_PUBLIC = 'github_pat_REMOVED_PUBLIC';
@@ -19,7 +19,7 @@ const GH_TOKEN_INSIDER =
   'github_pat_REMOVED_INSIDER';
 
 // Pending login promise resolvers
-let pendingLoginResolve: ((value: PatreonUserData) => void) | null = null;
+let pendingLoginResolve: ((value: UserAccountData) => void) | null = null;
 let pendingLoginReject: ((err: any) => void) | null = null;
 
 /**
@@ -47,8 +47,8 @@ async function processTokenLogin(token: string) {
     const userData = await verifyTokenWithWebsite(token);
 
     // Save token and channel configuration
-    await saveTokens(PATREON_LOGIN_KEY, token);
-    await saveChannel(PATREON_CHANNEL_KEY, userData.subscribeStage);
+    await saveTokens(AUTH_LOGIN_KEY, token);
+    await saveChannel(AUTH_CHANNEL_KEY, userData.subscribeStage);
 
     // Update UI and configure auto updater
     await refreshChannel(true, userData.subscribeStage);
@@ -72,7 +72,7 @@ async function processTokenLogin(token: string) {
 /**
  * Verifies the token with the website's API and returns user data.
  */
-async function verifyTokenWithWebsite(token: string): Promise<PatreonUserData> {
+async function verifyTokenWithWebsite(token: string): Promise<UserAccountData> {
   const response = await axios.get(`${LYNXHUB_WEBSITE}/api/user/session`, {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -102,9 +102,9 @@ async function verifyTokenWithWebsite(token: string): Promise<PatreonUserData> {
  */
 async function checkExistingLogin(): Promise<{
   isLoggedIn: boolean;
-  userData?: PatreonUserData;
+  userData?: UserAccountData;
 }> {
-  const token = await getTokens(PATREON_LOGIN_KEY);
+  const token = await getTokens(AUTH_LOGIN_KEY);
   if (token) {
     try {
       const userData = await verifyTokenWithWebsite(token);
@@ -114,7 +114,7 @@ async function checkExistingLogin(): Promise<{
       };
     } catch (error) {
       console.warn('Stored token is invalid or expired. Logging out.');
-      await deleteTokens(PATREON_LOGIN_KEY);
+      await deleteTokens(AUTH_LOGIN_KEY);
       return {isLoggedIn: false};
     }
   }
@@ -126,10 +126,10 @@ async function checkExistingLogin(): Promise<{
  */
 async function refreshChannel(isLogin: boolean, stage: SubscribeStages) {
   if (isLogin && (stage === 'insider' || stage === 'early_access')) {
-    await saveChannel(PATREON_CHANNEL_KEY, stage);
+    await saveChannel(AUTH_CHANNEL_KEY, stage);
     applicationIpc.send.updateChannelChange(stage);
   } else {
-    await saveChannel(PATREON_CHANNEL_KEY, 'public');
+    await saveChannel(AUTH_CHANNEL_KEY, 'public');
     applicationIpc.send.updateChannelChange('public');
   }
 }
@@ -169,15 +169,15 @@ function checkForAppUpdate(stage: SubscribeStages) {
 }
 
 /**
- * Sets up IPC listeners for Patreon authentication (which redirects to website auth) and channel management.
+ * Sets up IPC listeners for Account authentication (which redirects to website auth) and channel management.
  */
-export default function PatreonAuth() {
-  userIpc.patreon.handle.getInfo(async () => {
+export default function Auth() {
+  userIpc.account.handle.getInfo(async () => {
     try {
       const existingLogin = await checkExistingLogin();
 
       if (existingLogin.isLoggedIn && existingLogin.userData) {
-        const currentChannel = await getChannel(PATREON_CHANNEL_KEY);
+        const currentChannel = await getChannel(AUTH_CHANNEL_KEY);
         checkForAppUpdate(currentChannel);
         return {...existingLogin.userData, subscribeStage: currentChannel};
       } else {
@@ -190,7 +190,7 @@ export default function PatreonAuth() {
     }
   });
 
-  userIpc.patreon.handle.login(async () => {
+  userIpc.account.handle.login(async () => {
     const authUrl = `${LYNXHUB_WEBSITE}/auth/app`;
 
     const {storageManager} = classHolder;
@@ -202,15 +202,15 @@ export default function PatreonAuth() {
       applicationIpc.send.onNewTab(authUrl);
     }
 
-    return new Promise<PatreonUserData>((resolve, reject) => {
+    return new Promise<UserAccountData>((resolve, reject) => {
       pendingLoginResolve = resolve;
       pendingLoginReject = reject;
     });
   });
 
-  userIpc.patreon.handle.logout(async () => {
+  userIpc.account.handle.logout(async () => {
     try {
-      await deleteTokens(PATREON_LOGIN_KEY);
+      await deleteTokens(AUTH_LOGIN_KEY);
       await refreshChannel(false, 'public');
       checkForAppUpdate('public');
       return;
@@ -221,9 +221,9 @@ export default function PatreonAuth() {
     }
   });
 
-  userIpc.patreon.on.updateChannel(async channel => {
+  userIpc.account.on.updateChannel(async channel => {
     if (channel === 'get') {
-      const currentChannel = await getChannel(PATREON_CHANNEL_KEY);
+      const currentChannel = await getChannel(AUTH_CHANNEL_KEY);
       applicationIpc.send.updateChannelChange(currentChannel);
     }
   });

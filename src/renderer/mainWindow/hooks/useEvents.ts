@@ -9,9 +9,9 @@ import {
   useListenForUpdateError,
   useNewTabEvents,
   useOnlineEvents,
-  usePatreon,
   useShowToast,
   useStorageData,
+  useUserAccount,
 } from './events';
 
 /** Listening for various app events and modify redux states */
@@ -20,7 +20,7 @@ export default function useAppEvents() {
   useCheckPluginsUpdate();
   useOnlineEvents();
   useStorageData();
-  usePatreon();
+  useUserAccount();
   useIpcEvents();
   useAppTitleEvents();
   useHotkeyEvents();

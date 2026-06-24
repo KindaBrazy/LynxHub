@@ -6,21 +6,21 @@ import {useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 
 /**
- * Manages Patreon account integration and user state.
+ * Manages user account integration and user state.
  */
-export const usePatreon = () => {
+export const useUserAccount = () => {
   const dispatch = useDispatch<AppDispatch>();
   const isOnline = useAppState('isOnline');
 
   useEffect(() => {
-    userIpc.patreon.getInfo().then(userData => {
+    userIpc.account.getInfo().then(userData => {
       if (userData) {
-        dispatch(userActions.setUserState({key: 'patreonUserData', value: userData}));
-        dispatch(userActions.setUserState({key: 'patreonLoggedIn', value: true}));
+        dispatch(userActions.setUserState({key: 'userData', value: userData}));
+        dispatch(userActions.setUserState({key: 'isLoggedIn', value: true}));
       }
     });
 
-    const offReleaseChannel = userIpc.patreon.onReleaseChannel(stage => dispatch(userActions.setUpdateChannel(stage)));
+    const offReleaseChannel = userIpc.account.onReleaseChannel(stage => dispatch(userActions.setUpdateChannel(stage)));
 
     return () => offReleaseChannel();
   }, [dispatch, isOnline]);
