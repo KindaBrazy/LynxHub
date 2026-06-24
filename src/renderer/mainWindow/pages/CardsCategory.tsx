@@ -137,7 +137,7 @@ export const RecentlyCards = memo(() => {
       subTitle="Your Most Recent AI Interactions"
       icon={<History_Color_Icon className={CardContainerClasses} id={'home_category_history' + id} />}>
       <div className="flex w-full flex-wrap gap-5 overflow-visible scrollbar-hide">
-        {!isEmpty(recentlyUsedCards) && isEmpty(recentlyCategory) ? (
+        {isEmpty(recentlyUsedCards) && isEmpty(recentlyCategory) ? (
           <EmptyStateCard
             className="size-full"
             bodyClassName="gap-y-3"
