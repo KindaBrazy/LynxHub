@@ -1,5 +1,6 @@
 import {Avatar, Button, Description, Label} from '@heroui/react';
 import SettingsSection from '@lynx/components/SettingsSection';
+import {useUserState} from '@lynx/redux/reducers/user';
 import {PATREON_URL} from '@lynx_common/consts';
 import {PatreonSupporter, PatreonSupporterTier} from '@lynx_common/types';
 import staticsIpc from '@lynx_shared/ipc/statics';
@@ -97,6 +98,10 @@ const DashboardCredits = memo(() => {
     window.open(PATREON_URL);
   };
 
+  const isLoggedIn = useUserState('isLoggedIn');
+  const userData = useUserState('userData');
+  const hasConnectedPatreon = isLoggedIn && userData.connectedProviders?.includes('patreon');
+
   return (
     <SettingsSection title="Credits" id={DashboardCreditsId} icon={<HeartPulse2 className="size-5" />} itemsCenter>
       {/* Premium Hero Banner */}
@@ -112,7 +117,7 @@ const DashboardCredits = memo(() => {
         />
 
         <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
-          <div className="max-w-xl text-start">
+          <div className={`${hasConnectedPatreon ? '' : 'max-w-xl'} text-start`}>
             <div
               className={
                 'inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-blue-500/10 text-blue-600' +
@@ -131,52 +136,54 @@ const DashboardCredits = memo(() => {
           </div>
 
           {/* Action Callout Box */}
-          <div
-            className={
-              'relative shrink-0 flex flex-col items-center lg:items-start bg-white/60 dark:bg-zinc-950/40 border' +
-              ' border-zinc-200/50 dark:border-zinc-800 p-5 rounded-2xl min-w-xs lg:min-w-sm'
-            }>
-            <Button
-              className={
-                'relative isolate overflow-hidden w-full font-bold text-sm text-white' +
-                // Base Gradients (Light & Dark)
-                ' bg-linear-to-r from-rose-600 to-rose-500' +
-                ' dark:from-rose-700 dark:to-rose-600' +
-                // Hover Gradient Overlay (Light)
-                ' before:absolute before:inset-0 before:-z-10 before:opacity-0' +
-                ' before:transition-opacity before:duration-300' +
-                ' before:bg-linear-to-r before:from-rose-500 before:to-rose-400' +
-                // Hover Gradient Overlay (Dark)
-                ' dark:before:from-rose-600 dark:before:to-rose-500' +
-                // Hover Action to trigger the opacity transition
-                ' hover:before:opacity-100' +
-                // Shadows & Transitions
-                ' shadow-md shadow-rose-500/10 hover:shadow-rose-500/20' +
-                ' dark:shadow-rose-950/30 dark:hover:shadow-rose-900/20' +
-                ' py-5 rounded-xl transition-all duration-300 active:scale-[0.98]'
-              }
-              onPress={handleBecomePatron}>
-              <span className="flex items-center justify-center gap-2 w-full">
-                Join the Patrons <SquareTopDown className="size-4" />
-              </span>
-            </Button>
-
+          {!hasConnectedPatreon && (
             <div
               className={
-                'mt-4 w-full border-t border-zinc-200/60 dark:border-zinc-800/80 pt-3 flex items-center' +
-                ' justify-around text-[10px] font-semibold text-zinc-500 dark:text-zinc-400'
+                'relative shrink-0 flex flex-col items-center lg:items-start bg-white/60 dark:bg-zinc-950/40 border' +
+                ' border-zinc-200/50 dark:border-zinc-800 p-5 rounded-2xl min-w-xs lg:min-w-sm'
               }>
-              <span className="flex items-center gap-1.5">
-                <span className="size-1.5 rounded-full bg-rose-500" />
-                Profile Badge
-              </span>
-              <span className="text-zinc-300 dark:text-zinc-700">|</span>
-              <span className="flex items-center gap-1.5">
-                <span className="size-1.5 rounded-full bg-indigo-500" />
-                Discord Role
-              </span>
+              <Button
+                className={
+                  'relative isolate overflow-hidden w-full font-bold text-sm text-white' +
+                  // Base Gradients (Light & Dark)
+                  ' bg-linear-to-r from-rose-600 to-rose-500' +
+                  ' dark:from-rose-700 dark:to-rose-600' +
+                  // Hover Gradient Overlay (Light)
+                  ' before:absolute before:inset-0 before:-z-10 before:opacity-0' +
+                  ' before:transition-opacity before:duration-300' +
+                  ' before:bg-linear-to-r before:from-rose-500 before:to-rose-400' +
+                  // Hover Gradient Overlay (Dark)
+                  ' dark:before:from-rose-600 dark:before:to-rose-500' +
+                  // Hover Action to trigger the opacity transition
+                  ' hover:before:opacity-100' +
+                  // Shadows & Transitions
+                  ' shadow-md shadow-rose-500/10 hover:shadow-rose-500/20' +
+                  ' dark:shadow-rose-950/30 dark:hover:shadow-rose-900/20' +
+                  ' py-5 rounded-xl transition-all duration-300 active:scale-[0.98]'
+                }
+                onPress={handleBecomePatron}>
+                <span className="flex items-center justify-center gap-2 w-full">
+                  Join the Patrons <SquareTopDown className="size-4" />
+                </span>
+              </Button>
+
+              <div
+                className={
+                  'mt-4 w-full border-t border-zinc-200/60 dark:border-zinc-800/80 pt-3 flex items-center' +
+                  ' justify-around text-[10px] font-semibold text-zinc-500 dark:text-zinc-400'
+                }>
+                <span className="flex items-center gap-1.5">
+                  <span className="size-1.5 rounded-full bg-rose-500" />
+                  Profile Badge
+                </span>
+                <span className="text-zinc-300 dark:text-zinc-700">|</span>
+                <span className="flex items-center gap-1.5">
+                  <span className="size-1.5 rounded-full bg-indigo-500" />
+                  Discord Role
+                </span>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
 
