@@ -1,6 +1,7 @@
 import {Avatar, Button, Card, Description, Label, Spinner} from '@heroui/react';
 import {userActions, useUserState} from '@lynx/redux/reducers/user';
 import {AppDispatch} from '@lynx/redux/store';
+import {LYNXHUB_WEBSITE} from '@lynx_common/consts';
 import {getCacheUrl, getFallbackString} from '@lynx_common/utils';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
 import userIpc from '@lynx_shared/ipc/user';
@@ -87,9 +88,14 @@ const Profile_Account = memo(() => {
 
         <div className="flex flex-row space-x-2">
           {isLoggedIn ? (
-            <Button size="sm" variant="danger-soft" isPending={isLoading} onPress={logoutAccount}>
-              {isLoading ? <Spinner size="sm" color="current" /> : 'Logout'}
-            </Button>
+            <>
+              <Button size="sm" variant="secondary" onPress={() => window.open(`${LYNXHUB_WEBSITE}/account`)}>
+                Manage Account
+              </Button>
+              <Button size="sm" variant="danger-soft" isPending={isLoading} onPress={logoutAccount}>
+                {isLoading ? <Spinner size="sm" color="current" /> : 'Logout'}
+              </Button>
+            </>
           ) : (
             <Button size="sm" variant="primary" isPending={isLoading} onPress={loginAccount}>
               {isLoading ? <Spinner size="sm" color="current" /> : 'Login'}
