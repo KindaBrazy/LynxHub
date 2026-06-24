@@ -2,6 +2,7 @@ import path from 'node:path';
 
 import {isDev} from '@lynx_common/utils';
 import ElectronAppManager from '@lynx_main/mainWindow';
+import classHolder from '@lynx_main/managers/classHolder';
 import StorageManager from '@lynx_main/storage/storageOperations';
 import {captureException} from '@sentry/electron/main';
 import {app} from 'electron';
@@ -83,8 +84,11 @@ export default class ExtensionManager {
       if (this.moduleManager) extensionUtils.setModuleManager(this.moduleManager);
 
       await initial.initialExtension(this.extensionApi.getApi(), extensionUtils, mainIpcApi);
-    } catch (e) {
+    } catch (e: any) {
       console.log('No dev extension found or failed to load, skipping...', e);
+      if (e?.code !== 'MODULE_NOT_FOUND' && e?.code !== 'ERR_MODULE_NOT_FOUND') {
+        classHolder.pluginManager?.addUnloadedPlugin('dev-extension', `Dev extension load error: ${e?.message || e}`);
+      }
     }
   }
 
@@ -106,9 +110,11 @@ export default class ExtensionManager {
       if (this.moduleManager) extensionUtils.setModuleManager(this.moduleManager);
 
       await initial.initialExtension(this.extensionApi.getApi(), extensionUtils, mainIpcApi);
-    } catch (e) {
+    } catch (e: any) {
       console.error(`Failed to load extension from ${extensionPath}:`, e);
       captureException(e);
+      const folder = path.basename(extensionPath);
+      classHolder.pluginManager?.addUnloadedPlugin(folder, `Main load error: ${e?.message || e}`);
     }
   }
 

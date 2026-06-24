@@ -47,10 +47,7 @@ function shouldIgnoreError(event: Event): boolean {
  * @param cachedDsn - The Sentry DSN loaded from cache.
  */
 export function initSentry(appStartTime: number, release: string, pluginsRootPath: string, cachedDsn?: string) {
-  if (isDev()) {
-    console.log('is dev and returning');
-    return;
-  }
+  if (isDev()) return;
 
   if (!cachedDsn) {
     console.warn('Sentry DSN not cached. Sentry will not be initialized this run.');

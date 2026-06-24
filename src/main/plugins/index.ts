@@ -152,6 +152,15 @@ export class PluginManager {
   }
 
   /**
+   * Adds a plugin to the list of unloaded/skipped plugins.
+   */
+  public addUnloadedPlugin(id: string, message: string): void {
+    if (!this.skipped.some(item => item.id === id)) {
+      this.skipped.push({id, message});
+    }
+  }
+
+  /**
    * Gets the list of installed plugins.
    */
   public getInstalledList(): PluginInstalledItem[] {

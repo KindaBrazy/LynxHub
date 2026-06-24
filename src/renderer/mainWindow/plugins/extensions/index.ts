@@ -4,6 +4,7 @@ import pluginsIpc from '@lynx_shared/ipc/plugins';
 import {captureException} from '@sentry/electron/renderer';
 import {compact} from 'lodash-es';
 
+import {addRendererFailure} from '../failures';
 import initializeExtensions from './loader';
 import {ExtensionImport_Renderer} from './types';
 
@@ -90,12 +91,13 @@ export async function loadExtensions() {
     // Import all remotes concurrently; null-out any that fail so `compact`
     // below can filter them before passing to the initializer.
     importedExtensions = await Promise.all(
-      extensionIds.map(folderName => {
+      extensionIds.map(async folderName => {
         try {
-          return getRemote(folderName, 'Extension');
-        } catch (error) {
+          return await getRemote(folderName, 'Extension');
+        } catch (error: any) {
           console.error('Failed to load extension renderer entry:', folderName, error);
           captureException(error);
+          addRendererFailure(folderName, `Renderer load error: ${error?.message || error}`);
           return null;
         }
       }),

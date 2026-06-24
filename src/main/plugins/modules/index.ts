@@ -175,8 +175,11 @@ export default class ModuleManager {
         return isEnabled;
       });
       this.mainMethods.push(...enabledMethods);
-    } catch (e) {
+    } catch (e: any) {
       console.log('No dev module found, skipping...', e);
+      if (e?.code !== 'MODULE_NOT_FOUND' && e?.code !== 'ERR_MODULE_NOT_FOUND') {
+        classHolder.pluginManager?.addUnloadedPlugin('dev-module', `Dev module load error: ${e?.message || e}`);
+      }
     }
   }
 
@@ -213,9 +216,11 @@ export default class ModuleManager {
           });
 
           this.mainMethods.push(...enabledMethods);
-        } catch (e) {
+        } catch (e: any) {
           console.error('Failed to load module main entry: ', modulePath, 'Error: ', e);
           captureException(e);
+          const folder = path.basename(modulePath);
+          classHolder.pluginManager?.addUnloadedPlugin(folder, `Main load error: ${e?.message || e}`);
         }
       }),
     );

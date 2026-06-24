@@ -17,6 +17,8 @@ import {captureException} from '@sentry/electron/renderer';
 import {compact} from 'lodash-es';
 import {useSyncExternalStore} from 'react';
 
+import {addRendererFailure} from '../failures';
+
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 /** Flat list of pre-extracted search tokens per card, used for fast text search. */
@@ -413,9 +415,11 @@ const loadModules = async () => {
             // Cache-bust with a timestamp so updated modules are always fetched.
             const module = await import(/* @vite-ignore */ `${serverAddress}/scripts/renderer.mjs?${Date.now()}`);
             return {path: serverAddress, module};
-          } catch (error) {
+          } catch (error: any) {
             console.error('Failed to load module renderer entry:', serverAddress, error);
             captureException(error);
+            const folderName = serverAddress.replace('lynxplugin://', '');
+            addRendererFailure(folderName, `Renderer load error: ${error?.message || error}`);
             return null;
           }
         }),

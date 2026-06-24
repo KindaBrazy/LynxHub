@@ -5,6 +5,7 @@ import pluginsIpc from '@lynx_shared/ipc/plugins';
 import {memo, useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 
+import {getRendererFailures} from '../../plugins/failures';
 import PageView from '../Page';
 import List from './list';
 import Preview from './preview';
@@ -25,7 +26,10 @@ function useInitializePlugins() {
     pluginsIpc.checkForSync(updateChannel);
 
     pluginsIpc.getUnloadedList().then(items => {
-      dispatch(pluginsActions.setPluginsState({key: 'unloadedList', value: items}));
+      const allFailures = [...items, ...getRendererFailures()];
+      // De-duplicate by ID in case
+      const uniqueFailures = allFailures.filter((item, index, self) => self.findIndex(f => f.id === item.id) === index);
+      dispatch(pluginsActions.setPluginsState({key: 'unloadedList', value: uniqueFailures}));
     });
   }, [dispatch, updateChannel]);
 }
