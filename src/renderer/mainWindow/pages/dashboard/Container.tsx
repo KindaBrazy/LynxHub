@@ -25,9 +25,9 @@ export const DashboardSections = memo(() => {
     <>
       <DashboardProfile />
       <DashboardUpdate />
-      <DashboardReportIssue />
       <DashboardCredits />
       <DashboardAbout />
+      <DashboardReportIssue />
 
       {content.map((Content, index) => (
         <Content key={`plugin-content-${index}`} />

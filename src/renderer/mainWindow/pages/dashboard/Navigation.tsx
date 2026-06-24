@@ -42,11 +42,6 @@ const initialGroupSections: GroupProps[] = [
     title: 'Info',
     items: [
       {
-        title: 'Help & Feedback',
-        icon: <Bug className="size-4 shrink-0" />,
-        elementId: dashboardSectionId.DashboardReportIssueId,
-      },
-      {
         title: 'Credits',
         icon: <HeartPulse2 className="size-4 shrink-0" />,
         elementId: dashboardSectionId.DashboardCreditsId,
@@ -55,6 +50,11 @@ const initialGroupSections: GroupProps[] = [
         title: 'About',
         icon: <InfoCircle className="size-4 shrink-0" />,
         elementId: dashboardSectionId.DashboardAboutId,
+      },
+      {
+        title: 'Help & Feedback',
+        icon: <Bug className="size-4 shrink-0" />,
+        elementId: dashboardSectionId.DashboardReportIssueId,
       },
     ],
   },
