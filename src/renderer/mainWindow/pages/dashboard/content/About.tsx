@@ -12,9 +12,11 @@ import {
   GITHUB_URL,
   LICENSE_NAME,
   LICENSE_PAGE,
+  LYNXHUB_DOCS,
+  LYNXHUB_WEBSITE,
   REDDIT_URL,
 } from '@lynx_common/consts';
-import {Copy, InfoCircle} from '@solar-icons/react-perf/BoldDuotone';
+import {Copy, DocumentText, Global, InfoCircle} from '@solar-icons/react-perf/BoldDuotone';
 import {memo, useCallback} from 'react';
 
 import {topToast} from '../../../layouts/ToastProviders';
@@ -29,6 +31,18 @@ const DashboardAbout = memo(() => {
   }, []);
 
   const socialLinks = [
+    {
+      name: 'Website',
+      icon: <Global className="size-5" />,
+      action: () => window.open(LYNXHUB_WEBSITE),
+      actionIcon: <LinkIcon className="size-3.5" />,
+    },
+    {
+      name: 'Docs',
+      icon: <DocumentText className="size-5" />,
+      action: () => window.open(LYNXHUB_DOCS),
+      actionIcon: <LinkIcon className="size-3.5" />,
+    },
     {
       name: 'Email',
       icon: <Gmail_Icon className="size-5" />,
