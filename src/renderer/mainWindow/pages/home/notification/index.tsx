@@ -223,7 +223,7 @@ function NotificationItem({
 
         <div className="flex gap-3 pr-6">
           {IconComponent && (
-            <div className="flex-shrink-0 mt-0.5">
+            <div className="shrink-0 mt-0.5">
               <div className="p-1.5 bg-default/20 dark:bg-default/10 rounded-lg inline-flex">
                 <IconComponent className={`size-4.5 ${iconColorClass}`} />
               </div>
@@ -245,7 +245,7 @@ function NotificationItem({
                 )}
               </div>
             )}
-            <div className="text-xs leading-relaxed break-words select-none text-muted-foreground">
+            <div className="text-xs leading-relaxed wrap-break-word select-none text-muted-foreground">
               {formatMarkdown(body)}
             </div>
 
@@ -261,7 +261,7 @@ function NotificationItem({
                   'mt-2.5 p-2.5 bg-warning/10 border border-warning/20 rounded-xl ' +
                   'flex items-start gap-1.5 text-[10px] text-warning font-semibold leading-normal'
                 }>
-                <ShieldWarning className="size-3.5 mt-0.5 flex-shrink-0" />
+                <ShieldWarning className="size-3.5 mt-0.5 shrink-0" />
                 <span>
                   This version is exclusive to {releaseType === 'INSIDER' ? 'Insider' : 'Early Access'} members. Upgrade
                   your plan to unlock downloads.
