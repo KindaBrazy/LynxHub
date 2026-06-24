@@ -28,6 +28,9 @@ export default defineConfig(({mode}) => {
         sourcemap: true,
         rollupOptions: {
           external: isDev ? undefined : ['../../../../extension/src/main/lynxExtension', '../../../../module/src/main'],
+          output: {
+            format: 'cjs',
+          },
         },
       },
       resolve: {
@@ -69,7 +72,7 @@ export default defineConfig(({mode}) => {
         federation({
           name: 'host-app',
           remotes: {nothing: 'nothing.js'},
-          shared: ['react', 'react-dom', 'react-redux', '@heroui-v3/react', '@heroui-v3/styles', 'react-aria'],
+          shared: ['react', 'react-dom', 'react-redux', '@heroui/react', '@heroui/styles', 'react-aria'],
         }),
       ],
       resolve: {
@@ -77,7 +80,7 @@ export default defineConfig(({mode}) => {
           '@lynx_module': resolve(__dirname, 'module/src'),
           '@lynx_extension': resolve(__dirname, 'extension/src'),
           '@lynx_common': resolve(__dirname, 'src/common'),
-          '@lynx': resolve(__dirname, 'src/renderer/main_window'),
+          '@lynx': resolve(__dirname, 'src/renderer/mainWindow'),
           '@lynx_shared': resolve(__dirname, 'src/renderer/shared'),
           '@lynx_assets': resolve(__dirname, 'src/renderer/shared/assets'),
         },
@@ -95,10 +98,10 @@ export default defineConfig(({mode}) => {
           input: {
             index: resolve(__dirname, 'src/renderer/index.html'),
             loading: resolve(__dirname, 'src/renderer/loading.html'),
-            context_menu: resolve(__dirname, 'src/renderer/context_menu.html'),
+            contextMenu: resolve(__dirname, 'src/renderer/contextMenu.html'),
             toast: resolve(__dirname, 'src/renderer/toast.html'),
-            share_screen: resolve(__dirname, 'src/renderer/share_screen.html'),
-            link_preview: resolve(__dirname, 'src/renderer/link_preview.html'),
+            shareScreen: resolve(__dirname, 'src/renderer/shareScreen.html'),
+            linkPreview: resolve(__dirname, 'src/renderer/linkPreview.html'),
           },
         },
         target: 'esnext',
