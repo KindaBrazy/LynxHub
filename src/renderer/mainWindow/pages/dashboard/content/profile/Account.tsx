@@ -7,7 +7,7 @@ import {getCacheUrl, getFallbackString} from '@lynx_common/utils';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
 import userIpc from '@lynx_shared/ipc/user';
 import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
-import {User} from '@solar-icons/react-perf/BoldDuotone';
+import {Refresh, User} from '@solar-icons/react-perf/BoldDuotone';
 import {memo, useCallback, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -15,6 +15,7 @@ const Profile_Account = memo(() => {
   const isLoggedIn = useUserState('isLoggedIn');
   const userData = useUserState('userData');
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isSyncing, setIsSyncing] = useState<boolean>(false);
   const dispatch = useDispatch<AppDispatch>();
 
   const loginAccount = useCallback(() => {
@@ -56,6 +57,30 @@ const Profile_Account = memo(() => {
     window.electron.ipcRenderer.send('patreon-cancel-process');
   }, []);
 
+  const syncAccount = useCallback(() => {
+    AddBreadcrumb_Renderer(`Website Sync`);
+    setIsSyncing(true);
+    userIpc.account
+      .getInfo()
+      .then(data => {
+        if (data) {
+          dispatch(userActions.setUserState({key: 'userData', value: data}));
+          dispatch(userActions.setUserState({key: 'isLoggedIn', value: true}));
+          pluginsIpc.checkForSync(data.subscribeStage);
+        } else {
+          dispatch(userActions.resetUserState('userData'));
+          dispatch(userActions.resetUserState('isLoggedIn'));
+          pluginsIpc.checkForSync('public');
+        }
+      })
+      .catch(e => {
+        console.error(e);
+      })
+      .finally(() => {
+        setIsSyncing(false);
+      });
+  }, [dispatch]);
+
   return (
     <Card className={`border ${isLoggedIn ? 'border-success/70 bg-success/5' : 'border-surface-secondary'} `}>
       <Card.Header>
@@ -90,15 +115,39 @@ const Profile_Account = memo(() => {
         <div className="flex flex-row space-x-2">
           {isLoggedIn ? (
             <>
-              <Button size="sm" variant="secondary" onPress={() => window.open(`${LYNXHUB_WEBSITE}/account`)}>
+              <Button
+                size="sm"
+                variant="secondary"
+                isDisabled={isLoading || isSyncing}
+                onPress={() => window.open(`${LYNXHUB_WEBSITE}/account`)}>
                 Manage Account
               </Button>
-              <Button size="sm" variant="danger-soft" isPending={isLoading} onPress={logoutAccount}>
+              <Button
+                size="sm"
+                variant="secondary"
+                isPending={isSyncing}
+                onPress={syncAccount}
+                isDisabled={isLoading || isSyncing}>
+                {isSyncing ? (
+                  <Spinner size="sm" color="current" />
+                ) : (
+                  <div className="flex items-center gap-1">
+                    <Refresh className="size-3.5 shrink-0" />
+                    <span>Sync</span>
+                  </div>
+                )}
+              </Button>
+              <Button
+                size="sm"
+                variant="danger-soft"
+                isPending={isLoading}
+                onPress={logoutAccount}
+                isDisabled={isLoading || isSyncing}>
                 {isLoading ? <Spinner size="sm" color="current" /> : 'Logout'}
               </Button>
             </>
           ) : (
-            <Button size="sm" variant="primary" isPending={isLoading} onPress={loginAccount}>
+            <Button size="sm" variant="primary" isPending={isLoading} isDisabled={isLoading} onPress={loginAccount}>
               {isLoading ? <Spinner size="sm" color="current" /> : 'Login'}
             </Button>
           )}

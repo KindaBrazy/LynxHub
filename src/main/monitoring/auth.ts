@@ -184,7 +184,12 @@ export default function Auth() {
       const existingLogin = await checkExistingLogin();
 
       if (existingLogin.isLoggedIn && existingLogin.userData) {
-        const currentChannel = await getChannel(AUTH_CHANNEL_KEY);
+        let currentChannel = await getChannel(AUTH_CHANNEL_KEY);
+        if (existingLogin.userData.subscribeStage !== currentChannel) {
+          await saveChannel(AUTH_CHANNEL_KEY, existingLogin.userData.subscribeStage);
+          await refreshChannel(true, existingLogin.userData.subscribeStage);
+          currentChannel = existingLogin.userData.subscribeStage;
+        }
         checkForAppUpdate(currentChannel, existingLogin.userData.updateToken);
         const {updateToken, ...rendererUserData} = existingLogin.userData;
         return {...rendererUserData, subscribeStage: currentChannel};
