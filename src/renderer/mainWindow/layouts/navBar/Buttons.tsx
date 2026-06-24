@@ -1,7 +1,9 @@
+import {Avatar} from '@heroui/react';
 import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {hasCardsByPath} from '@lynx/plugins/modules';
 import {usePluginsState} from '@lynx/redux/reducers/plugins';
 import {useSettingsState} from '@lynx/redux/reducers/settings';
+import {useUserState} from '@lynx/redux/reducers/user';
 import {
   AgentPage_Icon,
   AudioPage_Icon,
@@ -16,6 +18,7 @@ import {
   ToolsPage_Icon,
 } from '@lynx_assets/icons/pages';
 import {PageID, PageTitles} from '@lynx_common/consts';
+import {getCacheUrl, getFallbackString} from '@lynx_common/utils';
 import {isEmpty} from 'lodash-es';
 import {useMemo} from 'react';
 
@@ -111,14 +114,25 @@ export function SettingsNav({tabID, pageID}: Props) {
 
   const syncList = usePluginsState('syncList');
   const appUpdateAvailable = useSettingsState('updateAvailable');
+  const isLoggedIn = useUserState('isLoggedIn');
+  const userData = useUserState('userData');
 
   const settingsItems: NavItem[] = useMemo(() => {
     const dashboardBadge = appUpdateAvailable;
     const pluginsBadge = !isEmpty(syncList) ? syncList.length : false;
 
+    const dashboardIcon = isLoggedIn ? (
+      <Avatar className="size-full">
+        <Avatar.Image src={getCacheUrl(userData.imageUrl)} />
+        <Avatar.Fallback>{getFallbackString(userData.name)}</Avatar.Fallback>
+      </Avatar>
+    ) : (
+      <DashboardPage_Icon className="size-full" />
+    );
+
     return [
       {
-        icon: <DashboardPage_Icon className="size-full" />,
+        icon: dashboardIcon,
         title: PageTitles.dashboard,
         path: PageID.dashboard,
         badge: dashboardBadge,
@@ -131,7 +145,7 @@ export function SettingsNav({tabID, pageID}: Props) {
       },
       {icon: <SettingPage_Icon className="size-full" />, title: PageTitles.settings, path: PageID.settings},
     ];
-  }, [syncList, appUpdateAvailable]);
+  }, [syncList, appUpdateAvailable, isLoggedIn, userData]);
 
   return (
     <>
