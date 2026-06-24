@@ -1,6 +1,6 @@
 import {Avatar, CardHeader, Description, Label, Spinner, Tooltip} from '@heroui/react';
 import {extractGitUrl, getCacheUrl, getFallbackString} from '@lynx_common/utils';
-import {DownloadMinimalistic} from '@solar-icons/react-perf/Linear';
+import {DownloadMinimalistic} from '@solar-icons/react-perf/LineDuotone';
 import {AnimatePresence, motion} from 'framer-motion';
 import {memo, useMemo} from 'react';
 
@@ -86,10 +86,10 @@ export const CardHeaderContent = memo(({modifiedTitle, onTitleChange, updateAvai
               <Tooltip.Trigger>
                 <div
                   className={
-                    'flex items-center justify-center size-7 rounded-full bg-success/15 text-success' +
+                    'flex items-center justify-center size-6 rounded-full bg-success/15 text-success' +
                     ' border border-success/20 shadow-sm transition duration-200 hover:scale-105'
                   }>
-                  <DownloadMinimalistic className="size-4" />
+                  <DownloadMinimalistic className="size-3" />
                 </div>
               </Tooltip.Trigger>
               <Tooltip.Content>Update available</Tooltip.Content>
