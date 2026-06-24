@@ -1,4 +1,5 @@
 import {Avatar, Button, Card, Description, Label, Spinner} from '@heroui/react';
+import {SiGithub, SiGoogle, SiPatreon} from '@icons-pack/react-simple-icons';
 import {userActions, useUserState} from '@lynx/redux/reducers/user';
 import {AppDispatch} from '@lynx/redux/store';
 import {LYNXHUB_WEBSITE} from '@lynx_common/consts';
@@ -108,6 +109,59 @@ const Profile_Account = memo(() => {
           )}
         </div>
       </Card.Content>
+
+      {isLoggedIn && (
+        <div className="border-t border-border/30 mx-5 pb-1 space-y-2">
+          <div className="flex flex-row flex-wrap gap-x-6 gap-y-2">
+            {/* Google */}
+            <div className="flex items-center gap-2">
+              <SiGoogle className="size-3.5 text-foreground/80 shrink-0" />
+              <span className="text-xs font-medium text-foreground">Google</span>
+              <span
+                className={
+                  'text-[9px] font-bold text-success/80 bg-success/5 px-1.5 py-px ' +
+                  'rounded-md border border-success/20'
+                }>
+                Primary
+              </span>
+            </div>
+
+            {/* GitHub */}
+            <div
+              className={`flex items-center gap-2 ${
+                userData.connectedProviders?.includes('github') ? 'opacity-100' : 'opacity-40'
+              }`}>
+              <SiGithub className="size-3.5 text-foreground/80 shrink-0" />
+              <span className="text-xs font-medium text-foreground">GitHub</span>
+              <span
+                className={`text-[9px] font-bold px-1.5 py-px rounded-md border ${
+                  userData.connectedProviders?.includes('github')
+                    ? 'text-success/80 bg-success/5 border-success/20'
+                    : 'text-muted/65 border-border/20'
+                }`}>
+                {userData.connectedProviders?.includes('github') ? 'Linked' : 'Not Linked'}
+              </span>
+            </div>
+
+            {/* Patreon */}
+            <div
+              className={`flex items-center gap-2 ${
+                userData.connectedProviders?.includes('patreon') ? 'opacity-100' : 'opacity-40'
+              }`}>
+              <SiPatreon className="size-3.5 text-LynxPurple shrink-0" />
+              <span className="text-xs font-medium text-foreground">Patreon</span>
+              <span
+                className={`text-[9px] font-bold px-1.5 py-px rounded-md border ${
+                  userData.connectedProviders?.includes('patreon')
+                    ? 'text-success/80 bg-success/5 border-success/20'
+                    : 'text-muted/65 border-border/20'
+                }`}>
+                {userData.connectedProviders?.includes('patreon') ? 'Linked' : 'Not Linked'}
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
     </Card>
   );
 });

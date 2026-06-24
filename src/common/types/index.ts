@@ -165,6 +165,7 @@ export type UserAccountData = {
   name: string;
   imageUrl: string;
   subscribeStage: SubscribeStages;
+  connectedProviders?: string[];
 };
 
 export type FolderListData = {type: 'folder' | 'file'; name: string};

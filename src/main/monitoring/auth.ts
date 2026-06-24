@@ -96,6 +96,7 @@ async function verifyTokenWithWebsite(token: string): Promise<InternalUserAccoun
     imageUrl: user.imageUrl,
     subscribeStage: user.subscribeStage as SubscribeStages,
     updateToken: user.updateToken,
+    connectedProviders: user.connectedProviders || [],
   };
 }
 

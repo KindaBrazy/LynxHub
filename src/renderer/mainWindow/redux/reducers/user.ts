@@ -20,6 +20,7 @@ const initialState: UserState = {
     name: 'Guest',
     imageUrl: '',
     subscribeStage: 'public',
+    connectedProviders: [],
   },
   isLoggedIn: false,
   updateChannel: 'public',
