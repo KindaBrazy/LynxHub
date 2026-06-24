@@ -281,42 +281,16 @@ export function PluginListItem({item, installed, layoutMode = 'default'}: Plugin
   return (
     <Card
       className={
-        `relative border border-surface/50 transition-all! duration-300!` +
-        ` hover:bg-surface/70 dark:hover:bg-black/70 ${isCompatible ? 'cursor-pointer' : ''}` +
+        `relative border transition-all! duration-300!` +
+        ` ${
+          isCompatible
+            ? 'border-surface/50 hover:bg-surface/70 dark:hover:bg-black/70 cursor-pointer'
+            : 'border-surface/30 bg-surface/30 opacity-75'
+        }` +
         ` ${isSelected && (isExtension ? 'border-accent!' : 'border-LynxPurple!')}`
       }
       key={`${item.metadata.id}_plugin_list_item`}
       onClick={isCompatible ? handleSelect : undefined}>
-      {!isCompatible && (
-        <div
-          className={
-            'absolute inset-0 z-20 flex flex-col items-center justify-center gap-y-1 ' + 'bg-surface-tertiary/50'
-          }>
-          <Tooltip delay={300}>
-            <Tooltip.Trigger>
-              <QuestionCircle
-                className={
-                  'size-10 rounded-full bg-surface p-1 text-warning/80 transition-colors' +
-                  ' duration-200 hover:text-warning'
-                }
-              />
-            </Tooltip.Trigger>
-            <Tooltip.Content className="whitespace-pre" showArrow>
-              <Tooltip.Arrow />
-              <p className="text-wrap">{item.incompatibleReason}</p>
-            </Tooltip.Content>
-          </Tooltip>
-          <span className="rounded-lg bg-surface px-2 py-1 text-sm">Incompatible</span>
-          {foundInstalled && (
-            <div className="absolute right-2 top-2 rounded-lg bg-surface p-1">
-              <Button size="sm" variant="danger-soft" onClick={handleUninstall} isIconOnly>
-                <TrashBin2 className="size-4" />
-              </Button>
-            </div>
-          )}
-        </div>
-      )}
-
       <Card.Header>
         <div className="inline-flex items-center gap-2">
           <Avatar>
@@ -332,9 +306,9 @@ export function PluginListItem({item, installed, layoutMode = 'default'}: Plugin
             <Description>
               By <span className="font-bold text-muted">{extractGitUrl(item.url).owner}</span>
             </Description>
-            <div className="flex flex-wrap gap-x-1 items-center">
-              <Description>
-                {currentVersion !== 'N/A' && (
+            <div className="flex flex-wrap gap-x-1.5 items-center">
+              {currentVersion !== 'N/A' && (
+                <Description>
                   <span className="flex flex-row items-center justify-center gap-x-0.5 w-fit mt-0.5 tracking-tight">
                     <span>{currentVersion}</span>
                     {targetUpdate && (
@@ -344,8 +318,8 @@ export function PluginListItem({item, installed, layoutMode = 'default'}: Plugin
                       </>
                     )}
                   </span>
-                )}
-              </Description>
+                </Description>
+              )}
               {foundUnloaded && (
                 <Tooltip delay={300}>
                   <Tooltip.Trigger>
@@ -377,7 +351,7 @@ export function PluginListItem({item, installed, layoutMode = 'default'}: Plugin
           {win32 && <Windows_Icon className="size-4 text-surface-foreground/70" />}
           {darwin && <MacOS_Icon className="size-4 text-surface-foreground/70" />}
 
-          {foundInstalled && (
+          {isCompatible && foundInstalled && (
             <>
               {!isExtension && (
                 <>
@@ -399,20 +373,51 @@ export function PluginListItem({item, installed, layoutMode = 'default'}: Plugin
           )}
         </div>
 
-        <UpdateButton item={item} isIconOnly />
-
-        {isInstalling && (
-          <div className="flex items-center gap-x-1">
-            <Spinner size="sm" />
-            <span className="text-sm">Installing...</span>
-          </div>
+        {!isCompatible && (
+          <Tooltip delay={300}>
+            <Tooltip.Trigger>
+              <Chip variant="soft" color="danger" className="px-1.5 h-5 text-[10px] gap-1 cursor-help">
+                <QuestionCircle className="size-3.5 text-danger/80" />
+                Incompatible
+              </Chip>
+            </Tooltip.Trigger>
+            <Tooltip.Content className="whitespace-pre" showArrow>
+              <Tooltip.Arrow />
+              <p className="text-wrap max-w-sm">{item.incompatibleReason}</p>
+            </Tooltip.Content>
+          </Tooltip>
         )}
 
-        {isUnInstalling && (
-          <div className="flex items-center gap-x-1">
-            <Spinner size="sm" color="warning" />
-            <span className="text-sm">Uninstalling...</span>
-          </div>
+        {!isCompatible ? (
+          foundInstalled && (
+            <Button
+              size="sm"
+              isIconOnly={false}
+              variant="danger-soft"
+              onClick={handleUninstall}
+              className="px-2.5 h-7 text-xs font-semibold flex items-center">
+              <TrashBin2 className="size-3.5" />
+              Uninstall
+            </Button>
+          )
+        ) : (
+          <>
+            <UpdateButton item={item} isIconOnly />
+
+            {isInstalling && (
+              <div className="flex items-center gap-x-1">
+                <Spinner size="sm" />
+                <span className="text-sm">Installing...</span>
+              </div>
+            )}
+
+            {isUnInstalling && (
+              <div className="flex items-center gap-x-1">
+                <Spinner size="sm" color="warning" />
+                <span className="text-sm">Uninstalling...</span>
+              </div>
+            )}
+          </>
         )}
 
         <InstallProgress pluginUrl={item.url} isInstalling={isInstalling} />
