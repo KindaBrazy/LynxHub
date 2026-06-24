@@ -37,7 +37,7 @@ export function UpdateButton({item, isIconOnly = false}: UpdateButtonProps) {
     const updateTarget = syncList.find(available => available.id === id);
     const upgradeState = updateTarget?.type === 'upgrade';
 
-    const variant: ButtonProps['variant'] = isUpdating ? 'ghost' : 'danger-soft';
+    const variant: ButtonProps['variant'] = isUpdating ? 'ghost' : upgradeState ? 'primary' : 'danger-soft';
 
     return {updateItem: updateTarget, isUpgrade: upgradeState, variant};
   }, [syncList, id]);
