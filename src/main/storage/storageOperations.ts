@@ -14,7 +14,7 @@ import {
 import {ChosenArgument} from '@lynx_common/types/plugins/modules';
 import {InstalledCard, InstalledCards} from '@lynx_common/types/storage';
 import {compareUrls, isValidURL, terminalLineEnding} from '@lynx_common/utils';
-import {storageUtilsIpc} from '@lynx_main/ipc/storage';
+import {sendToMain} from '@lynx_main/ipc/sender';
 import classHolder from '@lynx_main/managers/classHolder';
 import {
   decryptString,
@@ -61,7 +61,7 @@ class StorageManager extends BaseStorage {
     const updatedArray = [...currentArray, cardId];
 
     this.updateData('cards', {[arrayKey]: updatedArray});
-    storageUtilsIpc.send.onArrayUpdate(channel, updatedArray);
+    sendToMain(channel, updatedArray);
   }
 
   /**
@@ -79,7 +79,7 @@ class StorageManager extends BaseStorage {
     const updatedArray = currentArray.filter(id => id !== cardId);
 
     this.updateData('cards', {[arrayKey]: updatedArray});
-    storageUtilsIpc.send.onArrayUpdate(channel, updatedArray);
+    sendToMain(channel, updatedArray);
   }
 
   /**
@@ -255,7 +255,7 @@ class StorageManager extends BaseStorage {
 
         this.updateData('cards', {installedCards});
 
-        storageUtilsIpc.send.onInstalledCards(uniqBy(installedCards, 'id'));
+        sendToMain(storageUtilsChannels.onInstalledCards, uniqBy(installedCards, 'id'));
 
         cardsValidator.changedCards();
       }
@@ -270,7 +270,7 @@ class StorageManager extends BaseStorage {
 
       this.updateData('cards', {installedCards});
 
-      storageUtilsIpc.send.onInstalledCards(installedCards);
+      sendToMain(storageUtilsChannels.onInstalledCards, installedCards);
 
       cardsValidator.changedCards();
     });
@@ -281,7 +281,7 @@ class StorageManager extends BaseStorage {
       card => getAbsolutePath(getExePath(), card.dir || '') !== getAbsolutePath(getExePath(), dir),
     );
     this.updateData('cards', {installedCards});
-    storageUtilsIpc.send.onInstalledCards(installedCards);
+    sendToMain(storageUtilsChannels.onInstalledCards, installedCards);
   }
 
   public addAutoUpdateCard(cardId: string): void {
@@ -348,7 +348,7 @@ class StorageManager extends BaseStorage {
         get: () => this.getData('cards').pinnedCards,
         set: () => {
           this.updateData('cards', {pinnedCards});
-          storageUtilsIpc.send.onPinnedCardsChange(pinnedCards || []);
+          sendToMain(storageUtilsChannels.onPinnedCardsChange, pinnedCards || []);
         },
       }) || []
     );
@@ -361,7 +361,7 @@ class StorageManager extends BaseStorage {
     const result = newArray.slice(0, 5);
 
     this.updateData('cards', {recentlyUsedCards: result});
-    storageUtilsIpc.send.onRecentlyUsedCardsChange(result);
+    sendToMain(storageUtilsChannels.onRecentlyUsedCardsChange, result);
   }
 
   public recentlyUsedCardsOpt(opt: RecentlyOperation, id: string): string[] {
@@ -375,7 +375,7 @@ class StorageManager extends BaseStorage {
 
   public setHomeCategory(data: string[]): void {
     this.updateData('app', {homeCategory: data});
-    storageUtilsIpc.send.onHomeCategory(data);
+    sendToMain(storageUtilsChannels.onHomeCategory, data);
   }
 
   public handleHomeCategoryOperation(opt: StorageOperation, data: string[]): HomeCategory {
@@ -428,7 +428,9 @@ class StorageManager extends BaseStorage {
   }
 
   public addPreCommand(cardId: string, command: string): void {
-    this.handleCardCommandOperation('preCommands', 'add', cardId, command, storageUtilsIpc.send.onPreCommands);
+    this.handleCardCommandOperation('preCommands', 'add', cardId, command, commands =>
+      sendToMain(storageUtilsChannels.onPreCommands, commands),
+    );
   }
 
   public setPreCommand(cardId: string, commands: string[]): void {
@@ -436,7 +438,9 @@ class StorageManager extends BaseStorage {
   }
 
   public removePreCommand(cardId: string, index: number): void {
-    this.handleCardCommandOperation('preCommands', 'remove', cardId, index, storageUtilsIpc.send.onPreCommands);
+    this.handleCardCommandOperation('preCommands', 'remove', cardId, index, commands =>
+      sendToMain(storageUtilsChannels.onPreCommands, commands),
+    );
   }
 
   public handlePreCommandOperation(opt: StorageOperation, data: PreCommands): string[] {
@@ -464,7 +468,9 @@ class StorageManager extends BaseStorage {
   }
 
   public addCustomRun(cardId: string, command: string): void {
-    this.handleCardCommandOperation('customRun', 'add', cardId, command, storageUtilsIpc.send.onCustomRun);
+    this.handleCardCommandOperation('customRun', 'add', cardId, command, commands =>
+      sendToMain(storageUtilsChannels.onCustomRun, commands),
+    );
   }
 
   public setCustomRun(cardId: string, commands: string[]): void {
@@ -472,7 +478,9 @@ class StorageManager extends BaseStorage {
   }
 
   public removeCustomRun(cardId: string, index: number): void {
-    this.handleCardCommandOperation('customRun', 'remove', cardId, index, storageUtilsIpc.send.onCustomRun);
+    this.handleCardCommandOperation('customRun', 'remove', cardId, index, commands =>
+      sendToMain(storageUtilsChannels.onCustomRun, commands),
+    );
   }
 
   public handleCustomRunOperation(opt: StorageOperation, data: PreCommands): string[] {
@@ -713,7 +721,7 @@ class StorageManager extends BaseStorage {
     const prevState = this.getData('app');
     prevState[type] = enable;
 
-    storageUtilsIpc.send.onConfirmChange(type, enable);
+    sendToMain(storageUtilsChannels.onConfirmChange, type, enable);
 
     this.write();
   }

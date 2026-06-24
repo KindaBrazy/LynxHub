@@ -16,14 +16,14 @@ import HomeCategory from './home/Category';
 
 // ─── Private helpers ─────────────────────────────────────────────────────────
 
-/**
- * Custom hook that filters the full card list down to the provided IDs,
- * preserving original ordering of `cardIds`.
- */
 const useCardsById = (cardIds: string[]): LoadedCardData[] => {
   const allCards = useAllCardDataWithPath();
 
-  return useMemo(() => allCards.filter(card => cardIds.includes(card.id)), [cardIds, allCards]);
+  return useMemo(() => {
+    return cardIds
+      .map(id => allCards.find(card => card.id === id))
+      .filter((card): card is LoadedCardData => card !== undefined);
+  }, [cardIds, allCards]);
 };
 
 /** Renders a filtered card list by an array of IDs. */
