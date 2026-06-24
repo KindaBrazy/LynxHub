@@ -20,6 +20,7 @@ export const APP_DETAILED_DESCRIPTION: string = packageJson.appDetails.detailedD
 export const LYNXHUB_HOMEPAGE = packageJson.homepage;
 /** Website URL */
 export const LYNXHUB_WEBSITE = import.meta.env.DEV ? 'http://localhost:3000' : 'https://lynxhub.app';
+export const LYNXHUB_DOCS = 'https://docs.lynxhub.app';
 /** Releases page URL */
 export const RELEASES_PAGE = `${LYNXHUB_HOMEPAGE}/releases`;
 /** Early access releases page URL */
