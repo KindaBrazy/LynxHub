@@ -2,6 +2,7 @@ import {normalize} from 'node:path';
 
 import {LYNXHUB_WEBSITE} from '@lynx_common/consts';
 import {formatTime} from '@lynx_common/utils';
+import StorageManager from '@lynx_main/storage/storageOperations';
 import {Event, extraErrorDataIntegration, init as sentryInit} from '@sentry/electron/main';
 import axios from 'axios';
 
@@ -43,20 +44,17 @@ function shouldIgnoreError(event: Event): boolean {
  * @param appStartTime - The timestamp when the app started.
  * @param release - The current app release version.
  * @param pluginsRootPath - The root path for plugins to filter out extension errors.
+ * @param cachedDsn - The Sentry DSN loaded from cache.
  */
-export async function initSentry(appStartTime: number, release: string, pluginsRootPath: string) {
-  try {
-    const response = await axios.get(`${LYNXHUB_WEBSITE}/api/monitoring/sentry`, {
-      timeout: 5000,
-    });
-    const dsn = response.data?.dsn;
-    if (!dsn) {
-      console.warn('Sentry DSN not found in website response.');
-      return;
-    }
+export function initSentry(appStartTime: number, release: string, pluginsRootPath: string, cachedDsn?: string) {
+  if (!cachedDsn) {
+    console.warn('Sentry DSN not cached. Sentry will not be initialized this run.');
+    return;
+  }
 
+  try {
     sentryInit({
-      dsn,
+      dsn: cachedDsn,
       release,
       integrations: [extraErrorDataIntegration()],
       beforeSend: event => {
@@ -92,6 +90,30 @@ export async function initSentry(appStartTime: number, release: string, pluginsR
         return event;
       },
     });
+  } catch (error) {
+    console.error('Failed to initialize Sentry:', error);
+  }
+}
+
+/**
+ * Fetches the latest Sentry DSN from the website and caches it in storage.
+ * @param storageManager - The storage manager instance.
+ */
+export async function fetchAndCacheSentryDsn(storageManager: StorageManager): Promise<void> {
+  try {
+    const response = await axios.get(`${LYNXHUB_WEBSITE}/api/monitoring/sentry`, {
+      timeout: 5000,
+    });
+    const dsn = response.data?.dsn;
+    if (dsn) {
+      const currentDsn = storageManager.getData('app').sentryDsn;
+      if (currentDsn !== dsn) {
+        storageManager.updateData('app', {sentryDsn: dsn});
+        console.log('Sentry DSN updated and cached.');
+      }
+    } else {
+      console.warn('Sentry DSN not found in website response.');
+    }
   } catch (error) {
     console.error('Failed to fetch Sentry DSN from website:', error);
   }

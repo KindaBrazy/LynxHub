@@ -96,6 +96,7 @@ export type AppConfigStorage = {
   disableLoadingAnimations: boolean;
   collectErrors: boolean;
   addBreadcrumbs: boolean;
+  sentryDsn: string;
 };
 
 /**

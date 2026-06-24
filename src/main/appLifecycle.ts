@@ -15,15 +15,13 @@ import {initSentry} from './monitoring/sentry';
  * Configures application settings, command line switches, and protocols before the app is ready.
  * Initializes Sentry, sets hardware acceleration, and registers custom schemes.
  */
-export async function configureAppBeforeReady(): Promise<void> {
+export function configureAppBeforeReady(): void {
   const {storageManager, appStartTime} = classHolder;
 
-  const {hardwareAcceleration, collectErrors} = storageManager.getData('app');
+  const {hardwareAcceleration, collectErrors, sentryDsn} = storageManager.getData('app');
   const performanceSettings = storageManager.getData('performance');
 
   if (!hardwareAcceleration) app.disableHardwareAcceleration();
-  if (collectErrors)
-    await initSentry(appStartTime, `Version:${APP_VERSION}, Build:${APP_BUILD_NUMBER}`, getAppDirectory('Plugins'));
 
   // Apply performance settings as command-line switches
   if (performanceSettings.forceColorProfile !== 'default') {
@@ -79,6 +77,15 @@ export async function configureAppBeforeReady(): Promise<void> {
 
   // Register image cache protocol scheme
   registerImageCacheScheme();
+
+  if (collectErrors) {
+    initSentry(
+      appStartTime,
+      `Version:${APP_VERSION}, Build:${APP_BUILD_NUMBER}`,
+      getAppDirectory('Plugins'),
+      sentryDsn,
+    );
+  }
 }
 
 /**

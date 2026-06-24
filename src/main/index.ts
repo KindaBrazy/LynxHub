@@ -19,6 +19,7 @@ import {checkAppDirectories} from './managers/dataFolder';
 import {getImageCacheManager} from './managers/imageCache';
 import {checkForUpdate} from './managers/updater';
 import Auth, {handleDeepLink} from './monitoring/auth';
+import {fetchAndCacheSentryDsn} from './monitoring/sentry';
 import {PluginMigrate} from './setup/migration';
 import {getPrivilegeText} from './utils';
 import downloadDU from './utils/calcFolderSize/downloadDiskUsageUtility';
@@ -121,6 +122,11 @@ async function initializeLynxHub(): Promise<void> {
 
   storageManager.completeDeferredMigrations();
   storageManager.decryptBrowserData();
+
+  // Fetch Sentry DSN in the background to cache it for the next run
+  fetchAndCacheSentryDsn(storageManager).catch(err => {
+    console.error('Failed to fetch and cache Sentry DSN:', err);
+  });
 
   await classHolder.initializeManagers();
   await classHolder.checkStaticsRequirements();

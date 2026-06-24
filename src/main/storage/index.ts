@@ -26,7 +26,7 @@ class BaseStorage {
   private readonly migrationManager: StorageMigrationManager;
 
   private readonly DEFAULT_DATA: AppStorageData = {
-    storage: {version: 0.97},
+    storage: {version: 0.98},
     cards: {
       installedCards: [],
       autoUpdateCards: [],
@@ -75,6 +75,7 @@ class BaseStorage {
       disableLoadingAnimations: false,
       collectErrors: true,
       addBreadcrumbs: true,
+      sentryDsn: '',
     },
     terminal: {
       outputColor: false,

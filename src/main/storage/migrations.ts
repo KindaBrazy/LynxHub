@@ -37,6 +37,7 @@ export class StorageMigrationManager {
     [0.95, () => this.migrate_0_95()],
     [0.96, () => this.migrate_0_96()],
     [0.97, () => this.migrate_0_97()],
+    [0.98, () => this.migrate_0_98()],
   ]);
 
   constructor(
@@ -260,6 +261,10 @@ export class StorageMigrationManager {
       perCard: [],
     };
     this.storage.data.terminal.openLinkNewTab = false;
+  }
+
+  private migrate_0_98() {
+    this.storage.data.app.sentryDsn = '';
   }
 
   private normalizeCustomRunBehavior() {
