@@ -160,37 +160,6 @@ export function DiscordColor_Icon(props: SvgProps): ReactElement {
   );
 }
 
-export function Patreon_Icon(props: SvgProps): ReactElement {
-  return (
-    <svg {...props} height="1em" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
-      <path
-        fill="currentColor"
-        d="M232 93.17c0 41-29.69 52.47-53.55 61.67c-8.41 3.24-16.35 6.3-22.21 10.28c-11.39 7.72-18.59 21.78-25.55 35.38c-9.94 19.42-20.23 39.5-43.17 39.5c-12.91 0-24.61-11.64-33.85-33.66s-14.31-51-13.61-77.45c1.08-40.65 14.58-62.68 25.7-74c14.95-15.2 35.24-25.3 58.68-29.2c21.79-3.62 44.14-1.38 62.93 6.3C215.73 43.6 232 65.9 232 93.17"
-      />
-    </svg>
-  );
-}
-
-export function XSite_Icon(props: SvgProps): ReactElement {
-  return (
-    <svg {...props} height="1em" viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg">
-      <g fill="none">
-        <g clipPath="url(#primeTwitter0)">
-          <path
-            fill="currentColor"
-            d="M11.025.656h2.147L8.482 6.03L14 13.344H9.68L6.294 8.909l-3.87 4.435H.275l5.016-5.75L0 .657h4.43L7.486 4.71zm-.755 11.4h1.19L3.78 1.877H2.504z"
-          />
-        </g>
-        <defs>
-          <clipPath id="primeTwitter0">
-            <path fill="#fff" d="M0 0h14v14H0z" />
-          </clipPath>
-        </defs>
-      </g>
-    </svg>
-  );
-}
-
 export function Reddit_Icon(props: SvgProps): ReactElement {
   return (
     <svg {...props} height="1em" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
