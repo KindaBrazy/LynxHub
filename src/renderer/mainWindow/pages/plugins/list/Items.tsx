@@ -69,7 +69,7 @@ export function PluginListItem({item, installed, layoutMode = 'default'}: Plugin
 
   const {isExtension, foundInstalled, foundUnloaded, win32, darwin, linux, isCompatible} = useMemo(() => {
     const isExt = item.metadata.type === 'extension';
-    const compatible = item.isCompatible;
+    const isCompatible = item.isCompatible;
 
     const installedPlugin = installed.find(i => i.id === item.metadata.id);
     const unloadedPlugin = skipped.find(u => installedPlugin?.id === u.id);
@@ -85,7 +85,7 @@ export function PluginListItem({item, installed, layoutMode = 'default'}: Plugin
       linux: hasLinux,
       win32: hasWin32,
       darwin: hasDarwin,
-      isCompatible: compatible,
+      isCompatible,
     };
   }, [item, installed, skipped]);
 
@@ -138,28 +138,17 @@ export function PluginListItem({item, installed, layoutMode = 'default'}: Plugin
     return (
       <Card
         className={
-          `relative border border-surface/50 transition-all! duration-300!` +
-          ` hover:bg-surface/70 dark:hover:bg-black/70 ${isCompatible ? 'cursor-pointer' : ''}` +
+          `relative border transition-all! duration-300!` +
+          ` ${
+            isCompatible
+              ? 'border-surface/50 hover:bg-surface/70 dark:hover:bg-black/70 cursor-pointer'
+              : 'border-surface/30 bg-surface/30 opacity-70'
+          }` +
           ` ${isSelected && (isExtension ? 'border-accent!' : 'border-LynxPurple!')}` +
           ` px-3 py-2 min-h-14 flex flex-row items-center justify-between gap-x-2`
         }
         key={`${item.metadata.id}_plugin_compact_item`}
         onClick={isCompatible ? handleSelect : undefined}>
-        {!isCompatible && (
-          <div
-            className={
-              'absolute inset-0 z-20 flex flex-row items-center justify-between px-3' +
-              ' bg-surface-tertiary/75 rounded-xl'
-            }>
-            <span className="text-xs font-semibold text-warning/90">Incompatible</span>
-            {foundInstalled && (
-              <Button size="sm" variant="danger-soft" onClick={handleUninstall} className="size-6 min-w-0 p-0">
-                <TrashBin2 className="size-3.5" />
-              </Button>
-            )}
-          </div>
-        )}
-
         {/* Left Side: Avatar, Title and Author */}
         <div className="flex items-center gap-x-2.5 overflow-hidden min-w-0 flex-1">
           <Avatar className="size-8 min-w-8 shrink-0">
@@ -187,73 +176,101 @@ export function PluginListItem({item, installed, layoutMode = 'default'}: Plugin
         </div>
 
         {/* Right Side: Platforms, Version Info and Inline Actions */}
-        <div className="flex items-center gap-x-2 shrink-0">
-          {/* OS Platform Indicators */}
-          <div className="flex items-center gap-x-0.5 max-sm:hidden">
-            {linux && <Linux_Icon className="size-3 text-surface-foreground/60" />}
-            {win32 && <Windows_Icon className="size-3 text-surface-foreground/60" />}
-            {darwin && <MacOS_Icon className="size-3 text-surface-foreground/60" />}
-          </div>
-
-          {/* Compact Version Badge */}
-          {currentVersion !== 'N/A' && (
+        {!isCompatible ? (
+          <div className="flex items-center gap-x-2 shrink-0">
             <span
               className={
-                'text-[10px] bg-surface/50 px-1.5 py-0.5 rounded border border-surface/80' +
-                ' text-muted font-medium flex items-center gap-x-1'
+                'text-[10px] bg-warning/10 px-1.5 py-0.5 rounded-full border border-warning/30' +
+                ' text-warning font-semibold flex items-center'
               }>
-              <span>{currentVersion}</span>
-              {targetUpdate && (
-                <>
-                  <ArrowRight className="size-2" />
-                  <span className={`font-bold ${isUpgrade ? 'text-success' : 'text-warning'}`}>{targetVersion}</span>
-                </>
-              )}
+              Incompatible
             </span>
-          )}
-
-          {/* Warnings/Unloaded Indicators */}
-          {foundUnloaded && (
             <Tooltip delay={300}>
               <Tooltip.Trigger>
                 <div className="text-warning cursor-help shrink-0">
-                  <ShieldWarning className="size-4" />
+                  <QuestionCircle className="size-5" />
                 </div>
               </Tooltip.Trigger>
-              <Tooltip.Content showArrow>
+              <Tooltip.Content className="whitespace-pre" showArrow>
                 <Tooltip.Arrow />
-                <p className="text-xs">{foundUnloaded.message}</p>
+                <p className="text-wrap max-w-64">{item.incompatibleReason}</p>
               </Tooltip.Content>
             </Tooltip>
-          )}
-
-          {/* Module Config Trigger */}
-          {foundInstalled && !isExtension && (
-            <>
-              <ModuleConfigModal isOpen={configModal.isOpen} onClose={configModal.close} />
-              <Button
-                onClick={e => {
-                  e.stopPropagation();
-                  configModal.open();
-                }}
-                size="sm"
-                variant="secondary"
-                className="size-7 min-w-0 p-0 rounded-lg hover:bg-surface-secondary"
-                isIconOnly>
-                <SettingsMinimalistic className="size-3.5" />
+            {foundInstalled && (
+              <Button size="sm" className="size-7" variant="danger-soft" onClick={handleUninstall} isIconOnly>
+                <TrashBin2 className="size-3.5" />
               </Button>
-            </>
-          )}
-
-          {/* Update Action Button */}
-          <div className="scale-90 origin-right">
-            <UpdateButton item={item} isIconOnly />
+            )}
           </div>
+        ) : (
+          <div className="flex items-center gap-x-2 shrink-0">
+            {/* OS Platform Indicators */}
+            <div className="flex items-center gap-x-0.5 max-sm:hidden">
+              {linux && <Linux_Icon className="size-3 text-surface-foreground/60" />}
+              {win32 && <Windows_Icon className="size-3 text-surface-foreground/60" />}
+              {darwin && <MacOS_Icon className="size-3 text-surface-foreground/60" />}
+            </div>
 
-          {/* Spinning Actions */}
-          {isInstalling && <Spinner size="sm" className="size-4 shrink-0" />}
-          {isUnInstalling && <Spinner size="sm" color="warning" className="size-4 shrink-0" />}
-        </div>
+            {/* Compact Version Badge */}
+            {currentVersion !== 'N/A' && (
+              <span
+                className={
+                  'text-[10px] bg-surface/50 px-1.5 py-0.5 rounded border border-surface/80' +
+                  ' text-muted font-medium flex items-center gap-x-1'
+                }>
+                <span>{currentVersion}</span>
+                {targetUpdate && (
+                  <>
+                    <ArrowRight className="size-2" />
+                    <span className={`font-bold ${isUpgrade ? 'text-success' : 'text-warning'}`}>{targetVersion}</span>
+                  </>
+                )}
+              </span>
+            )}
+
+            {/* Warnings/Unloaded Indicators */}
+            {foundUnloaded && (
+              <Tooltip delay={300}>
+                <Tooltip.Trigger>
+                  <div className="text-warning cursor-help shrink-0">
+                    <ShieldWarning className="size-4" />
+                  </div>
+                </Tooltip.Trigger>
+                <Tooltip.Content showArrow>
+                  <Tooltip.Arrow />
+                  <p className="text-xs">{foundUnloaded.message}</p>
+                </Tooltip.Content>
+              </Tooltip>
+            )}
+
+            {/* Module Config Trigger */}
+            {foundInstalled && !isExtension && (
+              <>
+                <ModuleConfigModal isOpen={configModal.isOpen} onClose={configModal.close} />
+                <Button
+                  onClick={e => {
+                    e.stopPropagation();
+                    configModal.open();
+                  }}
+                  size="sm"
+                  variant="secondary"
+                  className="size-7 min-w-0 p-0 rounded-lg hover:bg-surface-secondary"
+                  isIconOnly>
+                  <SettingsMinimalistic className="size-3.5" />
+                </Button>
+              </>
+            )}
+
+            {/* Update Action Button */}
+            <div className="scale-90 origin-right">
+              <UpdateButton item={item} isIconOnly />
+            </div>
+
+            {/* Spinning Actions */}
+            {isInstalling && <Spinner size="sm" className="size-4 shrink-0" />}
+            {isUnInstalling && <Spinner size="sm" color="warning" className="size-4 shrink-0" />}
+          </div>
+        )}
 
         <InstallProgress pluginUrl={item.url} isInstalling={isInstalling} />
       </Card>
