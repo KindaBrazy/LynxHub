@@ -27,7 +27,7 @@ const initialGroupSections: GroupProps[] = [
     title: 'Application',
     items: [
       {
-        title: 'Profiles',
+        title: 'Account',
         icon: <DashboardPage_Icon className="size-4 shrink-0" />,
         elementId: dashboardSectionId.DashboardProfileId,
       },
