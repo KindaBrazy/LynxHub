@@ -110,6 +110,50 @@ const Profile_Account = memo(() => {
         </div>
       </Card.Content>
 
+      {isLoggedIn && !userData.connectedProviders?.includes('patreon') && (
+        <div
+          className={
+            'mx-5 mb-4 p-3 rounded-xl bg-orange-500/10 border border-orange-500/20 ' +
+            'flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-orange-600 dark:text-orange-400'
+          }>
+          <div className="space-y-0.5">
+            <p className="text-xs font-bold">Patreon Not Connected</p>
+            <p className="text-[11px] text-muted-foreground/80 leading-normal">
+              Connect your Patreon account on the website to unlock Early Access or Insider updates.
+            </p>
+          </div>
+          <Button
+            size="sm"
+            variant="secondary"
+            onPress={() => window.open(`${LYNXHUB_WEBSITE}/account`)}
+            className="font-bold shrink-0 self-start sm:self-center cursor-pointer">
+            Connect Patreon
+          </Button>
+        </div>
+      )}
+
+      {isLoggedIn && userData.connectedProviders?.includes('patreon') && userData.subscribeStage === 'public' && (
+        <div
+          className={
+            'mx-5 mb-4 p-3 rounded-xl bg-purple-500/10 border border-purple-500/20 ' +
+            'flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-purple-600 dark:text-purple-400'
+          }>
+          <div className="space-y-0.5">
+            <p className="text-xs font-bold">No Active Supporter Tier</p>
+            <p className="text-[11px] text-muted-foreground/80 leading-normal">
+              Upgrade your Patreon membership to get access to Early Access or Insider updates.
+            </p>
+          </div>
+          <Button
+            size="sm"
+            variant="primary"
+            onPress={() => window.open(`${LYNXHUB_WEBSITE}/account`)}
+            className="font-bold shrink-0 self-start sm:self-center cursor-pointer">
+            Upgrade to Access
+          </Button>
+        </div>
+      )}
+
       {isLoggedIn && (
         <div className="border-t border-border/30 mx-5 pb-1 space-y-2">
           <div className="flex flex-row flex-wrap gap-x-6 gap-y-2">
