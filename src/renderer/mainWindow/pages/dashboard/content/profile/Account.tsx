@@ -58,8 +58,8 @@ const Profile_Account = memo(() => {
     <Card className={`border ${isLoggedIn ? 'border-success/70 bg-success/5' : 'border-surface-secondary'} `}>
       <Card.Header>
         <div className="flex flex-row items-center space-x-1.5">
-          <User className="text-large text-accent animate-pulse" />
-          <span className="text-medium">LynxHub Account</span>
+          <User />
+          <span className="text-medium">Account</span>
         </div>
       </Card.Header>
 
