@@ -247,7 +247,7 @@ const PluginChangelogList = memo(() => {
       transition={{duration: 0.15}}
       className="size-full overflow-hidden">
       <LynxScroll className="gap-y-4 px-4 py-4 size-full">
-        <div className="max-w-175 mx-auto space-y-4 pb-6">
+        <div className="max-w-4xl mx-auto space-y-4 pb-6">
           {selectedPlugin?.changes.map((version, index) => {
             const stage = selectedPlugin?.versions.find(v => v.version === version.version)?.stage;
             return (
