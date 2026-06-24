@@ -82,7 +82,7 @@ const Profile_Account = memo(() => {
   }, [dispatch]);
 
   return (
-    <Card className={`border ${isLoggedIn ? 'border-success/70 bg-success/5' : 'border-surface-secondary'} `}>
+    <Card className={isLoggedIn ? `border border-success/30` : ''}>
       <Card.Header>
         <div className="flex flex-row items-center space-x-1.5">
           <User />
