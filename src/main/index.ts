@@ -1,3 +1,5 @@
+import path from 'node:path';
+
 import {electronApp, optimizer} from '@electron-toolkit/utils';
 import {APP_NAME} from '@lynx_common/consts';
 import {isDev, isMac} from '@lynx_common/utils';
@@ -16,7 +18,7 @@ import classHolder from './managers/classHolder';
 import {checkAppDirectories} from './managers/dataFolder';
 import {getImageCacheManager} from './managers/imageCache';
 import {checkForUpdate} from './managers/updater';
-import PatreonAuth from './monitoring/patreonAuth';
+import PatreonAuth, {handleDeepLink} from './monitoring/patreonAuth';
 import {PluginMigrate} from './setup/migration';
 import {getPrivilegeText} from './utils';
 import downloadDU from './utils/calcFolderSize/downloadDiskUsageUtility';
@@ -32,6 +34,40 @@ if (!isDev()) {
 
 // Suppress default menu as we use custom in-app menus
 Menu.setApplicationMenu(null);
+
+const gotTheLock = app.requestSingleInstanceLock();
+if (!gotTheLock) {
+  app.quit();
+} else {
+  // Handle second instance deep linking
+  app.on('second-instance', (_, commandLine) => {
+    const appManager = classHolder.appManager;
+    const mainWindow = appManager?.getMainWindow();
+    if (mainWindow) {
+      if (mainWindow.isMinimized()) mainWindow.restore();
+      mainWindow.focus();
+    }
+    const url = commandLine.find(arg => arg.startsWith('lynxhub://'));
+    if (url) {
+      handleDeepLink(url);
+    }
+  });
+
+  // Handle open-url on macOS
+  app.on('open-url', (event, url) => {
+    event.preventDefault();
+    handleDeepLink(url);
+  });
+
+  // Register protocol client
+  if (process.defaultApp) {
+    if (process.argv.length >= 2) {
+      app.setAsDefaultProtocolClient('lynxhub', process.execPath, [path.resolve(process.argv[1])]);
+    }
+  } else {
+    app.setAsDefaultProtocolClient('lynxhub');
+  }
+}
 
 // Initialize command-line switches and protocol scheme before app getting ready
 configureAppBeforeReady();

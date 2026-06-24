@@ -1,0 +1,240 @@
+import {LYNXHUB_WEBSITE} from '@lynx_common/consts';
+import {PatreonUserData, SubscribeStages} from '@lynx_common/types';
+import {applicationIpc} from '@lynx_main/ipc/application';
+import {userIpc} from '@lynx_main/ipc/user';
+import classHolder from '@lynx_main/managers/classHolder';
+import axios from 'axios';
+import {ipcMain, shell} from 'electron';
+import {autoUpdater} from 'electron-updater';
+
+import {deleteTokens, getChannel, getTokens, saveChannel, saveTokens} from './token';
+
+// Constants
+const PATREON_CHANNEL_KEY = 'LynxHub-Patreon-Update-Channel';
+const PATREON_LOGIN_KEY = 'LynxHub-Patreon-Login-User';
+
+// GitHub Tokens
+const GH_TOKEN_PUBLIC = 'github_pat_REMOVED_PUBLIC';
+const GH_TOKEN_INSIDER =
+  'github_pat_REMOVED_INSIDER';
+
+// Pending login promise resolvers
+let pendingLoginResolve: ((value: PatreonUserData) => void) | null = null;
+let pendingLoginReject: ((err: any) => void) | null = null;
+
+/**
+ * Handles custom protocol deep links (e.g. lynxhub://auth?token=...)
+ */
+export function handleDeepLink(url: string) {
+  try {
+    const parsedUrl = new URL(url);
+    if (parsedUrl.hostname === 'auth') {
+      const token = parsedUrl.searchParams.get('token');
+      if (token) {
+        processTokenLogin(token);
+      }
+    }
+  } catch (error) {
+    console.error('Error handling deep link:', error);
+  }
+}
+
+/**
+ * Verify token and complete authentication
+ */
+async function processTokenLogin(token: string) {
+  try {
+    const userData = await verifyTokenWithWebsite(token);
+
+    // Save token and channel configuration
+    await saveTokens(PATREON_LOGIN_KEY, token);
+    await saveChannel(PATREON_CHANNEL_KEY, userData.subscribeStage);
+
+    // Update UI and configure auto updater
+    await refreshChannel(true, userData.subscribeStage);
+    checkForAppUpdate(userData.subscribeStage);
+
+    if (pendingLoginResolve) {
+      pendingLoginResolve(userData);
+      pendingLoginResolve = null;
+      pendingLoginReject = null;
+    }
+  } catch (error) {
+    console.error('Failed to complete login via token:', error);
+    if (pendingLoginReject) {
+      pendingLoginReject(error);
+      pendingLoginResolve = null;
+      pendingLoginReject = null;
+    }
+  }
+}
+
+/**
+ * Verifies the token with the website's API and returns user data.
+ */
+async function verifyTokenWithWebsite(token: string): Promise<PatreonUserData> {
+  const response = await axios.get(`${LYNXHUB_WEBSITE}/api/user/session`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    timeout: 10000,
+  });
+
+  const user = response.data;
+
+  // Map subscribeStage to matching tier name for UI compatibility
+  const tierMap: Record<SubscribeStages, string> = {
+    insider: 'Insider Supporter',
+    early_access: 'Early Access Supporter',
+    public: 'Free Account',
+  };
+
+  return {
+    tier: tierMap[user.subscribeStage as SubscribeStages] || 'Free Account',
+    name: user.name,
+    imageUrl: user.imageUrl,
+    subscribeStage: user.subscribeStage as SubscribeStages,
+  };
+}
+
+/**
+ * Checks if the user is already logged in by verifying the stored token.
+ */
+async function checkExistingLogin(): Promise<{
+  isLoggedIn: boolean;
+  userData?: PatreonUserData;
+}> {
+  const token = await getTokens(PATREON_LOGIN_KEY);
+  if (token) {
+    try {
+      const userData = await verifyTokenWithWebsite(token);
+      return {
+        isLoggedIn: true,
+        userData,
+      };
+    } catch (error) {
+      console.warn('Stored token is invalid or expired. Logging out.');
+      await deleteTokens(PATREON_LOGIN_KEY);
+      return {isLoggedIn: false};
+    }
+  }
+  return {isLoggedIn: false};
+}
+
+/**
+ * Refreshes the channel based on login status and tier.
+ */
+async function refreshChannel(isLogin: boolean, stage: SubscribeStages) {
+  if (isLogin && (stage === 'insider' || stage === 'early_access')) {
+    await saveChannel(PATREON_CHANNEL_KEY, stage);
+    applicationIpc.send.updateChannelChange(stage);
+  } else {
+    await saveChannel(PATREON_CHANNEL_KEY, 'public');
+    applicationIpc.send.updateChannelChange('public');
+  }
+}
+
+/**
+ * Configures the auto-updater based on the subscription stage.
+ */
+function checkForAppUpdate(stage: SubscribeStages) {
+  const provider = 'github';
+  const owner = 'KindaBrazy';
+
+  if (stage === 'insider' || stage === 'early_access') {
+    const token = stage === 'insider' ? GH_TOKEN_INSIDER : GH_TOKEN_PUBLIC;
+    const repo = stage === 'insider' ? 'LynxHub-Insider-Releases' : 'LynxHub-EA-Releases';
+
+    process.env.GH_TOKEN = token;
+
+    autoUpdater.setFeedURL({
+      provider,
+      owner,
+      repo,
+      private: true,
+      token,
+    });
+
+    autoUpdater.disableDifferentialDownload = true;
+  } else {
+    autoUpdater.setFeedURL({
+      provider,
+      owner,
+      repo: 'LynxHub',
+      private: false,
+    });
+  }
+
+  autoUpdater.checkForUpdates();
+}
+
+/**
+ * Sets up IPC listeners for Patreon authentication (which redirects to website auth) and channel management.
+ */
+export default function PatreonAuth() {
+  userIpc.patreon.handle.getInfo(async () => {
+    try {
+      const existingLogin = await checkExistingLogin();
+
+      if (existingLogin.isLoggedIn && existingLogin.userData) {
+        const currentChannel = await getChannel(PATREON_CHANNEL_KEY);
+        checkForAppUpdate(currentChannel);
+        return {...existingLogin.userData, subscribeStage: currentChannel};
+      } else {
+        checkForAppUpdate('public');
+        return null;
+      }
+    } catch (e) {
+      console.info('Auth failed to update channel', e);
+      return null;
+    }
+  });
+
+  userIpc.patreon.handle.login(async () => {
+    const authUrl = `${LYNXHUB_WEBSITE}/auth/app`;
+
+    const {storageManager} = classHolder;
+    if (storageManager.getData('app').openLinkExternal) {
+      shell.openExternal(authUrl).catch(_e => {
+        // console.error('Error on openExternal: ', _e);
+      });
+    } else {
+      applicationIpc.send.onNewTab(authUrl);
+    }
+
+    return new Promise<PatreonUserData>((resolve, reject) => {
+      pendingLoginResolve = resolve;
+      pendingLoginReject = reject;
+    });
+  });
+
+  userIpc.patreon.handle.logout(async () => {
+    try {
+      await deleteTokens(PATREON_LOGIN_KEY);
+      await refreshChannel(false, 'public');
+      checkForAppUpdate('public');
+      return;
+    } catch (error) {
+      await refreshChannel(false, 'public');
+      checkForAppUpdate('public');
+      throw error;
+    }
+  });
+
+  userIpc.patreon.on.updateChannel(async channel => {
+    if (channel === 'get') {
+      const currentChannel = await getChannel(PATREON_CHANNEL_KEY);
+      applicationIpc.send.updateChannelChange(currentChannel);
+    }
+  });
+
+  // Handle user-initiated login cancellation
+  ipcMain.removeAllListeners('patreon-cancel-process');
+  ipcMain.on('patreon-cancel-process', () => {
+    if (pendingLoginReject) {
+      pendingLoginReject(new Error('OAuth process cancelled by user'));
+      pendingLoginResolve = null;
+      pendingLoginReject = null;
+    }
+  });
+}
