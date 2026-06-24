@@ -448,11 +448,12 @@ function InstallProgress({isInstalling, pluginUrl}: InstallProgressProps) {
 
   return (
     <ProgressBar
+      size="sm"
       color="success"
       value={installProgress}
       aria-label="Installing progress"
-      className="absolute -bottom-0.5 inset-x-0">
-      <ProgressBar.Track>
+      className="absolute bottom-0 inset-x-0 px-3.5">
+      <ProgressBar.Track className="h-0.5">
         <ProgressBar.Fill />
       </ProgressBar.Track>
     </ProgressBar>
