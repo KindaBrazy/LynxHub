@@ -122,7 +122,7 @@ export function SettingsNav({tabID, pageID}: Props) {
     const pluginsBadge = !isEmpty(syncList) ? syncList.length : false;
 
     const dashboardIcon = isLoggedIn ? (
-      <Avatar className="size-full">
+      <Avatar className="size-full scale-140">
         <Avatar.Image src={getCacheUrl(userData.imageUrl)} />
         <Avatar.Fallback>{getFallbackString(userData.name)}</Avatar.Fallback>
       </Avatar>
