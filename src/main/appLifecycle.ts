@@ -23,7 +23,7 @@ export async function configureAppBeforeReady(): Promise<void> {
 
   if (!hardwareAcceleration) app.disableHardwareAcceleration();
   if (collectErrors)
-    initSentry(appStartTime, `Version:${APP_VERSION}, Build:${APP_BUILD_NUMBER}`, getAppDirectory('Plugins'));
+    await initSentry(appStartTime, `Version:${APP_VERSION}, Build:${APP_BUILD_NUMBER}`, getAppDirectory('Plugins'));
 
   // Apply performance settings as command-line switches
   if (performanceSettings.forceColorProfile !== 'default') {

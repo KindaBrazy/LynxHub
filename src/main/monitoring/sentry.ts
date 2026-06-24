@@ -1,2 +1,98 @@
-// @ts-ignore-next-line
-export function initSentry(appStartTime: number, release: string, pluginsRootPath: string) {}
+import {normalize} from 'node:path';
+
+import {LYNXHUB_WEBSITE} from '@lynx_common/consts';
+import {formatTime} from '@lynx_common/utils';
+import {Event, extraErrorDataIntegration, init as sentryInit} from '@sentry/electron/main';
+import axios from 'axios';
+
+/** Patterns for errors that should not be reported to Sentry */
+const IGNORED_ERROR_PATTERNS = [
+  // GPU process crashes - Chromium internal issues
+  /crash_reporter::DumpWithoutCrashing/i,
+  /GPU.*process.*exited/i,
+  /abnormal-exit/i,
+  /GpuWatchdogThread/i,
+  // Windows loader/native crashes - Chromium/OS internal issues
+  /LdrpInitializeInternal/i,
+  /EXCEPTION_BREAKPOINT/i,
+  // Git not installed - user environment issue
+  /spawn git ENOENT/i,
+  /spawn.*ENOENT/i,
+  /git.*not found/i,
+  /Git is not available/i,
+  // Port already in use - user environment issue
+  /EADDRINUSE/i,
+  /address already in use/i,
+  // Git clone destination exists - user action needed, not a bug
+  /already exists and is not an empty directory/i,
+  /destination path.*already exists/i,
+];
+
+/**
+ * Checks if the error event should be ignored based on known patterns.
+ * @param event - The Sentry event to check.
+ * @returns boolean - True if the error should be ignored.
+ */
+function shouldIgnoreError(event: Event): boolean {
+  const message = event.message || event.exception?.values?.[0]?.value || '';
+  return IGNORED_ERROR_PATTERNS.some(pattern => pattern.test(message));
+}
+
+/**
+ * Initializes Sentry for error tracking in the main process.
+ * @param appStartTime - The timestamp when the app started.
+ * @param release - The current app release version.
+ * @param pluginsRootPath - The root path for plugins to filter out extension errors.
+ */
+export async function initSentry(appStartTime: number, release: string, pluginsRootPath: string) {
+  try {
+    const response = await axios.get(`${LYNXHUB_WEBSITE}/api/monitoring/sentry`, {
+      timeout: 5000,
+    });
+    const dsn = response.data?.dsn;
+    if (!dsn) {
+      console.warn('Sentry DSN not found in website response.');
+      return;
+    }
+
+    sentryInit({
+      dsn,
+      release,
+      integrations: [extraErrorDataIntegration()],
+      beforeSend: event => {
+        // Filter out known non-actionable errors
+        if (shouldIgnoreError(event)) {
+          return null;
+        }
+
+        const exception = event.exception?.values?.[0];
+        if (!exception?.stacktrace?.frames) {
+          return event;
+        }
+
+        // Filter out errors originating from extensions/plugins
+        const isFromExtension = exception.stacktrace.frames.some(frame => {
+          if (!frame.filename) {
+            return false;
+          }
+          return normalize(frame.filename).startsWith(normalize(pluginsRootPath));
+        });
+
+        if (isFromExtension) {
+          console.log('Sentry event from an extension detected. Dropping.');
+          return null;
+        }
+
+        // Add uptime to the event data
+        event.extra = {
+          ...event.extra,
+          uptime: formatTime(Math.floor((Date.now() - appStartTime) / 1000)),
+        };
+
+        return event;
+      },
+    });
+  } catch (error) {
+    console.error('Failed to fetch Sentry DSN from website:', error);
+  }
+}
