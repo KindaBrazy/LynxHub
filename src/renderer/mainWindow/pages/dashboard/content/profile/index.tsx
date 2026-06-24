@@ -8,7 +8,7 @@ export const DashboardProfileId = 'settings_profile_elem';
 
 const DashboardProfile = memo(() => {
   return (
-    <SettingsSection title="Profiles" id={DashboardProfileId} icon={<DashboardPage_Icon className="size-5" />}>
+    <SettingsSection title="Account" id={DashboardProfileId} icon={<DashboardPage_Icon className="size-5" />}>
       <Profile_Account />
       {/*<Profile_Google />*/}
     </SettingsSection>

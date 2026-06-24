@@ -7,7 +7,7 @@ import {getCacheUrl, getFallbackString} from '@lynx_common/utils';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
 import userIpc from '@lynx_shared/ipc/user';
 import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
-import {Refresh, User} from '@solar-icons/react-perf/BoldDuotone';
+import {Refresh} from '@solar-icons/react-perf/BoldDuotone';
 import {memo, useCallback, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -82,14 +82,7 @@ const Profile_Account = memo(() => {
   }, [dispatch]);
 
   return (
-    <Card className={isLoggedIn ? `border border-success/30` : ''}>
-      <Card.Header>
-        <div className="flex flex-row items-center space-x-1.5">
-          <User />
-          <span className="text-medium">Account</span>
-        </div>
-      </Card.Header>
-
+    <Card className={`${isLoggedIn ? 'border border-success/30' : ''} py-6 px-5`}>
       <Card.Content className="space-between flex flex-row justify-between items-center">
         <div className="inline-flex items-center gap-2">
           <Avatar className={`shrink-0`}>
