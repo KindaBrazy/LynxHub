@@ -1,7 +1,7 @@
 import {normalize} from 'node:path';
 
 import {LYNXHUB_WEBSITE} from '@lynx_common/consts';
-import {formatTime} from '@lynx_common/utils';
+import {formatTime, isDev} from '@lynx_common/utils';
 import StorageManager from '@lynx_main/storage/storageOperations';
 import {Event, extraErrorDataIntegration, init as sentryInit} from '@sentry/electron/main';
 import axios from 'axios';
@@ -47,6 +47,11 @@ function shouldIgnoreError(event: Event): boolean {
  * @param cachedDsn - The Sentry DSN loaded from cache.
  */
 export function initSentry(appStartTime: number, release: string, pluginsRootPath: string, cachedDsn?: string) {
+  if (isDev()) {
+    console.log('is dev and returning');
+    return;
+  }
+
   if (!cachedDsn) {
     console.warn('Sentry DSN not cached. Sentry will not be initialized this run.');
     return;
