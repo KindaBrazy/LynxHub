@@ -247,7 +247,7 @@ export function PluginListItem({item, installed, layoutMode = 'default'}: Plugin
 
           {/* Update Action Button */}
           <div className="scale-90 origin-right">
-            <UpdateButton item={item} />
+            <UpdateButton item={item} isIconOnly />
           </div>
 
           {/* Spinning Actions */}
@@ -382,7 +382,7 @@ export function PluginListItem({item, installed, layoutMode = 'default'}: Plugin
           )}
         </div>
 
-        <UpdateButton item={item} />
+        <UpdateButton item={item} isIconOnly />
 
         {isInstalling && (
           <div className="flex items-center gap-x-1">

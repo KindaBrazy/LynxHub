@@ -1,4 +1,4 @@
-import {Button, ButtonProps, Spinner} from '@heroui/react';
+import {Button, ButtonProps, Spinner, Tooltip} from '@heroui/react';
 import {pluginsActions, useIsUpdatingPlugin, usePluginsState} from '@lynx/redux/reducers/plugins';
 import {AppDispatch} from '@lynx/redux/store';
 import {showRestartModal} from '@lynx/utils';
@@ -17,13 +17,15 @@ import {topToast} from '../../layouts/ToastProviders';
 interface UpdateButtonProps {
   /** The plugin item for which you want to display the update or downgrade buttons. */
   item: PluginItem;
+  /** Whether to render only the icon without text. */
+  isIconOnly?: boolean;
 }
 
 /**
  * Button component that handles syncing a plugin to its remote codebase,
  * either by upgrading or downgrading. Provides UI feedback during the operation.
  */
-export function UpdateButton({item}: UpdateButtonProps) {
+export function UpdateButton({item, isIconOnly = false}: UpdateButtonProps) {
   const dispatch = useDispatch<AppDispatch>();
   const syncList = usePluginsState('syncList');
   const isUpdating = useIsUpdatingPlugin(item.metadata.id);
@@ -67,10 +69,30 @@ export function UpdateButton({item}: UpdateButtonProps) {
     return null;
   }
 
-  return (
-    <Button size="sm" variant={variant} onPress={handleSync} isPending={isUpdating} isDisabled={updatingAll}>
+  const buttonEl = (
+    <Button
+      size="sm"
+      variant={variant}
+      onPress={handleSync}
+      isPending={isUpdating}
+      isIconOnly={isIconOnly}
+      isDisabled={updatingAll}>
       {isUpdating ? <Spinner size="sm" color="current" /> : <DownloadMinimalistic className="size-3" />}
-      {text}
+      {!isIconOnly && text}
     </Button>
   );
+
+  if (isIconOnly) {
+    return (
+      <Tooltip delay={300}>
+        <Tooltip.Trigger>{buttonEl}</Tooltip.Trigger>
+        <Tooltip.Content showArrow>
+          <Tooltip.Arrow />
+          <p>{text}</p>
+        </Tooltip.Content>
+      </Tooltip>
+    );
+  }
+
+  return buttonEl;
 }
