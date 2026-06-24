@@ -1,7 +1,7 @@
 import {existsSync, readdirSync, readFileSync, rmSync} from 'node:fs';
 import {join} from 'node:path';
 
-import {APP_BUILD_NUMBER, STATICS_URL} from '@lynx_common/consts';
+import {APP_BUILD_NUMBER, LYNXHUB_WEBSITE, STATICS_URL} from '@lynx_common/consts';
 import {
   AppUpdateData,
   AppUpdateInsiderData,
@@ -14,8 +14,11 @@ import {
 import {PluginMetadata, PluginVersioning} from '@lynx_common/types/plugins';
 import {toMs} from '@lynx_common/utils';
 import GitManager from '@lynx_main/git';
+import axios from 'axios';
 import {promises} from 'graceful-fs';
 
+import {AUTH_LOGIN_KEY} from '../monitoring/auth';
+import {getTokens} from '../monitoring/token';
 import classHolder from './classHolder';
 import {getAppDirectory} from './dataFolder';
 
@@ -113,7 +116,24 @@ export default class StaticsManager {
   }
 
   public async getNotification(): Promise<NotificationData[] | undefined> {
-    return this.getDataAsJson<NotificationData[]>('notifications.json');
+    try {
+      const token = await getTokens(AUTH_LOGIN_KEY);
+      const headers: Record<string, string> = {};
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+      const response = await axios.get(`${LYNXHUB_WEBSITE}/api/notifications`, {
+        headers,
+        timeout: 10000,
+      });
+      if (response.data && response.data.success) {
+        return response.data.notifications;
+      }
+      return [];
+    } catch (error) {
+      console.error('Failed to fetch notifications from website:', error);
+      return [];
+    }
   }
 
   public async getModules(): Promise<ModuleInfo[] | undefined> {

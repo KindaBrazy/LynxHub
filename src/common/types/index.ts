@@ -2,13 +2,7 @@
 
 import type {ButtonProps} from '@heroui/react';
 
-import type {
-  AvailablePageIDs,
-  BINARIES_FOLDER_NAME,
-  PLUGINS_FOLDER_NAME,
-  REPOSITORIES_FOLDER_NAME,
-  STATICS_FOLDER_NAME,
-} from '../consts';
+import type {BINARIES_FOLDER_NAME, PLUGINS_FOLDER_NAME, REPOSITORIES_FOLDER_NAME, STATICS_FOLDER_NAME} from '../consts';
 import {ArgumentType, ChosenArgument} from './plugins/modules';
 
 /**
@@ -186,20 +180,36 @@ export type TabInfo = {
   progress?: {state: 0 | 1 | 2 | 3 | 4; value: number};
 };
 
+export interface NotificationAction {
+  label: string;
+  url: string;
+  variant?: 'solid' | 'bordered' | 'light' | 'flat' | 'ghost';
+  color?: 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger';
+  isExternal?: boolean;
+}
+
 /**
  * Data for a notification.
  */
 export type NotificationData = {
   id: string;
-  title: string;
-  titleColor?: 'primary' | 'success' | 'secondary' | 'warning' | 'danger';
-  description: {text: string; color?: 'primary' | 'success' | 'secondary' | 'warning' | 'danger'}[];
-  buttons?: {
-    title: string;
-    destination: AvailablePageIDs | string;
-    color?: ButtonProps['variant'];
-  }[];
-  icon?: string;
+  title: string | null;
+  body: string;
+  style: string;
+  icon: string | null;
+  iconColor: string | null;
+  bgColor: string | null;
+  textColor: string | null;
+  image: string | null;
+  actions: NotificationAction[] | string | null;
+  targetTiers: string[];
+  releaseType?: string | null;
+  releaseVersion?: string | null;
+  publicVersion?: string | null;
+  eaVersion?: string | null;
+  insiderVersion?: string | null;
+  createdAt?: string;
+  updatedAt?: string;
 };
 
 export type PatreonSupporterTier = 'Platinum Sponsor' | 'Diamond Sponsor';

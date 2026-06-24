@@ -1,3 +1,4 @@
+import {LYNXHUB_WEBSITE} from '@lynx_common/consts';
 import {storageUtilsChannels} from '@lynx_common/consts/ipcChannels/storage';
 import {ChosenArgumentsData, ConfirmMenuTypes} from '@lynx_common/types';
 import {
@@ -25,8 +26,11 @@ import {
   getRelativePath,
   isPortable,
 } from '@lynx_main/utils';
+import axios from 'axios';
 import {uniqBy} from 'lodash-es';
 
+import {AUTH_LOGIN_KEY} from '../monitoring/auth';
+import {getTokens} from '../monitoring/token';
 import BaseStorage from './index';
 
 /**
@@ -720,6 +724,30 @@ class StorageManager extends BaseStorage {
     if (prevReadNotifs.includes(id)) return;
 
     this.updateData('notification', {readNotifs: [...prevReadNotifs, id]});
+
+    // Asynchronously sync the dismissal to the website if logged in
+    getTokens(AUTH_LOGIN_KEY)
+      .then(async token => {
+        if (token) {
+          try {
+            await axios.post(
+              `${LYNXHUB_WEBSITE}/api/notifications/dismiss`,
+              {notificationId: id},
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+                timeout: 5000,
+              },
+            );
+          } catch (error) {
+            console.error('Failed to sync notification dismissal to website:', error);
+          }
+        }
+      })
+      .catch(err => {
+        console.error('Error retrieving login token for notification dismissal sync:', err);
+      });
   }
 
   /**

@@ -1,33 +1,51 @@
-import {
-  Avatar,
-  Badge,
-  Button,
-  buttonVariants,
-  Card,
-  Drawer,
-  Label,
-  Link,
-  ProgressBar,
-  useOverlayState,
-} from '@heroui/react';
+import {Badge, Button, Drawer, Label, ProgressBar, useOverlayState} from '@heroui/react';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import LynxScroll from '@lynx/components/LynxScroll';
 import {tabsActions} from '@lynx/redux/reducers/tabs';
+import {useUserState} from '@lynx/redux/reducers/user';
 import {AppDispatch} from '@lynx/redux/store';
-import {AvailablePageIDs, PageID, PageTitles} from '@lynx_common/consts';
-import {NotificationData} from '@lynx_common/types';
-import {getFallbackString, isValidURL} from '@lynx_common/utils';
+import {AvailablePageIDs, LYNXHUB_WEBSITE, PageID, PageTitles} from '@lynx_common/consts';
+import {NotificationAction, NotificationData} from '@lynx_common/types';
+import {isValidURL} from '@lynx_common/utils';
 import staticsIpc from '@lynx_shared/ipc/statics';
 import storageIpc, {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
-import {Bell, Notes} from '@solar-icons/react-perf/BoldDuotone';
-import {CheckRead, Unread} from '@solar-icons/react-perf/LineDuotone';
+import {
+  Bell,
+  CheckCircle,
+  CloseCircle,
+  Download,
+  Gift,
+  Heart,
+  InfoCircle,
+  ShieldWarning,
+  Star,
+  VolumeLoud,
+  Widget,
+  Widget5,
+} from '@solar-icons/react-perf/BoldDuotone';
+import {CheckRead} from '@solar-icons/react-perf/LineDuotone';
 import {AnimatePresence, motion} from 'framer-motion';
-import {isEmpty} from 'lodash-es';
+import {X} from 'lucide-react';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import useStaticNotifications from './StaticNotifications';
+import {formatMarkdown} from './markdown';
+
+const IconMap: Record<string, React.ComponentType<{className?: string}>> = {
+  Bell,
+  InfoCircle,
+  ShieldWarning,
+  CheckCircle,
+  CloseCircle,
+  Gift,
+  Star,
+  VolumeLoud,
+  Heart,
+  Widget,
+  Widget5,
+  Download,
+};
 
 /**
  * Hook to manage notification state and data fetching.
@@ -66,13 +84,10 @@ function useNotificationsData() {
     });
   }, [fetchAndFilterNotifications]);
 
-  const markAsRead = useCallback(
-    (id: string) => {
-      storageUtilsIpc.send.addReadNotif(id);
-      filterAndSetNotifications(notifications);
-    },
-    [filterAndSetNotifications, notifications],
-  );
+  const markAsRead = useCallback((id: string) => {
+    storageUtilsIpc.send.addReadNotif(id);
+    setNotifications(prev => prev.filter(notif => notif.id !== id));
+  }, []);
 
   return {
     notifications,
@@ -94,79 +109,203 @@ interface NotificationItemProps {
   /** Callback to close the notification drawer, usually after navigating. */
   onCloseDrawer: () => void;
   delay?: number;
+  userEntitlement: string;
 }
 
 /**
- * A sub-component rendering a single notification card.
+ * A sub-component rendering a single notification card matching the website overlay rendering.
  */
-function NotificationItem({notif, onRead, onNavigatePage, onCloseDrawer, delay}: NotificationItemProps) {
-  const {buttons, icon, titleColor, title, description} = notif;
+function NotificationItem({
+  notif,
+  onRead,
+  onNavigatePage,
+  onCloseDrawer,
+  delay,
+  userEntitlement,
+}: NotificationItemProps) {
+  const {id, title, body, style, icon, iconColor, bgColor, textColor, image, actions, releaseType} = notif;
+
+  // Resolve visual presets
+  let cardBgClass = 'bg-background/90 backdrop-blur-md border-border/80 text-foreground';
+  let titleColorClass = 'text-foreground';
+
+  if (style === 'info') {
+    cardBgClass = 'bg-primary-soft/10 dark:bg-primary-soft/5 backdrop-blur-md border-primary/20';
+    titleColorClass = 'text-primary';
+  } else if (style === 'success') {
+    cardBgClass = 'bg-success/10 dark:bg-success/5 backdrop-blur-md border-success/20';
+    titleColorClass = 'text-success';
+  } else if (style === 'warning') {
+    cardBgClass = 'bg-warning/10 dark:bg-warning/5 backdrop-blur-md border-warning/20';
+    titleColorClass = 'text-warning';
+  } else if (style === 'danger') {
+    cardBgClass = 'bg-danger/10 dark:bg-danger/5 backdrop-blur-md border-danger/20';
+    titleColorClass = 'text-danger';
+  } else if (style === 'custom') {
+    cardBgClass = `${bgColor || 'bg-background/90 backdrop-blur-md'} border-border/80`;
+    titleColorClass = textColor || 'text-foreground';
+  }
+
+  // Resolve Icon
+  const IconComponent = icon && IconMap[icon] ? IconMap[icon] : null;
+
+  // Resolve Icon Color
+  let iconColorClass = 'text-foreground';
+  if (iconColor) {
+    if (iconColor === 'primary') iconColorClass = 'text-primary';
+    else if (iconColor === 'secondary') iconColorClass = 'text-secondary';
+    else if (iconColor === 'success') iconColorClass = 'text-success';
+    else if (iconColor === 'warning') iconColorClass = 'text-warning';
+    else if (iconColor === 'danger') iconColorClass = 'text-danger';
+    else if (iconColor === 'default') iconColorClass = 'text-muted-foreground';
+    else iconColorClass = iconColor;
+  } else {
+    if (style === 'info') iconColorClass = 'text-primary';
+    else if (style === 'success') iconColorClass = 'text-success';
+    else if (style === 'warning') iconColorClass = 'text-warning';
+    else if (style === 'danger') iconColorClass = 'text-danger';
+  }
+
+  // Parse actions
+  let actionsList: NotificationAction[] = [];
+  if (actions) {
+    actionsList = typeof actions === 'string' ? JSON.parse(actions) : actions;
+  }
+
+  // Check version access
+  const isRestrictedRelease = releaseType === 'EA' || releaseType === 'INSIDER';
+  const hasReleaseAccess =
+    !isRestrictedRelease ||
+    (releaseType === 'EA' && (userEntitlement === 'EA' || userEntitlement === 'INSIDER')) ||
+    (releaseType === 'INSIDER' && userEntitlement === 'INSIDER');
+
+  if (!hasReleaseAccess) {
+    actionsList = [
+      {
+        label: 'Upgrade to Get Access',
+        url: '/pricing',
+        variant: 'solid',
+      },
+    ];
+  }
+
+  const handleActionPress = (url: string) => {
+    onCloseDrawer();
+    if (url.startsWith('/')) {
+      window.open(`${LYNXHUB_WEBSITE}${url}`);
+    } else if (isValidURL(url)) {
+      window.open(url);
+    } else {
+      onNavigatePage(url);
+    }
+  };
 
   return (
     <motion.div
+      layoutId={id}
       className="px-1"
-      layoutId={notif.id}
       transition={{delay}}
       animate={{translateY: 0, opacity: 1}}
       initial={{translateY: 30, opacity: 0}}>
-      <Card variant="secondary">
-        <Card.Header className="flex flex-row items-center gap-3">
-          {icon && isValidURL(icon) ? (
-            <Avatar>
-              <Avatar.Image src={icon} alt={`${title} avatar`} />
-              <Avatar.Fallback>{getFallbackString(title)}</Avatar.Fallback>
-            </Avatar>
-          ) : (
-            <Notes className="size-5" />
+      <div className={`flex flex-col border p-4 rounded-2xl shadow-xl ${cardBgClass} relative overflow-hidden`}>
+        {/* Dismiss Button */}
+        <Button
+          className={
+            'absolute top-3.5 right-3.5 size-7 rounded-full text-muted ' +
+            'hover:text-foreground hover:bg-default/20 transition-colors cursor-pointer'
+          }
+          size="sm"
+          variant="secondary"
+          onPress={() => onRead(id)}
+          isIconOnly>
+          <X className="size-3.5" />
+        </Button>
+
+        <div className="flex gap-3 pr-6">
+          {IconComponent && (
+            <div className="flex-shrink-0 mt-0.5">
+              <div className="p-1.5 bg-default/20 dark:bg-default/10 rounded-lg inline-flex">
+                <IconComponent className={`size-4.5 ${iconColorClass}`} />
+              </div>
+            </div>
           )}
-          <div className="flex flex-1 items-center justify-between gap-2">
-            <span
-              className={
-                titleColor ? `text-${titleColor} text-sm font-semibold` : 'text-foreground text-sm font-semibold'
-              }>
-              {title}
-            </span>
-            <Button size="sm" variant="secondary" onPress={() => onRead(notif.id)} isIconOnly>
-              <Unread className="size-4.5" />
-            </Button>
+          <div className="flex-1 min-w-0">
+            {title && (
+              <div className="flex flex-wrap gap-1.5 items-center mb-1">
+                <h4 className={`text-sm font-bold leading-tight select-none ${titleColorClass}`}>{title}</h4>
+                {releaseType && (
+                  <span
+                    className={`text-[8px] font-extrabold uppercase px-1.5 py-0.5 rounded-md border ${
+                      releaseType === 'PUBLIC'
+                        ? 'bg-success/10 border-success/20 text-success'
+                        : 'bg-warning/10 border-warning/20 text-warning'
+                    }`}>
+                    {releaseType}
+                  </span>
+                )}
+              </div>
+            )}
+            <div className="text-xs leading-relaxed break-words select-none text-muted-foreground">
+              {formatMarkdown(body)}
+            </div>
+
+            {image && (
+              <div className="mt-3 overflow-hidden rounded-lg border border-default/30 max-h-36">
+                <img src={image} alt="Notification visual" className="w-full h-auto object-cover max-h-36" />
+              </div>
+            )}
+
+            {!hasReleaseAccess && (
+              <div
+                className={
+                  'mt-2.5 p-2.5 bg-warning/10 border border-warning/20 rounded-xl ' +
+                  'flex items-start gap-1.5 text-[10px] text-warning font-semibold leading-normal'
+                }>
+                <ShieldWarning className="size-3.5 mt-0.5 flex-shrink-0" />
+                <span>
+                  This version is exclusive to {releaseType === 'INSIDER' ? 'Insider' : 'Early Access'} members. Upgrade
+                  your plan to unlock downloads.
+                </span>
+              </div>
+            )}
+
+            {actionsList.length > 0 && (
+              <div className="flex flex-wrap gap-2 mt-3.5">
+                {actionsList.map((act, i) => {
+                  const mappedVariant =
+                    act.variant === 'bordered'
+                      ? 'outline'
+                      : act.variant === 'light'
+                        ? 'ghost'
+                        : act.variant === 'flat' || act.variant === 'solid'
+                          ? 'primary'
+                          : (act.variant as
+                              | 'primary'
+                              | 'secondary'
+                              | 'tertiary'
+                              | 'outline'
+                              | 'ghost'
+                              | 'danger'
+                              | 'danger-soft') || 'primary';
+                  return (
+                    <Button
+                      className={
+                        'text-xs font-semibold h-7.5 px-3.5 rounded-lg ' +
+                        'cursor-pointer flex items-center justify-center'
+                      }
+                      key={i}
+                      size="sm"
+                      variant={mappedVariant}
+                      onPress={() => handleActionPress(act.url)}>
+                      {act.label}
+                    </Button>
+                  );
+                })}
+              </div>
+            )}
           </div>
-        </Card.Header>
-        <Card.Content className="flex flex-col gap-y-1.5 text-xs leading-relaxed">
-          {description.map((desc, index) => (
-            <span key={`desc_${index}`} className={desc.color ? `text-${desc.color}` : 'text-foreground'}>
-              {desc.text}
-            </span>
-          ))}
-        </Card.Content>
-
-        {!isEmpty(buttons) && (
-          <Card.Footer className="justify-end gap-2 pt-1">
-            {buttons!.map(btn => {
-              const isUrl = isValidURL(btn.destination);
-
-              return (
-                <Link
-                  className={buttonVariants({
-                    variant: btn.color || 'primary',
-                    size: 'sm',
-                  })}
-                  onPress={() => {
-                    onCloseDrawer();
-                    if (isUrl) {
-                      window.open(btn.destination);
-                    } else {
-                      onNavigatePage(btn.destination);
-                    }
-                  }}
-                  key={btn.title}>
-                  {btn.title}
-                  {isUrl && <Link.Icon className="size-[0.85rem]" />}
-                </Link>
-              );
-            })}
-          </Card.Footer>
-        )}
-      </Card>
+        </div>
+      </div>
     </motion.div>
   );
 }
@@ -180,7 +319,7 @@ export default function HomeNotificationDrawer() {
   const state = useOverlayState();
 
   const {notifications, isRefreshing, markAsRead} = useNotificationsData();
-  const {staticNotifs, staticNotifCount, haveWarn} = useStaticNotifications();
+  const updateChannel = useUserState('updateChannel');
 
   const handleOpenDrawer = useCallback(() => {
     AddBreadcrumb_Renderer(`Open Notifications`);
@@ -199,9 +338,19 @@ export default function HomeNotificationDrawer() {
     [dispatch],
   );
 
+  const userEntitlement = useMemo(() => {
+    if (updateChannel === 'insider') return 'INSIDER';
+    if (updateChannel === 'early_access') return 'EA';
+    return 'FREE';
+  }, [updateChannel]);
+
+  const hasWarningOrDanger = useMemo(() => {
+    return notifications.some(notif => notif.style === 'warning' || notif.style === 'danger');
+  }, [notifications]);
+
   const totalNotificationCount = useMemo(() => {
-    return notifications.length + staticNotifCount;
-  }, [notifications, staticNotifCount]);
+    return notifications.length;
+  }, [notifications]);
 
   const readAll = () => notifications.forEach(notif => markAsRead(notif.id));
 
@@ -212,7 +361,7 @@ export default function HomeNotificationDrawer() {
           <Bell />
         </Button>
         {totalNotificationCount !== 0 && (
-          <Badge size="sm" placement="top-left" color={haveWarn ? 'warning' : 'success'}>
+          <Badge size="sm" placement="top-left" color={hasWarningOrDanger ? 'warning' : 'success'}>
             {totalNotificationCount}
           </Badge>
         )}
@@ -220,7 +369,7 @@ export default function HomeNotificationDrawer() {
       <Drawer isOpen={state.isOpen} onOpenChange={state.setOpen}>
         <Drawer.Backdrop className="top-10">
           <Drawer.Content placement="right" className="top-10 pb-10">
-            <Drawer.Dialog className="w-md px-0">
+            <Drawer.Dialog className="w-lg px-0">
               {isRefreshing && (
                 <ProgressBar size="sm" className="absolute -top-1 inset-x-0" isIndeterminate>
                   <ProgressBar.Track className="rounded-none">
@@ -260,12 +409,10 @@ export default function HomeNotificationDrawer() {
                             delay={index * 0.1}
                             onRead={markAsRead}
                             onCloseDrawer={state.close}
+                            userEntitlement={userEntitlement}
                             onNavigatePage={handleNavigatePage}
                           />
                         ))}
-
-                        {/* Spread static notifications here */}
-                        {...staticNotifs}
                       </div>
                     )}
                   </AnimatePresence>

@@ -11,7 +11,7 @@ import {deleteTokens, getChannel, getTokens, saveChannel, saveTokens} from './to
 
 // Constants
 const AUTH_CHANNEL_KEY = 'LynxHub-Auth-Update-Channel';
-const AUTH_LOGIN_KEY = 'LynxHub-Auth-Login-User';
+export const AUTH_LOGIN_KEY = 'LynxHub-Auth-Login-User';
 
 // Internal user data representation including sensitive release tokens
 interface InternalUserAccountData extends UserAccountData {
