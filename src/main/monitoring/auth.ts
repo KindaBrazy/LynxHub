@@ -13,10 +13,10 @@ import {deleteTokens, getChannel, getTokens, saveChannel, saveTokens} from './to
 const AUTH_CHANNEL_KEY = 'LynxHub-Auth-Update-Channel';
 const AUTH_LOGIN_KEY = 'LynxHub-Auth-Login-User';
 
-// GitHub Tokens
-const GH_TOKEN_PUBLIC = 'github_pat_REMOVED_PUBLIC';
-const GH_TOKEN_INSIDER =
-  'github_pat_REMOVED_INSIDER';
+// Internal user data representation including sensitive release tokens
+interface InternalUserAccountData extends UserAccountData {
+  updateToken?: string | null;
+}
 
 // Pending login promise resolvers
 let pendingLoginResolve: ((value: UserAccountData) => void) | null = null;
@@ -52,10 +52,11 @@ async function processTokenLogin(token: string) {
 
     // Update UI and configure auto updater
     await refreshChannel(true, userData.subscribeStage);
-    checkForAppUpdate(userData.subscribeStage);
+    checkForAppUpdate(userData.subscribeStage, userData.updateToken);
 
     if (pendingLoginResolve) {
-      pendingLoginResolve(userData);
+      const {updateToken, ...rendererUserData} = userData;
+      pendingLoginResolve(rendererUserData);
       pendingLoginResolve = null;
       pendingLoginReject = null;
     }
@@ -72,7 +73,7 @@ async function processTokenLogin(token: string) {
 /**
  * Verifies the token with the website's API and returns user data.
  */
-async function verifyTokenWithWebsite(token: string): Promise<UserAccountData> {
+async function verifyTokenWithWebsite(token: string): Promise<InternalUserAccountData> {
   const response = await axios.get(`${LYNXHUB_WEBSITE}/api/user/session`, {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -94,6 +95,7 @@ async function verifyTokenWithWebsite(token: string): Promise<UserAccountData> {
     name: user.name,
     imageUrl: user.imageUrl,
     subscribeStage: user.subscribeStage as SubscribeStages,
+    updateToken: user.updateToken,
   };
 }
 
@@ -102,7 +104,7 @@ async function verifyTokenWithWebsite(token: string): Promise<UserAccountData> {
  */
 async function checkExistingLogin(): Promise<{
   isLoggedIn: boolean;
-  userData?: UserAccountData;
+  userData?: InternalUserAccountData;
 }> {
   const token = await getTokens(AUTH_LOGIN_KEY);
   if (token) {
@@ -137,26 +139,30 @@ async function refreshChannel(isLogin: boolean, stage: SubscribeStages) {
 /**
  * Configures the auto-updater based on the subscription stage.
  */
-function checkForAppUpdate(stage: SubscribeStages) {
+function checkForAppUpdate(stage: SubscribeStages, updateToken?: string | null) {
   const provider = 'github';
   const owner = 'KindaBrazy';
 
   if (stage === 'insider' || stage === 'early_access') {
-    const token = stage === 'insider' ? GH_TOKEN_INSIDER : GH_TOKEN_PUBLIC;
     const repo = stage === 'insider' ? 'LynxHub-Insider-Releases' : 'LynxHub-EA-Releases';
 
-    process.env.GH_TOKEN = token;
+    if (updateToken) {
+      process.env.GH_TOKEN = updateToken;
+    } else {
+      delete process.env.GH_TOKEN;
+    }
 
     autoUpdater.setFeedURL({
       provider,
       owner,
       repo,
       private: true,
-      token,
+      token: updateToken || undefined,
     });
 
     autoUpdater.disableDifferentialDownload = true;
   } else {
+    delete process.env.GH_TOKEN;
     autoUpdater.setFeedURL({
       provider,
       owner,
@@ -178,8 +184,9 @@ export default function Auth() {
 
       if (existingLogin.isLoggedIn && existingLogin.userData) {
         const currentChannel = await getChannel(AUTH_CHANNEL_KEY);
-        checkForAppUpdate(currentChannel);
-        return {...existingLogin.userData, subscribeStage: currentChannel};
+        checkForAppUpdate(currentChannel, existingLogin.userData.updateToken);
+        const {updateToken, ...rendererUserData} = existingLogin.userData;
+        return {...rendererUserData, subscribeStage: currentChannel};
       } else {
         checkForAppUpdate('public');
         return null;
