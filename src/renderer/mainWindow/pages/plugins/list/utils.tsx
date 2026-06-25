@@ -130,7 +130,7 @@ export function FilterMenu({selectedKeys, setSelectedKeys}: FilterMenuProps) {
   return (
     <Dropdown>
       <Dropdown.Trigger>
-        <Button variant="secondary" className="bg-surface shrink-0 shadow" isIconOnly>
+        <Button variant="tertiary" className="bg-surface shrink-0 shadow" isIconOnly>
           <Filter />
         </Button>
       </Dropdown.Trigger>
