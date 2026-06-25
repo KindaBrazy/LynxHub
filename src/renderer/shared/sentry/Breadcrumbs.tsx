@@ -1,4 +1,4 @@
-import {addBreadcrumb} from '@sentry/electron/renderer';
+import actionsIpc from '@lynx_shared/ipc/actions';
 import {isEmpty} from 'lodash-es';
 import {DependencyList, useEffect} from 'react';
 
@@ -15,7 +15,9 @@ export function onBreadcrumbStateChange(enabled: boolean) {
  * Adds an informational renderer breadcrumb when breadcrumb collection is enabled.
  */
 export default function AddBreadcrumb_Renderer(message: string) {
-  if (isEnabled) addBreadcrumb({category: 'renderer-actions', message, level: 'info'});
+  if (isEnabled) {
+    actionsIpc.logAction({category: 'renderer-actions', message, level: 'info'});
+  }
 }
 
 /**

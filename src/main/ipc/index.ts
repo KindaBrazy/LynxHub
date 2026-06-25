@@ -1,5 +1,6 @@
 import classHolder from '@lynx_main/managers/classHolder';
 
+import listenActions from './actions';
 import listenApplication from './application';
 import listenContextMenu from './contextMenu';
 import listenFiles from './filesIpc';
@@ -36,6 +37,7 @@ async function listenManagers() {
 export async function listenToIpcChannels() {
   listenStorage();
   listenStorageUtils();
+  listenActions();
 
   await listenApplication();
   listenFiles();

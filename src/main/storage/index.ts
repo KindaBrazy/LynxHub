@@ -1,3 +1,4 @@
+import {randomUUID} from 'node:crypto';
 import {join} from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
@@ -76,6 +77,7 @@ class BaseStorage {
       collectErrors: true,
       addBreadcrumbs: true,
       sentryDsn: '',
+      anonymousId: '',
     },
     terminal: {
       outputColor: false,
@@ -210,6 +212,12 @@ class BaseStorage {
 
     this.migrationManager = new StorageMigrationManager(this.storage, this.DEFAULT_DATA, () => this.write());
     this.migrationManager.runStorageMigrations(this.DEFAULT_DATA.storage.version);
+
+    // Initialize anonymousId if empty
+    if (!this.storage.data.app.anonymousId) {
+      this.storage.data.app.anonymousId = randomUUID();
+      this.write();
+    }
   }
 
   /**

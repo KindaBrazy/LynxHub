@@ -97,6 +97,7 @@ export type AppConfigStorage = {
   collectErrors: boolean;
   addBreadcrumbs: boolean;
   sentryDsn: string;
+  anonymousId: string;
 };
 
 /**

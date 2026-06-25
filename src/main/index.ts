@@ -22,6 +22,7 @@ import Auth, {handleDeepLink} from './monitoring/auth';
 import {fetchAndCacheSentryDsn} from './monitoring/sentry';
 import {PluginMigrate} from './setup/migration';
 import {getPrivilegeText} from './utils';
+import {initSession, sendCollectedActions} from './utils/actionLogger';
 import downloadDU from './utils/calcFolderSize/downloadDiskUsageUtility';
 
 /**
@@ -122,6 +123,7 @@ async function initializeLynxHub(): Promise<void> {
 
   storageManager.completeDeferredMigrations();
   storageManager.decryptBrowserData();
+  initSession();
 
   // Fetch Sentry DSN in the background to cache it for the next run
   fetchAndCacheSentryDsn(storageManager).catch(err => {
@@ -171,9 +173,11 @@ app.on('before-quit', e => {
     e.preventDefault();
     // Stop image cache manager
     getImageCacheManager().stop();
-    stopAllPty().then(() => {
-      isAppQuitting = true;
-      app.quit();
+    sendCollectedActions().finally(() => {
+      stopAllPty().then(() => {
+        isAppQuitting = true;
+        app.quit();
+      });
     });
   }
 });
