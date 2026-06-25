@@ -1,5 +1,7 @@
+import {createHash} from 'node:crypto';
 import {dirname, join} from 'node:path';
 
+import {LYNXHUB_WEBSITE} from '@lynx_common/consts';
 import {SubscribeStages} from '@lynx_common/types';
 import {
   PluginAddresses,
@@ -16,9 +18,12 @@ import {pluginsIpc} from '@lynx_main/ipc/plugins/plugins';
 import classHolder from '@lynx_main/managers/classHolder';
 import {getAppDirectory} from '@lynx_main/managers/dataFolder';
 import {captureException} from '@sentry/electron/main';
+import axios from 'axios';
 import {constants, promises, readdirSync} from 'graceful-fs';
 import {includes, isString} from 'lodash-es';
 
+import {AUTH_LOGIN_KEY} from '../monitoring/auth';
+import {getTokens} from '../monitoring/token';
 import {pluginFolders} from './constants';
 import ExtensionManager from './extensions';
 import ModuleManager from './modules';
@@ -231,6 +236,7 @@ export class PluginManager {
     try {
       await this.performGitInstallation(url, directory, targetCommit);
       this.installed.push({id, url, version});
+      void trackDownload(id);
       return true;
     } catch (e) {
       console.warn(`Failed to install plugin: ${url}`, e);
@@ -488,5 +494,64 @@ export class PluginManager {
 
       await this.install(url, targetCommit);
     }
+  }
+}
+
+/**
+ * Solves the Proof of Work challenge.
+ */
+function solveChallengeNode(challenge: string, difficulty: number): string {
+  const prefix = '0'.repeat(difficulty);
+  let nonce = 0;
+  while (true) {
+    const hash = createHash('sha256').update(`${challenge}${nonce}`).digest('hex');
+    if (hash.startsWith(prefix)) {
+      return nonce.toString();
+    }
+    nonce++;
+  }
+}
+
+/**
+ * Sends a plugin download count increment tracking request.
+ */
+async function trackDownload(pluginId: string): Promise<void> {
+  try {
+    const token = await getTokens(AUTH_LOGIN_KEY);
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+    };
+
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+
+    try {
+      const url = `${LYNXHUB_WEBSITE}/api/plugins/download`;
+      const response = await axios.post(url, {pluginId}, {headers, timeout: 5000});
+      if (response.status === 200) {
+        return;
+      }
+    } catch (err: any) {
+      // Fallback to PoW verification if unauthorized (401 status)
+      if (err.response?.status === 401) {
+        const challengeUrl = `${LYNXHUB_WEBSITE}/api/plugins/download/challenge`;
+        const challengeRes = await axios.get(challengeUrl, {timeout: 5000});
+        const {challenge, difficulty} = challengeRes.data;
+
+        const nonce = solveChallengeNode(challenge, difficulty);
+
+        const verifyUrl = `${LYNXHUB_WEBSITE}/api/plugins/download`;
+        await axios.post(
+          verifyUrl,
+          {pluginId, challenge, nonce},
+          {headers: {'Content-Type': 'application/json'}, timeout: 5000},
+        );
+      } else {
+        console.warn(`Failed tracking plugin download: ${err.message}`);
+      }
+    }
+  } catch (error: any) {
+    console.warn(`Failed tracking plugin download: ${error.message}`);
   }
 }
