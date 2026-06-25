@@ -1,4 +1,5 @@
 import {Button} from '@heroui/react';
+import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
 import {Broom} from '@solar-icons/react-perf/BoldDuotone';
 import {memo, RefObject, useCallback} from 'react';
 
@@ -17,6 +18,7 @@ type Props = {
 const TerminalClearAll = memo(({clearTerminal}: Props) => {
   const clearTerm = useCallback(() => {
     if (clearTerminal.current) {
+      AddBreadcrumb_Renderer('Terminal: Clear scrollback');
       clearTerminal.current();
     }
   }, [clearTerminal]);

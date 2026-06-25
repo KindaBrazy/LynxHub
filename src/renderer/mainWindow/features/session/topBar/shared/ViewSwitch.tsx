@@ -3,6 +3,7 @@ import {cardsActions} from '@lynx/redux/reducers/cards';
 import {useTabsState} from '@lynx/redux/reducers/tabs';
 import {AppDispatch} from '@lynx/redux/store';
 import {Terminal_Icon} from '@lynx_assets/icons';
+import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
 import {Earth} from '@solar-icons/react-perf/BoldDuotone';
 import {memo} from 'react';
 import {useDispatch} from 'react-redux';
@@ -24,6 +25,8 @@ const ViewSwitch = memo(({currentView}: Props) => {
   const dispatch = useDispatch<AppDispatch>();
 
   const handlePress = () => {
+    const nextView = currentView === 'browser' ? 'terminal' : 'browser';
+    AddBreadcrumb_Renderer(`Running Card: Switch view to ${nextView}`);
     dispatch(cardsActions.toggleRunningCardView({tabId: activeTab}));
   };
 

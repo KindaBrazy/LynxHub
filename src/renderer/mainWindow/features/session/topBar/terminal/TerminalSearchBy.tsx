@@ -1,6 +1,7 @@
 import {Avatar, Button, Dropdown, Header, Label} from '@heroui/react';
 import {SearchQuerySites} from '@lynx_common/types';
 import {getCacheUrl, getSearchUrl} from '@lynx_common/utils';
+import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
 import {Earth, SquareTopDown} from '@solar-icons/react-perf/BoldDuotone';
 import {AnimatePresence, motion} from 'framer-motion';
 import {memo, useCallback} from 'react';
@@ -22,6 +23,7 @@ type Props = {
 const TerminalSearchBy = memo(({selectedTerminalText}: Props) => {
   const searchSelectedText = useCallback(
     (key: SearchQuerySites) => {
+      AddBreadcrumb_Renderer(`Terminal: Search selected text by: ${key}`);
       window.open(getSearchUrl(selectedTerminalText, key));
     },
     [selectedTerminalText],
@@ -43,7 +45,7 @@ const TerminalSearchBy = memo(({selectedTerminalText}: Props) => {
               </LynxTooltip>
             </Dropdown.Trigger>
             <Dropdown.Popover>
-              <Dropdown.Menu onAction={key => console.log(`Selected: ${key}`)}>
+              <Dropdown.Menu>
                 <Dropdown.Section>
                   <Header>Search selected text by</Header>
                   <Dropdown.Item textValue="Google" onPress={() => searchSelectedText('Google')}>

@@ -1,5 +1,6 @@
 import {Button} from '@heroui/react';
 import browserIpc from '@lynx_shared/ipc/browser';
+import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
 import {MagnifierZoomIn} from '@solar-icons/react-perf/BoldDuotone';
 import {memo, useEffect, useRef} from 'react';
 
@@ -19,6 +20,7 @@ const BrowserZoom = memo(({id}: Props) => {
   const btnRef = useRef<HTMLButtonElement | null>(null);
 
   const openZoomMenu = () => {
+    AddBreadcrumb_Renderer('Browser: Open zoom control');
     const bounds = btnRef.current?.getBoundingClientRect();
     if (bounds) {
       const {x, y} = bounds;

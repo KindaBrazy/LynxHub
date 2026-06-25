@@ -5,6 +5,7 @@ import {formatHotkey} from '@lynx/utils';
 import {Hotkey_Names} from '@lynx_common/consts/hotkeys';
 import {terminalLineEnding} from '@lynx_common/utils';
 import ptyIpc from '@lynx_shared/ipc/pty';
+import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
 import {memo} from 'react';
 
 type Props = {
@@ -49,10 +50,13 @@ const TerminalQuickCommands = memo(({id}: Props) => {
 
         return (
           <Button
+            onPress={() => {
+              AddBreadcrumb_Renderer(`Terminal: Run quick command: index:${index}`);
+              ptyIpc.write(id, command);
+            }}
             size="sm"
             variant="outline"
-            key={`terminal_quick_btn_${index}`}
-            onPress={() => ptyIpc.write(id, command)}>
+            key={`terminal_quick_btn_${index}`}>
             <span className="flex flex-row items-center gap-x-1">
               <span className="font-semibold tracking-tight">{label}</span>
               {hasHotkey && (

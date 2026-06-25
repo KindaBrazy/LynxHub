@@ -1,5 +1,6 @@
 import {formatWebAddress} from '@lynx_common/utils';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
+import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
 import {isEmpty} from 'lodash-es';
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
@@ -225,6 +226,7 @@ export const useAddressBar = ({runningCard, setCustomAddress}: UseAddressBarProp
         setAutocomplete('');
         try {
           const url = formatWebAddress(textValue, true);
+          AddBreadcrumb_Renderer('Browser: Navigate to URL');
           if (setCustomAddress) {
             setCustomAddress(url);
           } else {
@@ -260,6 +262,7 @@ export const useAddressBar = ({runningCard, setCustomAddress}: UseAddressBarProp
       const url = formatWebAddress(effectiveAddress || '');
       if (!url) return;
 
+      AddBreadcrumb_Renderer(`Browser: Toggle favorite: isFavorite:${!isFavorite}`);
       const action = isFavorite ? storageUtilsIpc.send.removeBrowserFavorite : storageUtilsIpc.send.addBrowserFavorite;
 
       invalidateHistoryCache();

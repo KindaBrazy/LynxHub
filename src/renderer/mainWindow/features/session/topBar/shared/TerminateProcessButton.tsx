@@ -5,6 +5,7 @@ import {Stop_Icon} from '@lynx_assets/icons';
 import {terminalLineEnding} from '@lynx_common/utils/platform';
 import contextMenuIpc from '@lynx_shared/ipc/contextMenu';
 import ptyIpc from '@lynx_shared/ipc/pty';
+import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
 import {Exit} from '@solar-icons/react-perf/BoldDuotone';
 import {memo, useCallback} from 'react';
 
@@ -32,17 +33,21 @@ const TerminateProcessButton = memo(({id}: Props) => {
     if (!id) return;
 
     if (isCtrlPressed || !showTerminateConfirm) {
+      AddBreadcrumb_Renderer('Running Card: Terminate process (force)');
       contextMenuIpc.send.stopAI(id);
     } else {
+      AddBreadcrumb_Renderer('Running Card: Open terminate process dialog');
       contextMenuIpc.send.openTerminateProcess(id);
     }
   }, [id, isCtrlPressed, showTerminateConfirm]);
 
   const handleExit = useCallback(() => {
     if (isCtrlPressed || !exitSignalConfirm) {
+      AddBreadcrumb_Renderer('Running Card: Send exit signal (force)');
       ptyIpc.write(id, '\x03');
       if (sendYWithExit) ptyIpc.write(id, 'y' + terminalLineEnding);
     } else {
+      AddBreadcrumb_Renderer('Running Card: Open send exit signal dialog');
       contextMenuIpc.send.openSendExitSignal(id);
     }
   }, [id, sendYWithExit, exitSignalConfirm, isCtrlPressed]);

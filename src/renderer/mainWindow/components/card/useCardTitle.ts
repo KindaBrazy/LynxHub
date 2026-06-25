@@ -1,4 +1,5 @@
 import storageIpc from '@lynx_shared/ipc/storage';
+import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
 import {isEmpty} from 'lodash-es';
 import {useCallback, useEffect, useState} from 'react';
 
@@ -28,6 +29,7 @@ export const useCardTitle = () => {
   const onTitleChange = useCallback(
     (target: string) => {
       const newTitle = isEmpty(target) ? title : target;
+      AddBreadcrumb_Renderer(`Card Rename: id:${id}`);
       setCustomTitle(newTitle);
       storageIpc.setCustom(`${id}_title_edited`, newTitle);
     },

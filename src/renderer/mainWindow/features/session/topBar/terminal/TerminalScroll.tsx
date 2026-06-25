@@ -1,4 +1,5 @@
 import {Button} from '@heroui/react';
+import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
 import {AltArrowDown, AltArrowUp} from '@solar-icons/react-perf/Linear';
 import {IDisposable} from '@xterm/xterm';
 import {AnimatePresence, motion} from 'framer-motion';
@@ -66,6 +67,7 @@ export default function TerminalScroll({xtermRef}: Props) {
     const term = ref.terminal;
     if (!term) return;
 
+    AddBreadcrumb_Renderer('Terminal: Scroll to top');
     term.scrollToTop();
   };
 
@@ -75,6 +77,7 @@ export default function TerminalScroll({xtermRef}: Props) {
     const term = ref.terminal;
     if (!term) return;
 
+    AddBreadcrumb_Renderer('Terminal: Scroll to bottom');
     term.scrollToBottom();
   };
 

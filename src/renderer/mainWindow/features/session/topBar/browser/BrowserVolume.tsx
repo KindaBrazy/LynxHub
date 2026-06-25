@@ -1,6 +1,7 @@
 import {Button} from '@heroui/react';
 import {useVolumeState} from '@lynx/redux/reducers/volume';
 import browserIpc from '@lynx_shared/ipc/browser';
+import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
 import {Volume, VolumeCross, VolumeLoud} from '@solar-icons/react-perf/BoldDuotone';
 import {memo, useCallback, useMemo, useRef} from 'react';
 
@@ -33,6 +34,7 @@ const BrowserVolume = memo(({id, tabId}: Props) => {
   const volume = tabVolumes[tabId] ?? 100;
 
   const openVolumeMenu = useCallback(() => {
+    AddBreadcrumb_Renderer('Browser: Open volume control');
     const bounds = btnRef.current?.getBoundingClientRect();
     if (bounds) {
       const {x, y} = bounds;

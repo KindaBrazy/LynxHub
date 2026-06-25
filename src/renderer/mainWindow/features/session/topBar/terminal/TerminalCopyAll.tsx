@@ -1,6 +1,7 @@
 import {Button} from '@heroui/react';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import filesIpc from '@lynx_shared/ipc/files';
+import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
 import {FileText} from '@solar-icons/react-perf/BoldDuotone';
 import {SerializeAddon} from '@xterm/addon-serialize';
 import {memo, useCallback} from 'react';
@@ -24,6 +25,7 @@ const TerminalCopyAll = memo(({serializeAddon}: Props) => {
     if (!contentToCopy) return;
 
     try {
+      AddBreadcrumb_Renderer('Terminal: Copy all to clipboard');
       navigator.clipboard.writeText(contentToCopy);
     } catch (e) {
       topToast.danger('Failed to copy terminal text to clipboard!');
@@ -37,6 +39,7 @@ const TerminalCopyAll = memo(({serializeAddon}: Props) => {
       return;
     }
 
+    AddBreadcrumb_Renderer('Terminal: Export all to file');
     filesIpc
       .saveToFile(contentToSave)
       .then(result => {

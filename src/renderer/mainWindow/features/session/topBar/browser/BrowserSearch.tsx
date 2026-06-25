@@ -4,6 +4,7 @@ import {useTabsState} from '@lynx/redux/reducers/tabs';
 import {Circle_Icon} from '@lynx_assets/icons';
 import {Hotkey_Names} from '@lynx_common/consts/hotkeys';
 import browserIpc from '@lynx_shared/ipc/browser';
+import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
 import {memo, useRef} from 'react';
 
 import LynxTooltip from '../../../../components/LynxTooltip';
@@ -27,6 +28,7 @@ const BrowserSearch = memo(({id, tabID}: Props) => {
   const btnRef = useRef<HTMLButtonElement | null>(null);
 
   const openSearchMenu = () => {
+    AddBreadcrumb_Renderer('Browser: Find in Page');
     const bounds = btnRef.current?.getBoundingClientRect();
     if (bounds) {
       const {x, y} = bounds;

@@ -1,5 +1,6 @@
 import {Badge, Button} from '@heroui/react';
 import downloadManagerIpc from '@lynx_shared/ipc/downloadManager';
+import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
 import {DownloadMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
 import {memo, useEffect, useState} from 'react';
 
@@ -19,7 +20,10 @@ const BrowserDownloadManager = memo(() => {
     return () => offDownloadCount();
   }, []);
 
-  const openDownloadsWindow = () => downloadManagerIpc.send.openMenu();
+  const openDownloadsWindow = () => {
+    AddBreadcrumb_Renderer('Browser: Open download manager');
+    downloadManagerIpc.send.openMenu();
+  };
 
   if (itemCount === 0) return null;
 

@@ -4,6 +4,7 @@ import {useIsActiveTab} from '@lynx/layouts/tabs/utils';
 import {useTabsState} from '@lynx/redux/reducers/tabs';
 import {Hotkey_Names} from '@lynx_common/consts/hotkeys';
 import browserIpc from '@lynx_shared/ipc/browser';
+import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
 import {ArrowLeft, ArrowRight, Home2, Restart} from '@solar-icons/react-perf/BoldDuotone';
 import {AnimatePresence, motion, Transition, Variants} from 'framer-motion';
 import {X} from 'lucide-react';
@@ -53,15 +54,31 @@ const BrowserActionButtons = memo(({webuiAddress, tabID, id, isDomReady}: Props)
 
   const isLoading = useMemo(() => tabs.find(tab => tab.id === tabID)?.isLoading ?? false, [tabs, tabID]);
 
-  const goBack = () => browserIpc.send.goBack(id);
-  const goForward = () => browserIpc.send.goForward(id);
+  const goBack = () => {
+    AddBreadcrumb_Renderer('Browser: Go back');
+    browserIpc.send.goBack(id);
+  };
+  const goForward = () => {
+    AddBreadcrumb_Renderer('Browser: Go forward');
+    browserIpc.send.goForward(id);
+  };
   const reload = () => {
+    AddBreadcrumb_Renderer('Browser: Reload page');
     browserIpc.send.reload(id);
     dispatch(triggerActions.trigger('reloadBrowserHomePage'));
   };
-  const stop = () => browserIpc.send.stop(id);
-  const loadWebuiURL = () => browserIpc.send.loadURL(id, webuiAddress);
-  const toggleDevTools = () => browserIpc.send.toggleDevTools(id);
+  const stop = () => {
+    AddBreadcrumb_Renderer('Browser: Stop loading');
+    browserIpc.send.stop(id);
+  };
+  const loadWebuiURL = () => {
+    AddBreadcrumb_Renderer('Browser: Go to home');
+    browserIpc.send.loadURL(id, webuiAddress);
+  };
+  const toggleDevTools = () => {
+    AddBreadcrumb_Renderer('Browser: Toggle Developer Tools');
+    browserIpc.send.toggleDevTools(id);
+  };
 
   const canToggleDevTools = isActiveTab && isDomReady;
 

@@ -3,6 +3,7 @@ import {terminalLineEnding} from '@lynx_common/utils';
 import filesIpc from '@lynx_shared/ipc/files';
 import ptyIpc from '@lynx_shared/ipc/pty';
 import storageIpc from '@lynx_shared/ipc/storage';
+import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
 import {Broom, FolderOpen, MoveToFolder} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty} from 'lodash-es';
 import {memo, useCallback, useEffect, useState} from 'react';
@@ -32,6 +33,7 @@ const TerminalCDTo = memo(({id}: Props) => {
       storageIpc.update('terminal', {cdHistory: newHistory});
       setHistory(newHistory);
 
+      AddBreadcrumb_Renderer('Terminal: CD to directory');
       ptyIpc.write(id, `cd "${dir}"${terminalLineEnding}`);
     },
     [history, id],
@@ -43,6 +45,7 @@ const TerminalCDTo = memo(({id}: Props) => {
 
       storageIpc.update('terminal', {cdHistory: newHistory});
       setHistory(newHistory);
+      AddBreadcrumb_Renderer('Terminal: Remove item from CD history');
     },
     [history],
   );
@@ -50,10 +53,12 @@ const TerminalCDTo = memo(({id}: Props) => {
   const clearHistory = useCallback(() => {
     storageIpc.update('terminal', {cdHistory: []});
     setHistory([]);
+    AddBreadcrumb_Renderer('Terminal: Clear CD history');
   }, []);
 
   const selectDir = useCallback(() => {
     setIsOpen(false);
+    AddBreadcrumb_Renderer('Terminal: Choose CD directory dialog');
     filesIpc
       .openDlg({properties: ['openDirectory']})
       .then(dir => {

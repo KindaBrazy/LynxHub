@@ -2,6 +2,7 @@ import {Button} from '@heroui/react';
 import {tabsActions} from '@lynx/redux/reducers/tabs';
 import {AppDispatch} from '@lynx/redux/store';
 import {defaultTabItem} from '@lynx/utils/constants';
+import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
 import {motion} from 'framer-motion';
 import {Plus} from 'lucide-react';
 import {memo, useCallback} from 'react';
@@ -15,6 +16,7 @@ const NewTab = memo(() => {
   const dispatch = useDispatch<AppDispatch>();
 
   const addTab = useCallback(() => {
+    AddBreadcrumb_Renderer('Tabs: Add new tab');
     dispatch(tabsActions.addTab(defaultTabItem));
   }, [dispatch]);
 

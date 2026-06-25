@@ -4,6 +4,7 @@ import {useIsActiveTab} from '@lynx/layouts/tabs/utils';
 import {useHotkeysState} from '@lynx/redux/reducers/hotkeys';
 import {formatHotkey} from '@lynx/utils';
 import {Hotkey_Names} from '@lynx_common/consts/hotkeys';
+import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
 import {AltArrowDown, AltArrowUp, Magnifier} from '@solar-icons/react-perf/BoldDuotone';
 import {ISearchOptions, SearchAddon} from '@xterm/addon-search';
 import {AnimatePresence, motion} from 'framer-motion';
@@ -65,6 +66,16 @@ const TerminalSearchText = memo(({searchAddon, tabId}: Props) => {
     setFoundAny(isFound);
   }, [searchAddon, searchText, searchOptions]);
 
+  const handleFindNext = useCallback(() => {
+    AddBreadcrumb_Renderer('Terminal: Find next in page');
+    findNext();
+  }, [findNext]);
+
+  const handleFindPrev = useCallback(() => {
+    AddBreadcrumb_Renderer('Terminal: Find previous in page');
+    findPrev();
+  }, [findPrev]);
+
   useEffect(() => {
     if (searchText) findNext();
   }, [findNext]);
@@ -72,8 +83,10 @@ const TerminalSearchText = memo(({searchAddon, tabId}: Props) => {
   const onInputKeyUp = useCallback(
     (e: KeyboardEvent) => {
       if (e.code === 'ArrowDown') {
+        AddBreadcrumb_Renderer('Terminal: Find next in page via ArrowDown');
         findNext();
       } else if (e.code === 'ArrowUp') {
+        AddBreadcrumb_Renderer('Terminal: Find previous in page via ArrowUp');
         findPrev();
       }
     },
@@ -83,7 +96,12 @@ const TerminalSearchText = memo(({searchAddon, tabId}: Props) => {
   useHotkeyPress([
     {
       name: Hotkey_Names.findInPage,
-      method: isActiveTab ? () => setIsOpen(true) : null,
+      method: isActiveTab
+        ? () => {
+            AddBreadcrumb_Renderer('Terminal: Open search input');
+            setIsOpen(true);
+          }
+        : null,
     },
   ]);
 
@@ -96,11 +114,27 @@ const TerminalSearchText = memo(({searchAddon, tabId}: Props) => {
   );
 
   const clear = () => {
+    AddBreadcrumb_Renderer('Terminal: Clear search text');
     setSearchText('');
     searchAddon.findNext('');
     searchAddon.clearDecorations();
     setFoundAny(false);
   };
+
+  const handleToggleRegex = useCallback((val: boolean) => {
+    AddBreadcrumb_Renderer(`Terminal: Toggle search regex: ${val}`);
+    setEnabledRegex(val);
+  }, []);
+
+  const handleToggleMatchCase = useCallback((val: boolean) => {
+    AddBreadcrumb_Renderer(`Terminal: Toggle search match case: ${val}`);
+    setMatchCase(val);
+  }, []);
+
+  const handleToggleMatchWord = useCallback((val: boolean) => {
+    AddBreadcrumb_Renderer(`Terminal: Toggle search match whole word: ${val}`);
+    setMatchWord(val);
+  }, []);
 
   return (
     <Popover isOpen={isOpen} onOpenChange={setIsOpen}>
@@ -164,11 +198,21 @@ const TerminalSearchText = memo(({searchAddon, tabId}: Props) => {
           </AnimatePresence>
 
           <div className="flex gap-x-2">
-            <Button size="sm" className="w-23" onPress={findNext} variant="tertiary" isDisabled={isEmpty(searchText)}>
+            <Button
+              size="sm"
+              className="w-23"
+              variant="tertiary"
+              onPress={handleFindNext}
+              isDisabled={isEmpty(searchText)}>
               <AltArrowDown className="size-4 shrink-0" />
               Next
             </Button>
-            <Button size="sm" className="w-23" onPress={findPrev} variant="tertiary" isDisabled={isEmpty(searchText)}>
+            <Button
+              size="sm"
+              className="w-23"
+              variant="tertiary"
+              onPress={handleFindPrev}
+              isDisabled={isEmpty(searchText)}>
               <AltArrowUp className="size-4 shrink-0" />
               Previous
             </Button>
@@ -184,7 +228,7 @@ const TerminalSearchText = memo(({searchAddon, tabId}: Props) => {
           </div>
 
           <div className="flex flex-col w-full gap-y-2">
-            <Switch isSelected={enabledRegex} onChange={setEnabledRegex}>
+            <Switch isSelected={enabledRegex} onChange={handleToggleRegex}>
               <Switch.Control>
                 <Switch.Thumb />
               </Switch.Control>
@@ -193,7 +237,7 @@ const TerminalSearchText = memo(({searchAddon, tabId}: Props) => {
               </Switch.Content>
             </Switch>
 
-            <Switch isSelected={matchCase} onChange={setMatchCase}>
+            <Switch isSelected={matchCase} onChange={handleToggleMatchCase}>
               <Switch.Control>
                 <Switch.Thumb />
               </Switch.Control>
@@ -202,7 +246,7 @@ const TerminalSearchText = memo(({searchAddon, tabId}: Props) => {
               </Switch.Content>
             </Switch>
 
-            <Switch isSelected={matchWord} onChange={setMatchWord}>
+            <Switch isSelected={matchWord} onChange={handleToggleMatchWord}>
               <Switch.Control>
                 <Switch.Thumb />
               </Switch.Control>
