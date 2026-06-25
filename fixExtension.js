@@ -32,7 +32,11 @@ try {
 
   // Filter and remove files matching the patterns
   files.forEach(file => {
-    if (file.startsWith('useTableRowGroup-') || file.startsWith('tooltip.styles-')) {
+    if (
+      file.startsWith('useTableRowGroup-') ||
+      file.startsWith('tooltip.styles-') ||
+      file.startsWith('useMeter-')
+    ) {
       const filePath = join(rendererDir, file);
       rmSync(filePath);
       console.log(`Successfully removed: ${filePath}`);
