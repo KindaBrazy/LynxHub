@@ -17,7 +17,7 @@ import {
   usePluginsState,
 } from '@lynx/redux/reducers/plugins';
 import {AppDispatch} from '@lynx/redux/store';
-import {showRestartModal} from '@lynx/utils';
+import {formatNumber, showRestartModal} from '@lynx/utils';
 import {Linux_Icon, MacOS_Icon, Windows_Icon} from '@lynx_assets/icons';
 import {PluginInstalledItem, PluginItem} from '@lynx_common/types/plugins';
 import {extractGitUrl, getCacheUrl, getFallbackString} from '@lynx_common/utils';
@@ -26,7 +26,12 @@ import gitIpc from '@lynx_shared/ipc/git';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
 import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
 import {QuestionCircle} from '@solar-icons/react-perf/Bold';
-import {SettingsMinimalistic, ShieldWarning, TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
+import {
+  DownloadMinimalistic,
+  SettingsMinimalistic,
+  ShieldWarning,
+  TrashBin2,
+} from '@solar-icons/react-perf/BoldDuotone';
 import {ArrowRight, CheckRead} from '@solar-icons/react-perf/LineDuotone';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
@@ -169,9 +174,17 @@ export function PluginListItem({item, installed, layoutMode = 'default'}: Plugin
               </Link>
               {foundInstalled && <CheckRead className="text-success size-3.5 shrink-0" />}
             </div>
-            <span className="text-[10px] text-muted truncate">
-              By <span className="font-semibold">{extractGitUrl(item.url).owner}</span>
-            </span>
+            <div className="flex flex-row items-center gap-x-2 text-[10px] text-muted truncate">
+              <span>
+                By <span className="font-semibold">{extractGitUrl(item.url).owner}</span>
+              </span>
+              {item.downloadsCount !== undefined && (
+                <span title="Total downloads" className="flex items-center gap-x-0.5 font-JetBrainsMono">
+                  <DownloadMinimalistic className="size-3 text-muted/70" />
+                  <span>{formatNumber(item.downloadsCount).toLowerCase()}</span>
+                </span>
+              )}
+            </div>
           </div>
         </div>
 
@@ -350,6 +363,15 @@ export function PluginListItem({item, installed, layoutMode = 'default'}: Plugin
           {linux && <Linux_Icon className="size-4 text-surface-foreground/70" />}
           {win32 && <Windows_Icon className="size-4 text-surface-foreground/70" />}
           {darwin && <MacOS_Icon className="size-4 text-surface-foreground/70" />}
+
+          {item.downloadsCount !== undefined && (
+            <div
+              title="Total downloads"
+              className="flex flex-row items-center gap-x-0.5 text-[10px] text-muted ml-2 font-JetBrainsMono">
+              <DownloadMinimalistic className="size-3.5 text-muted/70" />
+              <span>{formatNumber(item.downloadsCount).toLowerCase()}</span>
+            </div>
+          )}
 
           {isCompatible && foundInstalled && (
             <>

@@ -109,6 +109,8 @@ export type PluginItem = {
   versions: VersionItemValidated[];
   /** Changelog history. */
   changes: PluginChanges;
+  /** Total download counts (loaded dynamically from web API) */
+  downloadsCount?: number;
 } & PluginCompatibility;
 
 /**

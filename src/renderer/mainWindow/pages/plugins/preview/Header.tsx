@@ -1,6 +1,7 @@
 import {Avatar, Button, Chip, Description, Label} from '@heroui/react';
 import {usePluginsState} from '@lynx/redux/reducers/plugins';
 import {useUserState} from '@lynx/redux/reducers/user';
+import {formatNumber} from '@lynx/utils';
 import {PluginInstalledItem} from '@lynx_common/types/plugins';
 import {extractGitUrl, getCacheUrl, getFallbackString} from '@lynx_common/utils';
 import {getPluginIconUrl} from '@lynx_common/utils/plugins';
@@ -8,6 +9,7 @@ import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
 import {
   BoxMinimalistic,
   CalendarMinimalistic,
+  DownloadMinimalistic,
   HomeAngle2,
   SquareTopDown,
   User as UserIcon,
@@ -96,6 +98,14 @@ export default function PluginPreviewHeader({installedPlugin}: PluginPreviewHead
                   <CalendarMinimalistic />
                   {releaseDate}
                 </Chip>
+
+                {/* Downloads count chip */}
+                {selectedPlugin?.downloadsCount !== undefined && (
+                  <Chip size="sm" variant="tertiary" className="text-muted font-JetBrainsMono">
+                    <DownloadMinimalistic />
+                    <span>{formatNumber(selectedPlugin.downloadsCount).toLowerCase()}</span>
+                  </Chip>
+                )}
 
                 {/* Plugin type indicator (extension vs module) */}
                 <div

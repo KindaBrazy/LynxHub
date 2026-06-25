@@ -2,7 +2,7 @@ import {execSync} from 'node:child_process';
 import {platform} from 'node:os';
 import {resolve} from 'node:path';
 
-import {EXTENSION_API_VERSION, MODULE_API_VERSION} from '@lynx_common/consts';
+import {EXTENSION_API_VERSION, LYNXHUB_WEBSITE, MODULE_API_VERSION} from '@lynx_common/consts';
 import {SubscribeStages} from '@lynx_common/types';
 import {
   PluginEngines,
@@ -17,6 +17,7 @@ import GitManager from '@lynx_main/git';
 import classHolder from '@lynx_main/managers/classHolder';
 import {getAppDataPath, selectNewAppDataFolder} from '@lynx_main/managers/dataFolder';
 import {RelaunchApp} from '@lynx_main/utils';
+import axios from 'axios';
 import {promises} from 'graceful-fs';
 import {satisfies} from 'semver';
 
@@ -300,6 +301,16 @@ export async function getList(currentStage: SubscribeStages): Promise<PluginItem
   const list = await staticManager!.getPluginsList();
   const validated: PluginItem[] = [];
 
+  let downloadsRes: Record<string, number> = {};
+  try {
+    const res = await axios.get(`${LYNXHUB_WEBSITE}/api/plugins/downloads`, {timeout: 3000});
+    if (res.status === 200) {
+      downloadsRes = res.data;
+    }
+  } catch (e: any) {
+    console.warn('Failed to fetch download counts in main process:', e.message);
+  }
+
   for (const item of list) {
     const versions: VersionItemValidated[] = item.versioning.versions.map(v => {
       const {compatible: isCompatible, reason: incompatibleReason} = isVersionCompatible(
@@ -320,6 +331,7 @@ export async function getList(currentStage: SubscribeStages): Promise<PluginItem
       versions,
       incompatibleReason,
       changes: item.versioning.changes,
+      downloadsCount: downloadsRes[item.metadata.id] || 0,
     });
   }
 
