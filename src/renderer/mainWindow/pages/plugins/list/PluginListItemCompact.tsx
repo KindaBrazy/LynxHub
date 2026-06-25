@@ -189,8 +189,8 @@ export function PluginListItemCompact({
                   configModal.open();
                 }}
                 size="sm"
+                className="size-7"
                 variant="secondary"
-                className="size-7 min-w-0 p-0 rounded-lg hover:bg-surface-secondary"
                 isIconOnly>
                 <SettingsMinimalistic className="size-3.5" />
               </Button>
