@@ -202,7 +202,17 @@ export default class BrowserManager {
           },
         };
       } else if (storageManager.getData('app').openLinkExternal) {
-        shell.openExternal(url);
+        try {
+          const parsedUrl = new URL(url);
+          const safeProtocols = ['http:', 'https:', 'mailto:'];
+          if (safeProtocols.includes(parsedUrl.protocol)) {
+            shell.openExternal(url);
+          } else {
+            console.warn('Blocked opening unsafe URL:', url);
+          }
+        } catch (error) {
+          console.warn('Blocked opening invalid URL:', url);
+        }
       } else {
         // background-tab = middle-click = open in background (don't switch)
         // foreground-tab = Shift+middle-click = switch to new tab

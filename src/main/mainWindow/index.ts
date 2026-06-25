@@ -131,7 +131,17 @@ export default class MainWindowManager {
       const openExternal = storageManager.getData('app').openLinkExternal;
 
       if (openExternal) {
-        shell.openExternal(url);
+        try {
+          const parsedUrl = new URL(url);
+          const safeProtocols = ['http:', 'https:', 'mailto:'];
+          if (safeProtocols.includes(parsedUrl.protocol)) {
+            shell.openExternal(url);
+          } else {
+            console.warn('Blocked opening unsafe URL:', url);
+          }
+        } catch (error) {
+          console.warn('Blocked opening invalid URL:', url);
+        }
       } else {
         // disposition 'background-tab' usually corresponds to middle-click
         const openInBackground = disposition === 'background-tab';

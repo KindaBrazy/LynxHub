@@ -51,7 +51,19 @@ export default async function listenApplication() {
   applicationIpc.on.setTaskBarStatus(status => setTaskbarStatus(status));
 
   // Opens URL in default system browser
-  applicationIpc.on.openUrlDefaultBrowser(url => shell.openExternal(url));
+  applicationIpc.on.openUrlDefaultBrowser(url => {
+    try {
+      const parsedUrl = new URL(url);
+      const safeProtocols = ['http:', 'https:', 'mailto:'];
+      if (safeProtocols.includes(parsedUrl.protocol)) {
+        shell.openExternal(url);
+      } else {
+        console.warn('Blocked opening unsafe URL:', url);
+      }
+    } catch (error) {
+      console.warn('Blocked opening invalid URL:', url);
+    }
+  });
 
   // Sets window progress bar (taskbar/dock) - value: 0-1 for progress, -1 to remove, >1 for indeterminate
   // mode: 'none' | 'normal' | 'indeterminate' | 'error' | 'paused' (Windows only)
