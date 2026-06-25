@@ -2,6 +2,7 @@ import {gitChannels} from '@lynx_common/consts/ipcChannels/git';
 import {RepositoryInfo} from '@lynx_common/types';
 import {CommitItem, ShallowCloneOptions} from '@lynx_common/types/git';
 import {GitProgressState, MainHT} from '@lynx_common/types/ipc';
+import AddBreadcrumb_Main from '@lynx_main/utils/breadcrumbs';
 import {PullResult, SimpleGitProgressEvent} from 'simple-git';
 
 import lynxIpc from './ipcWrapper';
@@ -24,31 +25,52 @@ import {sendToMain} from './sender';
  */
 export default function listenGit() {
   // Pulls latest changes from remote repository
-  gitIpc.on.pull((dir, id) => pullRepo(dir, id));
+  gitIpc.on.pull((dir, id) => {
+    AddBreadcrumb_Main(`Git Pull Started: dir:${dir}`);
+    pullRepo(dir, id);
+  });
 
   // Performs shallow clone of Git repository (non-blocking)
-  gitIpc.on.shallowClone(options => shallowClone(options));
+  gitIpc.on.shallowClone(options => {
+    AddBreadcrumb_Main(`Git Shallow Clone Started: url:${options.url}, dir:${options.directory}`);
+    shallowClone(options);
+  });
 
   // Validates if directory is a valid Git repository matching the URL
   gitIpc.handle.validateGitDir((dir, url) => validateGitDir(dir, url));
 
   // Performs shallow clone and returns promise
-  gitIpc.handle.shallowClonePromise(options => shallowClonePromise(options));
+  gitIpc.handle.shallowClonePromise(options => {
+    AddBreadcrumb_Main(`Git Shallow Clone Promise Started: url:${options.url}, dir:${options.directory}`);
+    return shallowClonePromise(options);
+  });
 
   // Drops Git stash entries
-  gitIpc.handle.stashDrop(dir => stashDrop(dir));
+  gitIpc.handle.stashDrop(dir => {
+    AddBreadcrumb_Main(`Git Stash Drop: dir:${dir}`);
+    return stashDrop(dir);
+  });
 
   // Gets repository information (branch, remote, etc.)
   gitIpc.handle.getRepoInfo(dir => getRepositoryInfo(dir));
 
   // Changes Git branch
-  gitIpc.handle.changeBranch((dir, branchName) => changeBranch(dir, branchName));
+  gitIpc.handle.changeBranch((dir, branchName) => {
+    AddBreadcrumb_Main(`Git Change Branch: dir:${dir}, branch:${branchName}`);
+    return changeBranch(dir, branchName);
+  });
 
   // Converts shallow clone to full clone
-  gitIpc.handle.unShallow(dir => unShallow(dir));
+  gitIpc.handle.unShallow(dir => {
+    AddBreadcrumb_Main(`Git Unshallow: dir:${dir}`);
+    return unShallow(dir);
+  });
 
   // Performs hard reset to HEAD
-  gitIpc.handle.resetHard(dir => resetHard(dir));
+  gitIpc.handle.resetHard(dir => {
+    AddBreadcrumb_Main(`Git Reset Hard: dir:${dir}`);
+    return resetHard(dir);
+  });
 
   // Gets repository commit log
   gitIpc.handle.getCommits((dir, maxCount) => getCommits(dir, maxCount));

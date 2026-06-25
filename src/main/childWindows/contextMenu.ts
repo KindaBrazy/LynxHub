@@ -7,7 +7,6 @@ import {contextMenuIpc} from '@lynx_main/ipc/contextMenu';
 import {dialogBlurred} from '@lynx_main/ipc/dialogsWindow';
 import lynxIpc from '@lynx_main/ipc/ipcWrapper';
 import classHolder from '@lynx_main/managers/classHolder';
-import addBreadcrumb from '@lynx_main/utils/breadcrumbs';
 import {BrowserWindow, BrowserWindowConstructorOptions, screen, WebContents} from 'electron';
 
 export default class ContextMenuManager {
@@ -230,7 +229,6 @@ export default class ContextMenuManager {
     const contentH = Math.max(20, Math.min(Math.ceil(height * scale), 4096));
 
     try {
-      addBreadcrumb(`Resizing context menu: ${contentW}x${contentH}`);
       window.setBounds({width: contentW, height: contentH}, false);
     } catch (error) {
       console.error('Failed to resize context menu:', error);

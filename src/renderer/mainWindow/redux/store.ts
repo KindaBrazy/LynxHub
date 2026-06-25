@@ -5,6 +5,7 @@ import storageIpc from '@lynx_shared/ipc/storage';
 import {configureStore} from '@reduxjs/toolkit';
 import {createReduxEnhancer} from '@sentry/react';
 
+import {actionLoggerMiddleware} from './middleware/actionLogger';
 import app from './reducers/app';
 import cards from './reducers/cards';
 import hotkeys from './reducers/hotkeys';
@@ -135,6 +136,10 @@ const buildPreloadedState = (): PreloadState | undefined => {
 
 let store = configureStore({
   reducer: staticReducers,
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }).concat(actionLoggerMiddleware),
 });
 
 export const createStore = (collectError: boolean) => {
@@ -153,6 +158,10 @@ export const createStore = (collectError: boolean) => {
       ...extensionReducers,
     },
     preloadedState,
+    middleware: getDefaultMiddleware =>
+      getDefaultMiddleware({
+        serializableCheck: false,
+      }).concat(actionLoggerMiddleware),
     enhancers: collectError
       ? getDefaultEnhancers => {
           return getDefaultEnhancers().concat(sentryReduxEnhancer);

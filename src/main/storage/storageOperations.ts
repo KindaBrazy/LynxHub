@@ -26,6 +26,7 @@ import {
   getRelativePath,
   isPortable,
 } from '@lynx_main/utils';
+import AddBreadcrumb_Main from '@lynx_main/utils/breadcrumbs';
 import axios from 'axios';
 import {uniqBy} from 'lodash-es';
 
@@ -183,6 +184,10 @@ class StorageManager extends BaseStorage {
       currentArgs.push({cardId, ...args});
     }
 
+    AddBreadcrumb_Main(
+      `Card Arguments Configured: cardId:${cardId}, activePreset:${args.activePreset}, ` +
+        `args:${JSON.stringify(args.data)}`,
+    );
     this.updateData('cardsConfig', {args: currentArgs});
   }
 
@@ -398,6 +403,10 @@ class StorageManager extends BaseStorage {
     ipcChannel?: (data: {commands: string[]; id: string}) => void,
   ): void {
     const configArray = this.getData('cardsConfig')[configKey];
+    AddBreadcrumb_Main(
+      `Card Config Command Operation: key:${configKey}, operation:${operation}, ` +
+        `cardId:${cardId}, payload:${JSON.stringify(commandData)}`,
+    );
 
     switch (operation) {
       case 'add': {
@@ -516,6 +525,8 @@ class StorageManager extends BaseStorage {
       targetOpen = {type: targetOpen.type, path: getRelativePath(getExePath(), open.path)};
     }
 
+    AddBreadcrumb_Main(`Card Pre-Open Added: cardId:${cardId}, type:${targetOpen.type}, ` + `path:${targetOpen.path}`);
+
     if (existingCustomRunIndex !== -1) {
       preOpen[existingCustomRunIndex].data.push(targetOpen);
     } else {
@@ -529,6 +540,8 @@ class StorageManager extends BaseStorage {
     const existCommand = preOpen.findIndex(command => command.cardId === cardId);
 
     if (existCommand !== -1) {
+      const removedItem = preOpen[existCommand].data[index];
+      AddBreadcrumb_Main(`Card Pre-Open Removed: cardId:${cardId}, item:${JSON.stringify(removedItem)}`);
       preOpen[existCommand].data.splice(index, 1);
     }
     this.updateData('cardsConfig', {preOpen});
@@ -559,6 +572,8 @@ class StorageManager extends BaseStorage {
    */
   public updateCustomRunBehavior(data: Partial<CustomRunBehaviorData>): void {
     if (!data.cardID) return;
+
+    AddBreadcrumb_Main(`Card Run Behavior Updated: cardId:${data.cardID}, payload:${JSON.stringify(data)}`);
 
     let customRunBehavior = this.getData('cardsConfig').customRunBehavior;
     const existCustom = customRunBehavior.findIndex(command => command.cardID === data.cardID);

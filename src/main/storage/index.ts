@@ -9,6 +9,7 @@ import {applicationIpc} from '@lynx_main/ipc/application';
 import {changeWindowState} from '@lynx_main/ipc/methods/windowUtils';
 import classHolder from '@lynx_main/managers/classHolder';
 import {getAbsolutePath, getExePath, getUserAgent, isPortable} from '@lynx_main/utils';
+import {logAction} from '@lynx_main/utils/actionLogger';
 import {app} from 'electron';
 import fs from 'graceful-fs';
 import {cloneDeep} from 'lodash-es';
@@ -455,6 +456,30 @@ class BaseStorage {
   }
 
   /**
+   * Helper to recursively sanitize sensitive keys before logging storage updates.
+   */
+  private sanitizeStoragePayload(payload: any): any {
+    if (payload === null || payload === undefined) return payload;
+    if (typeof payload !== 'object') return payload;
+
+    if (Array.isArray(payload)) {
+      return payload.map(item => this.sanitizeStoragePayload(item));
+    }
+
+    const sanitized = {...payload};
+    const sensitiveKeys = ['dsn', 'password', 'token', 'key', 'secret', 'auth', 'address', 'url', 'path'];
+
+    for (const k of Object.keys(sanitized)) {
+      if (sensitiveKeys.some(sk => k.toLowerCase().includes(sk))) {
+        sanitized[k] = '[REDACTED]';
+      } else if (typeof sanitized[k] === 'object') {
+        sanitized[k] = this.sanitizeStoragePayload(sanitized[k]);
+      }
+    }
+    return sanitized;
+  }
+
+  /**
    * Updates data for a specific key and persists to disk.
    * @param key - The key of the data to update
    * @param updateData - The partial data to merge
@@ -462,6 +487,13 @@ class BaseStorage {
   public updateData<K extends keyof AppStorageData>(key: K, updateData: Partial<AppStorageData[K]>): void {
     this.storage.data[key] = {...this.storage.data[key], ...updateData};
     this.write();
+
+    try {
+      const sanitized = this.sanitizeStoragePayload(updateData);
+      logAction('storage-update', `Update ${key} with ${JSON.stringify(sanitized)}`);
+    } catch {
+      // Ignore logging failures
+    }
   }
 
   /**

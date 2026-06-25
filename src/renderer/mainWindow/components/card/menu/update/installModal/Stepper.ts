@@ -5,6 +5,7 @@ import gitIpc from '@lynx_shared/ipc/git';
 import lynxIpc from '@lynx_shared/ipc/lynxIpc';
 import storageIpc, {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import utilsIpc from '@lynx_shared/ipc/utils';
+import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
 import {Dispatch, FC, SetStateAction} from 'react';
 
 import {extensionRendererApi} from '../../../../../plugins/extensions/loader';
@@ -64,6 +65,7 @@ export default class InstallStepper {
     this.progressBar = data.progressBar;
 
     this.setInstalled = dir => {
+      AddBreadcrumb_Renderer(`Card Marked Installed: id:${data.cardId}, dir:${dir}`);
       storageUtilsIpc.send.addInstalledCard({dir, id: data.cardId});
       data.checkForUpdate(dir);
     };
@@ -176,6 +178,7 @@ export default class InstallStepper {
   public initialSteps(steps: InitialSteps) {
     this.totalSteps = steps.length - 1;
     this.setSteps(steps);
+    AddBreadcrumb_Renderer(`Card Install Started: id:${this.cardId}, steps:${JSON.stringify(steps)}`);
 
     extensionRendererApi.events.emit('card_install_addStep', {
       id: this.cardId,
@@ -183,6 +186,7 @@ export default class InstallStepper {
         this.setSteps(prevSteps => prevSteps.toSpliced(atIndex, 0, title));
         this.customStepContents.push({index: atIndex, content});
         this.totalSteps += 1;
+        AddBreadcrumb_Renderer(`Card Install Custom Step Added: id:${this.cardId}, step:${title} at ${atIndex}`);
       },
     });
   }
@@ -192,6 +196,9 @@ export default class InstallStepper {
       if (!this.nextStepResolver) this.nextStepResolver = resolve;
       this.setNextStep(prevState => {
         const stepNumber = prevState < this.totalSteps ? prevState + 1 : prevState;
+        AddBreadcrumb_Renderer(
+          `Card Install Step Progressed: id:${this.cardId}, currentStep:${stepNumber}/${this.totalSteps}`,
+        );
         const customStep = this.customStepContents.find(step => step.index === stepNumber);
 
         if (customStep) {
@@ -207,6 +214,9 @@ export default class InstallStepper {
   }
 
   public showFinalStep(type: 'success' | 'error', title: string, description?: string) {
+    AddBreadcrumb_Renderer(
+      `Card Install Finished: id:${this.cardId}, outcome:${type}, title:${title}, description:${description}`,
+    );
     this.setNextStep(this.totalSteps);
     this.finalStep(type, title, description);
   }

@@ -10,6 +10,7 @@ import {
 } from '@lynx_common/types/plugins';
 import classHolder from '@lynx_main/managers/classHolder';
 import {getList} from '@lynx_main/plugins/utils';
+import AddBreadcrumb_Main from '@lynx_main/utils/breadcrumbs';
 
 import lynxIpc from '../ipcWrapper';
 import {sendToMain} from '../sender';
@@ -30,16 +31,56 @@ export default async function listenPlugins() {
   pluginsIpc.handle.getUnloadedList(() => pluginManager.getUnloadedList());
 
   // Installs plugin from URL
-  pluginsIpc.handle.install((url, commitHash) => pluginManager.install(url, commitHash));
+  pluginsIpc.handle.install(async (url, commitHash) => {
+    AddBreadcrumb_Main(`Plugin Install Started: url:${url}`);
+    try {
+      const res = await pluginManager.install(url, commitHash);
+      AddBreadcrumb_Main(`Plugin Install Finished: url:${url}, success:${res}`);
+      return res;
+    } catch (err) {
+      AddBreadcrumb_Main(`Plugin Install Error: url:${url}, error:${err}`);
+      throw err;
+    }
+  });
 
   // Uninstalls plugin by ID
-  pluginsIpc.handle.uninstall(id => pluginManager.uninstall(id));
+  pluginsIpc.handle.uninstall(async id => {
+    AddBreadcrumb_Main(`Plugin Uninstall Started: id:${id}`);
+    try {
+      const res = await pluginManager.uninstall(id);
+      AddBreadcrumb_Main(`Plugin Uninstall Finished: id:${id}, success:${res}`);
+      return res;
+    } catch (err) {
+      AddBreadcrumb_Main(`Plugin Uninstall Error: id:${id}, error:${err}`);
+      throw err;
+    }
+  });
 
   // Syncs plugin to specific commit
-  pluginsIpc.handle.sync((id, commit) => pluginManager.syncItem(id, commit));
+  pluginsIpc.handle.sync(async (id, commit) => {
+    AddBreadcrumb_Main(`Plugin Sync Started: id:${id}, commit:${commit}`);
+    try {
+      const res = await pluginManager.syncItem(id, commit);
+      AddBreadcrumb_Main(`Plugin Sync Finished: id:${id}, success:${res}`);
+      return res;
+    } catch (err) {
+      AddBreadcrumb_Main(`Plugin Sync Error: id:${id}, error:${err}`);
+      throw err;
+    }
+  });
 
   // Syncs multiple plugins to their commits
-  pluginsIpc.handle.syncAll(items => pluginManager.syncAll(items));
+  pluginsIpc.handle.syncAll(async items => {
+    AddBreadcrumb_Main(`Plugins SyncAll Started: items:${JSON.stringify(items)}`);
+    try {
+      const res = await pluginManager.syncAll(items);
+      AddBreadcrumb_Main(`Plugins SyncAll Finished: updatedItemsCount:${res.length}`);
+      return res;
+    } catch (err) {
+      AddBreadcrumb_Main(`Plugins SyncAll Error: error:${err}`);
+      throw err;
+    }
+  });
 
   // Checks for available sync updates based on subscription stage
   pluginsIpc.handle.checkForSync(stage => pluginManager.checkForSync(stage));

@@ -1,3 +1,4 @@
+import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
 import {useEffect, useState} from 'react';
 
 /**
@@ -9,6 +10,12 @@ import {useEffect, useState} from 'react';
  */
 export const useScrollSpy = (itemIds: string[], threshold = 0.1): string => {
   const [activeId, setActiveId] = useState<string>('');
+
+  useEffect(() => {
+    if (activeId) {
+      AddBreadcrumb_Renderer(`Dashboard Section Visited: ${activeId}`);
+    }
+  }, [activeId]);
 
   useEffect(() => {
     const observers: IntersectionObserver[] = [];
@@ -31,12 +38,6 @@ export const useScrollSpy = (itemIds: string[], threshold = 0.1): string => {
         scrollContainer = scrollContainer.parentElement;
         if (!scrollContainer) break; // Safety break
       }
-
-      // If no os-viewport found, fallback to null (viewport) or maybe the immediate parent
-      // But IntersectionObserver root=null means viewport.
-      // The original code tried to find 'os-viewport'.
-      // If we don't find it, using null (viewport) might be wrong if it's a nested scroll.
-      // But let's stick to the logic: if found, use it.
 
       // Track intersection ratios for ALL sections
       const intersectionRatios = new Map<string, number>();
