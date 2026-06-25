@@ -57,7 +57,7 @@ export const InstalledMenu = memo(({setType, state}: {setType: (type: 'install' 
   return (
     <>
       <Dropdown isOpen={menuIsOpen} onOpenChange={setMenuIsOpen}>
-        <Button variant="tertiary" isPending={updating} isIconOnly>
+        <Button variant="tertiary" isPending={updating} aria-label="Open Card Menu" isIconOnly>
           {updating ? (
             <Spinner size="sm" color="current" />
           ) : (

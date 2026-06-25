@@ -16,7 +16,7 @@ export const RemoveButton = memo(
   ({isDisabled, name, isOpen, onOpenChange, onDeletePerman, onMoveToTrash}: RemoveButtonProps) => {
     if (isDisabled) {
       return (
-        <Button size="sm" isDisabled={true} variant="danger-soft" isIconOnly>
+        <Button size="sm" isDisabled={true} variant="danger-soft" aria-label="Remove Extension" isIconOnly>
           <TrashBin2 className="size-4" />
         </Button>
       );
@@ -24,7 +24,7 @@ export const RemoveButton = memo(
 
     return (
       <Popover isOpen={isOpen} onOpenChange={onOpenChange}>
-        <Button size="sm" variant="danger-soft" isIconOnly>
+        <Button size="sm" variant="danger-soft" aria-label="Remove Extension" isIconOnly>
           <TrashBin2 className="size-4" />
         </Button>
         <Popover.Content>
@@ -88,14 +88,25 @@ type DisableButtonProps = {
 export const DisableButton = memo(({isDisabled, isLoading, onPress, isActionDisabled}: DisableButtonProps) => {
   if (isActionDisabled) {
     return (
-      <Button size="sm" isDisabled={true} variant="tertiary" isPending={isLoading} isIconOnly>
+      <Button
+        size="sm"
+        isDisabled={true}
+        variant="tertiary"
+        isPending={isLoading}
+        aria-label="Extension Information"
+        isIconOnly>
         {isLoading ? <Spinner size="sm" color="current" /> : <InfoCircle className="size-5" />}
       </Button>
     );
   }
 
   return (
-    <Button size="sm" onPress={onPress} variant={isDisabled ? 'tertiary' : 'secondary'} isIconOnly>
+    <Button
+      size="sm"
+      onPress={onPress}
+      variant={isDisabled ? 'tertiary' : 'secondary'}
+      aria-label={isDisabled ? 'Enable Extension' : 'Disable Extension'}
+      isIconOnly>
       {isDisabled ? <Lock className="size-4" /> : <LockUnlocked className="size-4" />}
     </Button>
   );

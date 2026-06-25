@@ -82,7 +82,7 @@ export default function TerminalScroll({xtermRef}: Props) {
     <>
       <AnimateChild show={currentScroll !== 0 && currentScroll !== undefined}>
         <LynxTooltip delay={500} content="Scroll to top">
-          <Button size="sm" variant="ghost" onPress={scrollTop} isIconOnly>
+          <Button size="sm" variant="ghost" onPress={scrollTop} aria-label="Scroll to top" isIconOnly>
             <AltArrowUp />
           </Button>
         </LynxTooltip>
@@ -90,7 +90,7 @@ export default function TerminalScroll({xtermRef}: Props) {
 
       <AnimateChild show={currentScroll !== undefined && currentScroll < (baseY || 0)}>
         <LynxTooltip delay={500} content="Scroll to bottom">
-          <Button size="sm" variant="ghost" onPress={scrollBottom} isIconOnly>
+          <Button size="sm" variant="ghost" onPress={scrollBottom} aria-label="Scroll to bottom" isIconOnly>
             <AltArrowDown />
           </Button>
         </LynxTooltip>

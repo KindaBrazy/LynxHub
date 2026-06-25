@@ -17,7 +17,7 @@ const UninstalledMenu = memo(() => {
   return (
     <>
       <Dropdown isOpen={menuIsOpen} onOpenChange={setMenuIsOpen}>
-        <Button variant="tertiary" isIconOnly>
+        <Button variant="tertiary" aria-label="Open Card Menu" isIconOnly>
           <MenuDots className={`size-[1.3rem] ${menuIsOpen ? 'rotate-90' : 'rotate-0'} transition-all duration-500`} />
         </Button>
         <Dropdown.Popover>
