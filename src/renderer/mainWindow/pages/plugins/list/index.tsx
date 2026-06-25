@@ -126,11 +126,11 @@ export default function PluginList() {
             {/* View Mode Switcher */}
             <div
               className={
-                'flex items-center shrink-0 bg-surface rounded-xl p-0.5 border border-surface/50 shadow-sm h-10'
+                'flex items-center shrink-0 bg-surface rounded-3xl py-0.5 px-1 border border-surface/50 shadow-sm h-10'
               }>
               <LynxTooltip content="Default Card View">
                 <Button
-                  className={`size-8 rounded-lg min-w-0 transition-colors duration-200 ${
+                  className={`size-8 min-w-0 transition-colors duration-200 ${
                     layoutMode === 'default' ? 'bg-surface-secondary text-foreground' : 'bg-transparent text-muted'
                   }`}
                   variant="secondary"
@@ -141,7 +141,7 @@ export default function PluginList() {
               </LynxTooltip>
               <LynxTooltip content="Compact List View">
                 <Button
-                  className={`size-8 rounded-lg min-w-0 transition-colors duration-200 ${
+                  className={`size-8 min-w-0 transition-colors duration-200 ${
                     layoutMode === 'compact' ? 'bg-surface-secondary text-foreground' : 'bg-transparent text-muted'
                   }`}
                   variant="secondary"
