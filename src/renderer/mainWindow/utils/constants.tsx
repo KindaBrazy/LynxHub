@@ -1,37 +1,7 @@
-import Agents from '@lynx/pages/agents';
-import AudioGenerationPage from '@lynx/pages/audio';
-import DashboardPage from '@lynx/pages/dashboard';
-import GamesPage from '@lynx/pages/games';
-import HomePage from '@lynx/pages/home';
-import ImageGenerationPage from '@lynx/pages/image';
-import OthersPage from '@lynx/pages/others';
-import PluginsPage from '@lynx/pages/plugins';
-import SettingsPage from '@lynx/pages/settings';
-import TextGenerationPage from '@lynx/pages/text';
-import ToolsPage from '@lynx/pages/tools';
 import {PageID} from '@lynx_common/consts';
 import {TabInfo} from '@lynx_common/types';
 import type {HTMLMotionProps} from 'framer-motion';
 import type {SimpleGitProgressEvent} from 'simple-git';
-
-/**
- * Mapping of internal page IDs to their renderer components.
- */
-export const PageComponents = {
-  [PageID.home]: HomePage,
-  [PageID.imageGen]: ImageGenerationPage,
-  [PageID.textGen]: TextGenerationPage,
-  [PageID.audioGen]: AudioGenerationPage,
-
-  [PageID.tools]: ToolsPage,
-  [PageID.games]: GamesPage,
-  [PageID.others]: OthersPage,
-  [PageID.agents]: Agents,
-
-  [PageID.dashboard]: DashboardPage,
-  [PageID.plugins]: PluginsPage,
-  [PageID.settings]: SettingsPage,
-};
 
 /**
  * Base palette used by terminal/theme-related helpers.

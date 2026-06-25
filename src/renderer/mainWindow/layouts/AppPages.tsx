@@ -1,9 +1,34 @@
 import SessionView from '@lynx/features/session';
+import Agents from '@lynx/pages/agents';
+import AudioGenerationPage from '@lynx/pages/audio';
+import DashboardPage from '@lynx/pages/dashboard';
+import GamesPage from '@lynx/pages/games';
 import HomePage from '@lynx/pages/home';
+import ImageGenerationPage from '@lynx/pages/image';
+import OthersPage from '@lynx/pages/others';
+import PluginsPage from '@lynx/pages/plugins';
+import SettingsPage from '@lynx/pages/settings';
+import TextGenerationPage from '@lynx/pages/text';
+import ToolsPage from '@lynx/pages/tools';
 import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {useCardsState} from '@lynx/redux/reducers/cards';
 import {useTerminalState} from '@lynx/redux/reducers/terminal';
-import {PageComponents} from '@lynx/utils/constants';
+import {PageID} from '@lynx_common/consts';
+
+const PageComponents = {
+  [PageID.home]: HomePage,
+  [PageID.imageGen]: ImageGenerationPage,
+  [PageID.textGen]: TextGenerationPage,
+  [PageID.audioGen]: AudioGenerationPage,
+  [PageID.tools]: ToolsPage,
+  [PageID.games]: GamesPage,
+  [PageID.others]: OthersPage,
+  [PageID.agents]: Agents,
+  [PageID.dashboard]: DashboardPage,
+  [PageID.plugins]: PluginsPage,
+  [PageID.settings]: SettingsPage,
+};
+
 import ptyIpc from '@lynx_shared/ipc/pty';
 import {memo, useEffect, useMemo} from 'react';
 
