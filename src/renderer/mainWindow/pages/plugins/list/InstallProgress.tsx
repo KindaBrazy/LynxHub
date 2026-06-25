@@ -44,7 +44,7 @@ export function InstallProgress({isInstalling, pluginUrl}: InstallProgressProps)
       color="success"
       value={installProgress}
       aria-label="Installing progress"
-      className="absolute bottom-0 inset-x-0 px-3.5">
+      className="absolute bottom-0 inset-x-0 px-[1.1rem]">
       <ProgressBar.Track className="h-0.5">
         <ProgressBar.Fill />
       </ProgressBar.Track>
