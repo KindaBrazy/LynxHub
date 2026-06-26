@@ -98,6 +98,9 @@ export type AppConfigStorage = {
   addBreadcrumbs: boolean;
   sentryDsn: string;
   anonymousId: string;
+  activeDays: string[];
+  totalUsageTime: number;
+  hasSeenUpgradePromo: boolean;
 };
 
 /**

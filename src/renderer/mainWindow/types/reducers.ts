@@ -21,6 +21,7 @@ export type AppState = {
     showWizard: boolean;
     isUpgradeFlow: boolean;
   };
+  showUpgradePromo: boolean;
 };
 
 export type CardsState = {

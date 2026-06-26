@@ -4,6 +4,7 @@ import {memo, useMemo} from 'react';
 import {RestartModal} from './RestartModal';
 import UpdateApp from './updateApp';
 import UpdatingNotification from './updateCard';
+import UpgradePromoModal from './UpgradePromoModal';
 
 /**
  * Main Modals container component.
@@ -20,6 +21,7 @@ const Modals = memo(() => {
     <>
       <RestartModal />
       <UpdatingNotification />
+      <UpgradePromoModal />
 
       {ReplaceUpdateApp ? <ReplaceUpdateApp /> : <UpdateApp />}
 

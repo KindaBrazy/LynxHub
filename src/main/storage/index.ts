@@ -79,6 +79,9 @@ class BaseStorage {
       addBreadcrumbs: true,
       sentryDsn: '',
       anonymousId: '',
+      activeDays: [],
+      totalUsageTime: 0,
+      hasSeenUpgradePromo: false,
     },
     terminal: {
       outputColor: false,

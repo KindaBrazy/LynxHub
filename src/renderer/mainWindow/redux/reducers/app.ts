@@ -22,6 +22,7 @@ const initialState: AppState = {
   navBar: true,
   appTitle: undefined,
   initializer: {showWizard: false, isUpgradeFlow: false},
+  showUpgradePromo: false,
 };
 
 const appSlice = createSlice({

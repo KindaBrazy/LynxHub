@@ -76,6 +76,7 @@ const buildPreloadedState = (): PreloadState | undefined => {
       navBar: true,
       appTitle: undefined,
       initializer,
+      showUpgradePromo: false,
     },
     cards: {
       autoUpdate: storage.cards.autoUpdateCards,
