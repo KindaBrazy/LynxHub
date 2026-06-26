@@ -31,7 +31,7 @@ const TabItem = memo(({tab, isOrdering}: Props) => {
   const isCtrlPressed = useHotkeysState('isCtrlPressed');
   const isActiveTab = useIsActiveTab(tab.id);
   const runningCards = useCardsState('runningCard');
-  const btnRef = useRef<HTMLButtonElement | null>(null);
+  const btnRef = useRef<HTMLDivElement | null>(null);
   const dispatch = useDispatch<AppDispatch>();
   const [isTruncated, setIsTruncated] = useState<boolean>(false);
 
@@ -116,12 +116,13 @@ const TabItem = memo(({tab, isOrdering}: Props) => {
           `cursor-default gap-x-0.5 h-9 overflow-hidden rounded-none rounded-t-xl! ` +
           `${isActiveTab ? 'bg-white dark:bg-[#303033]' : 'hover:bg-surface-secondary'} transition duration-200`
         }
-        ref={btnRef}
         variant="ghost"
         onPress={onPress}
+        ref={btnRef as any}
         aria-selected={isActiveTab}
         onHoverChange={setIsHovered}
-        aria-label={`Tab: ${tab.title}`}>
+        aria-label={`Tab: ${tab.title}`}
+        render={({ref: buttonRef, ...props}) => <div ref={buttonRef as any} {...(props as any)} />}>
         <div className="flex gap-x-0.5 flex-row items-center min-w-0 flex-1">
           <TabIcon tab={tab} currentView={runningCard?.currentView} />
 
