@@ -73,7 +73,7 @@ export default function StarRepoModal() {
       </Modal.Header>
       <Modal.Body className="space-y-4">
         <p className="text-sm leading-relaxed text-foreground select-none">
-          I hope you are enjoying your experience with LynxHub! If you do, please consider starring my official
+          I hope you are enjoying your experience with LynxHub! If you do, please consider starring LynxHub official
           repository on GitHub. It helps increase project visibility and supports my ongoing development.
         </p>
 
