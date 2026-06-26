@@ -12,6 +12,7 @@ import type staticsIpc from '@lynx_shared/ipc/statics';
 import type storageIpc from '@lynx_shared/ipc/storage';
 import type toastWindowIpc from '@lynx_shared/ipc/toastWindow';
 import type userIpc from '@lynx_shared/ipc/user';
+import type userImagesIpc from '@lynx_shared/ipc/userImages';
 import type utilsIpc from '@lynx_shared/ipc/utils';
 
 export type RendererIpcApi = {
@@ -29,5 +30,6 @@ export type RendererIpcApi = {
   storage: typeof storageIpc;
   toastWindow: typeof toastWindowIpc;
   user: typeof userIpc;
+  userImages: typeof userImagesIpc;
   utils: typeof utilsIpc;
 };

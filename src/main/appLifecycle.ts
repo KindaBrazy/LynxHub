@@ -9,6 +9,7 @@ import ShareScreenManager from './childWindows/shareScreen';
 import classHolder from './managers/classHolder';
 import {getAppDirectory} from './managers/dataFolder';
 import {getImageCacheManager, registerImageCacheScheme} from './managers/imageCache';
+import {getUserImagesManager, registerUserImagesScheme} from './managers/userImages';
 import {initSentry} from './monitoring/sentry';
 
 /**
@@ -78,6 +79,9 @@ export function configureAppBeforeReady(): void {
   // Register image cache protocol scheme
   registerImageCacheScheme();
 
+  // Register user local images protocol scheme
+  registerUserImagesScheme();
+
   if (collectErrors) {
     initSentry(
       appStartTime,
@@ -95,6 +99,9 @@ export function configureAppBeforeReady(): void {
 export async function registerCustomProtocols(): Promise<void> {
   // Initialize image cache manager
   await getImageCacheManager().initialize();
+
+  // Initialize user images manager
+  await getUserImagesManager().initialize();
 
   protocol.handle('lynxplugin', request => {
     try {

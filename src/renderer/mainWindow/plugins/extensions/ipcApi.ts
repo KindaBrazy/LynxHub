@@ -12,6 +12,7 @@ import staticsIpc from '@lynx_shared/ipc/statics';
 import storageIpc from '@lynx_shared/ipc/storage';
 import toastWindowIpc from '@lynx_shared/ipc/toastWindow';
 import userIpc from '@lynx_shared/ipc/user';
+import userImagesIpc from '@lynx_shared/ipc/userImages';
 import utilsIpc from '@lynx_shared/ipc/utils';
 
 import {RendererIpcApi} from './types/ipcWrapper';
@@ -31,5 +32,6 @@ export const rendererIpcApi: RendererIpcApi = {
   storage: storageIpc,
   toastWindow: toastWindowIpc,
   user: userIpc,
+  userImages: userImagesIpc,
   utils: utilsIpc,
 };

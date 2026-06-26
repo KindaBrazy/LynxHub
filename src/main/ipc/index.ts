@@ -10,6 +10,7 @@ import listenPlugins from './plugins/plugins';
 import listenPty from './pty';
 import listenStatics from './statics';
 import listenStorage, {listenStorageUtils} from './storage';
+import listenUserImages from './userImages';
 import listenUtils from './utils';
 
 /**
@@ -41,6 +42,7 @@ export async function listenToIpcChannels() {
 
   await listenApplication();
   listenFiles();
+  listenUserImages();
 
   listenGit();
   listenUtils();
