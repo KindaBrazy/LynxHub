@@ -168,6 +168,16 @@ export default class StaticsManager {
   }
 
   public async getPatrons(): Promise<PatreonSupporter[] | undefined> {
+    try {
+      const response = await axios.get(`${LYNXHUB_WEBSITE}/api/patrons`, {
+        timeout: 10000,
+      });
+      if (response.data && response.data.success) {
+        return response.data.patrons;
+      }
+    } catch (error) {
+      console.error('Failed to fetch patrons from website:', axios.isAxiosError(error) ? error.message : error);
+    }
     return this.getDataAsJson<PatreonSupporter[]>('patrons.json');
   }
 
