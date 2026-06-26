@@ -19,7 +19,12 @@ interface HomeSearchBoxProps {
  */
 const HomeSearchBox = memo(({searchValue, setSearchValue}: HomeSearchBoxProps) => {
   return (
-    <SearchField variant="secondary" value={searchValue} onChange={setSearchValue} fullWidth>
+    <SearchField
+      variant="secondary"
+      value={searchValue}
+      onChange={setSearchValue}
+      aria-label="Search interfaces"
+      fullWidth>
       <SearchField.Group>
         <SearchField.SearchIcon />
         <SearchField.Input spellCheck="false" placeholder="Search interfaces..." />
