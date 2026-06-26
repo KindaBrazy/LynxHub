@@ -1,4 +1,4 @@
-import {Checkbox, DropdownItem, Label, Spinner} from '@heroui/react';
+import {Checkbox, DropdownItem, Spinner} from '@heroui/react';
 import {extractGitUrl} from '@lynx_common/utils';
 import gitIpc from '@lynx_shared/ipc/git';
 import moduleIpc from '@lynx_shared/ipc/plugins/module';
@@ -152,11 +152,11 @@ export const AutoUpdateMenuItem = () => {
       key="auto-update"
       textValue="Auto Update">
       <Checkbox variant="secondary" isSelected={autoUpdate}>
-        <Checkbox.Control>
-          <Checkbox.Indicator />
-        </Checkbox.Control>
         <Checkbox.Content>
-          <Label>Auto Update</Label>
+          <Checkbox.Control>
+            <Checkbox.Indicator />
+          </Checkbox.Control>
+          Auto Update
         </Checkbox.Content>
       </Checkbox>
     </DropdownItem>

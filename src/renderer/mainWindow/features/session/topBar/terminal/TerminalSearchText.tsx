@@ -1,4 +1,4 @@
-import {Button, Label, Popover, SearchField, Switch} from '@heroui/react';
+import {Button, Popover, SearchField, Switch} from '@heroui/react';
 import useHotkeyPress from '@lynx/hooks/hotkeys';
 import {useIsActiveTab} from '@lynx/layouts/tabs/utils';
 import {useHotkeysState} from '@lynx/redux/reducers/hotkeys';
@@ -229,29 +229,29 @@ const TerminalSearchText = memo(({searchAddon, tabId}: Props) => {
 
           <div className="flex flex-col w-full gap-y-2">
             <Switch isSelected={enabledRegex} onChange={handleToggleRegex}>
-              <Switch.Control>
-                <Switch.Thumb />
-              </Switch.Control>
               <Switch.Content>
-                <Label className="cursor-pointer">Regex</Label>
+                <Switch.Control>
+                  <Switch.Thumb />
+                </Switch.Control>
+                Regex
               </Switch.Content>
             </Switch>
 
             <Switch isSelected={matchCase} onChange={handleToggleMatchCase}>
-              <Switch.Control>
-                <Switch.Thumb />
-              </Switch.Control>
               <Switch.Content>
-                <Label className="cursor-pointer">Match Case</Label>
+                <Switch.Control>
+                  <Switch.Thumb />
+                </Switch.Control>
+                Match Case
               </Switch.Content>
             </Switch>
 
             <Switch isSelected={matchWord} onChange={handleToggleMatchWord}>
-              <Switch.Control>
-                <Switch.Thumb />
-              </Switch.Control>
               <Switch.Content>
-                <Label className="cursor-pointer">Match whole word</Label>
+                <Switch.Control>
+                  <Switch.Thumb />
+                </Switch.Control>
+                Match whole word
               </Switch.Content>
             </Switch>
           </div>

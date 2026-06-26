@@ -1,4 +1,4 @@
-import {Card, Label, Switch} from '@heroui/react';
+import {Card, Switch} from '@heroui/react';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import {useCardsState} from '@lynx/redux/reducers/cards';
 import {useVolumeState, volumeActions} from '@lynx/redux/reducers/volume';
@@ -130,16 +130,16 @@ export default function AudioControl() {
 
         <Card.Content>
           <Switch isSelected={globalMuted} onChange={handleMuteToggle} aria-label="Global mute toggle">
-            {globalMuted ? (
-              <VolumeCross aria-hidden="true" className="size-4.5 shrink-0 text-danger-500" />
-            ) : (
-              <Volume aria-hidden="true" className="size-5 shrink-0 text-default-500" />
-            )}
-            <Switch.Control>
-              <Switch.Thumb />
-            </Switch.Control>
-            <Switch.Content>
-              <Label className="text-sm cursor-pointer">{globalMuted ? 'All audio muted' : 'Audio enabled'}</Label>
+            <Switch.Content className="flex flex-row items-center gap-x-2">
+              <Switch.Control>
+                <Switch.Thumb />
+              </Switch.Control>
+              {globalMuted ? (
+                <VolumeCross aria-hidden="true" className="size-4.5 shrink-0 text-danger-500" />
+              ) : (
+                <Volume aria-hidden="true" className="size-5 shrink-0 text-default-500" />
+              )}
+              {globalMuted ? 'All audio muted' : 'Audio enabled'}
             </Switch.Content>
           </Switch>
         </Card.Content>

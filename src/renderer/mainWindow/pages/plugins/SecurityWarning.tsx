@@ -1,4 +1,4 @@
-import {Button, Checkbox, Label, Modal} from '@heroui/react';
+import {Button, Checkbox, Modal} from '@heroui/react';
 import {APP_AUTHOR_NAME} from '@lynx_common/consts';
 import {ShieldWarning} from '@solar-icons/react-perf/BoldDuotone';
 import {Dispatch, SetStateAction, useCallback, useEffect, useMemo, useRef, useState} from 'react';
@@ -101,11 +101,11 @@ export default function SecurityWarning({isOpen, onAgree, setIsOpen, type, title
         </p>
 
         <Checkbox className="mt-4" variant="secondary" isSelected={dontShow} onChange={setDontShow}>
-          <Checkbox.Control>
-            <Checkbox.Indicator />
-          </Checkbox.Control>
           <Checkbox.Content>
-            <Label className="cursor-pointer">Do not show this warning again</Label>
+            <Checkbox.Control>
+              <Checkbox.Indicator />
+            </Checkbox.Control>
+            Do not show this warning again
           </Checkbox.Content>
         </Checkbox>
       </Modal.Body>

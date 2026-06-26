@@ -1,4 +1,4 @@
-import {Button, Checkbox, Label, Modal, Tabs} from '@heroui/react';
+import {Button, Checkbox, Modal, Tabs} from '@heroui/react';
 import {extractGitUrl} from '@lynx_common/utils';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {useDebounceBreadcrumb} from '@lynx_shared/sentry/Breadcrumbs';
@@ -141,11 +141,11 @@ const ExtensionsModalContent = ({state}: CommonProps) => {
                   isSelected={autoUpdate}
                   onChange={onAutoUpdateChange}
                   isDisabled={!isExtensionAvailable}>
-                  <Checkbox.Control>
-                    <Checkbox.Indicator />
-                  </Checkbox.Control>
                   <Checkbox.Content>
-                    <Label className="cursor-pointer">Auto Update on Launch</Label>
+                    <Checkbox.Control>
+                      <Checkbox.Indicator />
+                    </Checkbox.Control>
+                    Auto Update on Launch
                   </Checkbox.Content>
                 </Checkbox>
               )}

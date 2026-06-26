@@ -1,4 +1,4 @@
-import {Avatar, Button, Checkbox, CheckboxGroup, cn, Description, Label, Spinner} from '@heroui/react';
+import {Avatar, Button, Checkbox, CheckboxGroup, cn, Description, Spinner} from '@heroui/react';
 import {getFallbackString} from '@lynx_common/utils';
 import {ArrowRight} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty} from 'lodash-es';
@@ -84,19 +84,19 @@ export default function PluginSelector({
                     variant="secondary"
                     isSelected={selectedPlugins.has(ext.id)}
                     onChange={() => handleSelectionChange(ext.id)}>
-                    <Checkbox.Control className="absolute top-3 right-4 size-5 rounded-full before:rounded-full">
-                      <Checkbox.Indicator />
-                    </Checkbox.Control>
                     <Checkbox.Content className="flex flex-row items-start justify-start gap-4">
+                      <Checkbox.Control className="absolute top-3 right-4 size-5 rounded-full before:rounded-full">
+                        <Checkbox.Indicator />
+                      </Checkbox.Control>
                       <Avatar>
                         <Avatar.Image src={ext.icon} alt={`${ext.name} icon`} />
                         <Avatar.Fallback>{getFallbackString(ext.name)}</Avatar.Fallback>
                       </Avatar>
                       <div className="flex flex-col gap-1">
-                        <Label>{ext.name}</Label>
-                        <Description>{ext.description}</Description>
+                        <span className="font-semibold text-sm">{ext.name}</span>
                       </div>
                     </Checkbox.Content>
+                    <Description className="ml-14 text-xs text-muted -mt-3">{ext.description}</Description>
                   </Checkbox>
                 </div>
               </CheckboxGroup>

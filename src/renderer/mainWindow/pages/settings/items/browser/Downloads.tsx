@@ -1,4 +1,4 @@
-import {Button, Card, FieldError, Input, Label, Radio, RadioGroup, Spinner, TextField} from '@heroui/react';
+import {Button, Card, FieldError, Input, Radio, RadioGroup, Spinner, TextField} from '@heroui/react';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import downloadManagerIpc from '@lynx_shared/ipc/downloadManager';
 import {MoveToFolder} from '@solar-icons/react-perf/BoldDuotone';
@@ -198,23 +198,19 @@ export default function Downloads() {
               isRequired>
               <div className="flex flex-row gap-x-4 mb-2">
                 <Radio value="default" className="mt-0">
-                  <Radio.Control>
-                    <Radio.Indicator />
-                  </Radio.Control>
                   <Radio.Content>
-                    <Label>
-                      <SettingsSearchHighlight text="Use default location" />
-                    </Label>
+                    <Radio.Control>
+                      <Radio.Indicator />
+                    </Radio.Control>
+                    <SettingsSearchHighlight text="Use default location" />
                   </Radio.Content>
                 </Radio>
                 <Radio value="ask" className="mt-0">
-                  <Radio.Control>
-                    <Radio.Indicator />
-                  </Radio.Control>
                   <Radio.Content>
-                    <Label>
-                      <SettingsSearchHighlight text="Always ask where to save" />
-                    </Label>
+                    <Radio.Control>
+                      <Radio.Indicator />
+                    </Radio.Control>
+                    <SettingsSearchHighlight text="Always ask where to save" />
                   </Radio.Content>
                 </Radio>
               </div>

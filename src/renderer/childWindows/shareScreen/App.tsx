@@ -1,4 +1,4 @@
-import {Button, Label, Spinner, Switch, Tabs} from '@heroui/react';
+import {Button, Spinner, Switch, Tabs} from '@heroui/react';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import {ScreenShareSources, ScreenShareStart} from '@lynx_common/types/shareScreen';
 import shareScreenIpc from '@lynx_shared/ipc/shareScreen';
@@ -119,13 +119,15 @@ export default function ScreenShare() {
         <div className="border-t border-surface-tertiary bg-surface-secondary px-4 py-2">
           <div className="flex justify-between gap-x-3">
             <Switch isSelected={shareAudio} onChange={setShareAudio}>
-              <Switch.Control>
-                <Switch.Thumb>
-                  <Switch.Icon>{shareAudio ? <VolumeLoud className="size-3" /> : <X className="size-3" />}</Switch.Icon>
-                </Switch.Thumb>
-              </Switch.Control>
               <Switch.Content>
-                <Label className="cursor-pointer">Share audio</Label>
+                <Switch.Control>
+                  <Switch.Thumb>
+                    <Switch.Icon>
+                      {shareAudio ? <VolumeLoud className="size-3" /> : <X className="size-3" />}
+                    </Switch.Icon>
+                  </Switch.Thumb>
+                </Switch.Control>
+                Share audio
               </Switch.Content>
             </Switch>
             <div className="flex justify-between gap-x-3">

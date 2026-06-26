@@ -123,19 +123,19 @@ export default function CloneOptions({url, setCloneOptionsResult}: CloneOptionsP
 
             <div className="flex gap-x-4">
               <Checkbox isSelected={enabledSingleBranch} onChange={setEnabledSingleBranch}>
-                <Checkbox.Control>
-                  <Checkbox.Indicator />
-                </Checkbox.Control>
                 <Checkbox.Content>
-                  <Label className="cursor-pointer">Limit clone to a single branch</Label>
+                  <Checkbox.Control>
+                    <Checkbox.Indicator />
+                  </Checkbox.Control>
+                  Limit clone to a single branch
                 </Checkbox.Content>
               </Checkbox>
               <Checkbox isSelected={enabledDepth} onChange={setEnabledDepth}>
-                <Checkbox.Control>
-                  <Checkbox.Indicator />
-                </Checkbox.Control>
                 <Checkbox.Content>
-                  <Label className="cursor-pointer">Perform a shallow clone</Label>
+                  <Checkbox.Control>
+                    <Checkbox.Indicator />
+                  </Checkbox.Control>
+                  Perform a shallow clone
                 </Checkbox.Content>
               </Checkbox>
             </div>

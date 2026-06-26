@@ -47,6 +47,9 @@
   --uninstalled-card-bg-color: #ededed;
   --accent-bg-color: #212121;
   --xterm-scrollbar-thumb-color: rgba(0, 0, 0, 0.1);
+
+  --tooltip-delay: 700ms;
+  --tooltip-close-delay: 0ms;
 }
 
 :root,

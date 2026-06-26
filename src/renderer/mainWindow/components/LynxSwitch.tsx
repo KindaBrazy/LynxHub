@@ -1,4 +1,4 @@
-import {Description, Label, Surface, SurfaceProps, Switch, SwitchProps} from '@heroui/react';
+import {Description, Surface, SurfaceProps, Switch, SwitchProps} from '@heroui/react';
 import SettingsSearchHighlight from '@lynx/pages/settings/SettingsSearchHighlight';
 import {ReactNode, useCallback, useEffect, useState} from 'react';
 
@@ -67,32 +67,35 @@ export default function LynxSwitch({
         onChange={onChange}
         isDisabled={isDisabled}
         isSelected={isSelected}
-        className={['size-full justify-between', className].join(' ')}>
-        <Switch.Content className="flex flex-row items-center gap-x-2">
-          {icon}
-          <div className="flex flex-col">
-            <Label className="cursor-pointer">
-              <SettingsSearchHighlight text={title} className="text-sm" />
-            </Label>
-            <Description>
-              {description &&
-                (typeof description === 'string' ? (
-                  <SettingsSearchHighlight text={description} className="text-xs text-default-400" />
+        className={['', className].join(' ')}>
+        <Switch.Content className="flex flex-row items-center justify-between w-full gap-x-2">
+          <div>
+            <div className="flex flex-row items-center gap-x-2">
+              {icon}
+              <span className="text-sm cursor-pointer">
+                <SettingsSearchHighlight text={title} />
+              </span>
+            </div>
+            {description && (
+              <Description className="pointer-events-none p-0">
+                {typeof description === 'string' ? (
+                  <SettingsSearchHighlight text={description} className="text-xs text-muted" />
                 ) : (
-                  <div className="text-xs text-default-400">{description}</div>
-                ))}
-            </Description>
+                  <div className="text-xs text-muted">{description}</div>
+                )}
+              </Description>
+            )}
           </div>
+          <Switch.Control>
+            {thumbIcon ? (
+              <Switch.Thumb>
+                <Switch.Icon>{thumbIcon}</Switch.Icon>
+              </Switch.Thumb>
+            ) : (
+              <Switch.Thumb />
+            )}
+          </Switch.Control>
         </Switch.Content>
-        <Switch.Control>
-          {thumbIcon ? (
-            <Switch.Thumb>
-              <Switch.Icon>{thumbIcon}</Switch.Icon>
-            </Switch.Thumb>
-          ) : (
-            <Switch.Thumb />
-          )}
-        </Switch.Control>
       </Switch>
     </Surface>
   );

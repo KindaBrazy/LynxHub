@@ -1,4 +1,4 @@
-import {Button, Card, Checkbox, CheckboxGroup, Label, Spinner} from '@heroui/react';
+import {Button, Card, Checkbox, CheckboxGroup, Spinner} from '@heroui/react';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import {AppDispatch} from '@lynx/redux/store';
 import browserIpc from '@lynx_shared/ipc/browser';
@@ -110,13 +110,11 @@ export default function ClearBrowserData() {
             className="flex flex-row gap-x-4">
             {BROWSER_DATA_OPTIONS.map(option => (
               <Checkbox className="mt-0" key={option.value} value={option.value}>
-                <Checkbox.Control>
-                  <Checkbox.Indicator />
-                </Checkbox.Control>
                 <Checkbox.Content>
-                  <Label>
-                    <SettingsSearchHighlight text={option.label} />
-                  </Label>
+                  <Checkbox.Control>
+                    <Checkbox.Indicator />
+                  </Checkbox.Control>
+                  <SettingsSearchHighlight text={option.label} />
                 </Checkbox.Content>
               </Checkbox>
             ))}

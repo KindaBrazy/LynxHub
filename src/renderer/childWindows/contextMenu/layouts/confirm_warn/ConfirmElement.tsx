@@ -1,4 +1,4 @@
-import {Checkbox, Label} from '@heroui/react';
+import {Checkbox} from '@heroui/react';
 import {ConfirmMenuTypes} from '@lynx_common/types';
 import storageIpc, {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {ShieldWarning} from '@solar-icons/react-perf/BoldDuotone';
@@ -54,11 +54,11 @@ const ConfirmElement = memo(({title, enabledTitle, confirmName, buttons}: Confir
       </div>
 
       <Checkbox className="my-3" variant="secondary" onChange={onToggleSkipConfirm} isSelected={isSkipConfirmSelected}>
-        <Checkbox.Control>
-          <Checkbox.Indicator />
-        </Checkbox.Control>
         <Checkbox.Content>
-          <Label className="cursor-pointer">{enabledTitle}</Label>
+          <Checkbox.Control>
+            <Checkbox.Indicator />
+          </Checkbox.Control>
+          {enabledTitle}
         </Checkbox.Content>
       </Checkbox>
 

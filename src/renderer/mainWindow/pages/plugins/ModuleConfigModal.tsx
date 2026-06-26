@@ -1,4 +1,4 @@
-import {Button, Checkbox, Label, Modal, Spinner} from '@heroui/react';
+import {Button, Checkbox, Modal, Spinner} from '@heroui/react';
 import {AppDispatch} from '@lynx/redux/store';
 import {showRestartModal} from '@lynx/utils';
 import {CardModules, RendererModuleImportType} from '@lynx_common/types/plugins/modules';
@@ -242,11 +242,11 @@ export default function ModuleConfigModal({isOpen, onClose}: ModuleConfigModalPr
                 <div className="grid grid-cols-3 gap-2">
                   {category.cards.map(card => (
                     <Checkbox id={card.id} key={card.id} isSelected={card.enabled} onChange={() => toggleCard(card.id)}>
-                      <Checkbox.Control>
-                        <Checkbox.Indicator />
-                      </Checkbox.Control>
                       <Checkbox.Content>
-                        <Label className="cursor-pointer">{card.title}</Label>
+                        <Checkbox.Control>
+                          <Checkbox.Indicator />
+                        </Checkbox.Control>
+                        {card.title}
                       </Checkbox.Content>
                     </Checkbox>
                   ))}

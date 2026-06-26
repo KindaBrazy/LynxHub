@@ -210,11 +210,11 @@ const FindInPage = memo(function FindInPage() {
       </div>
 
       <Switch isSelected={matchCase} onChange={setMatchCase}>
-        <Switch.Control>
-          <Switch.Thumb />
-        </Switch.Control>
         <Switch.Content>
-          <Label className="cursor-pointer">Match Case</Label>
+          <Switch.Control>
+            <Switch.Thumb />
+          </Switch.Control>
+          Match Case
         </Switch.Content>
       </Switch>
 

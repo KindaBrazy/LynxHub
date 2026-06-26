@@ -53,6 +53,9 @@
 
   --duration: 2s;
   --i: 0;
+
+  --tooltip-delay: 700ms;
+  --tooltip-close-delay: 0ms;
 }
 
 * {
