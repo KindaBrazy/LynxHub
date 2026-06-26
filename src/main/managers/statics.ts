@@ -35,6 +35,9 @@ export default class StaticsManager {
   private requirementsCheckCompleted: boolean = false;
   private pullIntervalId: NodeJS.Timeout | null = null;
   private gitAvailable: boolean = true;
+  private cachedNotifications: NotificationData[] | undefined = undefined;
+  private lastNotificationFetchTime = 0;
+  private lastPullTime = 0;
 
   constructor() {
     this.gitManager = new GitManager();
@@ -98,12 +101,18 @@ export default class StaticsManager {
    */
   public async pull() {
     if (!this.gitAvailable || !classHolder.isOnline) return;
+    const now = Date.now();
+    if (now - this.lastPullTime < toMs(5, 'minutes')) {
+      return;
+    }
     try {
       await this.gitManager.pull(this.dir);
+      this.lastPullTime = now;
     } catch {
       // If pull fails (e.g. merge conflicts, corruption), wipe and re-clone
       rmSync(this.dir, {recursive: true, force: true});
       await this.clone();
+      this.lastPullTime = now;
     }
   }
 
@@ -116,6 +125,11 @@ export default class StaticsManager {
   }
 
   public async getNotification(): Promise<NotificationData[] | undefined> {
+    const now = Date.now();
+    if (this.cachedNotifications && now - this.lastNotificationFetchTime < toMs(5, 'minutes')) {
+      return this.cachedNotifications;
+    }
+
     try {
       const token = await getTokens(AUTH_LOGIN_KEY);
       const headers: Record<string, string> = {};
@@ -127,11 +141,16 @@ export default class StaticsManager {
         timeout: 10000,
       });
       if (response.data && response.data.success) {
-        return response.data.notifications;
+        this.cachedNotifications = response.data.notifications;
+        this.lastNotificationFetchTime = now;
+        return this.cachedNotifications;
       }
       return [];
     } catch (error) {
       console.error('Failed to fetch notifications from website:', axios.isAxiosError(error) ? error.message : error);
+      if (this.cachedNotifications) {
+        return this.cachedNotifications;
+      }
       return [];
     }
   }
