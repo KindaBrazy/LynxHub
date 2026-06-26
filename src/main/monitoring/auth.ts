@@ -234,6 +234,55 @@ export default function Auth() {
     }
   });
 
+  userIpc.account.handle.checkGitHubStar(async () => {
+    try {
+      const token = await getTokens(AUTH_LOGIN_KEY);
+      if (!token) {
+        return {connected: false, starred: false};
+      }
+
+      const response = await axios.get(`${LYNXHUB_WEBSITE}/api/github/star`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        timeout: 10000,
+      });
+
+      return response.data;
+    } catch (e) {
+      console.error('Error checking github star in main process:', e);
+      return {connected: false, starred: false};
+    }
+  });
+
+  userIpc.account.handle.starGitHubRepo(async () => {
+    try {
+      const token = await getTokens(AUTH_LOGIN_KEY);
+      if (!token) {
+        return {success: false, error: 'Not logged in'};
+      }
+
+      const response = await axios.post(
+        `${LYNXHUB_WEBSITE}/api/github/star`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          timeout: 10000,
+        },
+      );
+
+      return response.data;
+    } catch (e) {
+      console.error('Error starring repository in main process:', e);
+      return {
+        success: false,
+        error: axios.isAxiosError(e) && e.response?.data?.error ? e.response.data.error : 'Failed to star repository',
+      };
+    }
+  });
+
   userIpc.account.on.updateChannel(async channel => {
     if (channel === 'get') {
       const currentChannel = await getChannel(AUTH_CHANNEL_KEY);

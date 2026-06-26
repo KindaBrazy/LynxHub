@@ -8,6 +8,8 @@ export const userChannels = {
     login: 'account:login',
     logout: 'account:logout',
     updateChannel: 'account:updateChannel',
+    checkGitHubStar: 'account:checkGitHubStar',
+    starGitHubRepo: 'account:starGitHubRepo',
 
     onReleaseChannel: 'account:onReleaseChannel',
   },

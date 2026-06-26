@@ -22,6 +22,7 @@ export type AppState = {
     isUpgradeFlow: boolean;
   };
   showUpgradePromo: boolean;
+  showStarPromo: boolean;
 };
 
 export type CardsState = {

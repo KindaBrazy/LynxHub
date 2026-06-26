@@ -39,6 +39,7 @@ export class StorageMigrationManager {
     [0.97, () => this.migrate_0_97()],
     [0.98, () => this.migrate_0_98()],
     [0.99, () => this.migrate_0_99()],
+    [1.0, () => this.migrate_1_00()],
   ]);
 
   constructor(
@@ -272,6 +273,11 @@ export class StorageMigrationManager {
     this.storage.data.app.activeDays = [];
     this.storage.data.app.totalUsageTime = 0;
     this.storage.data.app.hasSeenUpgradePromo = false;
+  }
+
+  private migrate_1_00() {
+    this.storage.data.app.hasSeenStarPromo = false;
+    this.storage.data.app.hasStarredRepo = false;
   }
 
   private normalizeCustomRunBehavior() {

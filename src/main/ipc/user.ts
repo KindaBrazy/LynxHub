@@ -28,6 +28,12 @@ export const userIpc = {
       login: (callback: () => MainHT<UserAccountData>) => lynxIpc.handle(userChannels.account.login, callback),
       /** Handles logout request */
       logout: (callback: () => MainHT<void>) => lynxIpc.handle(userChannels.account.logout, callback),
+      /** Handles check github star request */
+      checkGitHubStar: (callback: () => MainHT<{connected: boolean; starred: boolean}>) =>
+        lynxIpc.handle(userChannels.account.checkGitHubStar, callback),
+      /** Handles star github repo request */
+      starGitHubRepo: (callback: () => MainHT<{success: boolean; error?: string}>) =>
+        lynxIpc.handle(userChannels.account.starGitHubRepo, callback),
     },
   },
 };

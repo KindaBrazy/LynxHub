@@ -101,6 +101,8 @@ export type AppConfigStorage = {
   activeDays: string[];
   totalUsageTime: number;
   hasSeenUpgradePromo: boolean;
+  hasSeenStarPromo: boolean;
+  hasStarredRepo: boolean;
 };
 
 /**
