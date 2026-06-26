@@ -1,6 +1,5 @@
 import './index.css';
 import '@xterm/xterm/css/xterm.css';
-import 'overlayscrollbars/overlayscrollbars.css';
 import '@lynx_shared/sentry/init';
 
 import {isDev} from '@lynx_common/utils';

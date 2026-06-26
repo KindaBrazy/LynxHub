@@ -32,7 +32,6 @@ export const useScrollSpy = (itemIds: string[], threshold = 0.1): string => {
         return;
       }
 
-      // Find the OverlayScrollbars viewport or fallback to window/parent
       let scrollContainer: Element | null = firstElem;
       while (scrollContainer && !scrollContainer.classList.contains('os-viewport')) {
         scrollContainer = scrollContainer.parentElement;
