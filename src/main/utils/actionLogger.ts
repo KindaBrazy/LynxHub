@@ -56,10 +56,8 @@ export function initSession(): void {
             }
           })
           .catch(err => {
-            console.warn(
-              'Failed to send offline actions log on startup (will retry on next exit):',
-              err.message || err,
-            );
+            const errorMsg = err instanceof Error ? err.message : String(err);
+            console.warn(`Failed to send offline actions log on startup (will retry on next exit): ${errorMsg}`);
           });
       } else {
         // Corrupted file, clean it up
