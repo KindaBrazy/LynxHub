@@ -28,7 +28,7 @@ export default function UpgradePromoModal() {
   );
 
   return (
-    <TabModal size="md" isOpen={showUpgradePromo} onOpenChange={() => handleClose(false)}>
+    <TabModal size="lg" isOpen={showUpgradePromo} onOpenChange={() => handleClose(false)} isKeyboardDismissDisabled>
       <Modal.Header>
         <Modal.Heading className="flex items-center gap-x-2 text-warning">
           <Crown className="size-6 shrink-0 animate-pulse" />
@@ -47,10 +47,11 @@ export default function UpgradePromoModal() {
               <Star className="size-5 text-LynxBlue shrink-0" />
             </div>
             <div className="space-y-0.5">
-              <h4 className="text-xs font-bold text-foreground">Early Access Tier ($6/mo)</h4>
+              <h4 className="text-xs font-bold text-foreground">Early Access Tier</h4>
               <p className="text-[11px] text-muted-foreground leading-relaxed select-none">
-                Get client, extension, and module updates **2 weeks to 2 months sooner** than public releases. Includes
-                Early Access Discord channel and voting rights.
+                Get client, extension, and module updates{' '}
+                <span className="font-semibold text-semi-muted">2 weeks to 2 months sooner</span> than public releases.
+                Includes Early Access Discord channel and voting rights.
               </p>
             </div>
           </div>
@@ -61,10 +62,11 @@ export default function UpgradePromoModal() {
               <ShieldStar className="size-5 text-yellow-500 shrink-0" />
             </div>
             <div className="space-y-0.5">
-              <h4 className="text-xs font-bold text-foreground">Insider Nightly builds ($15+/mo)</h4>
+              <h4 className="text-xs font-bold text-foreground">Insider Nightly builds</h4>
               <p className="text-[11px] text-muted-foreground leading-relaxed select-none">
-                Access bleeding-edge **Insider Nightly Builds** (2x more builds) with nightly client, extension, and
-                module updates.
+                Access bleeding-edge{' '}
+                <span className="font-semibold text-semi-muted">Insider Nightly Builds (2x more builds) </span>
+                with nightly client, extension, and module updates.
               </p>
             </div>
           </div>
@@ -77,8 +79,9 @@ export default function UpgradePromoModal() {
             <div className="space-y-0.5">
               <h4 className="text-xs font-bold text-foreground">Priority Support & Credits</h4>
               <p className="text-[11px] text-muted-foreground leading-relaxed select-none">
-                Higher sponsor tiers (Platinum & Diamond) get their **name featured in the application credits** and
-                **Priority Support** with direct developer access.
+                Higher sponsor tiers (Platinum & Diamond) get their{' '}
+                <span className="font-semibold text-semi-muted">name featured in the application credits</span> and
+                <span className="font-semibold text-semi-muted"> Priority Support</span> with direct developer access.
               </p>
             </div>
           </div>

@@ -69,7 +69,7 @@ export default function StarRepoModal() {
   }, [handleClose]);
 
   return (
-    <TabModal size="md" isOpen={showStarPromo} onOpenChange={() => handleClose(false)}>
+    <TabModal size="lg" isOpen={showStarPromo} onOpenChange={() => handleClose(false)} isKeyboardDismissDisabled>
       <Modal.Header>
         <Modal.Heading className="flex items-center gap-x-2 text-warning">
           <Star className="size-6 shrink-0 animate-pulse" />
@@ -78,7 +78,7 @@ export default function StarRepoModal() {
       </Modal.Header>
       <Modal.Body className="space-y-4">
         <p className="text-sm leading-relaxed text-foreground select-none">
-          I hope you are enjoying your experience with LynxHub! If you do, please consider starring my official
+          I hope you are enjoying your experience with LynxHub! If you do, please consider starring LynxHub official
           repository on GitHub. It helps increase project visibility and supports my ongoing development.
         </p>
 
