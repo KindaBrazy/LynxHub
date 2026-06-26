@@ -28,7 +28,7 @@ class BaseStorage {
   private readonly migrationManager: StorageMigrationManager;
 
   private readonly DEFAULT_DATA: AppStorageData = {
-    storage: {version: 0.98},
+    storage: {version: 0.99},
     cards: {
       installedCards: [],
       autoUpdateCards: [],
