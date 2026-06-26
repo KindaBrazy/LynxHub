@@ -472,7 +472,26 @@ class BaseStorage {
     }
 
     const sanitized = {...payload};
-    const sensitiveKeys = ['dsn', 'password', 'token', 'key', 'secret', 'auth', 'address', 'url', 'path'];
+    const sensitiveKeys = [
+      'dsn',
+      'password',
+      'token',
+      'key',
+      'secret',
+      'auth',
+      'address',
+      'url',
+      'path',
+      'dir',
+      'location',
+      'name',
+      'user',
+      'email',
+      'avatar',
+      'anonymousid',
+      'sentrydsn',
+      'appdatadir',
+    ];
 
     for (const k of Object.keys(sanitized)) {
       const lowerKey = k.toLowerCase();
@@ -499,8 +518,10 @@ class BaseStorage {
     this.write();
 
     try {
-      const sanitized = this.sanitizeStoragePayload(updateData);
-      logAction('storage-update', `Update ${key} with ${JSON.stringify(sanitized)}`);
+      if (key !== 'browser') {
+        const sanitized = this.sanitizeStoragePayload(updateData);
+        logAction('storage-update', `Update ${key} with ${JSON.stringify(sanitized)}`);
+      }
     } catch {
       // Ignore logging failures
     }

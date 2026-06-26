@@ -18,7 +18,26 @@ const sanitizePayload = (payload: any): any => {
   }
 
   const sanitized = {...payload};
-  const sensitiveKeys = ['dsn', 'password', 'token', 'key', 'secret', 'auth', 'address', 'url', 'path'];
+  const sensitiveKeys = [
+    'dsn',
+    'password',
+    'token',
+    'key',
+    'secret',
+    'auth',
+    'address',
+    'url',
+    'path',
+    'dir',
+    'location',
+    'name',
+    'user',
+    'email',
+    'avatar',
+    'anonymousid',
+    'sentrydsn',
+    'appdatadir',
+  ];
 
   for (const k of Object.keys(sanitized)) {
     const lowerKey = k.toLowerCase();
@@ -47,6 +66,7 @@ export const actionLoggerMiddleware: Middleware = () => next => action => {
 
     // Define patterns/actions to ignore (noise, internal state, window focus, etc.)
     const ignoredActionPrefixes = [
+      'user/', // Block all user account actions from telemetry/logging
       'hotkeys/',
       'volume/',
       'cards/setRunningCardAddress',
