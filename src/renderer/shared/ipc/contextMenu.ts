@@ -16,6 +16,9 @@ const contextMenuIpc = {
     // Hides context menu window
     hideWindow: () => lynxIpc.send(contextMenuChannels.hideWindow),
 
+    // Shows context menu window with its calculated size
+    showReady: (data: ElementResizeData) => lynxIpc.send(contextMenuChannels.showReady, data),
+
     // Opens terminate AI dialog
     openTerminateProcess: (id: string) => lynxIpc.send(contextMenuChannels.openTerminateAI, id),
 
@@ -80,6 +83,9 @@ const contextMenuIpc = {
   },
 
   on: {
+    // Listens for request to show the context menu
+    requestShow: (callback: () => void): (() => void) => lynxIpc.on(contextMenuChannels.requestShow, callback),
+
     // Listens for context menu view initialization events
     rightClick: (callback: (params: ContextMenuParams, navHistory: NavHistory, id: number) => void): (() => void) =>
       lynxIpc.on(contextMenuChannels.rightClick, callback),

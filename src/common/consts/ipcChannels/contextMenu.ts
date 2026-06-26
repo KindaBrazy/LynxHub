@@ -24,6 +24,8 @@ export const contextMenuChannels = {
 
   resizeWindow: 'context:resize-window',
   hideWindow: 'context:hide-window',
+  requestShow: 'context:request-show',
+  showReady: 'context:show-ready',
   copy: 'context:copy',
   cut: 'context:cut',
   paste: 'context:paste',

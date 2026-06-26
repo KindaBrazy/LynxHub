@@ -13,8 +13,6 @@ export default class ContextMenuManager {
   private contextMenuWindow?: BrowserWindow;
   private mainWindow?: BrowserWindow;
   private customContextPosition: {x: number; y: number} | undefined;
-  private animationInterval?: NodeJS.Timeout;
-  private isHiding = false;
   private webContents: WebContents[] = [];
 
   private static readonly CONTEXT_WINDOW_CONFIG: BrowserWindowConstructorOptions = {
@@ -137,72 +135,40 @@ export default class ContextMenuManager {
   public showContextMenu() {
     if (!this.contextMenuWindow || this.contextMenuWindow.isDestroyed()) return;
 
-    this.isHiding = false;
-    this.clearAnimation();
-
+    // We must show the window (with opacity 0) so that Chromium runs the rendering pipeline.
+    // If the window is completely hidden, requestAnimationFrame and ResizeObserver will not fire.
     this.contextMenuWindow.setOpacity(0);
     this.contextMenuWindow.show();
 
-    this.animateOpacity(1);
+    // Send request to renderer to calculate size and get back to us
+    contextMenuIpc.send.requestShow();
+  }
 
+  /**
+   * Called by the renderer when it is ready to show, with its final calculated size.
+   */
+  public applySizeAndShow(data: ElementResizeData) {
+    if (!this.contextMenuWindow || this.contextMenuWindow.isDestroyed()) return;
+
+    this.resizeContextMenu(data);
     this.positionContextMenuAtCursor();
+
+    // Now that it's sized and positioned correctly, make it instantly visible
+    this.contextMenuWindow.setOpacity(1);
   }
 
   public hideContextMenu(focusMainWindow: boolean = true) {
     const window = this.contextMenuWindow;
-    if (!window || window.isDestroyed() || !window.isVisible() || this.isHiding) return;
+    if (!window || window.isDestroyed() || !window.isVisible()) return;
 
     dialogBlurred();
-    this.isHiding = true;
 
-    this.animateOpacity(0, () => {
-      window.hide();
-      window.setOpacity(1);
-      this.isHiding = false;
+    window.hide();
+    window.setOpacity(1);
 
-      if (focusMainWindow && this.mainWindow && !this.mainWindow.isDestroyed()) {
-        this.mainWindow.focus();
-      }
-    });
-  }
-
-  private clearAnimation() {
-    if (this.animationInterval) {
-      clearInterval(this.animationInterval);
-      this.animationInterval = undefined;
+    if (focusMainWindow && this.mainWindow && !this.mainWindow.isDestroyed()) {
+      this.mainWindow.focus();
     }
-  }
-
-  /**
-   * Animates window opacity for smooth show/hide transitions.
-   * @param target - Target opacity (0 to 1)
-   * @param callback - Optional function to call when animation completes
-   */
-  private animateOpacity(target: number, callback?: () => void) {
-    this.clearAnimation();
-    const window = this.contextMenuWindow;
-    if (!window || window.isDestroyed()) return;
-
-    let opacity = window.getOpacity();
-    const step = target > opacity ? 0.1 : -0.1;
-
-    this.animationInterval = setInterval(() => {
-      if (!window || window.isDestroyed()) {
-        this.clearAnimation();
-        return;
-      }
-
-      opacity += step;
-      const finished = step > 0 ? opacity >= target : opacity <= target;
-
-      if (finished) {
-        window.setOpacity(target);
-        this.clearAnimation();
-        callback?.();
-      } else {
-        window.setOpacity(opacity);
-      }
-    }, 10);
   }
 
   public getContentById(id: number) {

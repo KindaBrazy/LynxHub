@@ -23,6 +23,9 @@ export default async function listenContextMenu() {
   // Resizes the context menu window
   contextMenuIpc.on.resizeWindow(data => contextMenuManager.resizeContextMenu(data));
 
+  // Show the context menu window after renderer size check
+  contextMenuIpc.on.showReady(data => contextMenuManager.applySizeAndShow(data));
+
   // Edit operations
   contextMenuIpc.on.copy(id => getWebContents(id)?.copy());
   contextMenuIpc.on.cut(id => getWebContents(id)?.cut());
@@ -169,6 +172,9 @@ export const contextMenuIpc = {
     /** Sends event to remove a tab */
     onRemoveTab: (tabID: string) => sendToMain(contextMenuChannels.onRemoveTab, tabID),
 
+    /** Sends request to show context menu to renderer */
+    requestShow: () => sendToContextMenu(contextMenuChannels.requestShow),
+
     /** Sends right-click event to context menu */
     rightClick: (params: ContextMenuParams, navHistory: NavHistory, id: number) =>
       sendToContextMenu(contextMenuChannels.rightClick, params, navHistory, id),
@@ -190,6 +196,8 @@ export const contextMenuIpc = {
     onDownloads: () => sendToContextMenu(contextMenuChannels.onDownloads),
   },
   on: {
+    /** Listens for show ready request from renderer */
+    showReady: (callback: (data: ElementResizeData) => void) => lynxIpc.on(contextMenuChannels.showReady, callback),
     /** Listens for resize window request */
     resizeWindow: (callback: (data: ElementResizeData) => void) =>
       lynxIpc.on(contextMenuChannels.resizeWindow, callback),
