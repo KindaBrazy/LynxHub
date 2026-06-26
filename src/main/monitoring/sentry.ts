@@ -117,6 +117,6 @@ export async function fetchAndCacheSentryDsn(storageManager: StorageManager): Pr
       console.warn('Sentry DSN not found in website response.');
     }
   } catch (error) {
-    console.error('Failed to fetch Sentry DSN from website:', error);
+    console.error('Failed to fetch Sentry DSN from website:', axios.isAxiosError(error) ? error.message : error);
   }
 }

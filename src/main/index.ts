@@ -127,7 +127,7 @@ async function initializeLynxHub(): Promise<void> {
 
   // Fetch Sentry DSN in the background to cache it for the next run
   fetchAndCacheSentryDsn(storageManager).catch(err => {
-    console.error('Failed to fetch and cache Sentry DSN:', err);
+    console.error('Failed to fetch and cache Sentry DSN:', err instanceof Error ? err.message : err);
   });
 
   await classHolder.initializeManagers();

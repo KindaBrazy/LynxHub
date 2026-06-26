@@ -764,7 +764,10 @@ class StorageManager extends BaseStorage {
               },
             );
           } catch (error) {
-            console.error('Failed to sync notification dismissal to website:', error);
+            console.error(
+              'Failed to sync notification dismissal to website:',
+              axios.isAxiosError(error) ? error.message : error,
+            );
           }
         }
       })

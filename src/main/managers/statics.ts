@@ -131,7 +131,7 @@ export default class StaticsManager {
       }
       return [];
     } catch (error) {
-      console.error('Failed to fetch notifications from website:', error);
+      console.error('Failed to fetch notifications from website:', axios.isAxiosError(error) ? error.message : error);
       return [];
     }
   }

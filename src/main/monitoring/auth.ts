@@ -61,7 +61,7 @@ async function processTokenLogin(token: string) {
       pendingLoginReject = null;
     }
   } catch (error) {
-    console.error('Failed to complete login via token:', error);
+    console.error('Failed to complete login via token:', axios.isAxiosError(error) ? error.message : error);
     if (pendingLoginReject) {
       pendingLoginReject(error);
       pendingLoginResolve = null;
