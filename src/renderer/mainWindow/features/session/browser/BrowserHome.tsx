@@ -1,5 +1,4 @@
-import {Button, Spinner, Surface} from '@heroui/react';
-import LynxScroll from '@lynx/components/LynxScroll';
+import {Button, ScrollShadow, Spinner, Surface} from '@heroui/react';
 import {cardsActions} from '@lynx/redux/reducers/cards';
 import {useTabsState} from '@lynx/redux/reducers/tabs';
 import {AppDispatch} from '@lynx/redux/store';
@@ -100,58 +99,56 @@ export default function BrowserHome({type}: Props) {
   }
 
   return (
-    <div className="size-full">
-      <LynxScroll className="size-full">
-        <motion.div
-          initial="hidden"
-          animate="visible"
-          variants={staggerContainer}
-          className="mx-auto flex max-w-7xl flex-col gap-5 p-5 md:p-6 lg:p-8">
-          <AnimatePresence>
-            {type === 'both' && (
-              <MotionSurface
-                variants={fadeIn}
-                variant="secondary"
-                exit={{opacity: 0}}
-                className={'flex flex-col items-center rounded-3xl px-6 py-8 text-center'}>
-                <Spinner size="xl" color="accent" />
-                <span className="text-xs text-muted">Waiting for address...</span>
+    <ScrollShadow className="size-full">
+      <motion.div
+        initial="hidden"
+        animate="visible"
+        variants={staggerContainer}
+        className="mx-auto flex max-w-7xl flex-col gap-5 p-5 md:p-6 lg:p-8">
+        <AnimatePresence>
+          {type === 'both' && (
+            <MotionSurface
+              variants={fadeIn}
+              variant="secondary"
+              exit={{opacity: 0}}
+              className={'flex flex-col items-center rounded-3xl px-6 py-8 text-center'}>
+              <Spinner size="xl" color="accent" />
+              <span className="text-xs text-muted">Waiting for address...</span>
 
-                <div className="my-3" />
+              <div className="my-3" />
 
-                <Button onPress={switchToTerminal}>
-                  <Terminal_Icon className="size-4" />
-                  Switch to Terminal
-                </Button>
-              </MotionSurface>
-            )}
-          </AnimatePresence>
+              <Button onPress={switchToTerminal}>
+                <Terminal_Icon className="size-4" />
+                Switch to Terminal
+              </Button>
+            </MotionSurface>
+          )}
+        </AnimatePresence>
 
-          <HistorySection
-            title="Favorites"
-            itemType="favorite"
-            data={favoriteAddress}
-            favIconMap={favIconMap}
-            emptyTitle="No favorites yet"
-            onRefresh={handleDataRefresh}
-            emptyDescription="Star sites to add them here"
-            subtitle="Quick access to your bookmarked sites"
-            icon={<Star className="size-10 text-amber-500" />}
-          />
+        <HistorySection
+          title="Favorites"
+          itemType="favorite"
+          data={favoriteAddress}
+          favIconMap={favIconMap}
+          emptyTitle="No favorites yet"
+          onRefresh={handleDataRefresh}
+          emptyDescription="Star sites to add them here"
+          subtitle="Quick access to your bookmarked sites"
+          icon={<Star className="size-10 text-amber-500" />}
+        />
 
-          <HistorySection
-            title="Recent"
-            itemType="recent"
-            data={recentAddress}
-            favIconMap={favIconMap}
-            emptyTitle="No recent visits"
-            onRefresh={handleDataRefresh}
-            subtitle="Your browsing history"
-            emptyDescription="Your history will appear here"
-            icon={<History_Color_Icon className="size-10" id="empty_page_history" />}
-          />
-        </motion.div>
-      </LynxScroll>
-    </div>
+        <HistorySection
+          title="Recent"
+          itemType="recent"
+          data={recentAddress}
+          favIconMap={favIconMap}
+          emptyTitle="No recent visits"
+          onRefresh={handleDataRefresh}
+          subtitle="Your browsing history"
+          emptyDescription="Your history will appear here"
+          icon={<History_Color_Icon className="size-10" id="empty_page_history" />}
+        />
+      </motion.div>
+    </ScrollShadow>
   );
 }

@@ -1,6 +1,5 @@
-import {Badge, Button, Drawer, Label, ProgressBar, useOverlayState} from '@heroui/react';
+import {Badge, Button, Drawer, Label, ProgressBar, ScrollShadow, useOverlayState} from '@heroui/react';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
-import LynxScroll from '@lynx/components/LynxScroll';
 import {tabsActions} from '@lynx/redux/reducers/tabs';
 import {useUserState} from '@lynx/redux/reducers/user';
 import {AppDispatch} from '@lynx/redux/store';
@@ -27,12 +26,12 @@ import {
 import {CheckRead} from '@solar-icons/react-perf/LineDuotone';
 import {AnimatePresence, motion} from 'framer-motion';
 import {X} from 'lucide-react';
-import {useCallback, useEffect, useMemo, useState} from 'react';
+import {ComponentType, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {formatMarkdown} from './markdown';
 
-const IconMap: Record<string, React.ComponentType<{className?: string}>> = {
+const IconMap: Record<string, ComponentType<{className?: string}>> = {
   Bell,
   InfoCircle,
   ShieldWarning,
@@ -389,7 +388,7 @@ export default function HomeNotificationDrawer() {
                 </Drawer.Heading>
               </Drawer.Header>
               <Drawer.Body className="pr-2">
-                <LynxScroll className="size-full pb-2 pr-3 pl-4">
+                <ScrollShadow className="size-full pb-2 pr-3 pl-4">
                   <AnimatePresence>
                     {totalNotificationCount <= 0 ? (
                       <motion.div animate={{translateY: 0, opacity: 1}} initial={{translateY: 30, opacity: 0}}>
@@ -416,7 +415,7 @@ export default function HomeNotificationDrawer() {
                       </div>
                     )}
                   </AnimatePresence>
-                </LynxScroll>
+                </ScrollShadow>
               </Drawer.Body>
               <Drawer.Footer className="px-6">
                 <Button variant="secondary" onPress={state.close}>

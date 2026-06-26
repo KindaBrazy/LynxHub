@@ -1,4 +1,4 @@
-import {Accordion, buttonVariants, Card, Chip, Link, Separator} from '@heroui/react';
+import {Accordion, buttonVariants, Card, Chip, Link, ScrollShadow, Separator} from '@heroui/react';
 import {APP_BUILD_NUMBER, APP_VERSION, RELEASES_PAGE} from '@lynx_common/consts';
 import {AppUpdateInfo} from '@lynx_common/types';
 import {ShieldCross} from '@solar-icons/react-perf/BoldDuotone';
@@ -8,7 +8,6 @@ import {isEmpty} from 'lodash-es';
 import {RenderSubItems} from '../../../utils/hooks';
 import DescriptionGrid from '../../DescriptionGrid';
 import EmptyStateCard from '../../EmptyStateCard';
-import LynxScroll from '../../LynxScroll';
 import {ReleaseNote} from './useUpdateApp';
 
 type Props = {
@@ -59,7 +58,7 @@ export default function Info({updateInfo, releaseNotes}: Props) {
           <Chip size="sm">{releaseNotes.length}</Chip>
         </Card.Header>
         <Card.Content className="size-full pb-8 pt-2">
-          <LynxScroll className="size-full pr-4 pl-2">
+          <ScrollShadow className="size-full pr-4 pl-2">
             {isEmpty(releaseNotes) ? (
               <EmptyStateCard
                 action={
@@ -111,7 +110,7 @@ export default function Info({updateInfo, releaseNotes}: Props) {
                 ))}
               </Accordion>
             )}
-          </LynxScroll>
+          </ScrollShadow>
         </Card.Content>
       </Card>
     </div>

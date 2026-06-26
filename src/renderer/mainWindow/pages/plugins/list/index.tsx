@@ -1,6 +1,5 @@
-import {Button, Card, ProgressBar, SearchField, Skeleton, Spinner} from '@heroui/react';
+import {Button, Card, ProgressBar, ScrollShadow, SearchField, Skeleton, Spinner} from '@heroui/react';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
-import LynxScroll from '@lynx/components/LynxScroll';
 import {pluginsActions, usePluginsState} from '@lynx/redux/reducers/plugins';
 import {AppDispatch} from '@lynx/redux/store';
 import {searchInStrings, showRestartModal} from '@lynx/utils';
@@ -156,7 +155,7 @@ export default function PluginList() {
       </Card.Header>
 
       <Card.Content className="size-full overflow-hidden px-1">
-        <LynxScroll className="size-full space-y-2 px-3 pt-2">
+        <ScrollShadow className="size-full space-y-2 px-3 pt-2">
           {loading ? (
             <div className="flex flex-col">
               {Array(3)
@@ -182,7 +181,7 @@ export default function PluginList() {
               ))}
             </div>
           )}
-        </LynxScroll>
+        </ScrollShadow>
       </Card.Content>
     </Card>
   );

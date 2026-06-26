@@ -1,4 +1,4 @@
-import LynxScroll from '@lynx/components/LynxScroll';
+import {ScrollShadow} from '@heroui/react';
 
 import {SettingsSections} from './Container';
 
@@ -13,11 +13,11 @@ export type SettingsPageContentsProps = {
  */
 const SettingsPageContents = ({sectionTexts}: SettingsPageContentsProps) => {
   return (
-    <LynxScroll className="size-full pl-1 pr-4 py-2">
+    <ScrollShadow className="size-full pl-1 pr-4 py-2">
       <div className="flex flex-col gap-y-4">
         <SettingsSections sectionTexts={sectionTexts} />
       </div>
-    </LynxScroll>
+    </ScrollShadow>
   );
 };
 

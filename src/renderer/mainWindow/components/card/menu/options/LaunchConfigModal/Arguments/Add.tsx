@@ -1,4 +1,4 @@
-import {Button, Chip, Dropdown, Label, Modal, SearchField, Tabs, useOverlayState} from '@heroui/react';
+import {Button, Chip, Dropdown, Label, Modal, ScrollShadow, SearchField, Tabs, useOverlayState} from '@heroui/react';
 import {ChosenArgumentsData, CustomArg} from '@lynx_common/types';
 import {ChosenArgument} from '@lynx_common/types/plugins/modules';
 import {Filter, Monitor, WindowFrame} from '@solar-icons/react-perf/BoldDuotone';
@@ -9,7 +9,6 @@ import {Dispatch, Key, SetStateAction, useCallback, useEffect, useMemo, useState
 import {useSupportCustomArg} from '../../../../../../plugins/modules';
 import {useGetArgumentsByID} from '../../../../../../plugins/modules';
 import {getArgumentDefaultValue, getFilteredArguments} from '../../../../../../utils/moduleArguments';
-import LynxScroll from '../../../../../LynxScroll';
 import TabModal from '../../../../../TabModal';
 import ArgumentSelectionList from './AddCategory';
 import CustomArguments from './CustomArguments';
@@ -231,7 +230,7 @@ export default function AddArgumentModal({addArgumentsModal, chosenArguments, se
         )}
       </Modal.Header>
       <Modal.Body className="pl-2">
-        <LynxScroll className="pr-2">
+        <ScrollShadow className="pr-2">
           {currentTab === 'module' && (
             <div className="space-y-2">
               {listData?.map((data, index) => {
@@ -268,7 +267,7 @@ export default function AddArgumentModal({addArgumentsModal, chosenArguments, se
               selectedArguments={selectedArguments}
             />
           )}
-        </LynxScroll>
+        </ScrollShadow>
       </Modal.Body>
       <Modal.Footer>
         <Button onPress={onAdd} isDisabled={isEmpty(selectedArguments)}>

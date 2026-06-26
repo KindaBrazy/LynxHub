@@ -1,4 +1,4 @@
-import {Spinner} from '@heroui/react';
+import {ScrollShadow, Spinner} from '@heroui/react';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import {extractGitUrl} from '@lynx_common/utils';
 import {Link} from '@solar-icons/react-perf/BoldDuotone';
@@ -19,8 +19,6 @@ import rehypeHighlight from 'rehype-highlight';
 import rehypeRaw from 'rehype-raw';
 import rehypeSlug from 'rehype-slug';
 import remarkGfm from 'remark-gfm';
-
-import LynxScroll from './LynxScroll';
 
 type MarkdownViewerProps = {
   url: string;
@@ -277,7 +275,7 @@ const MarkdownViewer = ({url, rounded = true, showBackground, urlType}: Markdown
       description="Please check your internet connection and try again."
     />
   ) : (
-    <LynxScroll className={`size-full ${rounded && 'rounded-xl'}`}>
+    <ScrollShadow className={`size-full ${rounded && 'rounded-xl'}`}>
       <div
         className={
           `prose prose-slate mr-4 max-w-none rounded-xl p-8` +
@@ -290,7 +288,7 @@ const MarkdownViewer = ({url, rounded = true, showBackground, urlType}: Markdown
           {content}
         </ReactMarkdown>
       </div>
-    </LynxScroll>
+    </ScrollShadow>
   );
 };
 

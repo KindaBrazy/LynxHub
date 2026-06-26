@@ -1,4 +1,4 @@
-import {Button, Modal, Spinner, Tabs} from '@heroui/react';
+import {Button, Modal, ScrollShadow, Spinner, Tabs} from '@heroui/react';
 import {ChosenArgumentsData} from '@lynx_common/types';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {useDebounceBreadcrumb} from '@lynx_shared/sentry/Breadcrumbs';
@@ -6,7 +6,6 @@ import {Diskette} from '@solar-icons/react-perf/BoldDuotone';
 import {Key, memo, useCallback, useEffect, useMemo, useState} from 'react';
 
 import {topToast} from '../../../../../layouts/ToastProviders';
-import LynxScroll from '../../../../LynxScroll';
 import TabModal from '../../../../TabModal';
 import {useCardStore} from '../../../store';
 import {CommonProps} from '../../about/types';
@@ -90,13 +89,13 @@ const LaunchConfig = memo(({state}: CommonProps) => {
         </Modal.Heading>
       </Modal.Header>
       <Modal.Body className="overflow-hidden">
-        <LynxScroll className="size-full px-6 pt-2 pb-6">
+        <ScrollShadow className="size-full px-6 pt-2 pb-6">
           {haveArguments && currentTab === tabs.arguments && (
             <CardArguments id={id} chosenArguments={chosenArguments} setChosenArguments={setChosenArguments} />
           )}
           {currentTab === tabs.customRun && <CustomRun id={id} />}
           {currentTab === tabs.preLaunch && <CardPreLaunch id={id} />}
-        </LynxScroll>
+        </ScrollShadow>
       </Modal.Body>
 
       {currentTab === tabs.arguments && (

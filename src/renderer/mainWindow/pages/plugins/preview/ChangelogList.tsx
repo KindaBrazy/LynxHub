@@ -1,5 +1,4 @@
-import {Chip} from '@heroui/react';
-import LynxScroll from '@lynx/components/LynxScroll';
+import {Chip, ScrollShadow} from '@heroui/react';
 import {usePluginsState} from '@lynx/redux/reducers/plugins';
 import {SubscribeStages} from '@lynx_common/types';
 import {ChangelogItem, ChangelogSubItem, PluginChangelog} from '@lynx_common/types/plugins';
@@ -246,7 +245,7 @@ const PluginChangelogList = memo(() => {
       animate={{opacity: 1}}
       transition={{duration: 0.15}}
       className="size-full overflow-hidden">
-      <LynxScroll className="gap-y-4 px-4 py-4 size-full">
+      <ScrollShadow className="gap-y-4 px-4 py-4 size-full">
         <div className="max-w-4xl mx-auto space-y-4 pb-6">
           {selectedPlugin?.changes.map((version, index) => {
             const stage = selectedPlugin?.versions.find(v => v.version === version.version)?.stage;
@@ -261,7 +260,7 @@ const PluginChangelogList = memo(() => {
             );
           })}
         </div>
-      </LynxScroll>
+      </ScrollShadow>
     </motion.div>
   );
 });

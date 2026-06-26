@@ -1,4 +1,4 @@
-import LynxScroll from '@lynx/components/LynxScroll';
+import {ScrollShadow} from '@heroui/react';
 import {memo} from 'react';
 
 import {DashboardSections} from './Container';
@@ -13,12 +13,12 @@ const DashboardContent = memo(() => {
   const showSections = useDelayedShow(300);
 
   return (
-    <LynxScroll className="size-full pl-1 pr-4 py-2">
+    <ScrollShadow className="size-full pl-1 pr-4 py-2">
       <div className="flex flex-col gap-y-4">
         {!showSections && <DashboardSkeleton />}
         {showSections && <DashboardSections />}
       </div>
-    </LynxScroll>
+    </ScrollShadow>
   );
 });
 
