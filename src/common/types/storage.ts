@@ -103,6 +103,7 @@ export type AppConfigStorage = {
   hasSeenUpgradePromo: boolean;
   hasSeenStarPromo: boolean;
   hasStarredRepo: boolean;
+  lastPromoShownActiveDaysCount?: number;
 };
 
 /**

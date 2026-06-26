@@ -1,20 +1,30 @@
-import {appActions} from '@lynx/redux/reducers/app';
+import {appActions, useAppState} from '@lynx/redux/reducers/app';
 import {useUserState} from '@lynx/redux/reducers/user';
 import storageIpc from '@lynx_shared/ipc/storage';
 import userIpc from '@lynx_shared/ipc/user';
-import {useEffect} from 'react';
+import {useEffect, useRef} from 'react';
 import {useDispatch} from 'react-redux';
 
 /**
  * Hook to track user active usage days and duration.
- * Triggers the tier upgrade promo modal (6 days & 14 hours)
- * and the GitHub star promo modal (3 days & 7 hours) under appropriate conditions.
+ * Triggers the tier upgrade promo modal (6 days & 6 hours or 20 active days)
+ * and the GitHub star promo modal (3 days & 3 hours or 10 active days) under appropriate conditions.
+ * Ensures mutual exclusivity, cooldown spacing, and support for non-GitHub connected users.
  */
 export default function useUsageTracker() {
   const dispatch = useDispatch();
   const updateChannel = useUserState('updateChannel');
   const userData = useUserState('userData');
   const isGitHubConnected = userData?.connectedProviders?.includes('github') || false;
+
+  const showUpgradePromo = useAppState('showUpgradePromo');
+  const showStarPromo = useAppState('showStarPromo');
+  const isAnyPromoOpen = showUpgradePromo || showStarPromo;
+  const isAnyPromoOpenRef = useRef(isAnyPromoOpen);
+
+  useEffect(() => {
+    isAnyPromoOpenRef.current = isAnyPromoOpen;
+  }, [isAnyPromoOpen]);
 
   useEffect(() => {
     // Generate today's date string in local YYYY-MM-DD format
@@ -30,35 +40,55 @@ export default function useUsageTracker() {
       hasSeenUpgradePromo: boolean,
       hasSeenStarPromo: boolean,
       hasStarredRepo: boolean,
+      lastPromoShownActiveDaysCount: number | undefined,
     ) => {
-      // 1. Upgrade Promo: 6 days and 14 hours (50400 seconds)
+      // 1. Mutual Exclusivity: Do not trigger if any promo modal is currently open
+      if (isAnyPromoOpenRef.current) {
+        return;
+      }
+
+      // 2. Cooldown check: At least 3 active days must pass between promo modals
+      const cooldownMet =
+        lastPromoShownActiveDaysCount === undefined || activeDays.length - lastPromoShownActiveDaysCount >= 3;
+
+      if (!cooldownMet) {
+        return;
+      }
+
+      // 3. Upgrade Promo: 6 active days & 6 hours (21600 seconds) OR 20 active days
+      // Must only be shown after the user has seen the Star promo (or already starred the repo)
+      const upgradeThresholdMet = (activeDays.length >= 6 && totalUsageTime >= 21600) || activeDays.length >= 20;
+
       if (
-        activeDays.length >= 6 &&
-        totalUsageTime >= 50400 && // 14 hours in seconds
+        upgradeThresholdMet &&
         !hasSeenUpgradePromo &&
+        (hasSeenStarPromo || hasStarredRepo) &&
         updateChannel === 'public'
       ) {
         dispatch(appActions.setAppState({key: 'showUpgradePromo', value: true}));
+        storageIpc.update('app', {lastPromoShownActiveDaysCount: activeDays.length});
+        return;
       }
 
-      // 2. Star Repo Promo: 3 days and 7 hours (25200 seconds)
-      // Only show if GitHub is connected, and user hasn't seen it and hasn't starred yet
-      if (
-        activeDays.length >= 3 &&
-        totalUsageTime >= 25200 && // 7 hours in seconds
-        isGitHubConnected &&
-        !hasSeenStarPromo &&
-        !hasStarredRepo &&
-        updateChannel === 'public'
-      ) {
-        // Double check with GitHub API first if they have starred it
-        userIpc.account.checkGitHubStar().then(res => {
-          if (res.starred) {
-            storageIpc.update('app', {hasStarredRepo: true});
-          } else {
-            dispatch(appActions.setAppState({key: 'showStarPromo', value: true}));
-          }
-        });
+      // 4. Star Repo Promo: 3 active days & 3 hours (10800 seconds) OR 10 active days
+      const starThresholdMet = (activeDays.length >= 3 && totalUsageTime >= 10800) || activeDays.length >= 10;
+
+      if (starThresholdMet && !hasSeenStarPromo && !hasStarredRepo && updateChannel === 'public') {
+        if (isGitHubConnected) {
+          // Double check with GitHub API first if they have starred it
+          userIpc.account.checkGitHubStar().then(res => {
+            if (res.starred) {
+              storageIpc.update('app', {hasStarredRepo: true});
+            } else {
+              dispatch(appActions.setAppState({key: 'showStarPromo', value: true}));
+              storageIpc.update('app', {lastPromoShownActiveDaysCount: activeDays.length});
+            }
+          });
+        } else {
+          // Show star promo even if GitHub is not connected (modal will adapt)
+          dispatch(appActions.setAppState({key: 'showStarPromo', value: true}));
+          storageIpc.update('app', {lastPromoShownActiveDaysCount: activeDays.length});
+        }
       }
     };
 
@@ -69,6 +99,7 @@ export default function useUsageTracker() {
       const hasSeenUpgradePromo = appData.hasSeenUpgradePromo || false;
       const hasSeenStarPromo = appData.hasSeenStarPromo || false;
       const hasStarredRepo = appData.hasStarredRepo || false;
+      const lastPromoShownActiveDaysCount = appData.lastPromoShownActiveDaysCount;
 
       const updatedActiveDays = [...activeDays];
       if (!updatedActiveDays.includes(todayStr)) {
@@ -76,7 +107,14 @@ export default function useUsageTracker() {
         storageIpc.update('app', {activeDays: updatedActiveDays});
       }
 
-      checkAndTriggerPromos(updatedActiveDays, totalUsageTime, hasSeenUpgradePromo, hasSeenStarPromo, hasStarredRepo);
+      checkAndTriggerPromos(
+        updatedActiveDays,
+        totalUsageTime,
+        hasSeenUpgradePromo,
+        hasSeenStarPromo,
+        hasStarredRepo,
+        lastPromoShownActiveDaysCount,
+      );
     });
 
     // Set up active usage timer to increment totalUsageTime every 60 seconds
@@ -87,6 +125,7 @@ export default function useUsageTracker() {
         const hasSeenUpgradePromo = appData.hasSeenUpgradePromo || false;
         const hasSeenStarPromo = appData.hasSeenStarPromo || false;
         const hasStarredRepo = appData.hasStarredRepo || false;
+        const lastPromoShownActiveDaysCount = appData.lastPromoShownActiveDaysCount;
 
         const updatedActiveDays = [...activeDays];
         if (!updatedActiveDays.includes(todayStr)) {
@@ -106,6 +145,7 @@ export default function useUsageTracker() {
           hasSeenUpgradePromo,
           hasSeenStarPromo,
           hasStarredRepo,
+          lastPromoShownActiveDaysCount,
         );
       });
     }, 60000);

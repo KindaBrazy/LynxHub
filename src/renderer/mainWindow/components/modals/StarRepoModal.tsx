@@ -1,6 +1,7 @@
 import {Button, Modal} from '@heroui/react';
 import {SiGithub} from '@icons-pack/react-simple-icons';
 import {appActions, useAppState} from '@lynx/redux/reducers/app';
+import {useUserState} from '@lynx/redux/reducers/user';
 import {GITHUB_URL} from '@lynx_common/consts';
 import storageIpc from '@lynx_shared/ipc/storage';
 import userIpc from '@lynx_shared/ipc/user';
@@ -12,11 +13,15 @@ import TabModal from '../TabModal';
 
 /**
  * Modal that prompts users to star the GitHub repository
- * after they have active usage of 3 days and 7 hours.
+ * after they have active usage of 3 days and 3 hours (or 10 active days).
+ * Adapts dynamically based on whether the user's GitHub account is connected.
  */
 export default function StarRepoModal() {
   const showStarPromo = useAppState('showStarPromo');
   const dispatch = useDispatch();
+  const userData = useUserState('userData');
+  const isGitHubConnected = userData?.connectedProviders?.includes('github') || false;
+
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -73,7 +78,7 @@ export default function StarRepoModal() {
       </Modal.Header>
       <Modal.Body className="space-y-4">
         <p className="text-sm leading-relaxed text-foreground select-none">
-          I hope you are enjoying your experience with LynxHub! If you do, please consider starring LynxHub official
+          I hope you are enjoying your experience with LynxHub! If you do, please consider starring my official
           repository on GitHub. It helps increase project visibility and supports my ongoing development.
         </p>
 
@@ -118,15 +123,22 @@ export default function StarRepoModal() {
         <Button variant="tertiary" isDisabled={isPending || success} onPress={() => handleClose(false)}>
           Maybe Later
         </Button>
-        <Button
-          variant="primary"
-          onPress={handleStar}
-          isDisabled={success}
-          isPending={isPending}
-          className="font-bold cursor-pointer">
-          {!isPending && <Star className="size-4 shrink-0" />}
-          {success ? 'Starred!' : 'Star Repository'}
-        </Button>
+        {isGitHubConnected ? (
+          <Button
+            variant="primary"
+            onPress={handleStar}
+            isDisabled={success}
+            isPending={isPending}
+            className="font-bold cursor-pointer">
+            {!isPending && <Star className="size-4 shrink-0" />}
+            {success ? 'Starred!' : 'Star Repository'}
+          </Button>
+        ) : (
+          <Button variant="primary" onPress={handleManualStar} className="font-bold cursor-pointer">
+            <Star className="size-4 shrink-0" />
+            Star on GitHub
+          </Button>
+        )}
       </Modal.Footer>
     </TabModal>
   );
