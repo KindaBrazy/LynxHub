@@ -34,8 +34,15 @@ export default class TrayManager {
     this.tray = new Tray(icon);
     this.tray.setToolTip(APP_NAME);
 
+    let menuIcon = nativeImage.createEmpty();
+    try {
+      menuIcon = nativeImage.createFromPath(trayIconMenu);
+    } catch {
+      // Fallback to empty image if the path cannot be loaded (e.g. inside .asar)
+    }
+
     const staticItems: ElectronMenuItem[] = [
-      {enabled: false, icon: nativeImage.createFromPath(trayIconMenu), label: APP_NAME_VERSION},
+      {enabled: false, icon: menuIcon, label: APP_NAME_VERSION},
       {type: 'separator'},
       {label: 'Show', type: 'normal', click: this.showMainWindow},
       {label: 'Quit', type: 'normal', click: this.closeMainWindow},
