@@ -34,8 +34,12 @@ export const Image = memo(({id, url}: ImageProps) => {
 
   const onCopyImageAddress = useCallback(
     () =>
-      createActionHandler(() => {
-        navigator.clipboard.writeText(url);
+      createActionHandler(async () => {
+        try {
+          await navigator.clipboard.writeText(url);
+        } catch (e) {
+          console.error('Failed to copy image address:', e);
+        }
       }),
     [url],
   );

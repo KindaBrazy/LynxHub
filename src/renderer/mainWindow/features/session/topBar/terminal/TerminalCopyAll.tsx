@@ -20,13 +20,13 @@ type Props = {
  * Buttons to copy terminal content to clipboard or save to file.
  */
 const TerminalCopyAll = memo(({serializeAddon}: Props) => {
-  const handleCopy = useCallback(() => {
+  const handleCopy = useCallback(async () => {
     const contentToCopy = serializeAddon.serialize();
     if (!contentToCopy) return;
 
     try {
       AddBreadcrumb_Renderer('Terminal: Copy all to clipboard');
-      navigator.clipboard.writeText(contentToCopy);
+      await navigator.clipboard.writeText(contentToCopy);
     } catch (e) {
       topToast.danger('Failed to copy terminal text to clipboard!');
     }

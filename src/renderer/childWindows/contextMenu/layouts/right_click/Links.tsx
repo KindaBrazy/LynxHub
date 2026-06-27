@@ -35,8 +35,12 @@ export const Links = memo(function Links({url}: LinksProps) {
         icon={<Export className="size-4" />}
       />
       <ActionButton
-        onPress={createActionHandler(() => {
-          navigator.clipboard.writeText(url);
+        onPress={createActionHandler(async () => {
+          try {
+            await navigator.clipboard.writeText(url);
+          } catch (e) {
+            console.error('Failed to copy link address:', e);
+          }
         })}
         title="Copy Link Address"
         icon={<Link className="size-4" />}

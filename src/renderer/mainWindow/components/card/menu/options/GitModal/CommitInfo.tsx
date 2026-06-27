@@ -100,9 +100,14 @@ const CommitInfo = memo(({repoInfo, dir}: CommitInfoProps) => {
                   commitUrl = `${baseRemote}/commit/${commit.hash}`;
                 }
 
-                const handleCopyHash = () => {
-                  navigator.clipboard.writeText(commit.hash);
-                  topToast.success('Commit hash copied to clipboard!');
+                const handleCopyHash = async () => {
+                  try {
+                    await navigator.clipboard.writeText(commit.hash);
+                    topToast.success('Commit hash copied to clipboard!');
+                  } catch (e) {
+                    console.error('Failed to copy commit hash:', e);
+                    topToast.warning('Failed to copy. Please try again.');
+                  }
                 };
 
                 const formatDate = (dateStr: string) => {

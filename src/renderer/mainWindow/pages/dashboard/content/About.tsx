@@ -25,9 +25,14 @@ export const DashboardAboutId = 'settings_about_elem';
 
 /** Information about application and developer */
 const DashboardAbout = memo(() => {
-  const copyText = useCallback((text: string) => {
-    navigator.clipboard.writeText(text);
-    topToast.info(`Copied to clipboard: ${text}`);
+  const copyText = useCallback(async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      topToast.info(`Copied to clipboard: ${text}`);
+    } catch (e) {
+      console.error('Failed to copy text:', e);
+      topToast.warning('Failed to copy to clipboard!');
+    }
   }, []);
 
   const socialLinks = [

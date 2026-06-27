@@ -36,7 +36,9 @@ const CopyClipboard = memo(({showTooltip = true, tooltipTitle, contentToCopy, cl
       onCopy();
     } else {
       if (contentToCopy) {
-        void navigator.clipboard.writeText(contentToCopy);
+        navigator.clipboard.writeText(contentToCopy).catch(e => {
+          console.error('Failed to copy to clipboard:', e);
+        });
       }
     }
 
