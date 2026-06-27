@@ -11,8 +11,12 @@ import {setupGitManagerListeners} from '@lynx_main/git/gitListeners';
  */
 export function shallowClone(options: ShallowCloneOptions): void {
   const manager = new GitManager(true);
-  manager.shallowClone(options);
+  // Attach listeners before the promise can reject, then suppress the rejection
+  // here since errors are already routed through the manager's onError callback.
   setupGitManagerListeners(manager);
+  manager.shallowClone(options).catch(err => {
+    console.error('Shallow clone failed (handled via onError callback):', err);
+  });
 }
 
 /**
