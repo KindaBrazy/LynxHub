@@ -124,10 +124,21 @@ class StorageManager extends BaseStorage {
     const existingUrlIndex = await this.findUrlIndex(addressArray, url);
 
     // Move to front if exists, otherwise prepend
-    const updatedArray =
+    let updatedArray =
       existingUrlIndex !== -1
         ? [url, ...addressArray.slice(0, existingUrlIndex), ...addressArray.slice(existingUrlIndex + 1)]
         : [url, ...addressArray];
+
+    // Cap the arrays to prevent infinite growth and memory/performance issues
+    const maxLimits = {
+      recentAddress: 100,
+      historyAddress: 1000,
+      favoriteAddress: 500,
+    };
+    const limit = maxLimits[arrayKey];
+    if (updatedArray.length > limit) {
+      updatedArray = updatedArray.slice(0, limit);
+    }
 
     this.updateBrowserDataSecurely({[arrayKey]: updatedArray});
   }
@@ -146,11 +157,47 @@ class StorageManager extends BaseStorage {
    */
   public decryptBrowserData(): void {
     const rawData = this.getData('browser');
+
+    // Prune raw encrypted lists if they exceed their limits to immediately resolve OOM on startup
+    let recentAddress = rawData.recentAddress || [];
+    let historyAddress = rawData.historyAddress || [];
+    let favoriteAddress = rawData.favoriteAddress || [];
+    let favIcons = rawData.favIcons || [];
+
+    let needsSave = false;
+
+    if (recentAddress.length > 100) {
+      recentAddress = recentAddress.slice(0, 100);
+      needsSave = true;
+    }
+    if (historyAddress.length > 1000) {
+      historyAddress = historyAddress.slice(0, 1000);
+      needsSave = true;
+    }
+    if (favoriteAddress.length > 500) {
+      favoriteAddress = favoriteAddress.slice(0, 500);
+      needsSave = true;
+    }
+    if (favIcons.length > 100) {
+      favIcons = favIcons.slice(favIcons.length - 100);
+      needsSave = true;
+    }
+
+    if (needsSave) {
+      this.updateData('browser', {
+        recentAddress,
+        historyAddress,
+        favoriteAddress,
+        favIcons,
+      });
+    }
+
+    const currentData = this.getData('browser');
     this.decryptedBrowserData = {
-      recentAddress: decryptStrings(rawData.recentAddress),
-      favoriteAddress: decryptStrings(rawData.favoriteAddress),
-      historyAddress: decryptStrings(rawData.historyAddress),
-      favIcons: rawData.favIcons.map(item => ({
+      recentAddress: decryptStrings(currentData.recentAddress || []),
+      favoriteAddress: decryptStrings(currentData.favoriteAddress || []),
+      historyAddress: decryptStrings(currentData.historyAddress || []),
+      favIcons: (currentData.favIcons || []).map(item => ({
         url: decryptString(item.url),
         favIcon: decryptString(item.favIcon),
         title: item.title ? decryptString(item.title) : undefined,
@@ -690,6 +737,12 @@ class StorageManager extends BaseStorage {
 
     // Add new entry if not found
     if (!updatedExisting) favIcons.push({url, favIcon: icon, title});
+
+    // Cap the favicons to prevent database and IPC payload bloating
+    const maxFavIcons = 100;
+    if (favIcons.length > maxFavIcons) {
+      favIcons.splice(0, favIcons.length - maxFavIcons);
+    }
 
     this.updateBrowserDataSecurely({favIcons});
   }
