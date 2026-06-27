@@ -30,6 +30,16 @@ const SUPPORTED_MIME_TYPES = new Set([
   'image/avif',
 ]);
 
+/**
+ * Ensures a header value is a valid HTTP ByteString (ASCII only, char codes 0-255).
+ * Non-ASCII characters are stripped to prevent undici's ByteString conversion errors.
+ */
+function toAsciiHeader(value: string): string {
+  // Replace any character with code > 127 with empty string
+  // eslint-disable-next-line no-control-regex
+  return value.replace(/[^\x00-\x7F]/g, '');
+}
+
 /** Cache entry metadata */
 interface CacheEntry {
   /** Original URL of the cached image */
@@ -399,7 +409,7 @@ export class ImageCacheManager {
           'User-Agent': userAgent,
           Accept: 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8',
           'Accept-Language': 'en-US,en;q=0.9',
-          ...(referer && {Referer: referer}),
+          ...(referer && {Referer: toAsciiHeader(referer)}),
         },
       });
 
@@ -512,7 +522,7 @@ export class ImageCacheManager {
         'Accept-Language': 'en-US,en;q=0.9',
       };
 
-      if (referer) headers['Referer'] = referer;
+      if (referer) headers['Referer'] = toAsciiHeader(referer);
 
       // Add conditional headers for revalidation
       if (entry.etag) {
