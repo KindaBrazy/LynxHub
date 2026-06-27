@@ -42,6 +42,7 @@ export class StorageMigrationManager {
     [1.0, () => this.migrate_1_00()],
     [1.01, () => this.migrate_1_01()],
     [1.02, () => this.migrate_1_02()],
+    [1.03, () => this.migrate_1_03()],
   ]);
 
   constructor(
@@ -289,6 +290,19 @@ export class StorageMigrationManager {
   private migrate_1_02() {
     this.storage.data.app.imageCacheIntervalDays = 30;
     this.storage.data.app.imageCacheMaxSize = 536870912;
+  }
+
+  private migrate_1_03() {
+    if (!this.storage.data.browser.historyLimits) {
+      this.storage.data.browser.historyLimits = {
+        recentAddress: 100,
+        historyAddress: 1000,
+        favoriteAddress: 500,
+        favIcons: 100,
+      };
+    } else if (this.storage.data.browser.historyLimits.favIcons === undefined) {
+      this.storage.data.browser.historyLimits.favIcons = 100;
+    }
   }
 
   private normalizeCustomRunBehavior() {

@@ -145,6 +145,12 @@ export type BrowserStorage = {
     globalMuted: boolean;
     tabVolumes: {[cardId: string]: number};
   };
+  historyLimits: {
+    recentAddress: number;
+    historyAddress: number;
+    favoriteAddress: number;
+    favIcons: number;
+  };
 };
 
 /**

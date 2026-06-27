@@ -129,11 +129,12 @@ class StorageManager extends BaseStorage {
         ? [url, ...addressArray.slice(0, existingUrlIndex), ...addressArray.slice(existingUrlIndex + 1)]
         : [url, ...addressArray];
 
-    // Cap the arrays to prevent infinite growth and memory/performance issues
+    // Cap the arrays to the user-configured limits
+    const {historyLimits} = this.getData('browser');
     const maxLimits = {
-      recentAddress: 100,
-      historyAddress: 1000,
-      favoriteAddress: 500,
+      recentAddress: historyLimits?.recentAddress ?? 100,
+      historyAddress: historyLimits?.historyAddress ?? 1000,
+      favoriteAddress: historyLimits?.favoriteAddress ?? 500,
     };
     const limit = maxLimits[arrayKey];
     if (updatedArray.length > limit) {
@@ -166,20 +167,27 @@ class StorageManager extends BaseStorage {
 
     let needsSave = false;
 
-    if (recentAddress.length > 100) {
-      recentAddress = recentAddress.slice(0, 100);
+    const limits = rawData.historyLimits ?? {
+      recentAddress: 100,
+      historyAddress: 1000,
+      favoriteAddress: 500,
+      favIcons: 100,
+    };
+
+    if (recentAddress.length > limits.recentAddress) {
+      recentAddress = recentAddress.slice(0, limits.recentAddress);
       needsSave = true;
     }
-    if (historyAddress.length > 1000) {
-      historyAddress = historyAddress.slice(0, 1000);
+    if (historyAddress.length > limits.historyAddress) {
+      historyAddress = historyAddress.slice(0, limits.historyAddress);
       needsSave = true;
     }
-    if (favoriteAddress.length > 500) {
-      favoriteAddress = favoriteAddress.slice(0, 500);
+    if (favoriteAddress.length > limits.favoriteAddress) {
+      favoriteAddress = favoriteAddress.slice(0, limits.favoriteAddress);
       needsSave = true;
     }
-    if (favIcons.length > 100) {
-      favIcons = favIcons.slice(favIcons.length - 100);
+    if (favIcons.length > limits.favIcons) {
+      favIcons = favIcons.slice(favIcons.length - limits.favIcons);
       needsSave = true;
     }
 
@@ -738,8 +746,8 @@ class StorageManager extends BaseStorage {
     // Add new entry if not found
     if (!updatedExisting) favIcons.push({url, favIcon: icon, title});
 
-    // Cap the favicons to prevent database and IPC payload bloating
-    const maxFavIcons = 100;
+    // Cap the favicons to the user-configured limit
+    const maxFavIcons = this.getData('browser').historyLimits?.favIcons ?? 100;
     if (favIcons.length > maxFavIcons) {
       favIcons.splice(0, favIcons.length - maxFavIcons);
     }

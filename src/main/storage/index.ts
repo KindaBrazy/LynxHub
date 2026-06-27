@@ -28,7 +28,7 @@ class BaseStorage {
   private readonly migrationManager: StorageMigrationManager;
 
   private readonly DEFAULT_DATA: AppStorageData = {
-    storage: {version: 1.02},
+    storage: {version: 1.03},
     cards: {
       installedCards: [],
       autoUpdateCards: [],
@@ -117,6 +117,12 @@ class BaseStorage {
       volumeSettings: {
         globalMuted: false,
         tabVolumes: {},
+      },
+      historyLimits: {
+        recentAddress: 100,
+        historyAddress: 1000,
+        favoriteAddress: 500,
+        favIcons: 100,
       },
     },
     notification: {
