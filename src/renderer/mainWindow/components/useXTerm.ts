@@ -109,11 +109,16 @@ export const useXTerm = ({
     let xTerm: XTerminal | null = null;
     let onResizeDisposable: {dispose: () => void} | null = null;
     let onDataDisposable: {dispose: () => void} | null = null;
+    let rafId: number | null = null;
+    let destroyed = false;
 
     const loadTerminal = async (fontFamily: string = 'monospace') => {
       const sysInfo = await applicationIpc.invoke.getSystemInfo();
       const windowsPty = getWindowPty(sysInfo, useConpty);
       const renderMode = getRendererMode();
+
+      // Bail out if component unmounted while awaiting system info
+      if (destroyed) return;
 
       xTerm = new XTerminal({
         allowProposedApi: true,
@@ -159,8 +164,11 @@ export const useXTerm = ({
       const fitRef = fitAddon.current;
 
       // Wait for next frame to ensure renderer is initialized before fitting
-      requestAnimationFrame(() => {
-        if (!termRef) return;
+      rafId = requestAnimationFrame(() => {
+        rafId = null;
+
+        // Guard: terminal was disposed before this frame fired
+        if (destroyed || !termRef) return;
 
         if (renderMode === 'webgl') {
           try {
@@ -258,8 +266,13 @@ export const useXTerm = ({
     window.addEventListener('resize', handleResize);
 
     return () => {
+      destroyed = true;
       window.removeEventListener('resize', handleResize);
       clearTimeout(resizeTimeoutId);
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+        rafId = null;
+      }
       onResizeDisposable?.dispose();
       onDataDisposable?.dispose();
       terminal.current?.dispose();
