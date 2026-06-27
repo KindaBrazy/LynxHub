@@ -1,7 +1,7 @@
 import {APP_NAME, APP_NAME_VERSION} from '@lynx_common/consts';
 import {isWin} from '@lynx_common/utils';
 import {ElectronMenuItem} from '@lynx_main/plugins/extensions/types';
-import {Menu, Tray} from 'electron';
+import {Menu, nativeImage, Tray} from 'electron';
 
 import trayIconMenu from '../../../resources/16x16.png?asset';
 import trayIcon from '../../../resources/icon.ico?asset';
@@ -35,7 +35,7 @@ export default class TrayManager {
     this.tray.setToolTip(APP_NAME);
 
     const staticItems: ElectronMenuItem[] = [
-      {enabled: false, icon: trayIconMenu, label: APP_NAME_VERSION},
+      {enabled: false, icon: nativeImage.createFromPath(trayIconMenu), label: APP_NAME_VERSION},
       {type: 'separator'},
       {label: 'Show', type: 'normal', click: this.showMainWindow},
       {label: 'Quit', type: 'normal', click: this.closeMainWindow},
