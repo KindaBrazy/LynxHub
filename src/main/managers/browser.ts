@@ -411,13 +411,18 @@ export default class BrowserManager {
     const webContents = browser.view.webContents;
     if (webContents && !webContents.isDestroyed()) {
       // Navigate to blank page to stop any running scripts/workers before closing
-      webContents.loadURL('about:blank').finally(() => {
-        if (!webContents.isDestroyed()) {
-          webContents.removeAllListeners();
-          // Forcefully close the webContents
-          (webContents as any).close?.();
-        }
-      });
+      webContents
+        .loadURL('about:blank')
+        .catch(() => {
+          // Ignore ERR_FAILED (-2) and similar errors when loading about:blank during cleanup
+        })
+        .finally(() => {
+          if (!webContents.isDestroyed()) {
+            webContents.removeAllListeners();
+            // Forcefully close the webContents
+            (webContents as any).close?.();
+          }
+        });
     }
 
     // Cleanup orphaned service workers when all browsers are closed
