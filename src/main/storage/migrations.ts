@@ -41,6 +41,7 @@ export class StorageMigrationManager {
     [0.99, () => this.migrate_0_99()],
     [1.0, () => this.migrate_1_00()],
     [1.01, () => this.migrate_1_01()],
+    [1.02, () => this.migrate_1_02()],
   ]);
 
   constructor(
@@ -283,6 +284,11 @@ export class StorageMigrationManager {
 
   private migrate_1_01() {
     this.storage.data.app.lastPromoShownActiveDaysCount = undefined;
+  }
+
+  private migrate_1_02() {
+    this.storage.data.app.imageCacheIntervalDays = 30;
+    this.storage.data.app.imageCacheMaxSize = 536870912;
   }
 
   private normalizeCustomRunBehavior() {

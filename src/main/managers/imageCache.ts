@@ -15,11 +15,7 @@ const CACHE_FOLDER_NAME = '.cache';
 /** Cache metadata file name */
 const CACHE_METADATA_FILE = 'cache-metadata.json';
 
-/** Cache revalidation interval in milliseconds (7 days) */
-const CACHE_REVALIDATION_INTERVAL = 7 * 24 * 60 * 60 * 1000;
-
-/** Maximum cache size in bytes (500MB default) */
-const MAX_CACHE_SIZE = 500 * 1024 * 1024;
+// Cache defaults are now stored in user settings (database).
 
 /** Supported image MIME types */
 const SUPPORTED_MIME_TYPES = new Set([
@@ -82,6 +78,33 @@ export class ImageCacheManager {
     this.cacheDir = join(getAppDataPath(), CACHE_FOLDER_NAME);
     this.metadataPath = join(this.cacheDir, CACHE_METADATA_FILE);
     this.metadata = this.createEmptyMetadata();
+  }
+
+  /** Gets dynamic cache interval in milliseconds from settings */
+  private getCacheInterval(): number {
+    try {
+      const days = classHolder.storageManager.getData('app').imageCacheIntervalDays;
+      if (days !== undefined) {
+        if (days <= 0) return Infinity;
+        return days * 24 * 60 * 60 * 1000;
+      }
+    } catch (e) {
+      console.warn('[ImageCache] Failed to get cache interval from storage:', e);
+    }
+    return 30 * 24 * 60 * 60 * 1000; // 30 days default
+  }
+
+  /** Gets dynamic maximum cache size in bytes from settings */
+  private getMaxCacheSize(): number {
+    try {
+      const size = classHolder.storageManager.getData('app').imageCacheMaxSize;
+      if (size !== undefined) {
+        return size;
+      }
+    } catch (e) {
+      console.warn('[ImageCache] Failed to get max cache size from storage:', e);
+    }
+    return 536870912; // 512MB default
   }
 
   /** Creates empty metadata structure */
@@ -198,12 +221,13 @@ export class ImageCacheManager {
   /** Removes oldest entries until cache is under max size */
   private async enforceMaxCacheSize(): Promise<void> {
     const currentSize = this.calculateCacheSize();
-    if (currentSize <= MAX_CACHE_SIZE) return;
+    const maxSize = this.getMaxCacheSize();
+    if (currentSize <= maxSize) return;
 
     // Sort entries by last accessed time (oldest first)
     const sortedEntries = Object.values(this.metadata.entries).sort((a, b) => a.lastAccessed - b.lastAccessed);
 
-    let sizeToFree = currentSize - MAX_CACHE_SIZE;
+    let sizeToFree = currentSize - maxSize;
     const entriesToRemove: string[] = [];
 
     for (const entry of sortedEntries) {
@@ -259,14 +283,20 @@ export class ImageCacheManager {
     return entryCount;
   }
 
-  /** Cleans up expired cache entries (older than 7 days) */
+  /** Cleans up expired cache entries (older than configured interval) */
   private async cleanupExpiredEntries(): Promise<void> {
     const now = Date.now();
+    const interval = this.getCacheInterval();
+    if (interval === Infinity) {
+      console.log('[ImageCache] Auto cleanup is disabled (interval set to never)');
+      return;
+    }
+
     const expiredHashes: string[] = [];
 
     for (const [hash, entry] of Object.entries(this.metadata.entries)) {
       const age = now - entry.cachedAt;
-      if (age > CACHE_REVALIDATION_INTERVAL) {
+      if (age > interval) {
         expiredHashes.push(hash);
       }
     }
@@ -313,6 +343,10 @@ export class ImageCacheManager {
 
   /** Performs full cache cleanup */
   private async performCleanup(): Promise<void> {
+    if (!classHolder.isOnline) {
+      console.log('[ImageCache] App is offline. Skipping cache cleanup.');
+      return;
+    }
     console.log('[ImageCache] Starting cache cleanup...');
     await this.cleanupExpiredEntries();
     this.cleanupOrphanedFiles();
@@ -324,15 +358,18 @@ export class ImageCacheManager {
   private scheduleCleanup(): void {
     // Check if cleanup is needed on startup
     const timeSinceLastCleanup = Date.now() - this.metadata.lastCleanup;
-    if (timeSinceLastCleanup >= CACHE_REVALIDATION_INTERVAL) {
+    const interval = this.getCacheInterval();
+    if (interval !== Infinity && timeSinceLastCleanup >= interval) {
       this.performCleanup().catch(err => console.error('[ImageCache] Cleanup failed:', err));
     }
 
     // Schedule periodic cleanup (check every hour)
     this.cleanupTimer = setInterval(
       () => {
+        const currentInterval = this.getCacheInterval();
+        if (currentInterval === Infinity) return;
         const timeSince = Date.now() - this.metadata.lastCleanup;
-        if (timeSince >= CACHE_REVALIDATION_INTERVAL) {
+        if (timeSince >= currentInterval) {
           this.performCleanup().catch(err => console.error('[ImageCache] Scheduled cleanup failed:', err));
         }
       },
@@ -449,7 +486,7 @@ export class ImageCacheManager {
   /** Checks if cached entry needs revalidation */
   private needsRevalidation(entry: CacheEntry): boolean {
     const age = Date.now() - entry.cachedAt;
-    return age > CACHE_REVALIDATION_INTERVAL;
+    return age > this.getCacheInterval();
   }
 
   /** Revalidates a cached entry with the server */
@@ -655,21 +692,23 @@ export class ImageCacheManager {
       Date.now(),
     );
     const newestEntry = entries.reduce((newest, entry) => (entry.cachedAt > newest ? entry.cachedAt : newest), 0);
+    const maxSize = this.getMaxCacheSize();
+    const interval = this.getCacheInterval();
 
     const info = {
       version: this.metadata.version,
       entryCount: entries.length,
       totalSize,
       totalSizeFormatted: formatBytes(totalSize),
-      maxSize: MAX_CACHE_SIZE,
-      maxSizeFormatted: formatBytes(MAX_CACHE_SIZE),
-      usagePercent: Math.round((totalSize / MAX_CACHE_SIZE) * 100),
+      maxSize: maxSize,
+      maxSizeFormatted: formatBytes(maxSize),
+      usagePercent: Math.round((totalSize / maxSize) * 100),
       lastCleanup: this.metadata.lastCleanup,
       lastCleanupFormatted: new Date(this.metadata.lastCleanup).toISOString(),
       oldestEntry: oldestEntry < Date.now() ? new Date(oldestEntry).toISOString() : null,
       newestEntry: newestEntry > 0 ? new Date(newestEntry).toISOString() : null,
-      revalidationInterval: CACHE_REVALIDATION_INTERVAL,
-      revalidationIntervalDays: CACHE_REVALIDATION_INTERVAL / (24 * 60 * 60 * 1000),
+      revalidationInterval: interval,
+      revalidationIntervalDays: interval === Infinity ? 0 : interval / (24 * 60 * 60 * 1000),
     };
 
     return new Response(JSON.stringify(info, null, 2), {

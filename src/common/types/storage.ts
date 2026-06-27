@@ -104,6 +104,8 @@ export type AppConfigStorage = {
   hasSeenStarPromo: boolean;
   hasStarredRepo: boolean;
   lastPromoShownActiveDaysCount?: number;
+  imageCacheIntervalDays: number;
+  imageCacheMaxSize: number;
 };
 
 /**

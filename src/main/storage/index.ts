@@ -28,7 +28,7 @@ class BaseStorage {
   private readonly migrationManager: StorageMigrationManager;
 
   private readonly DEFAULT_DATA: AppStorageData = {
-    storage: {version: 1.01},
+    storage: {version: 1.02},
     cards: {
       installedCards: [],
       autoUpdateCards: [],
@@ -85,6 +85,8 @@ class BaseStorage {
       hasSeenStarPromo: false,
       hasStarredRepo: false,
       lastPromoShownActiveDaysCount: undefined,
+      imageCacheIntervalDays: 30,
+      imageCacheMaxSize: 536870912,
     },
     terminal: {
       outputColor: false,

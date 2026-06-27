@@ -20,7 +20,7 @@ export default function SettingsClear() {
       <SettingsSection
         description={
           'Image cache stores remote images locally for faster loading. ' +
-          'Cache is automatically cleaned every 7 days.'
+          'Cache is automatically cleaned periodically based on your settings.'
         }
         title="Image Cache"
         id={SettingsClearId}
