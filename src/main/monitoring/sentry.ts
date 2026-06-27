@@ -27,6 +27,15 @@ const IGNORED_ERROR_PATTERNS = [
   // Git clone destination exists - user action needed, not a bug
   /already exists and is not an empty directory/i,
   /destination path.*already exists/i,
+  // Git clone interrupted mid-transfer by network issue - not a code bug
+  // These errors contain git progress output (Receiving objects / Resolving deltas)
+  // followed by a network or connection error
+  /error.*RPC failed/i,
+  /error.*early EOF/i,
+  /fatal.*the remote end hung up unexpectedly/i,
+  /fatal.*unable to access/i,
+  /Connection reset by peer/i,
+  /Recv failure.*Connection was reset/i,
 ];
 
 /**
