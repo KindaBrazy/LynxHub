@@ -31,6 +31,18 @@ import downloadDU from './utils/calcFolderSize/downloadDiskUsageUtility';
  */
 if (!isDev()) {
   log.initialize();
+
+  // On Linux/macOS, stdout/stderr can become a broken pipe (EPIPE) if the app
+  // is launched from a terminal that the user subsequently closes.
+  // Suppress EPIPE errors on these streams so electron-log's console transport
+  // doesn't crash the process — the file transport will continue logging normally.
+  process.stdout.on('error', err => {
+    if ((err as NodeJS.ErrnoException).code !== 'EPIPE') throw err;
+  });
+  process.stderr.on('error', err => {
+    if ((err as NodeJS.ErrnoException).code !== 'EPIPE') throw err;
+  });
+
   Object.assign(console, log.functions);
 }
 
