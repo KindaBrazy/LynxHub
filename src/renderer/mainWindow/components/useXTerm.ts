@@ -177,10 +177,18 @@ export const useXTerm = ({
             termRef.loadAddon(webglAddon);
           } catch (e) {
             console.warn('Failed to load WebGL addon, falling back to canvas:', e);
-            termRef.loadAddon(new CanvasAddon());
+            try {
+              termRef.loadAddon(new CanvasAddon());
+            } catch (canvasErr) {
+              console.warn('Failed to load CanvasAddon as WebGL fallback:', canvasErr);
+            }
           }
         } else {
-          termRef.loadAddon(new CanvasAddon());
+          try {
+            termRef.loadAddon(new CanvasAddon());
+          } catch (e) {
+            console.warn('Failed to load CanvasAddon:', e);
+          }
         }
 
         // Load ligatures addon if enabled
