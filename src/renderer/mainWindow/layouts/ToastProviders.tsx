@@ -23,16 +23,13 @@ const ToastProviders = memo(() => {
         {({toast: toastItem}) => {
           const content = toastItem.content as ToastContentValue;
           return (
-            <Toast toast={toastItem} variant={content.variant} className="border notDraggable">
-              <ToastContent>
-                <div className="flex items-center gap-2">
-                  <ToastIndicator variant={content.variant} />
-                  <div className="flex flex-col pr-6">
-                    {content.title ? <ToastTitle>{content.title}</ToastTitle> : null}
-                    {content.description ? <ToastDescription>{content.description}</ToastDescription> : null}
-                  </div>
-                </div>
+            <Toast placement="top" toast={toastItem} variant={content.variant} className="border notDraggable">
+              <ToastIndicator variant={content.variant} />
+              <ToastContent className="min-w-0 pr-4">
+                {content.title ? <ToastTitle>{content.title}</ToastTitle> : null}
+                {content.description ? <ToastDescription>{content.description}</ToastDescription> : null}
               </ToastContent>
+              {content.actionProps ? <Toast.ActionButton {...content.actionProps} /> : null}
               <Toast.CloseButton className={'notDraggable'} />
             </Toast>
           );
@@ -42,16 +39,13 @@ const ToastProviders = memo(() => {
         {({toast: toastItem}) => {
           const content = toastItem.content as ToastContentValue;
           return (
-            <Toast toast={toastItem} className="border" variant={content.variant}>
-              <ToastContent>
-                <div className="flex items-center gap-2">
-                  <ToastIndicator variant={content.variant} />
-                  <div className="flex flex-col pr-6">
-                    {content.title ? <ToastTitle>{content.title}</ToastTitle> : null}
-                    {content.description ? <ToastDescription>{content.description}</ToastDescription> : null}
-                  </div>
-                </div>
+            <Toast toast={toastItem} placement="bottom end" variant={content.variant} className="border py-4 px-5">
+              <ToastIndicator variant={content.variant} />
+              <ToastContent className="min-w-0 pr-4">
+                {content.title ? <ToastTitle>{content.title}</ToastTitle> : null}
+                {content.description ? <ToastDescription>{content.description}</ToastDescription> : null}
               </ToastContent>
+              {content.actionProps ? <Toast.ActionButton {...content.actionProps} /> : null}
               <Toast.CloseButton />
             </Toast>
           );
