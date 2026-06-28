@@ -1,7 +1,9 @@
 import {rendererIpcEventsApi} from '@lynx_shared/ipc/ipcEvents';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
+import {captureException} from '@sentry/electron/renderer';
 
 import {bottomToast, topToast} from '../../layouts/ToastProviders';
+import {addRendererFailure} from '../failures';
 import {allCards, allModules, getCardMethod, useGetArgumentsByID, useGetCardsByPath} from '../modules';
 import {initPluginBrowserSentry} from '../sentry';
 import {rendererIpcApi} from './ipcApi';
@@ -521,19 +523,25 @@ type LoadedExtension = {id: string; module: ExtensionImport_Renderer};
  */
 export default function initializeExtensions(extensions: LoadedExtension[]) {
   for (const extension of extensions) {
-    extension.module.InitialExtensions(
-      {
-        ...extensionRendererApi,
-        modulesData: {
-          allModules,
-          allCards,
-          useGetArgumentsByID,
-          useGetCardsByPath,
-          getCardMethod,
+    try {
+      extension.module.InitialExtensions(
+        {
+          ...extensionRendererApi,
+          modulesData: {
+            allModules,
+            allCards,
+            useGetArgumentsByID,
+            useGetCardsByPath,
+            getCardMethod,
+          },
         },
-      },
-      rendererIpcApi,
-      extension.id,
-    );
+        rendererIpcApi,
+        extension.id,
+      );
+    } catch (error: any) {
+      console.error(`Failed to initialize extension: ${extension.id}`, error);
+      captureException(error);
+      addRendererFailure(extension.id, `Renderer init error: ${error?.message || error}`);
+    }
   }
 }

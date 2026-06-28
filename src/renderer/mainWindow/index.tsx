@@ -22,8 +22,17 @@ import {createStore} from './redux/store';
 await initializeStorage();
 
 // Now load modules and extensions
-await loadModules();
-await loadExtensions();
+try {
+  await loadModules();
+} catch (error) {
+  console.error('Failed to load plugin modules:', error);
+}
+
+try {
+  await loadExtensions();
+} catch (error) {
+  console.error('Failed to load plugin extensions:', error);
+}
 
 // Get app settings from cached storage
 const storage = getStorageData()!;

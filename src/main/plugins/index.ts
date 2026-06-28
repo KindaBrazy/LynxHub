@@ -107,6 +107,12 @@ export class PluginManager {
       }
       await this.extensionManager.importPlugins(extensionFolder);
       await this.moduleManager.importPlugins(moduleFolders);
+
+      // Filter out any plugins that failed to load (i.e. are in skipped)
+      this.addresses = this.addresses.filter(addr => {
+        const folder = addr.address.replace('lynxplugin://', '');
+        return !this.skipped.some(skip => skip.id === folder);
+      });
     } catch (error: any) {
       console.error(`Loading Plugin Error: `, error);
       captureException(error);

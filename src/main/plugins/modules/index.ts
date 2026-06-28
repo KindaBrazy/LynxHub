@@ -249,7 +249,13 @@ export default class ModuleManager {
 
     this.currentRetries = 0;
 
-    this.mainMethods.forEach(({methods}) => methods().mainIpc?.());
+    this.mainMethods.forEach(({methods}) => {
+      try {
+        methods().mainIpc?.();
+      } catch (error) {
+        console.error('Error running module mainIpc:', error);
+      }
+    });
   }
 
   /**

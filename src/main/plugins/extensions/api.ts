@@ -42,7 +42,11 @@ export default class ExtensionApi {
    */
   public listenForChannels(): void {
     for (const listenForChannels of this.callbacks.listenForChannels) {
-      listenForChannels();
+      try {
+        listenForChannels();
+      } catch (error) {
+        console.error('Error running extension listenForChannels:', error);
+      }
     }
   }
 
@@ -51,7 +55,11 @@ export default class ExtensionApi {
    */
   public async onAppReady(): Promise<void> {
     for (const onAppReady of this.callbacks.onAppReady) {
-      await onAppReady();
+      try {
+        await onAppReady();
+      } catch (error) {
+        console.error('Error running extension onAppReady:', error);
+      }
     }
   }
 
@@ -60,7 +68,11 @@ export default class ExtensionApi {
    */
   public onReadyToShow(): void {
     for (const onReadyToShow of this.callbacks.onReadyToShow) {
-      onReadyToShow();
+      try {
+        onReadyToShow();
+      } catch (error) {
+        console.error('Error running extension onReadyToShow:', error);
+      }
     }
   }
 
@@ -71,11 +83,15 @@ export default class ExtensionApi {
    */
   public getTrayItems(staticItems: ElectronMenuItem[]): ElectronMenuItem[] {
     for (const addTrayItem of this.callbacks.trayMenu_AddItem) {
-      const {item, index} = addTrayItem();
-      // Ensure index is within bounds, default to end if invalid?
-      // Splice allows index > length (appends) and negative (from end).
-      // We assume extensions provide valid logic, but we could add safety checks.
-      staticItems.splice(index, 0, item);
+      try {
+        const {item, index} = addTrayItem();
+        // Ensure index is within bounds, default to end if invalid?
+        // Splice allows index > length (appends) and negative (from end).
+        // We assume extensions provide valid logic, but we could add safety checks.
+        staticItems.splice(index, 0, item);
+      } catch (error) {
+        console.error('Error running extension trayMenu_AddItem:', error);
+      }
     }
     return staticItems;
   }
