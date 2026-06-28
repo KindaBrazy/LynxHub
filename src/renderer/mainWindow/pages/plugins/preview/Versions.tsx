@@ -72,19 +72,19 @@ export default function PluginVersionSelector({currentVersion}: PluginVersionSel
           onSelectionChange={handleSelectionChange}
           disallowEmptySelection>
           {availableVersions.map(version => (
-            <Dropdown.Item key={version.commit} className="justify-between">
-              <div className="flex flex-col size-full">
-                <Label
-                  className={`justify-between w-full flex ${
-                    version.incompatibleReason ? 'text-warning' : 'text-success'
-                  }`}>
-                  {version.version}
-                  <Chip size="sm" variant="soft" color={getStageColor(version.stage)}>
-                    {getStageDisplayName(version.stage)}
-                  </Chip>
-                </Label>
-                <Description className="text-warning/50">{version.incompatibleReason}</Description>
-              </div>
+            <Dropdown.Item key={version.commit} className="flex flex-col gap-y-1">
+              <Label
+                className={`justify-between w-full flex ${
+                  version.incompatibleReason ? 'text-warning' : 'text-success'
+                }`}>
+                {version.version}
+                <Chip size="sm" variant="soft" color={getStageColor(version.stage)}>
+                  {getStageDisplayName(version.stage)}
+                </Chip>
+              </Label>
+              {version.incompatibleReason && (
+                <Description className="text-warning/50 w-full">{version.incompatibleReason}</Description>
+              )}
             </Dropdown.Item>
           ))}
         </Dropdown.Menu>
