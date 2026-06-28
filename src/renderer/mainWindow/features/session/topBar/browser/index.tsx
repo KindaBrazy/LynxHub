@@ -1,6 +1,6 @@
-import {isLinux} from '@lynx_common/utils';
 import {useCardsState} from '@lynx/redux/reducers/cards';
 import {RunningCard} from '@lynx/types';
+import {isLinux} from '@lynx_common/utils';
 import {memo, useMemo} from 'react';
 
 import BrowserActionButtons from './BrowserActionButtons';
