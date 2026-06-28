@@ -42,7 +42,7 @@
     "dev:default": "electron-vite dev --noSandbox",
     "prof": "electron-vite dev -w --noSandbox -- --js-flags=\"--prof\"",
     "dev:srouce": "electron-vite dev -w --noSandbox --sourcemap",
-    "postinstall": "electron-builder install-app-deps",
+    "postinstall": "node node_modules/electron/install.js && electron-builder install-app-deps",
     "build": "electron-vite build",
     "rebuild": "electron-builder node-gyp-rebuild",
     "removeDotExtension": "node fixExtension.js",
