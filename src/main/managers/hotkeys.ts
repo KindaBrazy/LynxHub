@@ -2,6 +2,8 @@ import {LynxInput} from '@lynx_common/types/ipc';
 import {applicationIpc} from '@lynx_main/ipc/application';
 import {Event, Input, WebContents} from 'electron';
 
+import classHolder from './classHolder';
+
 const initialKeys: LynxInput = {
   control: false,
   alt: false,
@@ -62,12 +64,30 @@ function onBlur() {
 /**
  * Handles input events from WebContents.
  * Normalizes input and sends it to the renderer.
- * @param _event - Electron event (unused)
+ * @param event - Electron event
  * @param input - Input data from Electron
  */
-function onInput(_event: Event, input: Input) {
+function onInput(event: Event, input: Input) {
   const {control, key, shift, alt, meta, type} = input;
   const lowerKey = key.toLowerCase();
+
+  const storageManager = classHolder.storageManager;
+  const hotkeys = storageManager?.getData('app')?.hotkeys || [];
+
+  const isHotkey = hotkeys.some(h => {
+    if (!h.key) return false;
+    return (
+      h.key.toLowerCase() === lowerKey &&
+      !!h.control === control &&
+      !!h.shift === shift &&
+      !!h.alt === alt &&
+      !!h.meta === meta
+    );
+  });
+
+  if (isHotkey) {
+    event.preventDefault();
+  }
 
   const currentKeys: LynxInput = {control, key: lowerKey, shift, alt, meta, type};
   sendToRenderer(currentKeys);

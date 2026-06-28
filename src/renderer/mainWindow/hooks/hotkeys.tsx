@@ -1,6 +1,6 @@
 import {appActions} from '@lynx/redux/reducers/app';
 import {cardsActions, useCardsState} from '@lynx/redux/reducers/cards';
-import {useHotkeysState} from '@lynx/redux/reducers/hotkeys';
+import {hotkeysActions, useHotkeysState} from '@lynx/redux/reducers/hotkeys';
 import {tabsActions, useTabsState} from '@lynx/redux/reducers/tabs';
 import {useTerminalState} from '@lynx/redux/reducers/terminal';
 import {AppDispatch} from '@lynx/redux/store';
@@ -43,6 +43,7 @@ export default function useHotkeyPress(keys: {name: string; method: (() => void)
   const lastExecutedRef = useRef<string>('');
   const lastExecutedTimeRef = useRef<number>(0);
   const keysRef = useRef(keys);
+  const dispatch = useDispatch();
 
   // Update ref in useLayoutEffect (runs synchronously after render, before effects)
   useLayoutEffect(() => {
@@ -53,8 +54,8 @@ export default function useHotkeyPress(keys: {name: string; method: (() => void)
   const hotkeyMap = useMemo(() => buildHotkeyMap(hotkeys), [hotkeys]);
 
   useEffect(() => {
-    // Only process keyUp events
-    if (input.type !== 'keyUp' || !input.key) return;
+    // Only process keyDown events
+    if (input.type !== 'keyDown' || !input.key) return;
 
     const lookupKey = createHotkeyKey(input.key, input.control, input.shift, input.alt, input.meta);
     const hotkeyName = hotkeyMap.get(lookupKey);
@@ -70,6 +71,7 @@ export default function useHotkeyPress(keys: {name: string; method: (() => void)
     if (keyConfig?.method) {
       lastExecutedRef.current = lookupKey;
       lastExecutedTimeRef.current = now;
+      dispatch(hotkeysActions.clearInput());
       keyConfig.method();
     }
   }, [input, hotkeyMap]);

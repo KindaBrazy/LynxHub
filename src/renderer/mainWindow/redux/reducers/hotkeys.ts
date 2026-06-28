@@ -57,6 +57,23 @@ const hotkeysSlice = createSlice({
     setHotkeys: (state, action: PayloadAction<LynxHotkey[]>) => {
       state.hotkeys = action.payload;
     },
+    clearInput: state => {
+      state.input = {
+        key: '',
+        shift: false,
+        control: false,
+        alt: false,
+        meta: false,
+        type: '',
+      };
+      state.isCtrlPressed = false;
+      state.isShiftPressed = false;
+      state.isAltPressed = false;
+      state.isMetaPressed = false;
+      state.key = '';
+      state.type = '';
+      state.copyPressed = false;
+    },
   },
 });
 
