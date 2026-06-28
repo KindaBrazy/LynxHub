@@ -1,10 +1,5 @@
 import {useElementResizing} from '@lynx/utils/hooks';
 import contextMenuIpc from '@lynx_shared/ipc/contextMenu';
-/**
- * Main Context Menu component.
- * Renders different layouts based on the active layout state.
- * Handles window resizing based on content.
- */
 import {useEffect} from 'react';
 
 import {MenuTypes} from './consts';
@@ -23,6 +18,11 @@ import PromptWindow from './layouts/window_dialogs/Prompt';
 import {useContextState} from './redux/reducer';
 import useShowEvents from './useShowEvents';
 
+/**
+ * Main Context Menu component.
+ * Renders different layouts based on the active layout state.
+ * Handles window resizing based on content.
+ */
 export default function ContextMenu() {
   const activeLayout = useContextState('activeLayout');
   const containerRef = useElementResizing(contextMenuIpc.send.resizeWindow);

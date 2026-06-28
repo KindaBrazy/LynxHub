@@ -23,6 +23,7 @@ export default class ContextMenuManager {
   private contextMenuWindow?: BrowserWindow;
   private mainWindow?: BrowserWindow;
   private customContextPosition: {x: number; y: number} | undefined;
+  private currentCursorPosition: {x: number; y: number} | undefined;
   private webContents: WebContents[] = [];
 
   private static readonly CONTEXT_WINDOW_CONFIG: BrowserWindowConstructorOptions = {
@@ -316,9 +317,18 @@ export default class ContextMenuManager {
   public showContextMenu() {
     if (!this.contextMenuWindow || this.contextMenuWindow.isDestroyed()) return;
 
+    // Capture the exact cursor position at the time of the click
+    // so that if the user moves the mouse before the renderer replies,
+    // the menu doesn't open at the wrong location.
+    this.currentCursorPosition = screen.getCursorScreenPoint();
+
     // We must show the window (with opacity 0) so that Chromium runs the rendering pipeline.
     // If the window is completely hidden, requestAnimationFrame and ResizeObserver will not fire.
     this.contextMenuWindow.setOpacity(0);
+
+    // Set a large initial size so the renderer can measure without scrollbars wrapping text
+    this.contextMenuWindow.setBounds({width: 2000, height: 2000});
+
     this.contextMenuWindow.show();
 
     // Send request to renderer to calculate size and get back to us
@@ -400,7 +410,7 @@ export default class ContextMenuManager {
         y: Math.floor(this.customContextPosition.y) + parentBounds.y + 1,
       };
     } else {
-      clickPoint = screen.getCursorScreenPoint();
+      clickPoint = this.currentCursorPosition || screen.getCursorScreenPoint();
     }
 
     const display = screen.getDisplayNearestPoint(clickPoint);
