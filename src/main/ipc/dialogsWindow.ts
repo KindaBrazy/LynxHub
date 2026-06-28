@@ -1,6 +1,6 @@
 import {windowDialogsChannels} from '@lynx_common/consts/ipcChannels/dialogsWindow';
-import classHolder from '@lynx_main/managers/classHolder';
 import {isLinux} from '@lynx_common/utils';
+import classHolder from '@lynx_main/managers/classHolder';
 import {BrowserWindow, dialog, IpcMainEvent} from 'electron';
 
 import lynxIpc from './ipcWrapper';

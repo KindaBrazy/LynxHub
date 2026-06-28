@@ -9,15 +9,7 @@ import {dialogBlurred} from '@lynx_main/ipc/dialogsWindow';
 import lynxIpc from '@lynx_main/ipc/ipcWrapper';
 import {downloadImageToClipboard} from '@lynx_main/ipc/methods/windowUtils';
 import classHolder from '@lynx_main/managers/classHolder';
-import {
-  BrowserWindow,
-  BrowserWindowConstructorOptions,
-  clipboard,
-  Menu,
-  screen,
-  shell,
-  WebContents,
-} from 'electron';
+import {BrowserWindow, BrowserWindowConstructorOptions, clipboard, Menu, screen, shell, WebContents} from 'electron';
 
 export default class ContextMenuManager {
   private contextMenuWindow?: BrowserWindow;

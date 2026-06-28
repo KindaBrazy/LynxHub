@@ -2,10 +2,10 @@ import {contextMenuChannels} from '@lynx_common/consts/ipcChannels/contextMenu';
 import {ElementResizeData} from '@lynx_common/types';
 import {ContextMenuVolumeData, NavHistory} from '@lynx_common/types/ipc';
 import {isLinux, terminalLineEnding} from '@lynx_common/utils';
-import BrowserManager from '@lynx_main/managers/browser';
-import classHolder from '@lynx_main/managers/classHolder';
 import {ptyWrite} from '@lynx_main/ipc/methods/pty';
 import {changeWindowState} from '@lynx_main/ipc/methods/windowUtils';
+import BrowserManager from '@lynx_main/managers/browser';
+import classHolder from '@lynx_main/managers/classHolder';
 import {BrowserWindow, ContextMenuParams, dialog} from 'electron';
 
 import {applicationIpc} from './application';
