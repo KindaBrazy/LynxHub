@@ -1,9 +1,12 @@
 import {contextMenuChannels} from '@lynx_common/consts/ipcChannels/contextMenu';
 import {ElementResizeData} from '@lynx_common/types';
 import {ContextMenuVolumeData, NavHistory} from '@lynx_common/types/ipc';
+import {isLinux, terminalLineEnding} from '@lynx_common/utils';
 import BrowserManager from '@lynx_main/managers/browser';
 import classHolder from '@lynx_main/managers/classHolder';
-import {ContextMenuParams} from 'electron';
+import {ptyWrite} from '@lynx_main/ipc/methods/pty';
+import {changeWindowState} from '@lynx_main/ipc/methods/windowUtils';
+import {BrowserWindow, ContextMenuParams, dialog} from 'electron';
 
 import {applicationIpc} from './application';
 import {browserIpc} from './browser';
@@ -86,13 +89,17 @@ export default async function listenContextMenu() {
  * @param browserManager - The browser manager instance.
  */
 export async function listenForBrowserChannels(browserManager: BrowserManager) {
-  const contextMenuManager = await classHolder.waitForClass('contextMenuManager');
+  const [contextMenuManager, appManager] = await Promise.all([
+    classHolder.waitForClass('contextMenuManager'),
+    classHolder.waitForClass('appManager'),
+  ]);
 
   const setPosition = (customPosition?: {x: number; y: number}) =>
     contextMenuManager.setCustomContextPosition(customPosition);
 
   // Open Find in Page
   browserIpc.on.openFindInPage(async (id, customPosition) => {
+    if (isLinux) return;
     setPosition(customPosition);
 
     const webContents = browserManager.getWebContentsById(id);
@@ -112,6 +119,7 @@ export async function listenForBrowserChannels(browserManager: BrowserManager) {
 
   // Open Zoom control
   browserIpc.on.openZoom((id, customPosition) => {
+    if (isLinux) return;
     setPosition(customPosition);
     contextMenuIpc.send.onZoom(id, browserManager.getCurrentZoom(id));
     contextMenuManager.showContextMenu();
@@ -119,6 +127,7 @@ export async function listenForBrowserChannels(browserManager: BrowserManager) {
 
   // Open Volume control
   browserIpc.on.openVolume((data, customPosition) => {
+    if (isLinux) return;
     setPosition(customPosition);
     contextMenuIpc.send.onVolume(data);
     contextMenuManager.showContextMenu();
@@ -126,6 +135,23 @@ export async function listenForBrowserChannels(browserManager: BrowserManager) {
 
   // Open Terminate AI
   contextMenuIpc.on.openTerminateAI(id => {
+    if (isLinux) {
+      const mainWindow = appManager.getMainWindow();
+      const choice = dialog.showMessageBoxSync(mainWindow as BrowserWindow, {
+        type: 'question',
+        buttons: ['Cancel', 'Relaunch', 'Terminate'],
+        defaultId: 2,
+        cancelId: 0,
+        message: 'Confirm Terminate Process',
+        detail: 'Are you sure you want to terminate or relaunch the process?',
+      });
+      if (choice === 1) {
+        contextMenuIpc.send.onRelaunchAI(id);
+      } else if (choice === 2) {
+        contextMenuIpc.send.onStopAI(id);
+      }
+      return;
+    }
     setPosition(undefined);
     contextMenuIpc.send.onTerminateAI(id);
     contextMenuManager.showContextMenu();
@@ -133,6 +159,24 @@ export async function listenForBrowserChannels(browserManager: BrowserManager) {
 
   // Open send exit signal process
   contextMenuIpc.on.openSendExitSignal(id => {
+    if (isLinux) {
+      const mainWindow = appManager.getMainWindow();
+      const choice = dialog.showMessageBoxSync(mainWindow as BrowserWindow, {
+        type: 'question',
+        buttons: ['Cancel', 'Exit (Ctrl+C)', 'Exit with Y (Ctrl+C + Y)'],
+        defaultId: 2,
+        cancelId: 0,
+        message: 'Confirm Sending Exit Signal',
+        detail: 'Select how you want to exit the running process.',
+      });
+      if (choice === 1) {
+        ptyWrite(id, '\x03');
+      } else if (choice === 2) {
+        ptyWrite(id, '\x03');
+        ptyWrite(id, 'y' + terminalLineEnding);
+      }
+      return;
+    }
     setPosition(undefined);
     contextMenuIpc.send.onSendExitProcess(id);
     contextMenuManager.showContextMenu();
@@ -140,6 +184,21 @@ export async function listenForBrowserChannels(browserManager: BrowserManager) {
 
   // Open Terminate Tab
   contextMenuIpc.on.openTerminateTab((id, customPosition) => {
+    if (isLinux) {
+      const mainWindow = appManager.getMainWindow();
+      const choice = dialog.showMessageBoxSync(mainWindow as BrowserWindow, {
+        type: 'question',
+        buttons: ['Cancel', 'Terminate'],
+        defaultId: 1,
+        cancelId: 0,
+        message: 'Confirm Terminate Process',
+        detail: 'Are you sure you want to terminate this tab?',
+      });
+      if (choice === 1) {
+        contextMenuIpc.send.onRemoveTab(id);
+      }
+      return;
+    }
     setPosition(customPosition);
     contextMenuIpc.send.onTerminateTab(id);
     contextMenuManager.showContextMenu();
@@ -147,6 +206,23 @@ export async function listenForBrowserChannels(browserManager: BrowserManager) {
 
   // Open Close App
   contextMenuIpc.on.openCloseApp(() => {
+    if (isLinux) {
+      const mainWindow = appManager.getMainWindow();
+      const choice = dialog.showMessageBoxSync(mainWindow as BrowserWindow, {
+        type: 'question',
+        buttons: ['Cancel', 'Restart', 'Exit'],
+        defaultId: 2,
+        cancelId: 0,
+        message: 'Confirm Exit',
+        detail: 'Are you sure you want to exit or restart?',
+      });
+      if (choice === 1) {
+        changeWindowState('restart');
+      } else if (choice === 2) {
+        changeWindowState('close');
+      }
+      return;
+    }
     setPosition(undefined);
     contextMenuIpc.send.onCloseApp();
     contextMenuManager.showContextMenu();
@@ -154,6 +230,7 @@ export async function listenForBrowserChannels(browserManager: BrowserManager) {
 
   // Open Downloads Menu
   downloadManagerIpc.on.openDownloadsMenu(() => {
+    if (isLinux) return;
     setPosition(undefined);
     contextMenuIpc.send.onDownloads();
     contextMenuManager.showContextMenu();

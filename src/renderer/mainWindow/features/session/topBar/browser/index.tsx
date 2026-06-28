@@ -1,3 +1,4 @@
+import {isLinux} from '@lynx_common/utils';
 import {useCardsState} from '@lynx/redux/reducers/cards';
 import {RunningCard} from '@lynx/types';
 import {memo, useMemo} from 'react';
@@ -41,7 +42,7 @@ const BrowserTopBar = memo(({runningCard, setCustomAddress, tabID}: Props) => {
       />
       <BrowserAddressBar runningCard={runningCard} setCustomAddress={setCustomAddress} />
 
-      {isDomReady && (
+      {isDomReady && !isLinux && (
         <>
           <BrowserSearch id={runningCard.id} tabID={runningCard.tabId} />
           <BrowserZoom id={runningCard.id} />

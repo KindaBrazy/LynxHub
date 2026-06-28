@@ -2,7 +2,7 @@ import path from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
 import {ScreenShareSources} from '@lynx_common/types/shareScreen';
-import {isMac, isWin} from '@lynx_common/utils';
+import {isLinux, isMac, isWin} from '@lynx_common/utils';
 import {shareScreenIpc} from '@lynx_main/ipc/shareScreen';
 import classHolder from '@lynx_main/managers/classHolder';
 import {
@@ -21,6 +21,7 @@ export default class ShareScreenManager {
   private handlersRegistered = false;
 
   public start() {
+    if (isLinux) return;
     const {appManager} = classHolder;
     this.requestHandler = this.requestHandler.bind(this);
 
@@ -162,7 +163,11 @@ export default class ShareScreenManager {
       },
     });
 
-    this.positionSelectorWindow();
+    if (isLinux) {
+      this._selectorWindow.center();
+    } else {
+      this.positionSelectorWindow();
+    }
 
     this._selectorWindow.on('ready-to-show', () => {
       this._selectorWindow?.show();

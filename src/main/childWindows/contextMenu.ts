@@ -2,12 +2,22 @@ import path from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
 import {ElementResizeData} from '@lynx_common/types';
-import {isMac, isWin} from '@lynx_common/utils';
+import {isLinux, isMac, isWin} from '@lynx_common/utils';
+import {applicationIpc} from '@lynx_main/ipc/application';
 import {contextMenuIpc} from '@lynx_main/ipc/contextMenu';
 import {dialogBlurred} from '@lynx_main/ipc/dialogsWindow';
 import lynxIpc from '@lynx_main/ipc/ipcWrapper';
+import {downloadImageToClipboard} from '@lynx_main/ipc/methods/windowUtils';
 import classHolder from '@lynx_main/managers/classHolder';
-import {BrowserWindow, BrowserWindowConstructorOptions, screen, WebContents} from 'electron';
+import {
+  BrowserWindow,
+  BrowserWindowConstructorOptions,
+  clipboard,
+  Menu,
+  screen,
+  shell,
+  WebContents,
+} from 'electron';
 
 export default class ContextMenuManager {
   private contextMenuWindow?: BrowserWindow;
@@ -98,6 +108,177 @@ export default class ContextMenuManager {
     });
 
     contents.on('context-menu', (_e, params) => {
+      if (isLinux) {
+        const template: Electron.MenuItemConstructorOptions[] = [];
+
+        // 1. Navigation
+        const navHistory = {
+          canGoBack: contents.navigationHistory.canGoBack(),
+          canGoForward: contents.navigationHistory.canGoForward(),
+        };
+        template.push({
+          label: 'Back',
+          enabled: navHistory.canGoBack,
+          click: () => contents.navigationHistory.goBack(),
+        });
+        template.push({
+          label: 'Forward',
+          enabled: navHistory.canGoForward,
+          click: () => contents.navigationHistory.goForward(),
+        });
+        template.push({
+          label: 'Reload',
+          click: () => contents.reload(),
+        });
+        template.push({type: 'separator'});
+
+        // 2. Suggestions
+        if (params.dictionarySuggestions && params.dictionarySuggestions.length > 0) {
+          params.dictionarySuggestions.forEach(suggestion => {
+            template.push({
+              label: suggestion,
+              click: () => contents.replaceMisspelling(suggestion),
+            });
+          });
+          template.push({type: 'separator'});
+        }
+
+        // 3. Link items
+        if (params.linkURL) {
+          template.push({
+            label: 'Open Link in New Tab',
+            click: () => {
+              applicationIpc.send.onNewTab(params.linkURL);
+            },
+          });
+          template.push({
+            label: 'Open Link in Default Browser',
+            click: () => {
+              shell.openExternal(params.linkURL);
+            },
+          });
+          template.push({
+            label: 'Copy Link Address',
+            click: () => {
+              clipboard.writeText(params.linkURL);
+            },
+          });
+          template.push({type: 'separator'});
+        }
+
+        // 4. Image items
+        if (params.mediaType === 'image' && params.srcURL) {
+          template.push({
+            label: 'Open Image in New Tab',
+            click: () => {
+              applicationIpc.send.onNewTab(params.srcURL);
+            },
+          });
+          template.push({
+            label: 'Copy Image',
+            click: () => {
+              downloadImageToClipboard(params.srcURL);
+            },
+          });
+          template.push({
+            label: 'Save Image',
+            click: () => {
+              contents.downloadURL(params.srcURL);
+            },
+          });
+          template.push({
+            label: 'Copy Image Address',
+            click: () => {
+              clipboard.writeText(params.srcURL);
+            },
+          });
+          template.push({
+            label: 'Search Web for Image',
+            click: () => {
+              applicationIpc.send.onNewTab(
+                `https://lens.google.com/uploadbyurl?url=${encodeURIComponent(params.srcURL)}`,
+              );
+            },
+          });
+          template.push({type: 'separator'});
+        }
+
+        // 5. Selection text
+        if (params.selectionText) {
+          template.push({
+            label: 'Search with Google',
+            click: () => {
+              const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(params.selectionText)}`;
+              applicationIpc.send.onNewTab(searchUrl);
+            },
+          });
+          template.push({type: 'separator'});
+        }
+
+        // 6. Edit operations
+        if (params.editFlags) {
+          const {canUndo, canRedo, canCut, canCopy, canPaste, canSelectAll} = params.editFlags;
+          let hasEdit = false;
+          if (canUndo) {
+            template.push({
+              label: 'Undo',
+              click: () => contents.undo(),
+            });
+            hasEdit = true;
+          }
+          if (canRedo) {
+            template.push({
+              label: 'Redo',
+              click: () => contents.redo(),
+            });
+            hasEdit = true;
+          }
+          if (canCut && params.selectionText) {
+            template.push({
+              label: 'Cut',
+              click: () => contents.cut(),
+            });
+            hasEdit = true;
+          }
+          if (canCopy && params.selectionText) {
+            template.push({
+              label: 'Copy',
+              click: () => contents.copy(),
+            });
+            hasEdit = true;
+          }
+          if (canPaste) {
+            template.push({
+              label: 'Paste',
+              click: () => contents.paste(),
+            });
+            hasEdit = true;
+          }
+          if (canSelectAll) {
+            template.push({
+              label: 'Select All',
+              click: () => contents.selectAll(),
+            });
+            hasEdit = true;
+          }
+          if (hasEdit) {
+            template.push({type: 'separator'});
+          }
+        }
+
+        // 7. Inspect Element
+        template.push({
+          label: 'Inspect Element',
+          click: () => {
+            contents.inspectElement(params.x, params.y);
+          },
+        });
+
+        const menu = Menu.buildFromTemplate(template);
+        menu.popup({window: this.mainWindow});
+        return;
+      }
+
       if (!this.contextMenuWindow || this.contextMenuWindow.isDestroyed()) return;
 
       this.setCustomContextPosition(undefined);

@@ -1,7 +1,7 @@
 import path from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
-import {isWin} from '@lynx_common/utils';
+import {isLinux, isWin} from '@lynx_common/utils';
 import {browserIpc} from '@lynx_main/ipc/browser';
 import lynxIpc from '@lynx_main/ipc/ipcWrapper';
 import {BrowserWindow, BrowserWindowConstructorOptions, WebContents} from 'electron';
@@ -38,6 +38,7 @@ export default class LinkPreviewManager {
   };
 
   public createWindow(mainWindow: BrowserWindow) {
+    if (isLinux) return;
     if (this.linkPreviewWindow && !this.linkPreviewWindow.isDestroyed()) {
       this.linkPreviewWindow.close();
     }
@@ -109,6 +110,7 @@ export default class LinkPreviewManager {
   }
 
   public updateUrl(url: string) {
+    if (isLinux) return;
     if (url) {
       this.show(url);
     } else {
