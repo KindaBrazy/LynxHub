@@ -21,7 +21,6 @@ export default class ShareScreenManager {
   private handlersRegistered = false;
 
   public start() {
-    if (isLinux) return;
     const {appManager} = classHolder;
     this.requestHandler = this.requestHandler.bind(this);
 
@@ -44,6 +43,22 @@ export default class ShareScreenManager {
   }
 
   private requestHandler(_: DisplayMediaRequestHandlerHandlerRequest, callback: (streams: Streams) => void) {
+    if (isLinux) {
+      desktopCapturer
+        .getSources({types: ['screen', 'window']})
+        .then(sources => {
+          if (sources.length > 0) {
+            callback({video: sources[0]});
+          } else {
+            callback({});
+          }
+        })
+        .catch(err => {
+          console.error('Error fetching screen sources on Linux:', err);
+          callback({});
+        });
+      return;
+    }
     this.showSelector();
     this.startShare(callback);
     this.registerSourceHandlers();
