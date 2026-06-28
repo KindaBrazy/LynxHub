@@ -204,7 +204,10 @@ function checkSubscriptionStageCompatibility(
 /**
  * Checks compatibility based on the operating system platform.
  */
-function checkPlatformCompatibility(version: VersionItem): {compatible: boolean; reason: string | undefined} {
+function checkPlatformCompatibility(version: Pick<VersionItem, 'platforms' | 'version'>): {
+  compatible: boolean;
+  reason: string | undefined;
+} {
   const currentPlatform = platform();
   const platforms = version.platforms;
 
@@ -277,9 +280,9 @@ export function isVersionCompatible(
   currentStage: SubscribeStages,
 ): {compatible: boolean; reason: string | undefined} {
   const checks = [
-    () => checkSubscriptionStageCompatibility(version, currentStage),
     () => checkPlatformCompatibility(version),
     () => checkApiVersionCompatibility(version, type),
+    () => checkSubscriptionStageCompatibility(version, currentStage),
   ];
 
   for (const check of checks) {
@@ -322,7 +325,16 @@ export async function getList(currentStage: SubscribeStages): Promise<PluginItem
     });
 
     const isCompatible = versions.some(v => v.isCompatible);
-    const incompatibleReason = versions.find(v => !v.isCompatible)?.incompatibleReason;
+    let incompatibleReason: string | undefined = undefined;
+
+    if (!isCompatible) {
+      const platformCompatibleVersion = versions.find(v => checkPlatformCompatibility(v).compatible);
+      if (platformCompatibleVersion) {
+        incompatibleReason = platformCompatibleVersion.incompatibleReason;
+      } else {
+        incompatibleReason = versions[0]?.incompatibleReason;
+      }
+    }
 
     validated.push({
       isCompatible,
