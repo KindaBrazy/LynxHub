@@ -56,8 +56,8 @@ export default function ScreenShare() {
   );
 
   return (
-    <main>
-      <div className={'h-120 w-155 flex flex-col overflow-hidden scrollbar-hide dark:bg-LynxRaisinBlack'}>
+    <main className="h-screen w-screen overflow-hidden">
+      <div className="h-full w-full flex flex-col overflow-hidden dark:bg-LynxRaisinBlack">
         {/* Header */}
         <div className="border-b border-surface-tertiary px-4 py-2">
           <div className="flex items-center justify-between">
