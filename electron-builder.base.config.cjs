@@ -41,6 +41,7 @@ const baseConfig = {
       " it's the all-in-one environment for AI power users.",
     category: 'ArtificialIntelligence',
     executableArgs: ['--no-sandbox'],
+    syncDesktopName: true,
   },
   mac: {
     artifactName: '${productName}-V${version}-${os}_${arch}.${ext}',

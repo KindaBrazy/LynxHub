@@ -1,6 +1,7 @@
 {
   "name": "lynxhub",
   "productName": "LynxHub",
+  "desktopName": "ai.kindabrazy.lynxhub.desktop",
   "version": "3.5.5-insider-1",
   "type": "module",
   "description": "Cross-platform, extensible terminal/browser for AI management",
