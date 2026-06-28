@@ -48,27 +48,35 @@ export function useUpdatingProgress(
           {
             timeout: 0,
             description: (
-              <div className="flex gap-x-4 my-4">
-                <div className="flex flex-col items-center gap-y-1 bg-surface-secondary rounded-2xl p-2 w-20">
-                  <Plus className="size-4 text-success" />
-                  <span>{insertions}</span>
+              <div className="flex items-center gap-x-3 mt-1.5 text-xs text-muted">
+                <div className="flex items-center gap-x-1">
+                  <Plus className="size-3.5 text-success" />
+                  <span className="font-semibold text-success">{insertions}</span>
+                  <span className="text-muted-foreground/80">insertions</span>
                 </div>
-                <div className="flex flex-col items-center gap-y-1 bg-surface-secondary rounded-2xl p-2 w-20">
-                  <Minus className="size-4 text-danger" />
-                  <span>{deletions}</span>
+                <span className="text-muted-foreground/30 font-light">|</span>
+                <div className="flex items-center gap-x-1">
+                  <Minus className="size-3.5 text-danger" />
+                  <span className="font-semibold text-danger">{deletions}</span>
+                  <span className="text-muted-foreground/80">deletions</span>
                 </div>
-                <div className="flex flex-col items-center gap-y-1 bg-surface-secondary rounded-2xl p-2 w-20">
-                  <LucideReplace className="size-4 text-accent" />
-                  <span>{changes}</span>
+                <span className="text-muted-foreground/30 font-light">|</span>
+                <div className="flex items-center gap-x-1">
+                  <LucideReplace className="size-3.5 text-accent" />
+                  <span className="font-semibold text-accent">{changes}</span>
+                  <span className="text-muted-foreground/80">changes</span>
                 </div>
               </div>
             ),
             actionProps: {
+              variant: 'secondary',
+              size: 'sm',
+              className: 'self-center',
               children: (
-                <>
-                  <Documents size={15} />
-                  Details
-                </>
+                <div className="flex items-center gap-x-1">
+                  <Documents size={14} />
+                  <span>Details</span>
+                </div>
               ),
               onPress: () => {
                 if ('summary' in progress) {
