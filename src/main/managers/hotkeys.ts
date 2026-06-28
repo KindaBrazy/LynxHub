@@ -35,13 +35,15 @@ function getModifierString(control: boolean, shift: boolean, alt: boolean, meta:
  * Sends hotkey input to the renderer process if it differs from the previous input.
  * Uses fast string comparison to avoid unnecessary IPC calls.
  * @param input - The input event data
+ * @param isHotkey - Whether this input is a registered hotkey
  */
-function sendToRenderer(input: LynxInput) {
+function sendToRenderer(input: LynxInput, isHotkey: boolean) {
   const {key, type, control, shift, alt, meta} = input;
   const modifiers = getModifierString(control, shift, alt, meta);
 
   // Fast string comparison instead of deep object comparison
-  if (key === prevKey && type === prevType && modifiers === prevModifiers) return;
+  // Bypass duplicate check for hotkeys so they can be triggered repeatedly (e.g. Ctrl+T, Ctrl+W)
+  if (!isHotkey && key === prevKey && type === prevType && modifiers === prevModifiers) return;
 
   prevKey = key;
   prevType = type;
@@ -90,7 +92,7 @@ function onInput(event: Event, input: Input) {
   }
 
   const currentKeys: LynxInput = {control, key: lowerKey, shift, alt, meta, type};
-  sendToRenderer(currentKeys);
+  sendToRenderer(currentKeys, isHotkey);
 }
 
 /**
