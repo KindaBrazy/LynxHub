@@ -1,4 +1,4 @@
-import {Button, Chip, Description, Dropdown, Label, Selection} from '@heroui/react';
+import {Chip, Description, Key, Label, ListBox, Select} from '@heroui/react';
 import {usePluginsState} from '@lynx/redux/reducers/plugins';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
 import {BoxMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
@@ -43,8 +43,9 @@ export default function PluginVersionSelector({currentVersion}: PluginVersionSel
    * Updates the sync list via IPC to mark the target version for synchronization.
    */
   const handleSelectionChange = useCallback(
-    (selection: Selection) => {
-      const targetCommit = Array.from(selection)[0] as string;
+    (key: Key | null) => {
+      if (!key) return;
+      const targetCommit = key as string;
       const pluginId = selectedPlugin?.metadata.id;
 
       if (pluginId && targetCommit) {
@@ -57,22 +58,31 @@ export default function PluginVersionSelector({currentVersion}: PluginVersionSel
   const activeVersionNumber = availableVersions.find(item => item.commit === activeCommit)?.version;
 
   return (
-    <Dropdown>
-      <Dropdown.Trigger>
-        <Button size="sm" variant="tertiary">
-          <BoxMinimalistic className="size-3.5" />
-          Target v{activeVersionNumber}
-        </Button>
-      </Dropdown.Trigger>
-      <Dropdown.Popover>
-        <Dropdown.Menu
-          selectionMode="single"
-          selectedKeys={[activeCommit]}
-          disabledKeys={disabledCommitKeys}
-          onSelectionChange={handleSelectionChange}
-          disallowEmptySelection>
+    <Select
+      className="w-fit"
+      variant="primary"
+      value={activeCommit}
+      onChange={handleSelectionChange}
+      disabledKeys={disabledCommitKeys}
+      aria-label="Select target version">
+      <Select.Trigger>
+        <Select.Value>
+          <span className="flex items-center gap-x-1.5 font-medium">
+            <BoxMinimalistic className="size-3.5 shrink-0" />
+            Target v{activeVersionNumber}
+          </span>
+        </Select.Value>
+        <Select.Indicator className="size-3" />
+      </Select.Trigger>
+      <Select.Popover>
+        <ListBox>
           {availableVersions.map(version => (
-            <Dropdown.Item key={version.commit} className="flex flex-col gap-y-1">
+            <ListBox.Item
+              id={version.commit}
+              key={version.commit}
+              textValue={version.version}
+              className="flex flex-col gap-y-1 pr-8">
+              <ListBox.ItemIndicator />
               <Label
                 className={`justify-between w-full flex ${
                   version.incompatibleReason ? 'text-warning' : 'text-success'
@@ -85,10 +95,10 @@ export default function PluginVersionSelector({currentVersion}: PluginVersionSel
               {version.incompatibleReason && (
                 <Description className="text-warning/50 w-full">{version.incompatibleReason}</Description>
               )}
-            </Dropdown.Item>
+            </ListBox.Item>
           ))}
-        </Dropdown.Menu>
-      </Dropdown.Popover>
-    </Dropdown>
+        </ListBox>
+      </Select.Popover>
+    </Select>
   );
 }
