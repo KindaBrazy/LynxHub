@@ -1,4 +1,4 @@
-import {Button, Spinner, Switch, Tabs} from '@heroui/react';
+import {Button, ScrollShadow, Spinner, Switch, Tabs} from '@heroui/react';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import {ScreenShareSources, ScreenShareStart} from '@lynx_common/types/shareScreen';
 import shareScreenIpc from '@lynx_shared/ipc/shareScreen';
@@ -95,7 +95,7 @@ export default function ScreenShare() {
               </div>
             </div>
           ) : (
-            <div className="h-full overflow-y-auto pb-4 pr-2 pt-2">
+            <ScrollShadow className="h-full pb-4 pr-2 pt-2">
               {isEmpty(currentData) ? (
                 renderEmptyState()
               ) : (
@@ -111,13 +111,13 @@ export default function ScreenShare() {
                   ))}
                 </div>
               )}
-            </div>
+            </ScrollShadow>
           )}
         </div>
 
         {/* Footer */}
-        <div className="border-t border-surface-tertiary bg-surface-secondary px-4 py-2">
-          <div className="flex justify-between gap-x-3">
+        <div className="px-4 py-2 bg-surface">
+          <div className="flex justify-between items-center gap-x-3">
             <Switch isSelected={shareAudio} onChange={setShareAudio}>
               <Switch.Content>
                 <Switch.Control>
