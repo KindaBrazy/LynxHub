@@ -23,7 +23,11 @@ const ToastProviders = memo(() => {
         {({toast: toastItem}) => {
           const content = toastItem.content as ToastContentValue;
           return (
-            <Toast placement="top" toast={toastItem} variant={content.variant} className="border notDraggable">
+            <Toast
+              placement="top"
+              toast={toastItem}
+              variant={content.variant}
+              className="border border-border notDraggable">
               <ToastIndicator variant={content.variant} />
               <ToastContent className="min-w-0 pr-4">
                 {content.title ? <ToastTitle>{content.title}</ToastTitle> : null}
@@ -39,7 +43,11 @@ const ToastProviders = memo(() => {
         {({toast: toastItem}) => {
           const content = toastItem.content as ToastContentValue;
           return (
-            <Toast toast={toastItem} placement="bottom end" variant={content.variant} className="border py-4 px-5">
+            <Toast
+              toast={toastItem}
+              placement="bottom end"
+              variant={content.variant}
+              className="border border-border py-4 px-5">
               <ToastIndicator variant={content.variant} />
               <ToastContent className="min-w-0 pr-4">
                 {content.title ? <ToastTitle>{content.title}</ToastTitle> : null}
