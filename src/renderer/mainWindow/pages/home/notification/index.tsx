@@ -78,9 +78,12 @@ function useNotificationsData() {
 
     // Pull new static data and then fetch again
     setIsRefreshing(true);
-    staticsIpc.pull().finally(() => {
-      fetchAndFilterNotifications().finally(() => setIsRefreshing(false));
-    });
+    staticsIpc
+      .pull()
+      .catch(e => console.error('Failed to pull statics:', e))
+      .finally(() => {
+        fetchAndFilterNotifications().finally(() => setIsRefreshing(false));
+      });
   }, [fetchAndFilterNotifications]);
 
   const markAsRead = useCallback((id: string) => {

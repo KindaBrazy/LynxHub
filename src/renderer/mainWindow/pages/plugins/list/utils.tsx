@@ -42,11 +42,14 @@ export function useFetchExtensions() {
     if (isMounted) setRefreshing(true);
 
     // Pull the latest statics before fetching the list
-    staticsIpc.pull().finally(() => {
-      fetchExtensionsList().finally(() => {
-        if (isMounted) setRefreshing(false);
+    staticsIpc
+      .pull()
+      .catch(e => console.error('Failed to pull statics:', e))
+      .finally(() => {
+        fetchExtensionsList().finally(() => {
+          if (isMounted) setRefreshing(false);
+        });
       });
-    });
 
     return () => {
       isMounted = false;

@@ -88,8 +88,8 @@ export async function getCommits(dir: string, maxCount?: number): Promise<Commit
  */
 export function pullRepo(dir: string, id: string): void {
   const manager = new GitManager();
-  manager.pull(path.resolve(dir));
   setupGitManagerListeners(manager, id);
+  manager.pull(path.resolve(dir)).catch(() => {});
 }
 
 /**

@@ -726,13 +726,17 @@ export default class GitManager {
    * @param dir - The directory of the local repository.
    */
   public async pull(dir: string): Promise<void> {
-    if (!classHolder.isOnline) this.handleError('Network is not accessible!');
+    if (!classHolder.isOnline) {
+      this.handleError('Network is not accessible!');
+      throw new Error('Network is not accessible!');
+    }
 
     try {
       const result = await simpleGit(dir, {progress: this.handleProgressUpdate}).pull();
       this.handleProgressComplete(result);
     } catch (error) {
       this.handleError(error);
+      throw error;
     }
   }
 
