@@ -71,9 +71,7 @@
     "axios": "^1.18.1",
     "fix-path": "^5.0.0",
     "graceful-fs": "^4.2.11",
-    "keytar": "^7.9.0",
     "lowdb": "^7.0.1",
-    "mitt": "^3.0.1",
     "node-pty": "^1.2.0-beta.13",
     "prism-react-renderer": "^2.4.1",
     "react-syntax-highlighter": "^16.1.1",
@@ -161,7 +159,6 @@
   "allowScripts": {
     "electron": true,
     "esbuild": true,
-    "keytar": true,
     "node-pty": true,
     "@sentry/cli": true
   }
