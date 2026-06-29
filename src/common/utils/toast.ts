@@ -2,7 +2,7 @@ import type {ButtonProps, ToastContentValue, ToastQueue} from '@heroui/react';
 import {DEFAULT_TOAST_TIMEOUT} from '@heroui/react';
 import type {ReactNode} from 'react';
 
-interface HeroUIToastOptions {
+export interface HeroUIToastOptions {
   description?: ReactNode;
   indicator?: ReactNode;
   variant?: ToastContentValue['variant'];
@@ -12,7 +12,7 @@ interface HeroUIToastOptions {
   onClose?: () => void;
 }
 
-interface ToastPromiseOptions<T = unknown> {
+export interface ToastPromiseOptions<T = unknown> {
   loading: ReactNode;
   success: ((data: T) => ReactNode) | ReactNode;
   error: ((error: Error) => ReactNode) | ReactNode;
