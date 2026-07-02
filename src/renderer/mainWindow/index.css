@@ -70,6 +70,11 @@
   --semi-muted: oklch(0.789 0.017 286.008);
 }
 
+.scrollbar-hide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
