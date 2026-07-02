@@ -30,7 +30,7 @@ const MainContents = memo(() => {
         return (
           <TabWrapper tabID={tab.id} isActive={isActive} key={`${tab.id}_wrapper`}>
             <NavBar tabID={tab.id} pageID={tab.pageID} />
-            <div className={`size-full p-3 pt-1.5 ${paddingClass} transition-all duration-300`}>
+            <div className={`size-full p-3 pt-1.5 ${paddingClass} transition-all duration-300 overflow-hidden`}>
               <AppPages tabID={tab.id} pageID={tab.pageID} />
             </div>
           </TabWrapper>
