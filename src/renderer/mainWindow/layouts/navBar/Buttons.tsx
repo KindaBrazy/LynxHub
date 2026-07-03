@@ -94,6 +94,17 @@ export const ContentsNav = ({tabID, pageID}: Props) => {
       });
     }
 
+    // Custom extension pages with position 'top' (or unspecified)
+    const customPages = extensionsData.router.pages || [];
+    for (const page of customPages) {
+      if (page.position === 'bottom') continue;
+      result.push({
+        icon: page.icon,
+        title: page.title,
+        path: page.id,
+      });
+    }
+
     return result;
   }, []);
 
@@ -130,7 +141,7 @@ export function SettingsNav({tabID, pageID}: Props) {
       <DashboardPage_Icon className="size-full" />
     );
 
-    return [
+    const result: NavItem[] = [
       {
         icon: dashboardIcon,
         title: PageTitles.dashboard,
@@ -143,8 +154,23 @@ export function SettingsNav({tabID, pageID}: Props) {
         path: PageID.plugins,
         badge: pluginsBadge,
       },
-      {icon: <SettingPage_Icon className="size-full" />, title: PageTitles.settings, path: PageID.settings},
     ];
+
+    // Custom extension pages with position 'bottom'
+    const customPages = extensionsData.router.pages || [];
+    for (const page of customPages) {
+      if (page.position === 'bottom') {
+        result.push({
+          icon: page.icon,
+          title: page.title,
+          path: page.id,
+        });
+      }
+    }
+
+    result.push({icon: <SettingPage_Icon className="size-full" />, title: PageTitles.settings, path: PageID.settings});
+
+    return result;
   }, [syncList, appUpdateAvailable, isLoggedIn, userData]);
 
   return (

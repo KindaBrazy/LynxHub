@@ -4,7 +4,7 @@ import type {Reducer} from '@reduxjs/toolkit';
 import type {ComponentProps, FC} from 'react';
 
 import {useCardOverlayState} from '../../../components/card/useCardOverlayState';
-import {ExtensionRendererApi} from './api';
+import {ExtensionPage, ExtensionRendererApi} from './api';
 import {RendererIpcApi} from './ipcWrapper';
 
 /**
@@ -132,9 +132,8 @@ export type ExtensionData_Renderer = {
 
   /** Router modifications. */
   router: {
-    /** Added routes. */
-
-    add: any[];
+    /** Added pages. */
+    pages: ExtensionPage[];
     /** Replaced page components. */
     replace: {
       homePage: FC | undefined;

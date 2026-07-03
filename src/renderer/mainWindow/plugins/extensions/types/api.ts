@@ -9,7 +9,7 @@ import type {
 } from '@lynx_common/types/plugins/modules';
 import type {Reducer} from '@reduxjs/toolkit';
 import type {Scope} from '@sentry/browser';
-import type {FC} from 'react';
+import type {FC, ReactNode} from 'react';
 
 import type {bottomToast, topToast} from '../../../layouts/ToastProviders';
 import type {ExtensionEvents} from './events';
@@ -67,6 +67,14 @@ export type ModuleData = {
 
 // Type aliases for component injection functions
 type CompFc = (component: FC) => void;
+export type ExtensionPage = {
+  id: string;
+  title: string;
+  icon: ReactNode;
+  component: FC;
+  position?: 'top' | 'bottom';
+};
+
 type CompFcProp = (component: FcProp) => void;
 type CompFcPropCard = (component: FcPropCard) => void;
 type CompFcPropCardData = (component: FcPropCardData) => void;
@@ -167,15 +175,12 @@ export type ExtensionRendererApi = {
 
   /**
    * Modify the application router and its associated pages.
-
    */
   router: {
     /**
-     * Add new routes to the application router.
-     * To include a navigation button for the new route, add it to the `navBar` object.
+     * Add a new custom page to the application router and navigation bar.
      */
-
-    add: (routeObject: any[]) => void;
+    addPage: (page: ExtensionPage) => void;
     /** Replace existing pages within the router. */
     replace: {
       /** Replace the Home page component. */

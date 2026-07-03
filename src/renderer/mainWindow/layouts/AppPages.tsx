@@ -64,6 +64,12 @@ const AppPages = memo(({tabID, pageID}: Props) => {
 
   if (foundRunningCard) return <RunningView runningCard={foundRunningCard} />;
 
+  const customPage = (extensionsData.router.pages || []).find(p => p.id === pageID);
+  if (customPage) {
+    const Component = customPage.component;
+    return <Component />;
+  }
+
   const Component = PageComponents[pageID] || HomePage;
   return <Component />;
 });

@@ -8,7 +8,7 @@ import {allCards, allModules, getCardMethod, useGetArgumentsByID, useGetCardsByP
 import {initPluginBrowserSentry} from '../sentry';
 import {rendererIpcApi} from './ipcApi';
 import {ExtensionData_Renderer, ExtensionImport_Renderer} from './types';
-import {ExtensionRendererApi} from './types/api';
+import {ExtensionPage, ExtensionRendererApi} from './types/api';
 import type {ExtensionEvents} from './types/events';
 
 // ─── Extension Data Store ─────────────────────────────────────────────────────
@@ -42,7 +42,7 @@ export const extensionsData: ExtensionData_Renderer = {
     browser: undefined,
   },
   router: {
-    add: [],
+    pages: [],
     replace: {
       homePage: undefined,
       imageGenerationPage: undefined,
@@ -247,8 +247,8 @@ export const extensionRendererApi: ExtensionRendererApi = {
 
   // ── Router ───────────────────────────────────────────────────────────────
   router: {
-    add: (routeObject: any[]) => {
-      extensionsData.router.add = [...extensionsData.router.add, ...routeObject];
+    addPage: (page: ExtensionPage) => {
+      extensionsData.router.pages.push(page);
     },
     replace: {
       homePage: comp => {
