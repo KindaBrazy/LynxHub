@@ -38,6 +38,7 @@ export default class StaticsManager {
   private cachedNotifications: NotificationData[] | undefined = undefined;
   private lastNotificationFetchTime = 0;
   private lastPullTime = 0;
+  private isRepairing = false;
 
   constructor() {
     this.gitManager = new GitManager();
@@ -327,10 +328,47 @@ export default class StaticsManager {
   }
 
   /**
-   * Helper to read and parse a JSON file from the statics directory.
-   * Handles retry logic for transient file system errors.
+   * Repairs the statics repository by running a hard reset.
+   * If the hard reset fails, falls back to a clean clone.
    */
-  private async getDataAsJson<T>(fileName: string): Promise<T | undefined> {
+  public async repair(): Promise<boolean> {
+    if (this.isRepairing || !this.gitAvailable) return false;
+    this.isRepairing = true;
+    console.log('StaticsManager: Attempting to repair statics repository...');
+    try {
+      await this.gitManager.resetHard(this.dir, 'HEAD', false);
+      console.log('StaticsManager: Repository local hard reset successful.');
+      this.isRepairing = false;
+      return true;
+    } catch (error) {
+      console.warn('StaticsManager: Local hard reset failed, attempting fetch and reset to origin/main...', error);
+      try {
+        await this.gitManager.resetHard(this.dir, 'origin/main', true, 'main');
+        console.log('StaticsManager: Repository remote hard reset successful.');
+        this.isRepairing = false;
+        return true;
+      } catch (remoteResetError) {
+        console.warn('StaticsManager: Remote hard reset failed, trying full wipe and re-clone...', remoteResetError);
+        try {
+          this.robustWipe();
+          await this.clone();
+          console.log('StaticsManager: Full wipe and re-clone successful.');
+          this.isRepairing = false;
+          return true;
+        } catch (cloneError) {
+          console.error('StaticsManager: Repair failed completely:', cloneError);
+          this.isRepairing = false;
+          return false;
+        }
+      }
+    }
+  }
+
+  /**
+   * Helper to read and parse a JSON file from the statics directory.
+   * Handles retry logic for transient file system errors and automatic self-healing.
+   */
+  private async getDataAsJson<T>(fileName: string, allowRepair = true): Promise<T | undefined> {
     if (this.requirementsCheckPromise) {
       await this.requirementsCheckPromise;
     }
@@ -342,26 +380,45 @@ export default class StaticsManager {
 
     const filePath = join(this.dir, fileName);
 
-    if (!existsSync(filePath)) {
-      return undefined;
+    const tryRead = () => {
+      if (!existsSync(filePath)) {
+        return {success: false, data: undefined, missing: true, transient: false};
+      }
+      try {
+        const fileContent = readFileSync(filePath, 'utf8');
+        return {success: true, data: JSON.parse(fileContent) as T, missing: false, transient: false};
+      } catch (error) {
+        const errCode = (error as NodeJS.ErrnoException).code;
+        // Handle transient file system errors (UNKNOWN, EIO, etc.)
+        if (errCode === 'UNKNOWN' || errCode === 'EIO' || errCode === 'EBUSY') {
+          return {success: false, transient: true, missing: false};
+        }
+        return {success: false, transient: false, missing: false};
+      }
+    };
+
+    let result = tryRead();
+    if (result.success) {
+      return result.data;
     }
 
-    try {
-      const fileContent = readFileSync(filePath, 'utf8');
-      return JSON.parse(fileContent) as T;
-    } catch (error) {
-      const errCode = (error as NodeJS.ErrnoException).code;
-      // Handle transient file system errors (UNKNOWN, EIO, etc.) by retrying once after a short delay
-      if (errCode === 'UNKNOWN' || errCode === 'EIO' || errCode === 'EBUSY') {
-        await new Promise(resolve => setTimeout(resolve, 100));
-        try {
-          const fileContent = readFileSync(filePath, 'utf8');
-          return JSON.parse(fileContent) as T;
-        } catch {
-          return undefined;
-        }
+    if (result.transient) {
+      await new Promise(resolve => setTimeout(resolve, 100));
+      result = tryRead();
+      if (result.success) {
+        return result.data;
       }
-      return undefined;
     }
+
+    // If the file is missing or parse failed (corrupted syntax), and we are allowed to repair,
+    // trigger repository self-healing and retry reading once.
+    if (allowRepair && this.gitAvailable) {
+      const repaired = await this.repair();
+      if (repaired) {
+        return this.getDataAsJson<T>(fileName, false);
+      }
+    }
+
+    return undefined;
   }
 }
