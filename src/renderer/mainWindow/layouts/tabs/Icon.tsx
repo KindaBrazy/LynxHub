@@ -1,4 +1,5 @@
 import {Avatar, Spinner} from '@heroui/react';
+import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {Terminal_Icon} from '@lynx_assets/icons';
 import {
   AgentPage_Icon,
@@ -56,12 +57,17 @@ const getPageIcon = (pageID: string) => {
       return <PluginPage_Icon className="size-full" />;
     case PageID.settings:
       return <SettingPage_Icon className="size-full" />;
-    default:
+    default: {
+      const customPage = (extensionsData.router.pages || []).find(p => p.id === pageID);
+      if (customPage) {
+        return customPage.icon;
+      }
       return (
         <Avatar className="size-4 bg-transparent rounded-none">
           <Avatar.Image src={APP_ICON_TRANSPARENT} />
         </Avatar>
       );
+    }
   }
 };
 
