@@ -58,7 +58,7 @@ const getPageIcon = (pageID: string) => {
       return <SettingPage_Icon className="size-full" />;
     default:
       return (
-        <Avatar>
+        <Avatar className="size-4 bg-transparent rounded-none">
           <Avatar.Image src={APP_ICON_TRANSPARENT} />
         </Avatar>
       );
