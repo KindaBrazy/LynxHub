@@ -1,4 +1,4 @@
-import {existsSync, readdirSync, readFileSync, rmSync} from 'node:fs';
+import {existsSync, readdirSync, readFileSync, renameSync, rmSync} from 'node:fs';
 import {join} from 'node:path';
 
 import {APP_BUILD_NUMBER, LYNXHUB_WEBSITE, STATICS_URL} from '@lynx_common/consts';
@@ -110,7 +110,7 @@ export default class StaticsManager {
       this.lastPullTime = now;
     } catch {
       // If pull fails (e.g. merge conflicts, corruption), wipe and re-clone
-      rmSync(this.dir, {recursive: true, force: true});
+      this.robustWipe();
       await this.clone();
       this.lastPullTime = now;
     }
@@ -268,12 +268,47 @@ export default class StaticsManager {
    * Clones the statics repository.
    * Handles cases where Git is missing or cloning fails.
    */
+  /**
+   * Safely deletes the statics directory recursively.
+   * If deletion fails (likely due to Windows file locks), renames the directory
+   * to a temporary name to free up the path immediately and schedules cleanup.
+   */
+  private robustWipe(): void {
+    try {
+      if (!existsSync(this.dir)) return;
+      rmSync(this.dir, {recursive: true, force: true});
+    } catch (error) {
+      console.warn(`StaticsManager: Initial deletion of directory ${this.dir} failed (possibly locked files):`, error);
+      const tempDirName = `${this.dir}_old_${Date.now()}`;
+      try {
+        renameSync(this.dir, tempDirName);
+        console.log(`StaticsManager: Successfully renamed locked directory ${this.dir} to ${tempDirName}`);
+        try {
+          rmSync(tempDirName, {recursive: true, force: true});
+        } catch {
+          console.warn(
+            `StaticsManager: Could not delete renamed directory ${tempDirName} immediately, left for OS cleanup.`,
+          );
+        }
+      } catch (renameError) {
+        console.error(`StaticsManager: Failed to rename directory ${this.dir} as fallback:`, renameError);
+        throw error;
+      }
+    }
+  }
+
   private async clone() {
     try {
-      const dirUrl = await GitManager.getRemoteUrlFromDirectory(this.dir);
+      const isValid = await GitManager.isGitRepository(this.dir);
+      if (isValid) {
+        const dirUrl = await GitManager.getRemoteUrlFromDirectory(this.dir);
+        if (dirUrl === STATICS_URL) return;
+      }
 
-      // If already cloned from correct URL, skip
-      if (dirUrl && dirUrl === STATICS_URL) return;
+      // If it exists but is not a valid repo or url doesn't match, wipe it first
+      if (existsSync(this.dir)) {
+        this.robustWipe();
+      }
 
       return this.gitManager.shallowClone({url: STATICS_URL, directory: this.dir, singleBranch: true, branch: 'main'});
     } catch (error) {
@@ -283,7 +318,10 @@ export default class StaticsManager {
         console.warn('StaticsManager: Git is not installed or not in PATH. Statics will not be available.');
         throw new Error('Git is not available', {cause: error});
       }
-      // For other errors, try cloning again (might be corrupted repo)
+      // For other errors, wipe and try cloning again (might be corrupted repo)
+      if (existsSync(this.dir)) {
+        this.robustWipe();
+      }
       return this.gitManager.shallowClone({url: STATICS_URL, directory: this.dir, singleBranch: true, branch: 'main'});
     }
   }

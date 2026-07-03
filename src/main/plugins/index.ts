@@ -1,4 +1,5 @@
 import {createHash} from 'node:crypto';
+import {existsSync, renameSync, rmSync} from 'node:fs';
 import {dirname, join} from 'node:path';
 
 import {LYNXHUB_WEBSITE} from '@lynx_common/consts';
@@ -13,7 +14,6 @@ import {
 import {getUpdateType} from '@lynx_common/utils/plugins';
 import GitManager from '@lynx_main/git';
 import {setupGitManagerListeners} from '@lynx_main/git/gitListeners';
-import {removeDirRecursive} from '@lynx_main/ipc/methods/windowUtils';
 import {pluginsIpc} from '@lynx_main/ipc/plugins/plugins';
 import classHolder from '@lynx_main/managers/classHolder';
 import {getAppDirectory} from '@lynx_main/managers/dataFolder';
@@ -230,6 +230,34 @@ export class PluginManager {
    * @param commitHash - Optional commit hash.
    * @returns True if installation succeeded, false otherwise.
    */
+  /**
+   * Safely deletes a plugin directory.
+   * Fallback to renaming on Windows if locked.
+   */
+  private robustWipePluginDir(dir: string): void {
+    try {
+      if (!existsSync(dir)) return;
+      rmSync(dir, {recursive: true, force: true});
+    } catch (error) {
+      console.warn(`PluginManager: Initial deletion of directory ${dir} failed (possibly locked files):`, error);
+      const tempDirName = `${dir}_old_${Date.now()}`;
+      try {
+        renameSync(dir, tempDirName);
+        console.log(`PluginManager: Successfully renamed locked directory ${dir} to ${tempDirName}`);
+        try {
+          rmSync(tempDirName, {recursive: true, force: true});
+        } catch {
+          console.warn(
+            `PluginManager: Could not delete renamed directory ${tempDirName} immediately, left for OS cleanup.`,
+          );
+        }
+      } catch (renameError) {
+        console.error(`PluginManager: Failed to rename directory ${dir} as fallback:`, renameError);
+        throw error;
+      }
+    }
+  }
+
   public async install(url: string, commitHash?: string): Promise<boolean> {
     const metadata = await this.resolvePluginMetadata(url, commitHash);
     if (!metadata) {
@@ -240,12 +268,20 @@ export class PluginManager {
     const directory = join(this.pluginPath, id);
 
     try {
+      if (existsSync(directory)) {
+        this.robustWipePluginDir(directory);
+      }
       await this.performGitInstallation(url, directory, targetCommit);
       this.installed.push({id, url, version});
       void trackDownload(id);
       return true;
     } catch (e) {
       console.warn(`Failed to install plugin: ${url}`, e);
+      try {
+        this.robustWipePluginDir(directory);
+      } catch (cleanupError) {
+        console.error('Failed to cleanup plugin directory after failed installation:', cleanupError);
+      }
       return false;
     }
   }
@@ -259,7 +295,7 @@ export class PluginManager {
     const plugin = this.getDirById(id);
     if (!plugin) return false;
     try {
-      await removeDirRecursive(plugin);
+      this.robustWipePluginDir(plugin);
       this.syncList_remove(id);
       this.installed = this.installed.filter(plugin => plugin.id !== id);
       return true;

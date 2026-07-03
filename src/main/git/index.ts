@@ -177,6 +177,7 @@ export default class GitManager {
    */
   public static async getRemoteUrlFromDirectory(dir: string): Promise<string | undefined> {
     try {
+      if (!(await GitManager.isGitRepository(dir))) return undefined;
       const result: RemoteWithRefs[] = await simpleGit(dir).getRemotes(true);
       return GitManager.formatGitUrl(result[0]?.refs.fetch);
     } catch (error) {
