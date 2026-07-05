@@ -70,9 +70,9 @@ type CompFc = (component: FC) => void;
 export type ExtensionPage = {
   id: string;
   title: string;
-  icon: ReactNode;
+  icon?: ReactNode;
   component: FC;
-  position?: 'top' | 'bottom';
+  position?: 'top' | 'bottom' | 'hidden';
 };
 
 type CompFcProp = (component: FcProp) => void;
@@ -233,6 +233,16 @@ export type ExtensionRendererApi = {
        * Add a new button to the **settings navigation bar** (Bottom bar).  */
       settingsBar: CompFc;
     };
+  };
+
+  /**
+   * Modify or navigate tabs.
+   */
+  tabs: {
+    /**
+     * Set the active page for the current tab.
+     */
+    setActivePage: (pageID: string, title?: string, isTerminal?: boolean) => void;
   };
 
   /**

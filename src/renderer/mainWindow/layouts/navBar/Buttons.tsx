@@ -97,7 +97,7 @@ export const ContentsNav = ({tabID, pageID}: Props) => {
     // Custom extension pages with position 'top' (or unspecified)
     const customPages = extensionsData.router.pages || [];
     for (const page of customPages) {
-      if (page.position === 'bottom') continue;
+      if (page.position === 'bottom' || page.position === 'hidden') continue;
       result.push({
         icon: page.icon,
         title: page.title,

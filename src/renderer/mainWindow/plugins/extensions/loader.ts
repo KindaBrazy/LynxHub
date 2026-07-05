@@ -303,6 +303,17 @@ export const extensionRendererApi: ExtensionRendererApi = {
     },
   },
 
+  // ── Tabs ─────────────────────────────────────────────────────────────────
+  tabs: {
+    setActivePage: (pageID, title = '', isTerminal = false) => {
+      Promise.all([import('../../redux/store'), import('../../redux/reducers/tabs')]).then(
+        ([{getStore}, {tabsActions}]) => {
+          getStore().dispatch(tabsActions.setActivePage({pageID, title, isTerminal}));
+        },
+      );
+    },
+  },
+
   // ── Modals ───────────────────────────────────────────────────────────────
   replaceModals: {
     updateApp: comp => {
