@@ -70,6 +70,23 @@ const AppPages = memo(({tabID, pageID}: Props) => {
     return <Component />;
   }
 
+  const routerReplace = extensionsData.router.replace;
+  const ReplacedComponent = {
+    [PageID.home]: routerReplace.homePage,
+    [PageID.imageGen]: routerReplace.imageGenerationPage,
+    [PageID.textGen]: routerReplace.textGenerationPage,
+    [PageID.audioGen]: routerReplace.audioGenerationPage,
+    [PageID.tools]: routerReplace.toolsPage,
+    [PageID.games]: routerReplace.gamesPage,
+    [PageID.dashboard]: routerReplace.dashboardPage,
+    [PageID.plugins]: routerReplace.extensionsPage,
+    [PageID.settings]: routerReplace.settingsPage,
+  }[pageID];
+
+  if (ReplacedComponent) {
+    return <ReplacedComponent />;
+  }
+
   const Component = PageComponents[pageID] || HomePage;
   return <Component />;
 });

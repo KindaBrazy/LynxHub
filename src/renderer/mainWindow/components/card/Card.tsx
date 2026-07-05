@@ -1,4 +1,5 @@
 import {Card, Description, useOverlayState} from '@heroui/react';
+import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {getAccentColorAsHex} from '@lynx/utils/accentColorGenerator';
 import {extractGitUrl} from '@lynx_common/utils';
 import {motion} from 'framer-motion';
@@ -9,6 +10,7 @@ import {CardHeaderContent} from './Header';
 import InstallCardModal from './menu/update/installModal';
 import {useCardStore} from './store';
 import {useCardActions} from './useCardActions';
+import {useCardOverlayState} from './useCardOverlayState';
 import {useCardTitle} from './useCardTitle';
 
 const MotionCard = motion.create(Card);
@@ -24,6 +26,7 @@ const LynxCard = memo(() => {
   const repoUrl = useCardStore(state => state.repoUrl);
   const description = useCardStore(state => state.description);
   const setMenuIsOpen = useCardStore(state => state.setMenuIsOpen);
+  const id = useCardStore(state => state.id);
 
   const installModal = useOverlayState();
   const [installModalType, setInstallModalType] = useState<'install' | 'update'>('install');
@@ -74,25 +77,43 @@ const LynxCard = memo(() => {
           style={accentStyle}
         />
 
-        <CardHeaderContent
-          modifiedTitle={modifiedTitle}
-          onTitleChange={onTitleChange}
-          updateAvailable={updateAvailable}
-        />
+        {extensionsData.cards.customize.header ? (
+          <extensionsData.cards.customize.header
+            useCardStore={useCardStore}
+            useCardOverlayState={useCardOverlayState}
+          />
+        ) : (
+          <CardHeaderContent
+            modifiedTitle={modifiedTitle}
+            onTitleChange={onTitleChange}
+            updateAvailable={updateAvailable}
+          />
+        )}
 
-        <Card.Content>
-          <Description className="line-clamp-3 text-xs">{description}</Description>
-        </Card.Content>
+        {extensionsData.cards.customize.body ? (
+          <extensionsData.cards.customize.body useCardStore={useCardStore} useCardOverlayState={useCardOverlayState} />
+        ) : (
+          <Card.Content>
+            <Description className="line-clamp-3 text-xs">{description}</Description>
+          </Card.Content>
+        )}
 
-        <Footer
-          updating={updating}
-          state={installModal}
-          isRunning={isRunning}
-          updateCount={updateCount}
-          setType={setInstallModalType}
-          id={useCardStore(state => state.id)}
-          updatingExtensions={isUpdatingExtensions}
-        />
+        {extensionsData.cards.customize.footer ? (
+          <extensionsData.cards.customize.footer
+            useCardStore={useCardStore}
+            useCardOverlayState={useCardOverlayState}
+          />
+        ) : (
+          <Footer
+            id={id}
+            updating={updating}
+            state={installModal}
+            isRunning={isRunning}
+            updateCount={updateCount}
+            setType={setInstallModalType}
+            updatingExtensions={isUpdatingExtensions}
+          />
+        )}
       </MotionCard>
 
       <InstallCardModal state={installModal} type={installModalType} />
