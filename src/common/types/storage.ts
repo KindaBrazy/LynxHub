@@ -175,10 +175,7 @@ export type PerformanceStorage = {
   forceColorProfile: 'default' | 'srgb' | 'display-p3' | 'color-spin-gamma24';
   highDpiSupport: boolean;
   autoplayPolicy:
-    | 'default'
-    | 'no-user-gesture-required'
-    | 'user-gesture-required'
-    | 'document-user-activation-required';
+    'default' | 'no-user-gesture-required' | 'user-gesture-required' | 'document-user-activation-required';
   enableAcceleratedVideoDecode: boolean;
   jsMaxOldSpaceSize: 2048 | 4096 | 8192;
   ignoreGpuBlacklist: boolean;

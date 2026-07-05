@@ -22,17 +22,7 @@ export type RepositoryInfo = {
  * Supported Operating System platforms.
  */
 export type OsPlatforms =
-  | 'aix'
-  | 'android'
-  | 'darwin'
-  | 'freebsd'
-  | 'haiku'
-  | 'linux'
-  | 'openbsd'
-  | 'sunos'
-  | 'win32'
-  | 'cygwin'
-  | 'netbsd';
+  'aix' | 'android' | 'darwin' | 'freebsd' | 'haiku' | 'linux' | 'openbsd' | 'sunos' | 'win32' | 'cygwin' | 'netbsd';
 
 export type ArgumentsPresets = {preset: string; arguments: ChosenArgument[]};
 export type ChosenArgumentsData = {activePreset: string; data: ArgumentsPresets[]};

@@ -9,10 +9,7 @@ import SettingsFilterItem from '../../SettingsFilterItem';
 import SettingsSearchHighlight from '../../SettingsSearchHighlight';
 
 type AutoplayPolicy =
-  | 'default'
-  | 'no-user-gesture-required'
-  | 'user-gesture-required'
-  | 'document-user-activation-required';
+  'default' | 'no-user-gesture-required' | 'user-gesture-required' | 'document-user-activation-required';
 
 /**
  * Component to configure the media autoplay policy.

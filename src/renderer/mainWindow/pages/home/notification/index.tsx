@@ -282,13 +282,8 @@ function NotificationItem({
                         : act.variant === 'flat' || act.variant === 'solid'
                           ? 'primary'
                           : (act.variant as
-                              | 'primary'
-                              | 'secondary'
-                              | 'tertiary'
-                              | 'outline'
-                              | 'ghost'
-                              | 'danger'
-                              | 'danger-soft') || 'primary';
+                              'primary' | 'secondary' | 'tertiary' | 'outline' | 'ghost' | 'danger' | 'danger-soft') ||
+                            'primary';
                   return (
                     <Button
                       className={

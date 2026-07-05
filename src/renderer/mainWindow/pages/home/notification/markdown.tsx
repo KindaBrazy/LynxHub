@@ -45,7 +45,7 @@ export function formatMarkdown(text: string | null | undefined): ReactNode {
         if (trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
           return (
             <div key={i} className="flex items-start gap-2 pl-2 my-0.5">
-              <span className="mt-2 size-1 rounded-full bg-foreground/60 flex-shrink-0" />
+              <span className="mt-2 size-1 rounded-full bg-foreground/60 shrink-0" />
               <div className="flex-1 text-xs sm:text-sm leading-relaxed">{parseLineContent(trimmed.substring(2))}</div>
             </div>
           );
@@ -69,13 +69,13 @@ export function formatMarkdown(text: string | null | undefined): ReactNode {
 
 function parseLineContent(text: string): ReactNode {
   // Match links: [label](url)
-  const linkRegex = /(\[[^\]]+\]\([^)]+\))/g;
+  const linkRegex = /(\[[^\]]+]\([^)]+\))/g;
   const parts = text.split(linkRegex);
 
   return parts.map((part, i) => {
     // Check if this part is a link
     if (part.startsWith('[') && part.includes('](') && part.endsWith(')')) {
-      const match = part.match(/\[([^\]]+)\]\(([^)]+)\)/);
+      const match = part.match(/\[([^\]]+)]\(([^)]+)\)/);
       if (match) {
         const [, label, url] = match;
         const isSafeUrl = /^https?:\/\//i.test(url) || url.startsWith('/') || url.startsWith('#');
