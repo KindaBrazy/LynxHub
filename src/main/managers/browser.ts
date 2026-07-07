@@ -5,7 +5,7 @@ import {AudioState, CanGoType} from '@lynx_common/types/ipc';
 import {formatWebAddress} from '@lynx_common/utils';
 import {applicationIpc} from '@lynx_main/ipc/application';
 import {browserIpc} from '@lynx_main/ipc/browser';
-import {getUserAgent, getWindowColor} from '@lynx_main/utils';
+import {getUserAgent} from '@lynx_main/utils';
 import {BrowserWindow, FindInPageOptions, session, shell, WebContents, WebContentsView} from 'electron';
 import {isNil} from 'lodash-es';
 
@@ -318,7 +318,7 @@ export default class BrowserManager {
     });
 
     const webContents = newView.webContents;
-    newView.setBackgroundColor(getWindowColor());
+    newView.setBackgroundColor('#ffffff');
 
     webContents.setUserAgent(getUserAgent());
     webContents.setZoomFactor(storageManager.getData('cards').zoomFactor);
