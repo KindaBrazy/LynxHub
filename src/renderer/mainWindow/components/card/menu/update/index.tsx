@@ -34,7 +34,7 @@ export const UpdateMenuItem = ({setType, state}: {setType: (type: 'install' | 'u
   const dispatch = useDispatch<AppDispatch>();
 
   const onPress = useCallback(() => {
-    AddBreadcrumb_Renderer(`Start Update AI: id:${id}`);
+    AddBreadcrumb_Renderer(`Card Menu Action: Clicked "update" on "${title}"`);
     if (getCardMethod(allMethods, id, 'manager')?.updater.startUpdate) {
       setType('update');
       state.open();
@@ -77,9 +77,10 @@ export const CheckForUpdateMenuItem = () => {
   const allMethods = useAllCardMethods();
 
   const dispatch = useDispatch<AppDispatch>();
+  const title = useCardStore(state => state.title);
 
   const onPress = useCallback(() => {
-    AddBreadcrumb_Renderer(`Check Update AI: id:${id}`);
+    AddBreadcrumb_Renderer(`Card Menu Action: Clicked "check-update" on "${title}"`);
     setCheckingForUpdate(true);
     if (card) {
       const updateType = allMethods.find(c => c.id === id)?.methods?.['manager']?.updater.updateType;
@@ -88,7 +89,7 @@ export const CheckForUpdateMenuItem = () => {
         setCheckingForUpdate(false);
       });
     }
-  }, [dispatch, setCheckingForUpdate, card, id, allMethods]);
+  }, [dispatch, setCheckingForUpdate, card, id, allMethods, title]);
 
   if (updateAvailable || autoUpdate) return null;
 
@@ -125,14 +126,13 @@ export const AutoUpdateMenuItem = () => {
   }, [id, allMethods]);
 
   const onPress = useCallback(() => {
-    console.log('pressed');
-    AddBreadcrumb_Renderer(`Toggle AutoUpdate AI: id:${id}, !autoUpdate:${!autoUpdate}`);
+    AddBreadcrumb_Renderer(`Card Menu Action: Clicked "auto-update" on "${title}"`);
     if (autoUpdate) {
       storageUtilsIpc.send.removeAutoUpdateCard(id);
     } else {
       storageUtilsIpc.send.addAutoUpdateCard(id);
     }
-  }, [autoUpdate, id]);
+  }, [autoUpdate, id, title]);
 
   useEffect(() => {
     if (autoUpdate && updateAvailable && webUi && webUi.dir) {

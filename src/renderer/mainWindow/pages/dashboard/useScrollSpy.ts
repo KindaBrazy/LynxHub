@@ -1,4 +1,3 @@
-import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
 import {useEffect, useState} from 'react';
 
 /**
@@ -12,9 +11,7 @@ export const useScrollSpy = (itemIds: string[], threshold = 0.1): string => {
   const [activeId, setActiveId] = useState<string>('');
 
   useEffect(() => {
-    if (activeId) {
-      AddBreadcrumb_Renderer(`Dashboard Section Visited: ${activeId}`);
-    }
+    // Intentionally left blank as telemetry was noisy here
   }, [activeId]);
 
   useEffect(() => {

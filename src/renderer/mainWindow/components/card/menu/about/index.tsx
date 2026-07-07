@@ -22,6 +22,8 @@ export const AboutMenuItem = ({state}: CommonProps) => {
   const id = useCardStore(st => st.id);
   const setMenuIsOpen = useCardStore(st => st.setMenuIsOpen);
 
+  const title = useCardStore(st => st.title);
+
   const isCtrlPressed = useHotkeysState('isCtrlPressed');
   const webUI = useInstalledCard(id);
 
@@ -30,6 +32,7 @@ export const AboutMenuItem = ({state}: CommonProps) => {
   }, [webUI?.dir, isCtrlPressed]);
 
   const onPress = useCallback(() => {
+    AddBreadcrumb_Renderer(`Card Menu Action: Clicked "information" on "${title}"`);
     if (showOpenFolder && webUI?.dir) {
       filesIpc.openPath(webUI.dir);
       setMenuIsOpen(false);
@@ -37,7 +40,7 @@ export const AboutMenuItem = ({state}: CommonProps) => {
       state.open();
       setMenuIsOpen(false);
     }
-  }, [showOpenFolder, webUI?.dir, setMenuIsOpen]);
+  }, [showOpenFolder, webUI?.dir, setMenuIsOpen, title]);
 
   return (
     <DropdownItem key="information" onPress={onPress}>
@@ -59,7 +62,7 @@ export function HomePageMenuItem({state}: CommonProps) {
   const isCtrlPressed = useHotkeysState('isCtrlPressed');
 
   const onPress = useCallback(() => {
-    AddBreadcrumb_Renderer(`Open AI HomePage: repoUrl:${repoUrl}, isCtrlPressed:${isCtrlPressed}`);
+    AddBreadcrumb_Renderer(`Card Menu Action: Clicked "homepage" on "${title}"`);
     if (isCtrlPressed) {
       window.open(repoUrl);
       setMenuIsOpen(false);
@@ -88,9 +91,10 @@ export const DuplicateMenuItem = () => {
   const isDuplicated = useMemo(() => duplicates.some(card => card.id === id), [duplicates, id]);
 
   const dispatch = useDispatch<AppDispatch>();
+  const title = useCardStore(state => state.title);
 
   const onPress = useCallback(() => {
-    AddBreadcrumb_Renderer(`Duplicate AI: id:${id}, isDuplicated:${isDuplicated}`);
+    AddBreadcrumb_Renderer(`Card Menu Action: Clicked "duplicate" on "${title}"`);
     if (isDuplicated) {
       const removedDuplicate = duplicates.filter(d => d.id !== id);
       storageIpc.update('cards', {duplicated: removedDuplicate});
@@ -104,7 +108,7 @@ export const DuplicateMenuItem = () => {
         dispatch(cardsActions.setDuplicates(addedDuplicate));
       }
     }
-  }, [dispatch, isDuplicated, duplicates, id]);
+  }, [dispatch, isDuplicated, duplicates, id, title]);
 
   return (
     <DropdownItem onPress={onPress} key="duplicate_card">

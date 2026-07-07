@@ -1,7 +1,6 @@
 import {Button, Dropdown, Separator, Spinner, useOverlayState} from '@heroui/react';
 import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {useUpdatingCard} from '@lynx/utils/hooks';
-import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
 import {MenuDots} from '@solar-icons/react-perf/BoldDuotone';
 import {memo, useMemo} from 'react';
 
@@ -59,9 +58,6 @@ export const InstalledMenu = memo(({setType, state}: {setType: (type: 'install' 
     <>
       <Dropdown
         onOpenChange={isOpen => {
-          if (isOpen) {
-            AddBreadcrumb_Renderer(`Card Menu Action: Opened context menu for "${title}"`);
-          }
           setMenuIsOpen(isOpen);
         }}
         isOpen={menuIsOpen}>

@@ -1,5 +1,6 @@
 import {DropdownItem} from '@heroui/react';
 import {Extensions2_Icon, GitHub_Icon} from '@lynx_assets/icons';
+import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
 import {SettingsMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
 import {useCallback} from 'react';
 
@@ -12,11 +13,13 @@ import {CommonProps} from '../about/types';
  */
 export const LaunchConfigMenuItem = ({state}: CommonProps) => {
   const setMenuIsOpen = useCardStore(st => st.setMenuIsOpen);
+  const title = useCardStore(st => st.title);
 
   const onPress = useCallback(() => {
+    AddBreadcrumb_Renderer(`Card Menu Action: Clicked "launch-config" on "${title}"`);
     state.open();
     setMenuIsOpen(false);
-  }, [setMenuIsOpen]);
+  }, [setMenuIsOpen, title]);
 
   return (
     <DropdownItem onPress={onPress} key="launch-config">
@@ -33,11 +36,13 @@ export const LaunchConfigMenuItem = ({state}: CommonProps) => {
 export const ExtensionsMenuItem = ({state}: CommonProps) => {
   const setMenuIsOpen = useCardStore(st => st.setMenuIsOpen);
   const extensionsDir = useCardStore(st => st.extensionsDir);
+  const title = useCardStore(st => st.title);
 
   const onPress = useCallback(() => {
+    AddBreadcrumb_Renderer(`Card Menu Action: Clicked "extensions" on "${title}"`);
     state.open();
     setMenuIsOpen(false);
-  }, [setMenuIsOpen, state]);
+  }, [setMenuIsOpen, state, title]);
 
   if (!extensionsDir) return null;
 
@@ -56,13 +61,15 @@ export const ExtensionsMenuItem = ({state}: CommonProps) => {
 export const RepoConfigMenuItem = ({state}: CommonProps) => {
   const id = useCardStore(st => st.id);
   const setMenuIsOpen = useCardStore(st => st.setMenuIsOpen);
+  const title = useCardStore(st => st.title);
 
   const installType = useGetInstallType(id);
 
   const onPress = useCallback(() => {
+    AddBreadcrumb_Renderer(`Card Menu Action: Clicked "repository" on "${title}"`);
     state.open();
     setMenuIsOpen(false);
-  }, [setMenuIsOpen]);
+  }, [setMenuIsOpen, title]);
 
   if (installType === 'others') return null;
 

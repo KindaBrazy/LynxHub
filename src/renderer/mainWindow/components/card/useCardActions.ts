@@ -49,11 +49,10 @@ export const useCardActions = (state: UseOverlayStateReturn, setType: (type: 'in
   }, [updatingExtensions, id]);
 
   const startAi = useCallback(() => {
-    AddBreadcrumb_Renderer(`Starting AI: id:${id}`);
     extensionRendererApi.events.emit('before_card_start', {id});
 
     if (autoUpdateExtensions && card) {
-      AddBreadcrumb_Renderer(`Updating AI Extensions: id:${id}`);
+      AddBreadcrumb_Renderer(`Updating AI Extensions ${id}`);
       utilsIpc.updateAllExtensions({id, dir: card.dir! + extensionsDir!});
       setIsUpdatingExtensions(true);
     } else {
@@ -64,7 +63,7 @@ export const useCardActions = (state: UseOverlayStateReturn, setType: (type: 'in
   }, [id, autoUpdateExtensions, activeTab, dispatch, card, extensionsDir]);
 
   const install = useCallback(() => {
-    AddBreadcrumb_Renderer(`Start Installing AI: id:${id}`);
+    AddBreadcrumb_Renderer(`Start Installing AI ${id}`);
     if (getCardMethod(allMethods, id, 'manager')) {
       extensionRendererApi.events.emit('before_card_install', {id});
       setType('install');
