@@ -1,7 +1,6 @@
 import {CardState} from '@lynx_common/types';
 import {LoadedCardData} from '@lynx_common/types/plugins/modules';
 import {validateGitRepoUrl} from '@lynx_common/utils';
-import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
 import {createContext, useContext} from 'react';
 import {create, StoreApi, UseBoundStore} from 'zustand';
 
@@ -35,7 +34,6 @@ export const createCardStore = (
 
     // Actions that modify the state
     setMenuIsOpen: isOpen => {
-      AddBreadcrumb_Renderer(`Card Menu: id:${get().id}, name:${get().title}, open:${isOpen}`);
       set({menuIsOpen: isOpen});
     },
     setCheckingForUpdate: isChecking => set({checkingForUpdate: isChecking}),
@@ -52,26 +50,22 @@ export const createCardStore = (
         return {overlayStates: rest};
       }),
     setOverlay: (key, isOpen) => {
-      AddBreadcrumb_Renderer(`Card Overlay: id:${get().id}, name:${get().title}, key:${key}, open:${isOpen}`);
       set(state => ({
         overlayStates: {...state.overlayStates, [key]: isOpen},
       }));
     },
     openOverlay: key => {
-      AddBreadcrumb_Renderer(`Card Overlay: id:${get().id}, name:${get().title}, key:${key}, open:true`);
       set(state => ({
         overlayStates: {...state.overlayStates, [key]: true},
       }));
     },
     closeOverlay: key => {
-      AddBreadcrumb_Renderer(`Card Overlay: id:${get().id}, name:${get().title}, key:${key}, open:false`);
       set(state => ({
         overlayStates: {...state.overlayStates, [key]: false},
       }));
     },
     toggleOverlay: key => {
       const nextVal = !get().overlayStates[key];
-      AddBreadcrumb_Renderer(`Card Overlay: id:${get().id}, name:${get().title}, key:${key}, open:${nextVal}`);
       set(state => ({
         overlayStates: {
           ...state.overlayStates,

@@ -1,7 +1,6 @@
 import {useAppState} from '@lynx/redux/reducers/app';
 import {tabsActions} from '@lynx/redux/reducers/tabs';
 import {AppDispatch} from '@lynx/redux/store';
-import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
 import {AltArrowDown, AltArrowUp} from '@solar-icons/react-perf/Linear';
 import {AnimatePresence, motion, Transition} from 'framer-motion';
 import {memo, MouseEvent, ReactNode, useCallback, useEffect, useMemo, useRef, useState, WheelEvent} from 'react';
@@ -58,7 +57,6 @@ const RenderItem = memo(function RenderItem({item, activePage, isDark, tabID}: I
 
     const {title, path} = item;
 
-    AddBreadcrumb_Renderer(`Nav Button: pageId:${path}, title:${title}`);
     dispatch(
       tabsActions.setActivePage({
         pageID: path,
