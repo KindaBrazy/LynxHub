@@ -126,7 +126,9 @@ export const AutoUpdateMenuItem = () => {
   }, [id, allMethods]);
 
   const onPress = useCallback(() => {
-    AddBreadcrumb_Renderer(`Card Menu Action: Clicked "auto-update" on "${title}"`);
+    AddBreadcrumb_Renderer(
+      `Card Menu Action: Clicked "auto-update" (to ${!autoUpdate ? 'enable' : 'disable'}) on "${title}"`,
+    );
     if (autoUpdate) {
       storageUtilsIpc.send.removeAutoUpdateCard(id);
     } else {

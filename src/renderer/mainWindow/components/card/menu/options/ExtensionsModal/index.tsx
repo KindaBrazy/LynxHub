@@ -1,7 +1,7 @@
 import {Button, Checkbox, Modal, Tabs} from '@heroui/react';
 import {extractGitUrl} from '@lynx_common/utils';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
-import {useDebounceBreadcrumb} from '@lynx_shared/sentry/Breadcrumbs';
+import AddBreadcrumb_Renderer, {useDebounceBreadcrumb} from '@lynx_shared/sentry/Breadcrumbs';
 import {Download} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty} from 'lodash-es';
 import {useCallback, useEffect, useMemo, useState} from 'react';
@@ -53,13 +53,16 @@ const ExtensionsModalContent = ({state}: CommonProps) => {
     setCurrentTab('installed');
   }, [state.isOpen]);
 
-  const onAutoUpdateChange = useCallback(
-    () =>
-      autoUpdate
-        ? storageUtilsIpc.send.removeAutoUpdateExtensions(id)
-        : storageUtilsIpc.send.addAutoUpdateExtensions(id),
-    [autoUpdate, id],
-  );
+  const onAutoUpdateChange = useCallback(() => {
+    AddBreadcrumb_Renderer(
+      `Card Menu Action: Clicked "auto-update-extensions" (to ${!autoUpdate ? 'enable' : 'disable'}) on "${cardTitle}"`,
+    );
+    if (autoUpdate) {
+      storageUtilsIpc.send.removeAutoUpdateExtensions(id);
+    } else {
+      storageUtilsIpc.send.addAutoUpdateExtensions(id);
+    }
+  }, [autoUpdate, id, cardTitle]);
 
   const isUpdateAvailable = useMemo(() => {
     return !isEmpty(updatesAvailable);
