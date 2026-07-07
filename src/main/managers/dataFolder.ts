@@ -137,3 +137,53 @@ export async function isAppDir(dir: string): Promise<boolean> {
   const target = resolve(dir);
   return target.startsWith(appPath);
 }
+
+/**
+ * Cleans up leftover renamed (_old_*) folders for statics and plugins from previous sessions.
+ */
+export async function cleanupLeftoverOldFolders(): Promise<void> {
+  const appDataPath = getAppDataPath();
+  const pluginsPath = getAppDirectory('Plugins');
+
+  const oldFolderPattern = /_old_\d+$/;
+
+  // 1. Clean up old statics folders in appDataPath
+  try {
+    if (fs.existsSync(appDataPath)) {
+      const entries = await fs.promises.readdir(appDataPath, {withFileTypes: true});
+      for (const entry of entries) {
+        if (entry.isDirectory() && oldFolderPattern.test(entry.name)) {
+          const fullPath = join(appDataPath, entry.name);
+          try {
+            await fs.promises.rm(fullPath, {recursive: true, force: true});
+            console.log(`cleanupLeftoverOldFolders: Cleaned up leftover statics folder: ${entry.name}`);
+          } catch (err) {
+            console.warn(`cleanupLeftoverOldFolders: Failed to delete ${fullPath}:`, err);
+          }
+        }
+      }
+    }
+  } catch (err) {
+    console.error('cleanupLeftoverOldFolders: Error cleaning up old statics folders:', err);
+  }
+
+  // 2. Clean up old plugin folders in pluginsPath
+  try {
+    if (fs.existsSync(pluginsPath)) {
+      const entries = await fs.promises.readdir(pluginsPath, {withFileTypes: true});
+      for (const entry of entries) {
+        if (entry.isDirectory() && oldFolderPattern.test(entry.name)) {
+          const fullPath = join(pluginsPath, entry.name);
+          try {
+            await fs.promises.rm(fullPath, {recursive: true, force: true});
+            console.log(`cleanupLeftoverOldFolders: Cleaned up leftover plugin folder: ${entry.name}`);
+          } catch (err) {
+            console.warn(`cleanupLeftoverOldFolders: Failed to delete ${fullPath}:`, err);
+          }
+        }
+      }
+    }
+  } catch (err) {
+    console.error('cleanupLeftoverOldFolders: Error cleaning up old plugin folders:', err);
+  }
+}

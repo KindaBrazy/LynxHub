@@ -15,7 +15,7 @@ import {listenBrowser, resetBrowserIPC} from './ipc/browser';
 import listenDialogsWindow from './ipc/dialogsWindow';
 import {stopAllPty} from './ipc/methods/pty';
 import classHolder from './managers/classHolder';
-import {checkAppDirectories} from './managers/dataFolder';
+import {checkAppDirectories, cleanupLeftoverOldFolders} from './managers/dataFolder';
 import {getImageCacheManager} from './managers/imageCache';
 import {checkForUpdate} from './managers/updater';
 import Auth, {handleDeepLink} from './monitoring/auth';
@@ -129,6 +129,11 @@ async function initializeLynxHub(): Promise<void> {
     });
     return;
   }
+
+  // Cleanup leftover folders from previous runs
+  await cleanupLeftoverOldFolders().catch(err => {
+    console.error('Failed to cleanup leftover old folders:', err);
+  });
 
   // Initialize and hold classes
   const {storageManager} = classHolder;
