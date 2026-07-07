@@ -105,8 +105,8 @@ class BaseStorage {
     },
     browser: {
       recentAddress: [],
-      userAgent: 'lynxhub',
-      customUserAgent: getUserAgent('lynxhub'),
+      userAgent: 'chrome',
+      customUserAgent: getUserAgent('chrome'),
       favoriteAddress: [],
       historyAddress: [],
       favIcons: [],

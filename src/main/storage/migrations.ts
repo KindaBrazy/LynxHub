@@ -132,8 +132,8 @@ export class StorageMigrationManager {
       historyAddress: [],
       recentAddress: [],
       favIcons: [],
-      userAgent: 'lynxhub',
-      customUserAgent: getUserAgent('lynxhub'),
+      userAgent: 'chrome',
+      customUserAgent: getUserAgent('chrome'),
     };
     this.storage.data.app.closeTabConfirm = true;
     this.storage.data.app.hotkeys = Get_Default_Hotkeys();
