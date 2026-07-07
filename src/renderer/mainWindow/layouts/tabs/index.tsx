@@ -3,6 +3,7 @@ import {tabsActions, useTabsState} from '@lynx/redux/reducers/tabs';
 import {AppDispatch} from '@lynx/redux/store';
 import {TabInfo} from '@lynx_common/types';
 import contextMenuIpc from '@lynx_shared/ipc/contextMenu';
+import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
 import {AnimatePresence, Reorder} from 'framer-motion';
 import {isEqual} from 'lodash-es';
 import {memo, useCallback, useEffect, useRef, useState} from 'react';
@@ -21,12 +22,25 @@ const TabsList = memo(() => {
   const dispatch = useDispatch<AppDispatch>();
 
   const tabsFromRedux = useTabsState('tabs');
+  const activeTab = useTabsState('activeTab');
   const removeTab = useRemoveTab();
   const onFocus = useAppState('onFocus');
 
   const [localTabs, setLocalTabs] = useState<TabInfo[]>(tabsFromRedux);
 
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const prevTabRef = useRef<string>(activeTab);
+
+  // Log active tab switch centrally (covers click, keyboard shortcuts, etc.)
+  useEffect(() => {
+    if (prevTabRef.current !== activeTab) {
+      const targetTab = tabsFromRedux.find(t => t.id === activeTab);
+      if (targetTab) {
+        AddBreadcrumb_Renderer(`Tabs: Switch to tab: ${targetTab.title}`);
+      }
+      prevTabRef.current = activeTab;
+    }
+  }, [activeTab, tabsFromRedux]);
 
   const [isOrdering, setIsOrdering] = useState<boolean>(false);
 

@@ -8,7 +8,6 @@ import {AppDispatch} from '@lynx/redux/store';
 import {Hotkey_Names} from '@lynx_common/consts/hotkeys';
 import {TabInfo} from '@lynx_common/types';
 import contextMenuIpc from '@lynx_shared/ipc/contextMenu';
-import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
 import {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -98,7 +97,6 @@ const TabItem = memo(({tab, isOrdering}: Props) => {
 
   const onPress = useCallback(() => {
     if (!isOrdering) {
-      AddBreadcrumb_Renderer('Tabs: Switch to tab');
       dispatch(tabsActions.setActiveTab(tab.id));
     }
   }, [dispatch, tab.id, isOrdering]);

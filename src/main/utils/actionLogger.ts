@@ -1,4 +1,5 @@
 import {randomUUID} from 'node:crypto';
+import os from 'node:os';
 import {join} from 'node:path';
 
 import {LYNXHUB_WEBSITE} from '@lynx_common/consts';
@@ -27,6 +28,48 @@ let sessionId = '';
 let anonymousId = '';
 const actionQueue: ActionEvent[] = [];
 let failedActionsFilePath = '';
+let lastLoggedAction: {category: string; message: string; timestamp: number} | null = null;
+const DEDUPLICATION_WINDOW_MS = 2000;
+
+function escapeRegExp(string: string): string {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function sanitizeSensitiveInfo(value: any): any {
+  if (typeof value === 'string') {
+    let sanitized = value.replace(/\\/g, '/');
+    try {
+      const home = os.homedir().replace(/\\/g, '/');
+      const homeRegex = new RegExp(escapeRegExp(home), 'gi');
+      sanitized = sanitized.replace(homeRegex, '~');
+    } catch {
+      // Ignore errors if os.homedir() fails
+    }
+    try {
+      const username = os.userInfo().username;
+      if (username) {
+        const userRegex = new RegExp(escapeRegExp(username), 'gi');
+        sanitized = sanitized.replace(userRegex, '<username>');
+      }
+    } catch {
+      // Ignore errors if os.userInfo() fails
+    }
+    return sanitized;
+  }
+
+  if (value && typeof value === 'object') {
+    if (Array.isArray(value)) {
+      return value.map(sanitizeSensitiveInfo);
+    }
+    const result: {[key: string]: any} = {};
+    for (const key of Object.keys(value)) {
+      result[key] = sanitizeSensitiveInfo(value[key]);
+    }
+    return result;
+  }
+
+  return value;
+}
 
 /**
  * Initializes the action log session, generates a unique session ID, and attempts to send any cached actions from previous runs.
@@ -80,12 +123,31 @@ export function logAction(category: string, message: string, level: string = 'in
     return;
   }
 
+  const sanitizedMessage = sanitizeSensitiveInfo(message);
+  const now = Date.now();
+
+  // Deduplicate consecutive identical actions within the threshold window
+  if (
+    lastLoggedAction &&
+    lastLoggedAction.category === category &&
+    lastLoggedAction.message === sanitizedMessage &&
+    now - lastLoggedAction.timestamp < DEDUPLICATION_WINDOW_MS
+  ) {
+    return;
+  }
+
+  lastLoggedAction = {
+    category,
+    message: sanitizedMessage,
+    timestamp: now,
+  };
+
   actionQueue.push({
     category,
-    message,
+    message: sanitizedMessage,
     level,
     timestamp: new Date(),
-    payload,
+    payload: sanitizeSensitiveInfo(payload),
   });
 }
 

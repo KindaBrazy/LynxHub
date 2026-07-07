@@ -55,24 +55,19 @@ const BrowserActionButtons = memo(({webuiAddress, tabID, id, isDomReady}: Props)
   const isLoading = useMemo(() => tabs.find(tab => tab.id === tabID)?.isLoading ?? false, [tabs, tabID]);
 
   const goBack = () => {
-    AddBreadcrumb_Renderer('Browser: Go back');
     browserIpc.send.goBack(id);
   };
   const goForward = () => {
-    AddBreadcrumb_Renderer('Browser: Go forward');
     browserIpc.send.goForward(id);
   };
   const reload = () => {
-    AddBreadcrumb_Renderer('Browser: Reload page');
     browserIpc.send.reload(id);
     dispatch(triggerActions.trigger('reloadBrowserHomePage'));
   };
   const stop = () => {
-    AddBreadcrumb_Renderer('Browser: Stop loading');
     browserIpc.send.stop(id);
   };
   const loadWebuiURL = () => {
-    AddBreadcrumb_Renderer('Browser: Go to home');
     browserIpc.send.loadURL(id, webuiAddress);
   };
   const toggleDevTools = () => {
