@@ -43,6 +43,7 @@ export class StorageMigrationManager {
     [1.01, () => this.migrate_1_01()],
     [1.02, () => this.migrate_1_02()],
     [1.03, () => this.migrate_1_03()],
+    [1.04, () => this.migrate_1_04()],
   ]);
 
   constructor(
@@ -302,6 +303,15 @@ export class StorageMigrationManager {
       };
     } else if (this.storage.data.browser.historyLimits.favIcons === undefined) {
       this.storage.data.browser.historyLimits.favIcons = 100;
+    }
+  }
+
+  private migrate_1_04() {
+    if (this.storage.data.browser.userAgent === 'lynxhub') {
+      this.storage.data.browser = {
+        ...this.storage.data.browser,
+        userAgent: 'chrome',
+      };
     }
   }
 
