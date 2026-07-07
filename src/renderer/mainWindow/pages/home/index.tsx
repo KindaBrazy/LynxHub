@@ -4,7 +4,7 @@ import {useCardsState} from '@lynx/redux/reducers/cards';
 import {useDebounceBreadcrumb} from '@lynx_shared/sentry/Breadcrumbs';
 import {AnimatePresence, LayoutGroup} from 'framer-motion';
 import {isEmpty} from 'lodash-es';
-import {memo, useMemo, useState} from 'react';
+import {memo, useEffect, useMemo, useState} from 'react';
 
 import {AllCardsSection, CardsBySearch, PinnedCars, RecentlyCards} from '../CardsCategory';
 import Page from '../Page';
@@ -20,8 +20,24 @@ import HomeTopBar from './TopBar';
 const HomePage = memo(() => {
   const homeCategory = useCardsState('homeCategory');
   const [searchValue, setSearchValue] = useState<string>('');
+  const [debouncedSearchValue, setDebouncedSearchValue] = useState<string>('');
 
-  useDebounceBreadcrumb('Home search', [searchValue]);
+  useEffect(() => {
+    if (searchValue === '') {
+      setDebouncedSearchValue('');
+      return;
+    }
+
+    const handler = setTimeout(() => {
+      setDebouncedSearchValue(searchValue);
+    }, 100);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [searchValue]);
+
+  useDebounceBreadcrumb('Home search', [debouncedSearchValue]);
 
   const {
     searchAndFilter: SearchAndFilter,
@@ -52,16 +68,16 @@ const HomePage = memo(() => {
 
           {Categories ? (
             <Categories />
-          ) : isEmpty(searchValue) ? (
+          ) : isEmpty(debouncedSearchValue) ? (
             <LayoutGroup>
               <AnimatePresence>{homeCategory.includes('Pin') && <PinnedCars />}</AnimatePresence>
               <AnimatePresence>{homeCategory.includes('Recently') && <RecentlyCards />}</AnimatePresence>
               <AnimatePresence>{homeCategory.includes('All') && <AllCardsSection />}</AnimatePresence>
             </LayoutGroup>
           ) : SearchResult ? (
-            <SearchResult searchValue={searchValue} />
+            <SearchResult searchValue={debouncedSearchValue} />
           ) : (
-            <CardsBySearch searchValue={searchValue} />
+            <CardsBySearch searchValue={debouncedSearchValue} />
           )}
 
           {scrollBottom && scrollBottom.map((Top, index) => <Top key={index} />)}
