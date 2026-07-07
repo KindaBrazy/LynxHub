@@ -73,13 +73,13 @@ export default function CollectErrors() {
         <LynxSwitch
           description={
             <span>
-              Collect minimal UI interactions and send them with error reports. This data is anonymous and only sent
-              when errors occur, helping to better trace what happened before the error.
+              Collect minimal UI interactions reports. This data is anonymous and helps to improve app and better trace
+              what happened before an error.
             </span>
           }
           enabled={addBreadcrumbs}
           isDisabled={!collectErrors}
-          title="Include User Interactions"
+          title="Include Interactions"
           onEnabledChange={onBreadcrumbChange}
         />
       </SettingsFilterItem>
