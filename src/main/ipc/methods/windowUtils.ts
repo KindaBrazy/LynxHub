@@ -127,31 +127,29 @@ export async function removeDirRecursive(dir: string): Promise<void> {
 /**
  * Shows a save dialog and writes the provided content to the selected file.
  * @param content The string content to write to the file.
+ * @param defaultFilename Optional default filename for the save dialog.
  * @returns The file path if saved successfully, otherwise null if cancelled.
  * @throws An error if the file operation fails.
  */
-export async function saveToFile(content: string): Promise<string | null> {
+export async function saveToFile(content: string, defaultFilename?: string): Promise<string | null> {
   const {appManager} = classHolder;
 
   try {
     const mainWindow = appManager?.getMainWindow();
 
+    const options: Electron.SaveDialogOptions = {
+      properties: ['createDirectory'],
+      filters: [
+        {name: 'Text file', extensions: ['txt']},
+        {name: 'All types', extensions: ['*']},
+      ],
+      defaultPath: defaultFilename,
+    };
+
     // The dialog returns a promise that resolves with a SaveDialogReturnValue object
     const {canceled, filePath} = await (mainWindow
-      ? dialog.showSaveDialog(mainWindow, {
-          properties: ['createDirectory'],
-          filters: [
-            {name: 'Text file', extensions: ['txt']},
-            {name: 'All types', extensions: ['*']},
-          ],
-        })
-      : dialog.showSaveDialog({
-          properties: ['createDirectory'],
-          filters: [
-            {name: 'Text file', extensions: ['txt']},
-            {name: 'All types', extensions: ['*']},
-          ],
-        }));
+      ? dialog.showSaveDialog(mainWindow, options)
+      : dialog.showSaveDialog(options));
 
     // 1. Check if the user cancelled the dialog
     if (canceled || !filePath) {

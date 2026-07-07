@@ -21,7 +21,8 @@ const filesIpc = {
   openPath: (dir: string) => lynxIpc.send(fileChannels.openPath, dir),
 
   // Shows save dialog and saves content to file
-  saveToFile: (content: string) => lynxIpc.invoke<string | null>(fileChannels.saveToFile, content),
+  saveToFile: (content: string, defaultFilename?: string) =>
+    lynxIpc.invoke<string | null>(fileChannels.saveToFile, content, defaultFilename),
 
   // Gets app directory path by folder name (cards, extensions, etc.)
   getAppDirectories: (name: FolderNames) => lynxIpc.invoke<string>(fileChannels.getAppDirectories, name),

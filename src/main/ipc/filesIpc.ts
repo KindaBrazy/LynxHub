@@ -32,7 +32,7 @@ export default function listenFiles() {
   filesIpc.on.openPath(dir => shell.openPath(resolve(dir)));
 
   // Shows save dialog and saves content to file
-  filesIpc.handle.saveToFile(content => saveToFile(content));
+  filesIpc.handle.saveToFile((content, defaultFilename) => saveToFile(content, defaultFilename));
 
   // Permanently removes directory and all contents
   filesIpc.handle.removeDir(dir => removeDirRecursive(dir));
@@ -77,7 +77,7 @@ export const filesIpc = {
     dialog: (callback: (option: OpenDialogOptions) => MainHT<string | string[] | undefined>) =>
       lynxIpc.handle(fileChannels.dialog, callback),
     /** Handles save to file request */
-    saveToFile: (callback: (content: string) => MainHT<string | null>) =>
+    saveToFile: (callback: (content: string, defaultFilename?: string) => MainHT<string | null>) =>
       lynxIpc.handle(fileChannels.saveToFile, callback),
     /** Handles remove directory request */
     removeDir: (callback: (dir: string) => MainHT<void>) => lynxIpc.handle(fileChannels.removeDir, callback),
