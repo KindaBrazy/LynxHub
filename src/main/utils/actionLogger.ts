@@ -187,3 +187,17 @@ export async function sendCollectedActions(): Promise<void> {
     }
   }
 }
+
+/**
+ * Returns the current session ID.
+ */
+export function getSessionId(): string {
+  return sessionId;
+}
+
+/**
+ * Returns the current anonymous ID.
+ */
+export function getAnonymousId(): string {
+  return anonymousId;
+}

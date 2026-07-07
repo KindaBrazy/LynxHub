@@ -5,6 +5,9 @@ import {formatTime, isDev} from '@lynx_common/utils';
 import StorageManager from '@lynx_main/storage/storageOperations';
 import {Event, extraErrorDataIntegration, init as sentryInit} from '@sentry/electron/main';
 import axios from 'axios';
+import {app} from 'electron';
+
+import {getAnonymousId, getSessionId} from '../utils/actionLogger';
 
 /** Patterns for errors that should not be reported to Sentry */
 const IGNORED_ERROR_PATTERNS = [
@@ -49,6 +52,49 @@ function shouldIgnoreError(event: Event): boolean {
 }
 
 /**
+ * Sends a Sentry error event (with exception stacktrace and breadcrumbs) immediately to the website.
+ */
+async function sendErrorToWebsite(event: Event): Promise<void> {
+  const sessionId = getSessionId();
+  const anonymousId = getAnonymousId();
+
+  if (!sessionId || !anonymousId) {
+    return;
+  }
+
+  const exception = event.exception?.values?.[0];
+  const message = exception
+    ? `${exception.type || 'Error'}: ${exception.value || 'Unknown error'}`
+    : event.message || 'Unknown error';
+
+  const errorAction = {
+    category: 'error',
+    message,
+    level: 'error',
+    timestamp: new Date(),
+    payload: {
+      event_id: event.event_id,
+      exception: event.exception,
+      breadcrumbs: event.breadcrumbs || [],
+    },
+  };
+
+  const payload = {
+    anonymousId,
+    sessionId,
+    appVersion: app.getVersion(),
+    platform: process.platform,
+    actions: [errorAction],
+  };
+
+  try {
+    await axios.post(`${LYNXHUB_WEBSITE}/api/actions/collect`, payload, {timeout: 5000});
+  } catch (err) {
+    console.error('Failed to send error event to website:', err instanceof Error ? err.message : err);
+  }
+}
+
+/**
  * Initializes Sentry for error tracking in the main process.
  * @param appStartTime - The timestamp when the app started.
  * @param release - The current app release version.
@@ -75,17 +121,17 @@ export function initSentry(appStartTime: number, release: string, pluginsRootPat
         }
 
         const exception = event.exception?.values?.[0];
-        if (!exception?.stacktrace?.frames) {
-          return event;
-        }
+        let isFromExtension = false;
 
-        // Filter out errors originating from extensions/plugins
-        const isFromExtension = exception.stacktrace.frames.some(frame => {
-          if (!frame.filename) {
-            return false;
-          }
-          return normalize(frame.filename).startsWith(normalize(pluginsRootPath));
-        });
+        if (exception?.stacktrace?.frames) {
+          // Filter out errors originating from extensions/plugins
+          isFromExtension = exception.stacktrace.frames.some(frame => {
+            if (!frame.filename) {
+              return false;
+            }
+            return normalize(frame.filename).startsWith(normalize(pluginsRootPath));
+          });
+        }
 
         if (isFromExtension) {
           console.log('Sentry event from an extension detected. Dropping.');
@@ -97,6 +143,11 @@ export function initSentry(appStartTime: number, release: string, pluginsRootPat
           ...event.extra,
           uptime: formatTime(Math.floor((Date.now() - appStartTime) / 1000)),
         };
+
+        // Send Sentry error event to website immediately
+        sendErrorToWebsite(event).catch(err => {
+          console.error('Failed to send error event to website:', err);
+        });
 
         return event;
       },
