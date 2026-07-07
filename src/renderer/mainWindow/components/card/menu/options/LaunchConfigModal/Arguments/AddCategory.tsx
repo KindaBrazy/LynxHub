@@ -1,10 +1,9 @@
 import {Card, Description, Header, Label, ListBox, Selection} from '@heroui/react';
 import {ArgumentItem, ArgumentSection} from '@lynx_common/types/plugins/modules';
+import Fuse from 'fuse.js';
 import {isEmpty} from 'lodash-es';
 import {Dispatch, SetStateAction, useCallback, useMemo} from 'react';
 import Highlighter from 'react-highlight-words';
-
-import {searchInStrings} from '../../../../../../utils';
 
 type Props = {
   listData: ArgumentSection[] | ArgumentItem[];
@@ -61,19 +60,27 @@ export default function ArgumentSelectionList({
 
     // 2. Filter by search value
     if (searchValue) {
-      const filterItem = (item: ArgumentItem) => searchInStrings(searchValue, [item.name, item.description || '']);
-
       const isSection = !isEmpty(result) && 'items' in result[0];
 
       if (isSection) {
         result = (result as ArgumentSection[])
-          .map(section => ({
-            ...section,
-            items: section.items.filter(filterItem),
-          }))
+          .map(section => {
+            const fuse = new Fuse(section.items, {
+              keys: ['name', 'description'],
+              threshold: 0.4,
+            });
+            return {
+              ...section,
+              items: fuse.search(searchValue).map(r => r.item),
+            };
+          })
           .filter(section => !isEmpty(section.items));
       } else {
-        result = (result as ArgumentItem[]).filter(filterItem);
+        const fuse = new Fuse(result as ArgumentItem[], {
+          keys: ['name', 'description'],
+          threshold: 0.4,
+        });
+        result = fuse.search(searchValue).map(r => r.item);
       }
     }
 

@@ -1,4 +1,3 @@
-import {searchInStrings} from '@lynx/utils';
 import {AvailablePageIDs} from '@lynx_common/consts';
 import {
   ArgumentsData,
@@ -14,8 +13,9 @@ import {extractGitUrl, isDev} from '@lynx_common/utils';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
 import storageIpc from '@lynx_shared/ipc/storage';
 import {captureException} from '@sentry/electron/renderer';
+import Fuse from 'fuse.js';
 import {compact} from 'lodash-es';
-import {useSyncExternalStore} from 'react';
+import {useMemo, useSyncExternalStore} from 'react';
 
 import {addRendererFailure} from '../failures';
 
@@ -108,9 +108,24 @@ const useSupportCustomArg = (id: string) => useAllCardArguments().find(card => c
  */
 const useSearchCards = (searchValue: string) => {
   const index = useCardSearchIndex();
-  return allCardDataWithPath.filter(card =>
-    searchInStrings(searchValue, index.find(entry => entry.id === card.id)?.tokens),
-  );
+  return useMemo(() => {
+    if (!searchValue) return allCardDataWithPath;
+
+    const cardsWithTokens = allCardDataWithPath.map(card => {
+      const entry = index.find(e => e.id === card.id);
+      return {
+        card,
+        tokens: entry ? entry.tokens : [],
+      };
+    });
+
+    const fuse = new Fuse(cardsWithTokens, {
+      keys: ['tokens'],
+      threshold: 0.4,
+    });
+
+    return fuse.search(searchValue).map(r => r.item.card);
+  }, [searchValue, allCardDataWithPath, index]);
 };
 
 /**

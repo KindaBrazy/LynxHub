@@ -7,10 +7,10 @@ import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {useAllCardDataWithPath, useHasArguments, useSearchCards} from '@lynx/plugins/modules';
 import {toolsCardRegistry} from '@lynx/plugins/modules/toolsRegistry';
 import {useCardsState} from '@lynx/redux/reducers/cards';
-import {searchInStrings} from '@lynx/utils';
 import {Apps_Color_Icon, History_Color_Icon, Pin_Color_Icon} from '@lynx_assets/icons/Icons_Colorful';
 import {Inbox, PinCircle} from '@solar-icons/react-perf/BoldDuotone';
 import {AnimatePresence, LayoutGroup, motion, Variants} from 'framer-motion';
+import Fuse from 'fuse.js';
 import {isEmpty, isNil} from 'lodash-es';
 import {memo, useId, useMemo, useSyncExternalStore} from 'react';
 
@@ -284,7 +284,14 @@ export function CardsBySearch({searchValue}: CardsBySearchProps) {
   const installedCardIds = useMemo(() => new Set(installedCards.map(c => c.id)), [installedCards]);
 
   const items = useMemo(() => {
-    const matchedTools = tools.filter(t => searchInStrings(searchValue, [t.title, t.description]));
+    let matchedTools = tools;
+    if (searchValue) {
+      const fuse = new Fuse(tools, {
+        keys: ['title', 'description'],
+        threshold: 0.4,
+      });
+      matchedTools = fuse.search(searchValue).map(r => r.item);
+    }
     return [
       ...standardCards.map(c => ({type: 'standard' as const, data: c, id: c.id})),
       ...matchedTools.map(t => ({type: 'tools' as const, data: t, id: t.id})),

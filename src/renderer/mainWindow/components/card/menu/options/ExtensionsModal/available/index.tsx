@@ -1,10 +1,10 @@
 import {Description, Pagination, SearchField, Spinner} from '@heroui/react';
 import {validateGitRepoUrl} from '@lynx_common/utils';
 import {Inbox} from '@solar-icons/react-perf/BoldDuotone';
+import Fuse from 'fuse.js';
 import {useEffect, useMemo, useState} from 'react';
 
 import {getCardMethod, useAllCardMethods} from '../../../../../../plugins/modules';
-import {searchInStrings} from '../../../../../../utils';
 import EmptyStateCard from '../../../../../EmptyStateCard';
 import {ExtensionsInfo} from '../types';
 import RenderItem from './RenderItem';
@@ -27,9 +27,12 @@ const useAvailableExtensions = ({visible, updateTable, installedExtensions, id, 
   const allMethods = useAllCardMethods();
 
   const searchedData = useMemo(() => {
-    return data.filter(extension =>
-      searchInStrings(searchValue, [extension.title, extension.description, extension.url]),
-    );
+    if (!searchValue) return data;
+    const fuse = new Fuse(data, {
+      keys: ['title', 'description', 'url'],
+      threshold: 0.4,
+    });
+    return fuse.search(searchValue).map(r => r.item);
   }, [searchValue, data]);
 
   const paginatedData = useMemo(() => {

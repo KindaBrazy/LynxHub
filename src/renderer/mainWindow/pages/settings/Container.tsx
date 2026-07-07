@@ -1,6 +1,6 @@
 import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {useSettingsState} from '@lynx/redux/reducers/settings';
-import {searchInStrings} from '@lynx/utils';
+import Fuse from 'fuse.js';
 import {compact} from 'lodash-es';
 import {type ComponentType, useMemo} from 'react';
 
@@ -86,11 +86,24 @@ export const SettingsSections = ({sectionTexts}: SettingsSectionsProps) => {
       );
     }
 
-    return allSections.map(section => {
-      const dynamicText = section.elementId ? sectionTexts.get(section.elementId) : undefined;
-      const visible = searchInStrings(searchValue, [dynamicText, section.title]);
-      return {...section, visible};
+    const searchableSections = allSections.map(section => ({
+      section,
+      title: section.title,
+      dynamicText: section.elementId ? sectionTexts.get(section.elementId) : '',
+    }));
+
+    const fuse = new Fuse(searchableSections, {
+      keys: ['title', 'dynamicText'],
+      threshold: 0.4,
     });
+
+    const results = fuse.search(searchValue);
+    const visibleSectionIds = new Set(results.map(r => r.item.section.elementId));
+
+    return allSections.map(section => ({
+      ...section,
+      visible: visibleSectionIds.has(section.elementId),
+    }));
   }, [extensionSections, searchValue, sectionTexts, selectedSection]);
 
   const hasVisibleSection = sectionsWithVisibility.some(section => section.visible);

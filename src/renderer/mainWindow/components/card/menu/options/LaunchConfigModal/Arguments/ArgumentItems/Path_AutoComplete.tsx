@@ -3,9 +3,8 @@ import {FolderListData} from '@lynx_common/types';
 import {replaceSlashes} from '@lynx_common/utils';
 import filesIpc from '@lynx_shared/ipc/files';
 import {File, Folder} from '@solar-icons/react-perf/BoldDuotone';
+import Fuse from 'fuse.js';
 import {useEffect, useState} from 'react';
-
-import {searchInStrings} from '../../../../../../../utils';
 
 type Props = {
   /** The base directory to start relative paths from */
@@ -47,8 +46,11 @@ export default function PathAutoComplete({baseDir, onValueChange, defaultValue =
           // This logic might need refinement to filter based on the current last segment
           const lastSegment = inputValue.split('/').pop() || '';
           if (lastSegment) {
-            const lowerLast = lastSegment.toLowerCase();
-            setSearchData(filteredResult.filter(item => searchInStrings(lowerLast, [item.name])));
+            const fuse = new Fuse(filteredResult, {
+              keys: ['name'],
+              threshold: 0.4,
+            });
+            setSearchData(fuse.search(lastSegment).map(r => r.item));
           } else {
             setSearchData(filteredResult);
           }
@@ -78,12 +80,18 @@ export default function PathAutoComplete({baseDir, onValueChange, defaultValue =
     }
 
     // Filter existing data for immediate feedback
-    const segments = targetValue.toLowerCase().split('/');
+    const segments = targetValue.split('/');
     const lastSegment = segments[segments.length - 1];
 
-    // We filter the *current* data. If the user moved to a new dir (e.g. typed '/'),
-    // the useEffect will kick in and fetch new data eventually.
-    setSearchData(data.filter(item => searchInStrings(lastSegment, [item.name])));
+    if (!lastSegment) {
+      setSearchData(data);
+    } else {
+      const fuse = new Fuse(data, {
+        keys: ['name'],
+        threshold: 0.4,
+      });
+      setSearchData(fuse.search(lastSegment).map(r => r.item));
+    }
   };
 
   const onSelectionChange = (key: Key | null) => {

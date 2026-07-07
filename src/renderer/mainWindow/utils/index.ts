@@ -1,6 +1,7 @@
 import {modalActions} from '@lynx/redux/reducers/modals';
 import type {AppDispatch} from '@lynx/redux/store';
 import {isMac} from '@lynx_common/utils';
+import Fuse from 'fuse.js';
 import {capitalize, isEmpty} from 'lodash-es';
 
 /**
@@ -62,10 +63,14 @@ export function isWebgl2Supported(): boolean {
 export function searchInStrings(searchText: string, targetTexts: (string | undefined)[] | undefined): boolean {
   if (isEmpty(searchText) || !targetTexts) return true;
 
-  const searchWords = searchText.toLowerCase().split(/\s+/);
-  const lowerTargetTexts = (targetTexts.filter(Boolean) as string[]).map(text => text.toLowerCase());
+  const filteredTexts = targetTexts.filter(Boolean) as string[];
+  if (filteredTexts.length === 0) return false;
 
-  return searchWords.every(word => lowerTargetTexts.some(text => text.includes(word)));
+  const fuse = new Fuse(filteredTexts, {
+    threshold: 0.4,
+  });
+
+  return fuse.search(searchText).length > 0;
 }
 
 export type HotkeyLike = {

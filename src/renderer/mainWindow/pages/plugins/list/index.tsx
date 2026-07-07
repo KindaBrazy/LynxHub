@@ -2,12 +2,13 @@ import {Button, Card, ProgressBar, ScrollShadow, SearchField, Skeleton, Spinner}
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import {pluginsActions, usePluginsState} from '@lynx/redux/reducers/plugins';
 import {AppDispatch} from '@lynx/redux/store';
-import {searchInStrings, showRestartModal} from '@lynx/utils';
+import {showRestartModal} from '@lynx/utils';
 import {Circle_Icon, Grid_Icon, List_Icon} from '@lynx_assets/icons';
 import {PluginPage_Icon} from '@lynx_assets/icons/pages';
 import {PluginFilter} from '@lynx_common/types/plugins';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
 import {Refresh} from '@solar-icons/react-perf/BoldDuotone';
+import Fuse from 'fuse.js';
 import {isEmpty} from 'lodash-es';
 import {useCallback, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
@@ -48,9 +49,11 @@ export default function PluginList() {
     if (isEmpty(searchValue)) {
       return filteredList;
     }
-    return filteredList.filter(item =>
-      searchInStrings(searchValue, [item.metadata.title, item.metadata.description, item.url]),
-    );
+    const fuse = new Fuse(filteredList, {
+      keys: ['metadata.title', 'metadata.description', 'url'],
+      threshold: 0.4,
+    });
+    return fuse.search(searchValue).map(r => r.item);
   }, [searchValue, filteredList]);
 
   const handleLayoutChange = (mode: 'default' | 'compact') => {

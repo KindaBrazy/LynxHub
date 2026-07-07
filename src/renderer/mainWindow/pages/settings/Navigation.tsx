@@ -1,7 +1,6 @@
 import {Button, Card, Header, ScrollShadow, SearchField} from '@heroui/react';
 import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {settingsActions, useSettingsState} from '@lynx/redux/reducers/settings';
-import {searchInStrings} from '@lynx/utils';
 import {Terminal_Icon} from '@lynx_assets/icons';
 import {SettingPage_Icon} from '@lynx_assets/icons/pages';
 import {
@@ -14,7 +13,8 @@ import {
   TrashBin2,
 } from '@solar-icons/react-perf/BoldDuotone';
 import {AnimatePresence, motion} from 'framer-motion';
-import {ReactNode, useCallback} from 'react';
+import Fuse from 'fuse.js';
+import {ReactNode, useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {settingsSectionId} from './Container';
@@ -175,16 +175,32 @@ const SettingsPageNav = ({sectionTexts}: SettingsPageNavProps) => {
 
   // The arrays are small, so finding and filtering can be derived quickly on each render
 
-  const groupsToRender = searchValue
-    ? groupSections
-        .map(group => ({
+  const groupsToRender = useMemo(() => {
+    if (!searchValue) return groupSections;
+
+    return groupSections
+      .map(group => {
+        const itemsWithSearchFields = group.items.map(item => ({
+          item,
+          title: item.title,
+          groupTitle: group.title,
+          sectionText: sectionTexts.get(item.elementId) ?? '',
+        }));
+
+        const fuse = new Fuse(itemsWithSearchFields, {
+          keys: ['title', 'groupTitle', 'sectionText'],
+          threshold: 0.4,
+        });
+
+        const matchedItems = fuse.search(searchValue).map(r => r.item.item);
+
+        return {
           ...group,
-          items: group.items.filter(item =>
-            searchInStrings(searchValue, [item.title, group.title, sectionTexts.get(item.elementId) ?? '']),
-          ),
-        }))
-        .filter(group => group.items.length > 0)
-    : groupSections;
+          items: matchedItems,
+        };
+      })
+      .filter(group => group.items.length > 0);
+  }, [searchValue, groupSections, sectionTexts]);
 
   return (
     <Card variant="secondary" className="h-full my-2 w-48 shrink-0">
