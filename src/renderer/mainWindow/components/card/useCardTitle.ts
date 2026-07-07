@@ -29,7 +29,7 @@ export const useCardTitle = () => {
   const onTitleChange = useCallback(
     (target: string) => {
       const newTitle = isEmpty(target) ? title : target;
-      AddBreadcrumb_Renderer(`Card Rename: id:${id}`);
+      AddBreadcrumb_Renderer(`Card Rename: id:${id} to:${newTitle}`);
       setCustomTitle(newTitle);
       storageIpc.setCustom(`${id}_title_edited`, newTitle);
     },
