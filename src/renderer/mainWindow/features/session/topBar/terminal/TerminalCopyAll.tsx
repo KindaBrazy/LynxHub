@@ -41,7 +41,7 @@ const TerminalCopyAll = memo(({serializeAddon}: Props) => {
 
     AddBreadcrumb_Renderer('Terminal: Export all to file');
     filesIpc
-      .saveToFile(contentToSave)
+      .saveToFile(contentToSave, 'terminal-export.txt')
       .then(result => {
         if (result) topToast.success(`Successfully saved terminal data.`);
       })
