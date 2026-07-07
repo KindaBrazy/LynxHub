@@ -1,6 +1,6 @@
 import actionsIpc from '@lynx_shared/ipc/actions';
-import {isEmpty} from 'lodash-es';
-import {DependencyList, useEffect} from 'react';
+import {isEmpty, isEqual} from 'lodash-es';
+import {DependencyList, useEffect, useRef} from 'react';
 
 let isEnabled: boolean = true;
 
@@ -27,14 +27,30 @@ export default function AddBreadcrumb_Renderer(message: string) {
  * is non-empty.
  */
 export function useDebounceBreadcrumb(message: string, deps: DependencyList) {
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      if (!deps.every(isEmpty)) {
-        AddBreadcrumb_Renderer(`${message}: ${serializeDependencies(deps)}`);
-      }
-    }, 2000);
+  const prevDeps = useRef<DependencyList | undefined>(undefined);
 
-    return () => clearTimeout(timeoutId);
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout | undefined;
+
+    if (prevDeps.current === undefined) {
+      prevDeps.current = deps;
+      if (!deps.every(isEmpty)) {
+        timeoutId = setTimeout(() => {
+          AddBreadcrumb_Renderer(`${message}: ${serializeDependencies(deps)}`);
+        }, 2000);
+      }
+    } else if (!isEqual(prevDeps.current, deps)) {
+      prevDeps.current = deps;
+      timeoutId = setTimeout(() => {
+        AddBreadcrumb_Renderer(`${message}: ${serializeDependencies(deps)}`);
+      }, 2000);
+    }
+
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
   }, [message, ...deps]);
 }
 
