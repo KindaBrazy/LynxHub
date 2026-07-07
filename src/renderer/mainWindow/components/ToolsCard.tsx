@@ -1,5 +1,6 @@
 import {Avatar, Card, Description, Label} from '@heroui/react';
 import {getFallbackString} from '@lynx_common/utils';
+import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
 import {ReactNode} from 'react';
 
 type Props = {
@@ -17,11 +18,14 @@ type Props = {
 export function ToolsCard({title, description, icon, onPress, footer, avatarClassName}: Props) {
   return (
     <Card
+      onClick={() => {
+        AddBreadcrumb_Renderer(`Card Interaction: Clicked ToolsCard "${title}"`);
+        onPress();
+      }}
       className={
         `w-75 h-46 relative group transform border border-surface ` +
         ' hover:shadow-lg hover:scale-[1.02] transition-all duration-200 cursor-pointer'
-      }
-      onClick={onPress}>
+      }>
       <Card.Header>
         <div className="inline-flex items-center gap-2">
           {typeof icon === 'string' ? (

@@ -9,7 +9,6 @@ import {applicationIpc} from '@lynx_main/ipc/application';
 import {changeWindowState} from '@lynx_main/ipc/methods/windowUtils';
 import classHolder from '@lynx_main/managers/classHolder';
 import {getAbsolutePath, getExePath, getUserAgent, isPortable} from '@lynx_main/utils';
-import {logAction} from '@lynx_main/utils/actionLogger';
 import {app} from 'electron';
 import fs from 'graceful-fs';
 import {cloneDeep} from 'lodash-es';
@@ -530,15 +529,6 @@ class BaseStorage {
   public updateData<K extends keyof AppStorageData>(key: K, updateData: Partial<AppStorageData[K]>): void {
     this.storage.data[key] = {...this.storage.data[key], ...updateData};
     this.write();
-
-    try {
-      if (key !== 'browser') {
-        const sanitized = this.sanitizeStoragePayload(updateData);
-        logAction('storage-update', `Update ${key} with ${JSON.stringify(sanitized)}`);
-      }
-    } catch {
-      // Ignore logging failures
-    }
   }
 
   /**

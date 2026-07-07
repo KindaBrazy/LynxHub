@@ -64,32 +64,8 @@ export const actionLoggerMiddleware: Middleware = () => next => action => {
   if (action && typeof action === 'object' && 'type' in action) {
     const type = action.type as string;
 
-    // Define patterns/actions to ignore (noise, internal state, window focus, etc.)
-    const ignoredActionPrefixes = [
-      'user/', // Block all user account actions from telemetry/logging
-      'hotkeys/',
-      'volume/',
-      'cards/setRunningCardAddress',
-      'cards/setRunningCardCustomAddress',
-      'cards/setRunningCardCurrentAddress',
-      'cards/setRunningCardBrowserTitle',
-      'cards/addDomReady',
-      'terminal/initState',
-    ];
-
-    const shouldIgnore = ignoredActionPrefixes.some(prefix => type.startsWith(prefix));
-
-    // Specifically filter out noisy app/setAppState keys
-    let isNoisyAppState = false;
-    if (type === 'app/setAppState' && 'payload' in action && action.payload && typeof action.payload === 'object') {
-      const payloadKey = (action.payload as any).key;
-      const noisyKeys = ['onFocus', 'isOnline', 'maximized', 'fullscreen', 'appTitle'];
-      if (noisyKeys.includes(payloadKey)) {
-        isNoisyAppState = true;
-      }
-    }
-
-    if (!shouldIgnore && !isNoisyAppState) {
+    // Only log page navigation events to reduce telemetry noise
+    if (type === 'tabs/setActivePage') {
       let logMessage = `Redux Action: ${type}`;
       if ('payload' in action && action.payload !== undefined) {
         try {

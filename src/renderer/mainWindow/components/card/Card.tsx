@@ -2,6 +2,7 @@ import {Card, Description, useOverlayState} from '@heroui/react';
 import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {getAccentColorAsHex} from '@lynx/utils/accentColorGenerator';
 import {extractGitUrl} from '@lynx_common/utils';
+import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
 import {motion} from 'framer-motion';
 import {CSSProperties, memo, useMemo, useState} from 'react';
 
@@ -59,6 +60,7 @@ const LynxCard = memo(() => {
         onClick={() => {
           if (!isPressable) return;
 
+          AddBreadcrumb_Renderer(`Card Interaction: Clicked card "${title}"`);
           if (isInstalled) startAi();
           else install();
         }}

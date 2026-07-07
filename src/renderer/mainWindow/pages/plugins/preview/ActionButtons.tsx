@@ -34,7 +34,7 @@ function usePluginActions() {
       if (!selectedPlugin?.url) return;
 
       const pluginId = selectedPlugin.metadata.id;
-      AddBreadcrumb_Renderer(`Plugin install: id:${pluginId}`);
+      AddBreadcrumb_Renderer(`Install Activity: Started installing "${selectedPlugin.metadata.title}"`);
       dispatch(pluginsActions.manageSet({key: 'installing', id: pluginId, operation: 'add'}));
 
       const matchedVersion = selectedPlugin.versions.find(v => v.version === targetVersion);
@@ -42,6 +42,7 @@ function usePluginActions() {
       pluginsIpc.install(selectedPlugin.url, matchedVersion?.commit).then(wasInstalled => {
         dispatch(pluginsActions.manageSet({key: 'installing', id: pluginId, operation: 'remove'}));
         if (wasInstalled) {
+          AddBreadcrumb_Renderer(`Install Activity: Finished installing "${selectedPlugin.metadata.title}"`);
           topToast.success(`${selectedPlugin.metadata.title} installed successfully`);
           showRestartModal(dispatch, 'To apply the installation, please restart the app.');
           if (matchedVersion) {
@@ -63,12 +64,13 @@ function usePluginActions() {
     const pluginId = selectedPlugin?.metadata.id;
     if (!pluginId) return;
 
-    AddBreadcrumb_Renderer(`Plugin uninstall: id:${pluginId}`);
+    AddBreadcrumb_Renderer(`Install Activity: Started uninstalling "${selectedPlugin.metadata.title}"`);
     dispatch(pluginsActions.manageSet({key: 'unInstalling', id: pluginId, operation: 'add'}));
 
     pluginsIpc.uninstall(pluginId).then(wasUninstalled => {
       dispatch(pluginsActions.manageSet({key: 'unInstalling', id: pluginId, operation: 'remove'}));
       if (wasUninstalled) {
+        AddBreadcrumb_Renderer(`Install Activity: Finished uninstalling "${selectedPlugin.metadata.title}"`);
         topToast.success(`${selectedPlugin.metadata.title} uninstalled successfully`);
         showRestartModal(dispatch, 'To complete the uninstallation, please restart the app.');
         dispatch(pluginsActions.removeInstalled(pluginId));

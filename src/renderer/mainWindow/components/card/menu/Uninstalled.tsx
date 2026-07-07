@@ -1,4 +1,5 @@
 import {Button, Dropdown, useOverlayState} from '@heroui/react';
+import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
 import {MenuDots} from '@solar-icons/react-perf/BoldDuotone';
 import {memo} from 'react';
 
@@ -16,7 +17,14 @@ const UninstalledMenu = memo(() => {
 
   return (
     <>
-      <Dropdown isOpen={menuIsOpen} onOpenChange={setMenuIsOpen}>
+      <Dropdown
+        onOpenChange={isOpen => {
+          if (isOpen) {
+            AddBreadcrumb_Renderer(`Card Menu Action: Opened context menu for "${title}"`);
+          }
+          setMenuIsOpen(isOpen);
+        }}
+        isOpen={menuIsOpen}>
         <Button variant="tertiary" aria-label="Open Card Menu" isIconOnly>
           <MenuDots className={`size-[1.3rem] ${menuIsOpen ? 'rotate-90' : 'rotate-0'} transition-all duration-500`} />
         </Button>
