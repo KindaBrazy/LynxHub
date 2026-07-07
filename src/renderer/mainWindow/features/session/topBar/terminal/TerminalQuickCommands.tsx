@@ -51,7 +51,7 @@ const TerminalQuickCommands = memo(({id}: Props) => {
         return (
           <Button
             onPress={() => {
-              AddBreadcrumb_Renderer(`Terminal: Run quick command: index:${index}`);
+              AddBreadcrumb_Renderer(`Terminal: Run quick command`);
               ptyIpc.write(id, command);
             }}
             size="sm"
