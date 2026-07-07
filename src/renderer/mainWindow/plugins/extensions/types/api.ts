@@ -9,7 +9,7 @@ import type {
 } from '@lynx_common/types/plugins/modules';
 import type {Reducer} from '@reduxjs/toolkit';
 import type {Scope} from '@sentry/browser';
-import type {FC, ReactNode} from 'react';
+import type {ComponentType, FC, ReactNode} from 'react';
 
 import type {bottomToast, topToast} from '../../../layouts/ToastProviders';
 import type {ExtensionEvents} from './events';
@@ -442,6 +442,16 @@ export type ExtensionRendererApi = {
         addModal: CompFcPropAddCardModal;
       };
     };
+    /** Register a custom tools card. */
+    registerToolsCard?: (card: {
+      id: string;
+      title: string;
+      description: string;
+      icon?: string | ReactNode;
+      onPress?: () => void;
+      component?: ComponentType;
+      where?: string;
+    }) => void;
   };
 
   /**

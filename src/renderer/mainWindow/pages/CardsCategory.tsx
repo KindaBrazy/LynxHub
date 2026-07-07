@@ -1,34 +1,54 @@
 import RenderCardList from '@lynx/components/card/RenderList';
+import Wrapper from '@lynx/components/card/Wrapper';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import NavigateToPluginsButton from '@lynx/components/NavigateToPluginsButton';
+import {ToolsCard} from '@lynx/components/ToolsCard';
 import {extensionsData} from '@lynx/plugins/extensions/loader';
-import {useAllCardDataWithPath, useSearchCards} from '@lynx/plugins/modules';
+import {useAllCardDataWithPath, useHasArguments, useSearchCards} from '@lynx/plugins/modules';
+import {toolsCardRegistry} from '@lynx/plugins/modules/toolsRegistry';
 import {useCardsState} from '@lynx/redux/reducers/cards';
+import {searchInStrings} from '@lynx/utils';
 import {Apps_Color_Icon, History_Color_Icon, Pin_Color_Icon} from '@lynx_assets/icons/Icons_Colorful';
-import {LoadedCardData} from '@lynx_common/types/plugins/modules';
 import {Inbox, PinCircle} from '@solar-icons/react-perf/BoldDuotone';
-import {AnimatePresence, LayoutGroup} from 'framer-motion';
+import {AnimatePresence, LayoutGroup, motion, Variants} from 'framer-motion';
 import {isEmpty, isNil} from 'lodash-es';
-import {memo, useId, useMemo} from 'react';
+import {memo, useId, useMemo, useSyncExternalStore} from 'react';
 
 import {CardContainerClasses} from './CardsContainer';
 import HomeCategory from './home/Category';
 
 // ─── Private helpers ─────────────────────────────────────────────────────────
 
-const useCardsById = (cardIds: string[]): LoadedCardData[] => {
-  const allCards = useAllCardDataWithPath();
-
-  return useMemo(() => {
-    return cardIds
-      .map(id => allCards.find(card => card.id === id))
-      .filter((card): card is LoadedCardData => card !== undefined);
-  }, [cardIds, allCards]);
+const variants: Variants = {
+  initial: {opacity: 0, translateY: 20},
+  animate: (index: number) => ({
+    opacity: 1,
+    translateY: 0,
+    transition: {delay: Math.min(index, 5) * 0.05},
+  }),
 };
 
 /** Renders a filtered card list by an array of IDs. */
 const CardsByIds = ({cardIds, cat}: {cardIds: string[]; cat: string}) => {
-  const cards = useCardsById(cardIds);
+  const allCards = useAllCardDataWithPath();
+  const tools = useSyncExternalStore(toolsCardRegistry.subscribe, toolsCardRegistry.getAll);
+  const installedCards = useCardsState('installedCards');
+  const hasArguments = useHasArguments();
+
+  const installedCardIds = useMemo(() => new Set(installedCards.map(c => c.id)), [installedCards]);
+
+  const items = useMemo(() => {
+    return cardIds
+      .map(id => {
+        const standardCard = allCards.find(card => card.id === id);
+        if (standardCard) return {type: 'standard' as const, data: standardCard, id};
+        const toolsCard = tools.find(t => t.id === id);
+        if (toolsCard) return {type: 'tools' as const, data: toolsCard, id};
+        return null;
+      })
+      .filter((item): item is {type: 'standard' | 'tools'; data: any; id: string} => item !== null);
+  }, [cardIds, allCards, tools]);
+
   // Extension point: plugins can completely replace the card renderer.
   const ReplaceCards = extensionsData.cards.replace;
 
@@ -36,7 +56,7 @@ const CardsByIds = ({cardIds, cat}: {cardIds: string[]; cat: string}) => {
     <LayoutGroup id={`${cat}_cards_category`}>
       <AnimatePresence>
         {isNil(ReplaceCards) ? (
-          isEmpty(cards) ? (
+          isEmpty(items) ? (
             <EmptyStateCard
               className="size-full"
               bodyClassName="gap-y-3"
@@ -46,10 +66,53 @@ const CardsByIds = ({cardIds, cat}: {cardIds: string[]; cat: string}) => {
               description="Please install at least one module in plugins page."
             />
           ) : (
-            <RenderCardList cards={cards} />
+            <>
+              {items.map((item, index) => {
+                if (item.type === 'standard') {
+                  return (
+                    <motion.div
+                      key={item.id}
+                      custom={index}
+                      animate="animate"
+                      initial="initial"
+                      variants={variants}
+                      layout>
+                      <Wrapper
+                        cardData={item.data}
+                        hasArguments={hasArguments.has(item.id)}
+                        isInstalled={installedCardIds.has(item.id)}
+                      />
+                    </motion.div>
+                  );
+                } else {
+                  const CustomCard = item.data.component;
+                  return (
+                    <motion.div
+                      key={item.id}
+                      custom={index}
+                      animate="animate"
+                      initial="initial"
+                      variants={variants}
+                      layout>
+                      {CustomCard ? (
+                        <CustomCard />
+                      ) : (
+                        <ToolsCard
+                          id={item.data.id}
+                          icon={item.data.icon}
+                          title={item.data.title}
+                          onPress={item.data.onPress}
+                          description={item.data.description}
+                        />
+                      )}
+                    </motion.div>
+                  );
+                }
+              })}
+            </>
           )
         ) : (
-          <ReplaceCards cards={cards} />
+          <ReplaceCards cards={items.filter(x => x.type === 'standard').map(x => x.data)} />
         )}
       </AnimatePresence>
     </LayoutGroup>
@@ -59,12 +122,13 @@ const CardsByIds = ({cardIds, cat}: {cardIds: string[]; cat: string}) => {
 /** Renders every available card, delegating to the plugin replace-slot if present. */
 const AllCards = () => {
   const allCards = useAllCardDataWithPath();
+  const tools = useSyncExternalStore(toolsCardRegistry.subscribe, toolsCardRegistry.getAll);
   // Extension point: plugins may add custom category content after the main list.
   const allCategory = extensionsData.customizePages.home.add.allCategory;
   // Extension point: plugins can completely replace the card renderer.
   const ReplaceCards = extensionsData.cards.replace;
 
-  if (isEmpty(allCards) && isEmpty(allCategory)) {
+  if (isEmpty(allCards) && isEmpty(allCategory) && isEmpty(tools)) {
     return (
       <EmptyStateCard
         className="size-full"
@@ -80,7 +144,37 @@ const AllCards = () => {
   return (
     <LayoutGroup id="all_cards_category">
       <AnimatePresence>
-        {isNil(ReplaceCards) ? <RenderCardList cards={allCards} /> : <ReplaceCards cards={allCards} />}
+        {isNil(ReplaceCards) ? (
+          <>
+            <RenderCardList cards={allCards} />
+            {tools.map((item, index) => {
+              const CustomCard = item.component;
+              return (
+                <motion.div
+                  key={item.id}
+                  animate="animate"
+                  initial="initial"
+                  variants={variants}
+                  custom={index + allCards.length}
+                  layout>
+                  {CustomCard ? (
+                    <CustomCard />
+                  ) : (
+                    <ToolsCard
+                      id={item.id}
+                      icon={item.icon}
+                      title={item.title}
+                      onPress={item.onPress}
+                      description={item.description}
+                    />
+                  )}
+                </motion.div>
+              );
+            })}
+          </>
+        ) : (
+          <ReplaceCards cards={allCards} />
+        )}
       </AnimatePresence>
     </LayoutGroup>
   );
@@ -182,18 +276,63 @@ export interface CardsBySearchProps {
  * Delegates to the plugin replace-slot when one is registered.
  */
 export function CardsBySearch({searchValue}: CardsBySearchProps) {
-  const filteredCards = useSearchCards(searchValue);
+  const standardCards = useSearchCards(searchValue);
+  const tools = useSyncExternalStore(toolsCardRegistry.subscribe, toolsCardRegistry.getAll);
+  const installedCards = useCardsState('installedCards');
+  const hasArguments = useHasArguments();
+
+  const installedCardIds = useMemo(() => new Set(installedCards.map(c => c.id)), [installedCards]);
+
+  const items = useMemo(() => {
+    const matchedTools = tools.filter(t => searchInStrings(searchValue, [t.title, t.description]));
+    return [
+      ...standardCards.map(c => ({type: 'standard' as const, data: c, id: c.id})),
+      ...matchedTools.map(t => ({type: 'tools' as const, data: t, id: t.id})),
+    ];
+  }, [standardCards, tools, searchValue]);
+
   // Extension point: plugins can completely replace the card renderer.
   const ReplaceCards = extensionsData.cards.replace;
 
   return (
     <div className="flex w-full flex-wrap gap-5 overflow-y-scroll pb-6 pl-1 scrollbar-hide">
-      {isEmpty(filteredCards) ? (
+      {isEmpty(items) ? (
         <EmptyStateCard bodyClassName="gap-y-3" description="No cards match your search." />
       ) : isNil(ReplaceCards) ? (
-        <RenderCardList cards={filteredCards} />
+        <>
+          {items.map((item, index) => {
+            if (item.type === 'standard') {
+              return (
+                <motion.div key={item.id} custom={index} animate="animate" initial="initial" variants={variants} layout>
+                  <Wrapper
+                    cardData={item.data}
+                    hasArguments={hasArguments.has(item.id)}
+                    isInstalled={installedCardIds.has(item.id)}
+                  />
+                </motion.div>
+              );
+            } else {
+              const CustomCard = item.data.component;
+              return (
+                <motion.div key={item.id} custom={index} animate="animate" initial="initial" variants={variants} layout>
+                  {CustomCard ? (
+                    <CustomCard />
+                  ) : (
+                    <ToolsCard
+                      id={item.data.id}
+                      icon={item.data.icon}
+                      title={item.data.title}
+                      onPress={item.data.onPress}
+                      description={item.data.description}
+                    />
+                  )}
+                </motion.div>
+              );
+            }
+          })}
+        </>
       ) : (
-        <ReplaceCards cards={filteredCards} />
+        <ReplaceCards cards={items.filter(x => x.type === 'standard').map(x => x.data)} />
       )}
     </div>
   );

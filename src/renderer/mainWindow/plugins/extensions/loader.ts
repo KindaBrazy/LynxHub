@@ -5,6 +5,7 @@ import {captureException} from '@sentry/electron/renderer';
 import {bottomToast, topToast} from '../../layouts/ToastProviders';
 import {addRendererFailure} from '../failures';
 import {allCards, allModules, getCardMethod, useGetArgumentsByID, useGetCardsByPath} from '../modules';
+import {toolsCardRegistry} from '../modules/toolsRegistry';
 import {initPluginBrowserSentry} from '../sentry';
 import {rendererIpcApi} from './ipcApi';
 import {ExtensionData_Renderer, ExtensionImport_Renderer} from './types';
@@ -496,6 +497,9 @@ export const extensionRendererApi: ExtensionRendererApi = {
         addSection: comp => extensionsData.cards.customize.menu.addSection.push(...comp),
         addModal: comp => extensionsData.cards.customize.menu.addModal.push(...comp),
       },
+    },
+    registerToolsCard: card => {
+      toolsCardRegistry.register(card);
     },
   },
 

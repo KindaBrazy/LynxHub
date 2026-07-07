@@ -1,3 +1,4 @@
+import {toolsCardRegistry} from '@lynx/plugins/modules/toolsRegistry';
 import {useCardsState} from '@lynx/redux/reducers/cards';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {isEmpty, isEqual} from 'lodash-es';
@@ -17,9 +18,10 @@ export function useFilterPinnedCards() {
     }
 
     const installedCardIds = new Set(installedCards.map(card => card.id));
+    const registeredToolsIds = new Set(toolsCardRegistry.getAll().map(t => t.id));
 
-    // Filter pinned cards based on whether their ID exists in the installed cards
-    const filteredPins = pinnedCards.filter(pCard => installedCardIds.has(pCard));
+    // Filter pinned cards based on whether their ID exists in the installed cards or registered tools cards
+    const filteredPins = pinnedCards.filter(pCard => installedCardIds.has(pCard) || registeredToolsIds.has(pCard));
 
     if (!isEqual(filteredPins, pinnedCards)) {
       storageUtilsIpc.invoke.pinnedCards('set', '', filteredPins);

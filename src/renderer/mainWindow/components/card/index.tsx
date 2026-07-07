@@ -1,10 +1,12 @@
 import NavigateToPluginsButton from '@lynx/components/NavigateToPluginsButton';
+import {ToolsCard} from '@lynx/components/ToolsCard';
 import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {useGetCardsByPath} from '@lynx/plugins/modules';
+import {toolsCardRegistry} from '@lynx/plugins/modules/toolsRegistry';
 import {AvailablePageIDs} from '@lynx_common/consts';
 import {LayoutGroup, motion, Variants} from 'framer-motion';
 import {isEmpty, isNil} from 'lodash-es';
-import {FC, memo, useMemo} from 'react';
+import {FC, memo, useMemo, useSyncExternalStore} from 'react';
 
 import EmptyStateCard from '../EmptyStateCard';
 import RenderCardList from './RenderList';
@@ -21,7 +23,7 @@ const variants: Variants = {
   animate: (index: number) => ({
     opacity: 1,
     translateY: 0,
-    transition: {delay: index * 0.05},
+    transition: {delay: Math.min(index, 5) * 0.05},
   }),
 };
 
@@ -31,6 +33,11 @@ const variants: Variants = {
  */
 export const GetComponentsByPath = memo(({routePath, extensionsElements}: GetComponentsByPathProps) => {
   const cards = useGetCardsByPath(routePath);
+  const tools = useSyncExternalStore(toolsCardRegistry.subscribe, toolsCardRegistry.getAll);
+
+  const matchedTools = useMemo(() => {
+    return tools.filter(t => t.where === routePath);
+  }, [tools, routePath]);
 
   const ReplaceCards = useMemo(() => extensionsData.cards.replace, []);
 
@@ -44,22 +51,54 @@ export const GetComponentsByPath = memo(({routePath, extensionsElements}: GetCom
     </div>
   );
 
+  const hasNoContent = isEmpty(cards) && isEmpty(extensionsElements) && isEmpty(matchedTools);
+
   return (
     <div className="flex size-full flex-row flex-wrap gap-7 overflow-visible">
-      {isEmpty(cards) && isEmpty(extensionsElements) ? (
+      {hasNoContent ? (
         renderEmptyState()
       ) : (
         <>
           <LayoutGroup id={`${routePath}_cards`}>
-            {isNil(ReplaceCards) ? <RenderCardList cards={cards} /> : <ReplaceCards cards={cards} />}
+            {isNil(ReplaceCards) ? (
+              <>
+                <RenderCardList cards={cards} />
+                {matchedTools.map((item, index) => {
+                  const CustomCard = item.component;
+                  return (
+                    <motion.div
+                      key={item.id}
+                      animate="animate"
+                      initial="initial"
+                      variants={variants}
+                      custom={index + cards.length}
+                      layout>
+                      {CustomCard ? (
+                        <CustomCard />
+                      ) : (
+                        <ToolsCard
+                          id={item.id}
+                          icon={item.icon}
+                          title={item.title}
+                          onPress={item.onPress}
+                          description={item.description}
+                        />
+                      )}
+                    </motion.div>
+                  );
+                })}
+              </>
+            ) : (
+              <ReplaceCards cards={cards} />
+            )}
           </LayoutGroup>
           {extensionsElements?.map((Comp, index) => (
             <motion.div
               animate="animate"
               initial="initial"
               variants={variants}
-              custom={index + cards.length}
               key={`extension_card_${index}`}
+              custom={index + cards.length + matchedTools.length}
               layout>
               <Comp key={index} />{' '}
             </motion.div>

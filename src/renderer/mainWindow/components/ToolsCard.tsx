@@ -1,13 +1,18 @@
-import {Avatar, Card, Description, Label} from '@heroui/react';
+import {Avatar, Button, Card, Description, Label} from '@heroui/react';
+import {useIsPinnedCard} from '@lynx/utils/hooks';
 import {getFallbackString} from '@lynx_common/utils';
+import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
+import {Pin} from '@solar-icons/react-perf/Bold';
+import {Pin as PinLine} from '@solar-icons/react-perf/LineDuotone';
 import {ReactNode} from 'react';
 
 type Props = {
+  id?: string;
   title: string;
   description: string;
   icon: string | ReactNode;
-  onPress: () => void;
+  onPress?: () => void;
   footer?: ReactNode;
   avatarClassName?: string;
 };
@@ -15,17 +20,22 @@ type Props = {
 /**
  * A card component for the Tools page, featuring a spotlight effect and hover animations.
  */
-export function ToolsCard({title, description, icon, onPress, footer, avatarClassName}: Props) {
+export function ToolsCard({id, title, description, icon, onPress, footer, avatarClassName}: Props) {
+  const isPinned = useIsPinnedCard(id || '');
+
   return (
     <Card
-      onClick={() => {
-        AddBreadcrumb_Renderer(`Card Interaction: Clicked ToolsCard "${title}"`);
-        onPress();
-      }}
       className={
         `w-75 h-46 relative group transform border border-surface ` +
         ' hover:shadow-lg hover:scale-[1.02] transition-all duration-200 cursor-pointer'
-      }>
+      }
+      onClick={() => {
+        AddBreadcrumb_Renderer(`Card Interaction: Clicked ToolsCard "${title}"`);
+        if (id) {
+          storageUtilsIpc.invoke.recentlyUsedCards('update', id);
+        }
+        onPress?.();
+      }}>
       <Card.Header>
         <div className="inline-flex items-center gap-2">
           {typeof icon === 'string' ? (
@@ -50,7 +60,29 @@ export function ToolsCard({title, description, icon, onPress, footer, avatarClas
         <Description className="line-clamp-3 text-xs">{description}</Description>
       </Card.Content>
 
-      <Card.Footer>{footer}</Card.Footer>
+      <Card.Footer className="justify-between flex items-center">
+        {id ? (
+          <div onClick={e => e.stopPropagation()} className="flex items-center gap-x-2">
+            <Button
+              className={
+                `shrink-0 -translate-x-2 opacity-0 transition duration-200 ` +
+                `group-hover:translate-x-0 group-hover:opacity-100`
+              }
+              onPress={() => {
+                AddBreadcrumb_Renderer(`Pin ToolsCard: id:${id} , ${isPinned ? 'remove' : 'add'}`);
+                storageUtilsIpc.invoke.pinnedCards(isPinned ? 'remove' : 'add', id);
+              }}
+              size="sm"
+              variant="ghost"
+              isIconOnly>
+              {isPinned ? <Pin className="size-3" /> : <PinLine className="size-3" />}
+            </Button>
+          </div>
+        ) : (
+          <div />
+        )}
+        {footer}
+      </Card.Footer>
     </Card>
   );
 }
