@@ -147,14 +147,17 @@ const DashboardReportIssue = memo(() => {
   );
 
   return (
-    <SettingsSection title="Help & Feedback" id={DashboardReportIssueId} icon={<Bug className="size-5" />}>
-      <div className="flex flex-col gap-5 max-w-2xl mx-auto py-2">
-        <p className="text-sm text-default-500 text-center">
+    <SettingsSection
+      title="Help & Feedback"
+      id={DashboardReportIssueId}
+      icon={<Bug className="size-5" aria-hidden="true" />}>
+      <div className="flex flex-col gap-2 max-w-2xl mx-auto py-2">
+        <p className="text-sm text-default-500 text-center mb-4">
           Found a bug, have a feature request, or want to ask a question? Fill out the form below.
         </p>
 
         {/* Feedback Type Selection */}
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 mb-4">
           <Label className="text-sm font-semibold">Feedback Type</Label>
           <RadioGroup
             value={feedbackType}
@@ -167,7 +170,7 @@ const DashboardReportIssue = memo(() => {
                   <Radio.Indicator />
                 </Radio.Control>
                 <div className="flex items-center gap-1.5 font-medium">
-                  <Bug className="size-4 text-danger" />
+                  <Bug aria-hidden="true" className="size-4 text-danger" />
                   <span>Report Issue</span>
                 </div>
               </Radio.Content>
@@ -178,7 +181,7 @@ const DashboardReportIssue = memo(() => {
                   <Radio.Indicator />
                 </Radio.Control>
                 <div className="flex items-center gap-1.5 font-medium">
-                  <Lightbulb className="size-4 text-warning" />
+                  <Lightbulb aria-hidden="true" className="size-4 text-warning" />
                   <span>Feature Request</span>
                 </div>
               </Radio.Content>
@@ -189,7 +192,7 @@ const DashboardReportIssue = memo(() => {
                   <Radio.Indicator />
                 </Radio.Control>
                 <div className="flex items-center gap-1.5 font-medium">
-                  <ChatSquare className="size-4 text-primary" />
+                  <ChatSquare aria-hidden="true" className="size-4 text-primary" />
                   <span>General Feedback</span>
                 </div>
               </Radio.Content>
@@ -200,7 +203,7 @@ const DashboardReportIssue = memo(() => {
         {/* Dynamic Form */}
         <Form onSubmit={handleSubmit} className="flex flex-col gap-4">
           {/* Title / Subject */}
-          <TextField className="w-full" isRequired>
+          <TextField name="title" className="w-full" isRequired>
             <Label>
               {feedbackType === 'bug' ? 'Issue Title' : feedbackType === 'feature' ? 'Feature Title' : 'Subject'}
             </Label>
@@ -211,17 +214,18 @@ const DashboardReportIssue = memo(() => {
               }}
               placeholder={
                 feedbackType === 'bug'
-                  ? 'e.g. App crashes when clicking sync button'
+                  ? 'e.g. App crashes when clicking sync button…'
                   : feedbackType === 'feature'
-                    ? 'e.g. Add dark theme option to main settings'
-                    : 'e.g. Question about support tiers'
+                    ? 'e.g. Add dark theme option to main settings…'
+                    : 'e.g. Question about support tiers…'
               }
               value={title}
+              autoComplete="off"
             />
           </TextField>
 
           {/* Description / Message */}
-          <TextField className="w-full" isRequired>
+          <TextField className="w-full" name="description" isRequired>
             <Label>
               {feedbackType === 'bug' ? 'Description' : feedbackType === 'feature' ? 'Feature Description' : 'Message'}
             </Label>
@@ -232,11 +236,12 @@ const DashboardReportIssue = memo(() => {
               }}
               placeholder={
                 feedbackType === 'bug'
-                  ? 'What happened? Describe the issue you encountered...'
+                  ? 'What happened? Describe the issue you encountered…'
                   : feedbackType === 'feature'
-                    ? 'Describe the feature you would like to see...'
-                    : 'Write your general feedback or question here...'
+                    ? 'Describe the feature you would like to see…'
+                    : 'Write your general feedback or question here…'
               }
+              autoComplete="off"
               value={description}
               style={{resize: 'vertical'}}
               rows={feedbackType === 'general' ? 6 : 3}
@@ -246,7 +251,7 @@ const DashboardReportIssue = memo(() => {
           {/* Bug Report Specifics */}
           {feedbackType === 'bug' && (
             <>
-              <TextField className="w-full">
+              <TextField name="steps" className="w-full">
                 <Label>Steps to Reproduce</Label>
                 <TextArea
                   onChange={e => {
@@ -255,12 +260,13 @@ const DashboardReportIssue = memo(() => {
                   }}
                   rows={3}
                   value={steps}
+                  autoComplete="off"
                   style={{resize: 'vertical'}}
                   placeholder="1. Go to settings page&#10;2. Click on the sync button&#10;3. See the error dialog"
                 />
               </TextField>
 
-              <TextField className="w-full">
+              <TextField className="w-full" name="expectedActual">
                 <Label>Expected vs. Actual Behavior</Label>
                 <TextArea
                   onChange={e => {
@@ -271,6 +277,7 @@ const DashboardReportIssue = memo(() => {
                     'Expected: profile syncs and updates successfully.\n' + 'Actual: progress bar freezes at 50%.'
                   }
                   rows={3}
+                  autoComplete="off"
                   value={expectedActual}
                   style={{resize: 'vertical'}}
                 />
@@ -289,7 +296,7 @@ const DashboardReportIssue = memo(() => {
 
           {/* Feature Request Specifics */}
           {feedbackType === 'feature' && (
-            <TextField className="w-full">
+            <TextField name="useCase" className="w-full">
               <Label>Use Case / Why is this useful?</Label>
               <TextArea
                 onChange={e => {
@@ -298,6 +305,7 @@ const DashboardReportIssue = memo(() => {
                 }}
                 rows={3}
                 value={useCase}
+                autoComplete="off"
                 style={{resize: 'vertical'}}
                 placeholder="How would this improve your experience or solve a workflow problem?"
               />
@@ -325,9 +333,9 @@ const DashboardReportIssue = memo(() => {
                 'Submit Feedback'
               ) : (
                 <>
-                  <SiGithub className="size-3.5 shrink-0" />
+                  <SiGithub aria-hidden="true" className="size-3.5 shrink-0" />
                   <span>Open on GitHub</span>
-                  <SquareTopDown className="size-3.5 shrink-0" />
+                  <SquareTopDown aria-hidden="true" className="size-3.5 shrink-0" />
                 </>
               )}
             </Button>
@@ -336,23 +344,32 @@ const DashboardReportIssue = memo(() => {
 
         {/* GitHub Linked/Not Linked Guidance Banner */}
         {!isGitHubConnected && (
-          <div
-            className={
-              'text-[11px] text-muted-foreground bg-default-100 p-2.5 rounded-lg ' +
-              'border border-border/40 flex items-center justify-between gap-3'
-            }>
-            <span>
-              Tip: Log in and link your GitHub account in profile settings to automatically submit feedback directly
-              from the app.
-            </span>
+          <Alert status="default" className="text-xs mt-4">
+            <Alert.Indicator />
+            <Alert.Content>
+              <Alert.Description>
+                {isLoggedIn
+                  ? 'Tip: Link your GitHub account in profile settings to automatically submit feedback ' +
+                    'directly from the app.'
+                  : 'Tip: Log in and link your GitHub account in profile settings to automatically submit ' +
+                    'feedback directly from the app.'}
+              </Alert.Description>
+              <Button
+                size="sm"
+                variant="ghost"
+                onPress={() => window.open(`${LYNXHUB_WEBSITE}/account`)}
+                className="mt-2 sm:hidden font-semibold border border-divider">
+                Manage Account
+              </Button>
+            </Alert.Content>
             <Button
               size="sm"
               variant="ghost"
               onPress={() => window.open(`${LYNXHUB_WEBSITE}/account`)}
-              className="text-[10px] h-7 min-w-fit px-2.5 shrink-0 font-semibold border border-divider">
+              className="hidden sm:block font-semibold border border-divider">
               Manage Account
             </Button>
-          </div>
+          </Alert>
         )}
 
         {/* Results Banner */}
@@ -368,35 +385,31 @@ const DashboardReportIssue = memo(() => {
                   : 'Failed to Submit Feedback'}
               </Alert.Title>
               <Alert.Description>
-                {submitResult.success ? (
-                  isGitHubConnected ? (
-                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 mt-1">
-                      <span>An issue was opened on your behalf on GitHub:</span>
-                      <Button
-                        size="sm"
-                        variant="primary"
-                        className="h-7 text-xs font-semibold"
-                        onPress={() => window.open(submitResult.url)}>
-                        View GitHub Issue
-                      </Button>
-                    </div>
-                  ) : (
-                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 mt-1">
-                      <span>GitHub page has been opened in your browser with your prefilled details.</span>
-                      <Button
-                        size="sm"
-                        variant="primary"
-                        className="h-7 text-xs font-semibold"
-                        onPress={() => window.open(submitResult.url)}>
-                        Go to browser
-                      </Button>
-                    </div>
-                  )
-                ) : (
-                  <span>{submitResult.error || 'Please try again or submit directly on GitHub.'}</span>
-                )}
+                {submitResult.success
+                  ? isGitHubConnected
+                    ? 'An issue was opened on your behalf on GitHub.'
+                    : 'GitHub page has been opened in your browser with your prefilled details.'
+                  : submitResult.error || 'Please try again or submit directly on GitHub.'}
               </Alert.Description>
+              {submitResult.success && (
+                <Button
+                  size="sm"
+                  variant="primary"
+                  className="mt-2 sm:hidden font-semibold"
+                  onPress={() => window.open(submitResult.url)}>
+                  {isGitHubConnected ? 'View GitHub Issue' : 'Go to browser'}
+                </Button>
+              )}
             </Alert.Content>
+            {submitResult.success && (
+              <Button
+                size="sm"
+                variant="primary"
+                className="hidden sm:block font-semibold"
+                onPress={() => window.open(submitResult.url)}>
+                {isGitHubConnected ? 'View GitHub Issue' : 'Go to browser'}
+              </Button>
+            )}
           </Alert>
         )}
       </div>
