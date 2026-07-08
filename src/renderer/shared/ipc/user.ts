@@ -17,6 +17,12 @@ const userIpc = {
     // Stars the GitHub repository
     starGitHubRepo: (): Promise<{success: boolean; error?: string}> =>
       lynxIpc.invoke(userChannels.account.starGitHubRepo),
+    // Submits feedback/creates GitHub issue
+    submitFeedback: (feedback: {
+      title: string;
+      body: string;
+    }): Promise<{success: boolean; url?: string; error?: string}> =>
+      lynxIpc.invoke(userChannels.account.submitFeedback, feedback),
     // Updates subscription channel
     updateChannel: (channel: SubscribeStages | 'get'): void =>
       lynxIpc.send(userChannels.account.updateChannel, channel),

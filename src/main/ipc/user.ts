@@ -34,6 +34,10 @@ export const userIpc = {
       /** Handles star github repo request */
       starGitHubRepo: (callback: () => MainHT<{success: boolean; error?: string}>) =>
         lynxIpc.handle(userChannels.account.starGitHubRepo, callback),
+      /** Handles submit feedback request */
+      submitFeedback: (
+        callback: (feedback: {title: string; body: string}) => MainHT<{success: boolean; url?: string; error?: string}>,
+      ) => lynxIpc.handle(userChannels.account.submitFeedback, callback),
     },
   },
 };

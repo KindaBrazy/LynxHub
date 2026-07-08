@@ -283,6 +283,30 @@ export default function Auth() {
     }
   });
 
+  userIpc.account.handle.submitFeedback(async feedback => {
+    try {
+      const token = await getTokens(AUTH_LOGIN_KEY);
+      if (!token) {
+        return {success: false, error: 'Not logged in'};
+      }
+
+      const response = await axios.post(`${LYNXHUB_WEBSITE}/api/github/create-issue`, feedback, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        timeout: 15000,
+      });
+
+      return response.data;
+    } catch (e) {
+      console.error('Error submitting feedback in main process:', e);
+      return {
+        success: false,
+        error: axios.isAxiosError(e) && e.response?.data?.error ? e.response.data.error : 'Failed to submit feedback',
+      };
+    }
+  });
+
   userIpc.account.on.updateChannel(async channel => {
     if (channel === 'get') {
       const currentChannel = await getChannel(AUTH_CHANNEL_KEY);

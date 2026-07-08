@@ -10,6 +10,7 @@ export const userChannels = {
     updateChannel: 'account:updateChannel',
     checkGitHubStar: 'account:checkGitHubStar',
     starGitHubRepo: 'account:starGitHubRepo',
+    submitFeedback: 'account:submitFeedback',
 
     onReleaseChannel: 'account:onReleaseChannel',
   },
