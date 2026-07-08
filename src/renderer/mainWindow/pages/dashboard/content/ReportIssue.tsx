@@ -47,15 +47,19 @@ const DashboardReportIssue = memo(() => {
     return isLoggedIn && userData.connectedProviders?.includes('github');
   }, [isLoggedIn, userData.connectedProviders]);
 
-  const clearForm = useCallback(() => {
+  const clearFormFields = useCallback(() => {
     setTitle('');
     setDescription('');
     setSteps('');
     setExpectedActual('');
     setUseCase('');
     setAttachDiagnostics(true);
-    setSubmitResult(null);
   }, []);
+
+  const clearForm = useCallback(() => {
+    clearFormFields();
+    setSubmitResult(null);
+  }, [clearFormFields]);
 
   const handleTypeChange = useCallback((value: string) => {
     setFeedbackType(value as FeedbackType);
@@ -104,7 +108,7 @@ const DashboardReportIssue = memo(() => {
           });
           setSubmitResult(res);
           if (res.success) {
-            clearForm();
+            clearFormFields();
           }
         } catch (err: any) {
           console.error('Failed to submit feedback:', err);
@@ -142,7 +146,7 @@ const DashboardReportIssue = memo(() => {
       isLoggedIn,
       userData.tier,
       isGitHubConnected,
-      clearForm,
+      clearFormFields,
     ],
   );
 
