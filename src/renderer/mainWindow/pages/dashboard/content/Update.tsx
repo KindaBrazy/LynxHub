@@ -62,7 +62,7 @@ const DashboardUpdate = memo(() => {
   return (
     <SettingsSection title="Updates" id={DashboardUpdateId} icon={<Download className="size-5" />} itemsCenter>
       <div className="w-full">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-3 gap-4">
           {/* Insider Card */}
           <Card className={`${selection === 'insider' && 'border-2'} border-LynxPurple/50`}>
             <Card.Header>

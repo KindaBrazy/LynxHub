@@ -108,7 +108,7 @@ const DashboardCredits = memo(() => {
       <div
         className={
           'relative mb-10 overflow-hidden rounded-2xl border border-zinc-200/80 dark:border-zinc-800/80' +
-          ' bg-zinc-50 dark:bg-zinc-900/40 p-6 lg:p-8 shadow-xs'
+          ' bg-zinc-50 dark:bg-zinc-900/40 p-8 shadow-xs'
         }>
         <div
           className={
@@ -116,7 +116,7 @@ const DashboardCredits = memo(() => {
           }
         />
 
-        <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
+        <div className="relative z-10 flex items-center justify-between gap-8">
           <div className={`${hasConnectedPatreon ? '' : 'max-w-xl'} text-start`}>
             <div
               className={
@@ -126,7 +126,7 @@ const DashboardCredits = memo(() => {
               <HeartAngle className="size-3.5" />
               <span>Backer Community</span>
             </div>
-            <h2 className="text-xl md:text-2xl font-extrabold tracking-tight text-zinc-900 dark:text-zinc-50">
+            <h2 className="text-2xl font-extrabold tracking-tight text-zinc-900 dark:text-zinc-50">
               Supporting Open Development
             </h2>
             <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">
@@ -139,8 +139,8 @@ const DashboardCredits = memo(() => {
           {!hasConnectedPatreon && (
             <div
               className={
-                'relative shrink-0 flex flex-col items-center lg:items-start bg-white/60 dark:bg-zinc-950/40 border' +
-                ' border-zinc-200/50 dark:border-zinc-800 p-5 rounded-2xl min-w-xs lg:min-w-sm'
+                'relative shrink-0 flex flex-col items-start bg-white/60 dark:bg-zinc-950/40 border' +
+                ' border-zinc-200/50 dark:border-zinc-800 p-5 rounded-2xl min-w-sm'
               }>
               <Button
                 className={
@@ -227,7 +227,7 @@ const DashboardCredits = memo(() => {
               </div>
 
               {/* Grid Layout */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3">
+              <div className="grid grid-cols-4 gap-3">
                 {hasSupporters ? (
                   <>
                     {displayedList.map(supporter => {
