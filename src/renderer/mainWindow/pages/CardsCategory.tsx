@@ -1,3 +1,4 @@
+import {ScrollShadow} from '@heroui/react';
 import RenderCardList from '@lynx/components/card/RenderList';
 import Wrapper from '@lynx/components/card/Wrapper';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
@@ -302,45 +303,59 @@ export function CardsBySearch({searchValue}: CardsBySearchProps) {
   const ReplaceCards = extensionsData.cards.replace;
 
   return (
-    <div className="flex w-full flex-wrap gap-5 overflow-y-scroll pb-6 pl-1 scrollbar-hide">
-      {isEmpty(items) ? (
-        <EmptyStateCard bodyClassName="gap-y-3" description="No cards match your search." />
-      ) : isNil(ReplaceCards) ? (
-        <>
-          {items.map((item, index) => {
-            if (item.type === 'standard') {
-              return (
-                <motion.div key={item.id} custom={index} animate="animate" initial="initial" variants={variants} layout>
-                  <Wrapper
-                    cardData={item.data}
-                    hasArguments={hasArguments.has(item.id)}
-                    isInstalled={installedCardIds.has(item.id)}
-                  />
-                </motion.div>
-              );
-            } else {
-              const CustomCard = item.data.component;
-              return (
-                <motion.div key={item.id} custom={index} animate="animate" initial="initial" variants={variants} layout>
-                  {CustomCard ? (
-                    <CustomCard />
-                  ) : (
-                    <ToolsCard
-                      id={item.data.id}
-                      icon={item.data.icon}
-                      title={item.data.title}
-                      onPress={item.data.onPress}
-                      description={item.data.description}
+    <div className="size-full p-5 rounded-3xl bg-surface-secondary pr-1">
+      <ScrollShadow className="flex content-start size-full flex-wrap gap-5 overflow-y-scroll pr-2">
+        {isEmpty(items) ? (
+          <EmptyStateCard bodyClassName="gap-y-3" description="No cards match your search." />
+        ) : isNil(ReplaceCards) ? (
+          <>
+            {items.map((item, index) => {
+              if (item.type === 'standard') {
+                return (
+                  <motion.div
+                    key={item.id}
+                    custom={index}
+                    animate="animate"
+                    initial="initial"
+                    variants={variants}
+                    layout>
+                    <Wrapper
+                      cardData={item.data}
+                      hasArguments={hasArguments.has(item.id)}
+                      isInstalled={installedCardIds.has(item.id)}
                     />
-                  )}
-                </motion.div>
-              );
-            }
-          })}
-        </>
-      ) : (
-        <ReplaceCards cards={items.filter(x => x.type === 'standard').map(x => x.data)} />
-      )}
+                  </motion.div>
+                );
+              } else {
+                const CustomCard = item.data.component;
+                return (
+                  <motion.div
+                    key={item.id}
+                    custom={index}
+                    animate="animate"
+                    initial="initial"
+                    variants={variants}
+                    layout>
+                    {CustomCard ? (
+                      <CustomCard />
+                    ) : (
+                      <ToolsCard
+                        id={item.data.id}
+                        icon={item.data.icon}
+                        title={item.data.title}
+                        onPress={item.data.onPress}
+                        description={item.data.description}
+                      />
+                    )}
+                  </motion.div>
+                );
+              }
+            })}
+          </>
+        ) : (
+          <ReplaceCards cards={items.filter(x => x.type === 'standard').map(x => x.data)} />
+        )}
+      </ScrollShadow>
     </div>
   );
 }
