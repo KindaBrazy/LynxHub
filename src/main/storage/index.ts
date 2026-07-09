@@ -27,7 +27,7 @@ class BaseStorage {
   private readonly migrationManager: StorageMigrationManager;
 
   private readonly DEFAULT_DATA: AppStorageData = {
-    storage: {version: 1.05},
+    storage: {version: 1.06},
     cards: {
       installedCards: [],
       autoUpdateCards: [],
@@ -134,7 +134,7 @@ class BaseStorage {
       autoplayPolicy: 'default',
       enableAcceleratedVideoDecode: true,
       jsMaxOldSpaceSize: 4096,
-      ignoreGpuBlacklist: false,
+      ignoreGpuBlocklist: false,
       diskCacheSize: 0,
       enableWebAssemblySimd: true,
       forceHighPerformanceGpu: false,

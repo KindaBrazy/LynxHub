@@ -18,27 +18,27 @@ export default function GpuBlacklist() {
 
   useEffect(() => {
     storageIpc.get('performance').then(data => {
-      setEnabled(data.ignoreGpuBlacklist);
+      setEnabled(data.ignoreGpuBlocklist);
     });
   }, []);
 
   const onEnabledChange = useCallback(
     (selected: boolean) => {
-      storageIpc.update('performance', {ignoreGpuBlacklist: selected});
+      storageIpc.update('performance', {ignoreGpuBlocklist: selected});
       setEnabled(selected);
       showRestartModal(dispatch, 'To apply performance changes, please restart the app.');
     },
     [dispatch],
   );
 
-  const titleText = 'Ignore GPU Blacklist';
+  const titleText = 'Ignore GPU Blocklist';
   const descriptionText =
     'Overrides GPU driver compatibility checks. May cause crashes or visual' +
     ' artifacts on older or unsupported hardware.';
 
   return (
     <SettingsFilterItem
-      searchTexts={[titleText, descriptionText, 'gpu', 'blacklist', 'driver', 'compatibility', 'crash']}>
+      searchTexts={[titleText, descriptionText, 'gpu', 'blocklist', 'blacklist', 'driver', 'compatibility', 'crash']}>
       <LynxSwitch
         title={titleText}
         enabled={enabled}

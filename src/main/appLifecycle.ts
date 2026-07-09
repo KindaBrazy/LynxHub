@@ -38,8 +38,8 @@ export function configureAppBeforeReady(): void {
     app.commandLine.appendSwitch('enable-accelerated-video-decode');
   }
   app.commandLine.appendSwitch('js-flags', `--max-old-space-size=${performanceSettings.jsMaxOldSpaceSize}`);
-  if (performanceSettings.ignoreGpuBlacklist) {
-    app.commandLine.appendSwitch('ignore-gpu-blacklist');
+  if (performanceSettings.ignoreGpuBlocklist) {
+    app.commandLine.appendSwitch('ignore-gpu-blocklist');
   }
   if (performanceSettings.diskCacheSize > 0) {
     app.commandLine.appendSwitch('disk-cache-size', String(performanceSettings.diskCacheSize));

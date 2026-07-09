@@ -45,6 +45,7 @@ export class StorageMigrationManager {
     [1.03, () => this.migrate_1_03()],
     [1.04, () => this.migrate_1_04()],
     [1.05, () => this.migrate_1_05()],
+    [1.06, () => this.migrate_1_06()],
   ]);
 
   constructor(
@@ -323,6 +324,18 @@ export class StorageMigrationManager {
       }
       if (this.storage.data.performance.enableSkiaGraphite === undefined) {
         this.storage.data.performance.enableSkiaGraphite = false;
+      }
+    }
+  }
+
+  private migrate_1_06() {
+    if (this.storage.data.performance) {
+      const oldVal = (this.storage.data.performance as any).ignoreGpuBlacklist;
+      if (oldVal !== undefined) {
+        this.storage.data.performance.ignoreGpuBlocklist = oldVal;
+        delete (this.storage.data.performance as any).ignoreGpuBlacklist;
+      } else if (this.storage.data.performance.ignoreGpuBlocklist === undefined) {
+        this.storage.data.performance.ignoreGpuBlocklist = false;
       }
     }
   }

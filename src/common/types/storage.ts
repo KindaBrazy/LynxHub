@@ -178,7 +178,7 @@ export type PerformanceStorage = {
     'default' | 'no-user-gesture-required' | 'user-gesture-required' | 'document-user-activation-required';
   enableAcceleratedVideoDecode: boolean;
   jsMaxOldSpaceSize: 2048 | 4096 | 8192;
-  ignoreGpuBlacklist: boolean;
+  ignoreGpuBlocklist: boolean;
   diskCacheSize: 0 | 268435456 | 536870912 | 1073741824;
   enableWebAssemblySimd: boolean;
   forceHighPerformanceGpu: boolean;
