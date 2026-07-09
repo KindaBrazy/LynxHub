@@ -187,6 +187,7 @@ export type PerformanceStorage = {
   enableGpuRasterization: boolean;
   enableZeroCopy: boolean;
   enableParallelDownloading: boolean;
+  enableSkiaGraphite: boolean;
 };
 
 /**

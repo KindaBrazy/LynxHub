@@ -51,6 +51,9 @@ export function configureAppBeforeReady(): void {
   if (performanceSettings.enableParallelDownloading) {
     enabledFeatures.push('ParallelDownloading');
   }
+  if (performanceSettings.enableSkiaGraphite) {
+    enabledFeatures.push('SkiaGraphite');
+  }
   if (enabledFeatures.length > 0) {
     app.commandLine.appendSwitch('enable-features', enabledFeatures.join(','));
   }

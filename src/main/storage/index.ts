@@ -143,6 +143,7 @@ class BaseStorage {
       enableGpuRasterization: true,
       enableZeroCopy: true,
       enableParallelDownloading: false,
+      enableSkiaGraphite: false,
     },
   };
 

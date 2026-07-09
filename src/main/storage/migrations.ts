@@ -321,6 +321,9 @@ export class StorageMigrationManager {
       if (this.storage.data.performance.enableParallelDownloading === undefined) {
         this.storage.data.performance.enableParallelDownloading = false;
       }
+      if (this.storage.data.performance.enableSkiaGraphite === undefined) {
+        this.storage.data.performance.enableSkiaGraphite = false;
+      }
     }
   }
 

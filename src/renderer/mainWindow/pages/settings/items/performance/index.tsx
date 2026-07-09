@@ -12,6 +12,7 @@ import GpuSelection from './GpuSelection';
 import HighDpi from './HighDpi';
 import JsMemory from './JsMemory';
 import ParallelDownloading from './ParallelDownloading';
+import SkiaGraphite from './SkiaGraphite';
 import VideoDecoding from './VideoDecoding';
 import Vsync from './Vsync';
 import Wasm from './Wasm';
@@ -33,6 +34,7 @@ export default function SettingsPerformance() {
       <ZeroCopy />
       <Wasm />
       <ParallelDownloading />
+      <SkiaGraphite />
       <JsMemory />
       <DiskCache />
       <ColorProfile />
