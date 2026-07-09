@@ -44,8 +44,15 @@ export function configureAppBeforeReady(): void {
   if (performanceSettings.diskCacheSize > 0) {
     app.commandLine.appendSwitch('disk-cache-size', String(performanceSettings.diskCacheSize));
   }
+  const enabledFeatures: string[] = [];
   if (performanceSettings.enableWebAssemblySimd) {
-    app.commandLine.appendSwitch('enable-features', 'WebAssemblySimd');
+    enabledFeatures.push('WebAssemblySimd');
+  }
+  if (performanceSettings.enableParallelDownloading) {
+    enabledFeatures.push('ParallelDownloading');
+  }
+  if (enabledFeatures.length > 0) {
+    app.commandLine.appendSwitch('enable-features', enabledFeatures.join(','));
   }
   if (performanceSettings.forceHighPerformanceGpu) {
     app.commandLine.appendSwitch('force_high_performance_gpu');

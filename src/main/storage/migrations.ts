@@ -44,6 +44,7 @@ export class StorageMigrationManager {
     [1.02, () => this.migrate_1_02()],
     [1.03, () => this.migrate_1_03()],
     [1.04, () => this.migrate_1_04()],
+    [1.05, () => this.migrate_1_05()],
   ]);
 
   constructor(
@@ -312,6 +313,14 @@ export class StorageMigrationManager {
         ...this.storage.data.browser,
         userAgent: 'chrome',
       };
+    }
+  }
+
+  private migrate_1_05() {
+    if (this.storage.data.performance) {
+      if (this.storage.data.performance.enableParallelDownloading === undefined) {
+        this.storage.data.performance.enableParallelDownloading = false;
+      }
     }
   }
 

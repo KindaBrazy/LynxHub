@@ -186,6 +186,7 @@ export type PerformanceStorage = {
   disableFrameRateLimit: boolean;
   enableGpuRasterization: boolean;
   enableZeroCopy: boolean;
+  enableParallelDownloading: boolean;
 };
 
 /**

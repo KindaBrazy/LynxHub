@@ -27,7 +27,7 @@ class BaseStorage {
   private readonly migrationManager: StorageMigrationManager;
 
   private readonly DEFAULT_DATA: AppStorageData = {
-    storage: {version: 1.04},
+    storage: {version: 1.05},
     cards: {
       installedCards: [],
       autoUpdateCards: [],
@@ -142,6 +142,7 @@ class BaseStorage {
       disableFrameRateLimit: false,
       enableGpuRasterization: true,
       enableZeroCopy: true,
+      enableParallelDownloading: false,
     },
   };
 

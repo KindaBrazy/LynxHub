@@ -11,6 +11,7 @@ import GpuRasterization from './GpuRasterization';
 import GpuSelection from './GpuSelection';
 import HighDpi from './HighDpi';
 import JsMemory from './JsMemory';
+import ParallelDownloading from './ParallelDownloading';
 import VideoDecoding from './VideoDecoding';
 import Vsync from './Vsync';
 import Wasm from './Wasm';
@@ -31,6 +32,7 @@ export default function SettingsPerformance() {
       <GpuRasterization />
       <ZeroCopy />
       <Wasm />
+      <ParallelDownloading />
       <JsMemory />
       <DiskCache />
       <ColorProfile />
