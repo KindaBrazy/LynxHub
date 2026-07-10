@@ -19,7 +19,7 @@ export default defineConfig([
 
   eslint.configs.recommended,
   react.configs.flat.recommended,
-  ...tsEslint.configs.recommended,
+  tsEslint.configs.recommended,
   {
     rules: {
       '@typescript-eslint/ban-ts-comment': 'off',
